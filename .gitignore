@@ -1,0 +1,7 @@
+.next
+node_modules
+.env
+firebase.json
+.firebaserc
+out
+.firebase
