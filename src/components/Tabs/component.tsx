@@ -38,6 +38,11 @@ const Tabs = (props: TabsProps) => {
           ? currentIndex - 1
           : items.length - 1;
 
+    // Skip section labels when navigating
+    if (items[targetIndex]?.sectionLabel) {
+      return findNextValidTabIndex(targetIndex, direction);
+    }
+
     return targetIndex;
   };
 
@@ -86,6 +91,11 @@ const Tabs = (props: TabsProps) => {
     index?: number,
     from?: 'above' | 'below',
   ) => {
+    // Skip section labels
+    if (items[index]?.sectionLabel) {
+      return;
+    }
+
     if (items[index]?.hoverable === false && e instanceof Element) {
       const targetIndex =
         from === 'below'
@@ -220,7 +230,21 @@ const Tabs = (props: TabsProps) => {
         ref={listRef}
       >
         {items.map((item, index) => {
-          const { className, bgColor, bgDark, color, onClick } = item;
+          const { className, bgColor, bgDark, color, onClick, sectionLabel } =
+            item;
+
+          // Handle section labels differently
+          if (sectionLabel) {
+            return (
+              <li
+                key={`section-${sectionLabel}`}
+                className='text-black dark:text-white font-medium px-3 py-2 mt-2 first:mt-0'
+              >
+                {sectionLabel}
+              </li>
+            );
+          }
+
           return (
             <React.Fragment key={item.label}>
               <li

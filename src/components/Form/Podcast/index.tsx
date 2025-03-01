@@ -139,8 +139,8 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
           <h1 className='text-lg font-semibold'>
             {podcastToEdit ? 'Edit Podcast' : 'Add New Podcast'}
           </h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>

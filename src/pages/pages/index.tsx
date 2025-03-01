@@ -11,7 +11,6 @@ const Pages: NextPageWithLayout = () => {
     <div>
       <Head>
         <title>Pages - Zulfikar</title>
-        <meta name='description' content="Zulfikar's blog pages" />
       </Head>
       <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
@@ -23,10 +22,10 @@ const Pages: NextPageWithLayout = () => {
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 px-5'>
-              <p className='text-xl text-gray-500 dark:text-gray-400'>
+              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
-                  <span className='mr-2 h-6 w-6'>
-                    <Icon name='left' />
+                  <span className='mr-2 size-[16px]'>
+                    <Icon name='houseLine' />
                   </span>
                   Home
                 </Link>
@@ -39,49 +38,42 @@ const Pages: NextPageWithLayout = () => {
         <PageCard
           title='Dashboard'
           des='Track my metrics'
-          icon='ppt'
+          icon='presentationChart'
           className='text-blue-500'
           href='/dashboard'
         />
         <PageCard
           title='Reading List'
           des='My book shelf'
-          icon='bookmark'
+          icon='bookOpen'
           className='text-green-500'
           href='/reading-list'
         />
         <PageCard
           title='Podcasts'
           des='My recommendations'
-          icon='mic'
+          icon='microphone'
           className='text-yellow-500'
           href='/podcasts'
         />
         <PageCard
-          title='Guestbook'
-          des='Leave your comments'
-          icon='question'
-          className='text-gray-400'
-          href='/page/249'
-        />
-        <PageCard
-          title='Links'
-          des='Friends from the Internet'
-          icon='people'
-          className='text-gray-400'
-          href='/friends'
+          title='Feedback'
+          des='Leave your feedback'
+          icon='chatCenteredText'
+          className='text-red-400'
+          href='/feedback'
         />
         <PageCard
           title='Analytics'
           des='Website statistics'
-          icon='growth'
+          icon='chartBar'
           className='text-gray-400'
           href='https://analytics.ouorz.com/share/E4O9QpCn/ouorz-next'
         />
         <PageCard
           title='Music Playlist'
           des='My music playlist'
-          icon='microphone'
+          icon='musicNotes'
           className='text-gray-400'
           href='/playlist'
         />

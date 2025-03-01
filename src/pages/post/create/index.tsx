@@ -93,14 +93,11 @@ const CreatePost: NextPageWithLayout = () => {
             </h1>
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
-            <div className='flex-1'>
-              <p className='text-xl text-gray-500 dark:text-gray-400'>
-                <Link
-                  href='/'
-                  className='flex items-center hover:bg-gray-300 p-2 rounded-md'
-                >
-                  <span className='mr-2 h-6 w-6'>
-                    <Icon name='left' />
+            <div className='flex-1 px-5'>
+              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+                <Link href='/' className='flex items-center'>
+                  <span className='mr-2 size-[16px]'>
+                    <Icon name='houseLine' />
                   </span>
                   Home
                 </Link>

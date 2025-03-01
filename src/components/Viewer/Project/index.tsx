@@ -1,13 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
-import { Icon, Button } from '~/components/UI';
+import { Button } from '~/components/UI';
 import { Project } from '~/types/project';
 import { drawer } from '~/components/Drawer';
-import ProjectForm from '~/components/Form/Project';
-import { useAuth } from '~/contexts/authContext';
 
 const ProjectViewer = ({ project }: { project: Project }) => {
-  const { user } = useAuth();
   return (
     <>
       {/* Header */}
@@ -31,25 +28,13 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           <div className='flex gap-4'>
             <Button
               type='primary'
+              icon='arrowSquareOut'
               onClick={() => window.open(project.link, '_blank')}
-              className='flex items-center gap-2'
             >
-              <span className='h-5 w-5'>
-                <Icon name='externalLink' />
-              </span>
-              Visit Project
+              <span className='hidden md:block md:ml-2'>Visit</span>
             </Button>
-            {user && (
-              <Button
-                onClick={() =>
-                  drawer.open(<ProjectForm projectToEdit={project} />)
-                }
-              >
-                Edit
-              </Button>
-            )}
-            <Button type='default' onClick={() => drawer.close()}>
-              Close
+            <Button icon='close' onClick={() => drawer.close()}>
+              <span className='hidden md:block md:ml-2'>Close</span>
             </Button>
           </div>
         </div>

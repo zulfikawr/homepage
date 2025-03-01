@@ -1,44 +1,49 @@
 import Link from 'next/link';
 import { ProjectCard } from '~/components/Card/Project';
-import { Icon, Button } from '~/components/UI';
+import { Icon } from '~/components/UI';
 import { drawer } from '~/components/Drawer';
-import ProjectForm from '~/components/Form/Project';
 import { getProjects } from '~/functions/projects';
 import { useAuth } from '~/contexts/authContext';
 import { sortByDate } from '~/utilities/sortByDate';
 import { useFetchData } from '~/lib/fetchData';
+import ProjectsDrawer from './drawer';
 
 const ProjectSection = () => {
   const { user } = useAuth();
   const { data: projects, loading, error } = useFetchData(getProjects);
 
-  const handleAddProject = () => {
-    drawer.open(<ProjectForm />);
+  const handleOpenProjectsDrawer = () => {
+    drawer.open(<ProjectsDrawer projects={sortedProjects} />);
   };
 
   const sortedProjects = projects ? sortByDate(projects) : [];
 
   if (error) return <div>Failed to load projects</div>;
-  if (loading) return <div>Loading...</div>;
+  if (loading) return null;
   if (!projects) return <div>No projects found</div>;
 
   return (
     <section>
       <div className='flex items-center justify-between'>
-        <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
+        <div
+          onClick={user ? handleOpenProjectsDrawer : undefined}
+          className={`inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm ${
+            user ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600' : ''
+          } dark:border-gray-600 dark:bg-gray-700`}
+        >
           <span className='mr-1.5 flex h-5 w-5'>
-            <Icon name='article' />
+            <Icon name='package' />
           </span>
           <span className='block uppercase'>Selected Projects</span>
-        </label>
+        </div>
         <Link
           href='/projects'
           target='_blank'
-          className='flex items-center gap-x-1 text-gray-500 underline-offset-4 hover:underline dark:text-gray-400'
+          className='flex items-center gap-x-2 flex items-center gap-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
         >
           All Projects
-          <span className='h-5 w-5 underline'>
-            <Icon name='externalLink' />
+          <span className='h-5 w-5'>
+            <Icon name='arrowSquareOut' />
           </span>
         </Link>
       </div>
@@ -47,21 +52,6 @@ const ProjectSection = () => {
           <ProjectCard key={index} {...project} />
         ))}
       </div>
-
-      {user && (
-        <div className='mt-6 flex justify-center'>
-          <Button
-            type='primary'
-            onClick={handleAddProject}
-            className='flex items-center gap-2'
-          >
-            <span className='h-5 w-5'>
-              <Icon name='plus' />
-            </span>
-            Add Project
-          </Button>
-        </div>
-      )}
     </section>
   );
 };

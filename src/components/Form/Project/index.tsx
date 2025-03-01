@@ -150,8 +150,8 @@ const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
           <h1 className='text-lg font-semibold'>
             {projectToEdit ? 'Edit Project' : 'Add New Project'}
           </h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -269,12 +269,14 @@ const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
             </div>
             <div className='flex justify-end space-x-4'>
               {projectToEdit && (
-                <Button type='destructive' onClick={confirmDelete}>
-                  Delete
+                <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                  <span className='ml-2'>Delete</span>
                 </Button>
               )}
-              <Button type='primary' onClick={handleSubmit}>
-                {projectToEdit ? 'Save Changes' : 'Add Project'}
+              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                <span className='ml-2'>
+                  {projectToEdit ? 'Save Changes' : 'Add Project'}
+                </span>
               </Button>
             </div>
           </form>

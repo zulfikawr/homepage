@@ -69,8 +69,8 @@ const PersonalInfoForm = ({
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Personal Info</h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -117,10 +117,13 @@ const PersonalInfoForm = ({
             <div className='flex justify-end space-x-4'>
               <Button
                 type='primary'
+                icon='floppyDisk'
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                <span className='ml-2'>
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                </span>
               </Button>
             </div>
           </form>

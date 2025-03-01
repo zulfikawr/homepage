@@ -3,12 +3,8 @@ import Image from 'next/image';
 import { Button } from '~/components/UI';
 import { Employment } from '~/types/employment';
 import { drawer } from '~/components/Drawer';
-import { useAuth } from '~/contexts/authContext';
-import EmploymentForm from '~/components/Form/Employment';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
-  const { user } = useAuth();
-
   return (
     <>
       {/* Header */}
@@ -30,17 +26,8 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
               {employment.organization}
             </h1>
           </div>
-          {user && (
-            <Button
-              onClick={() =>
-                drawer.open(<EmploymentForm employmentToEdit={employment} />)
-              }
-            >
-              Edit
-            </Button>
-          )}
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>

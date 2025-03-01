@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useBodyScroll } from '~/hooks';
 
-// Define the DrawerInstance type
 type DrawerInstance = {
   isOpen: boolean;
   content: React.ReactNode | null;
@@ -113,7 +112,7 @@ const Drawer = () => {
       />
 
       <div
-        className={`absolute bottom-0 left-0 right-0 h-[75vh] md:h-[90vh] md:w-page md:mx-auto 
+        className={`absolute bottom-0 left-0 right-0 h-[80vh] md:h-[90vh] md:w-page md:mx-auto 
           bg-white dark:bg-gray-800 rounded-t-xl border-t dark:border-gray-700 
           shadow-md flex flex-col transition-transform duration-500 ease-in-out
           ${animation === 'in' ? 'translate-y-0' : 'translate-y-full'}`}

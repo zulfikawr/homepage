@@ -4,7 +4,7 @@ import { useAuth } from '~/contexts/authContext';
 import { auth, signOut } from '~/lib/firebase';
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import Tabs, { type TabItemProps } from '~/components/Tabs';
-import { drawer } from '../Drawer';
+import { drawer } from '~/components/Drawer';
 
 interface MenuSection {
   label: string;
@@ -100,25 +100,25 @@ export function KbarContent() {
                 id: 'back',
                 label: 'Go Back',
                 action: 'back',
-                icon: 'left',
+                icon: 'arrowLeft',
               }
             : {
                 id: 'home',
                 label: 'Home',
                 action: 'goHome',
-                icon: 'home',
+                icon: 'houseLine',
               },
           {
             id: 'about',
             label: 'About',
             action: 'goAbout',
-            icon: 'me',
+            icon: 'info',
           },
           {
             id: 'dashboard',
             label: 'Dashboard',
             action: 'goDashboard',
-            icon: 'ppt',
+            icon: 'presentationChart',
           },
           {
             id: 'reading-list',
@@ -127,10 +127,10 @@ export function KbarContent() {
             icon: 'bookOpen',
           },
           {
-            id: 'comment',
+            id: 'feedback',
             label: 'Feedback',
             action: 'goFeedback',
-            icon: 'comments',
+            icon: 'chatCenteredText',
           },
         ],
       },
@@ -155,7 +155,7 @@ export function KbarContent() {
             id: 'theme-system',
             label: 'Use System Theme',
             action: 'setSystemTheme',
-            icon: 'monitor',
+            icon: 'desktop',
           },
         ],
       },
@@ -173,7 +173,7 @@ export function KbarContent() {
                 id: 'logout',
                 label: 'Logout',
                 action: 'logout',
-                icon: 'left',
+                icon: 'signOut',
               },
             ]
           : [
@@ -181,7 +181,7 @@ export function KbarContent() {
                 id: 'login',
                 label: 'Login',
                 action: 'goLogin',
-                icon: 'left',
+                icon: 'signIn',
               },
             ],
       },
@@ -192,7 +192,7 @@ export function KbarContent() {
             id: 'analytics',
             label: 'Analytics',
             action: 'openAnalytics',
-            icon: 'growth',
+            icon: 'chartBar',
           },
           {
             id: 'thoughts',
@@ -209,7 +209,7 @@ export function KbarContent() {
             id: 'twitter',
             label: 'Twitter',
             action: 'openTwitter',
-            icon: 'twitterX',
+            icon: 'x',
           },
           {
             id: 'github',
@@ -221,13 +221,13 @@ export function KbarContent() {
             id: 'linkedin',
             label: 'LinkedIn',
             action: 'openLinkedIn',
-            icon: 'linkedIn',
+            icon: 'linkedin',
           },
           {
             id: 'email',
             label: 'Email',
             action: 'email',
-            icon: 'email',
+            icon: 'envelope',
           },
         ],
       },
@@ -253,10 +253,7 @@ export function KbarContent() {
   const tabItems: TabItemProps[] = useMemo(
     () =>
       filteredSections.flatMap((section) => [
-        {
-          label: section.label,
-          hoverable: false,
-        },
+        { sectionLabel: section.label },
         ...section.items.map((item) => ({
           label: item.label,
           onClick: () => handleAction(item.action) && drawer.close(),

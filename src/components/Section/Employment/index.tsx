@@ -1,46 +1,51 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { EmploymentCard } from '~/components/Card/Employment';
-import { Icon, Button } from '~/components/UI';
+import { Icon } from '~/components/UI';
 import { drawer } from '~/components/Drawer';
-import EmploymentForm from '~/components/Form/Employment';
-import { useState } from 'react';
 import { getEmployments } from '~/functions/employments';
 import { useAuth } from '~/contexts/authContext';
 import { sortByDate } from '~/utilities/sortByDate';
 import { useFetchData } from '~/lib/fetchData';
+import EmploymentsDrawer from './drawer';
 
 const EmploymentSection = () => {
   const { user } = useAuth();
   const [maskClass, setMaskClass] = useState('');
   const { data: employments, loading, error } = useFetchData(getEmployments);
 
-  const handleAddEmployment = () => {
-    drawer.open(<EmploymentForm />);
+  const handleOpenEmploymentsDrawer = () => {
+    drawer.open(<EmploymentsDrawer employments={sortedEmployments} />);
   };
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
 
   if (error) return <div>Failed to load employments</div>;
-  if (loading) return <div>Loading...</div>;
+  if (loading) return null;
   if (!employments) return <div>No employments found</div>;
 
   return (
     <section>
       <div className='flex items-center justify-between'>
-        <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
+        <div
+          onClick={user ? handleOpenEmploymentsDrawer : undefined}
+          className={`inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm ${
+            user ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600' : ''
+          } dark:border-gray-600 dark:bg-gray-700`}
+        >
           <span className='mr-1.5 flex h-5 w-5'>
-            <Icon name='suitcase' />
+            <Icon name='briefcase' />
           </span>
-          <span className='uppercase'>Employment</span>
-        </label>
+          <span className='block uppercase'>Employments</span>
+        </div>
         <Link
           href='https://www.linkedin.com/in/zulfikar-muhammad'
           target='_blank'
-          className='flex items-center gap-x-1 text-gray-500 underline-offset-4 hover:underline dark:text-gray-400'
+          className='flex items-center gap-x-2 flex items-center gap-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
         >
           LinkedIn
-          <span className='h-5 w-5 underline'>
-            <Icon name='externalLink' />
+          <span className='h-5 w-5'>
+            <Icon name='arrowSquareOut' />
           </span>
         </Link>
       </div>
@@ -68,21 +73,6 @@ const EmploymentSection = () => {
           ))}
         </div>
       </div>
-
-      {user && (
-        <div className='mt-6 flex justify-center'>
-          <Button
-            type='primary'
-            onClick={handleAddEmployment}
-            className='flex items-center gap-2'
-          >
-            <span className='h-5 w-5'>
-              <Icon name='plus' />
-            </span>
-            Add Employment
-          </Button>
-        </div>
-      )}
     </section>
   );
 };

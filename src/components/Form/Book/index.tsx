@@ -88,8 +88,8 @@ const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
           <h1 className='text-lg font-semibold'>
             {bookToEdit ? 'Edit Book' : 'Add New Book'}
           </h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>

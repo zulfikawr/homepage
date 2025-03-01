@@ -19,25 +19,25 @@ const PostSection = () => {
   const sortedPosts = posts ? sortByDate(posts) : [];
 
   if (error) return <div>Failed to load posts</div>;
-  if (loading) return <div>Loading...</div>;
+  if (loading) return;
 
   return (
     <section>
       <div className='flex items-center justify-between'>
         <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
           <span className='mr-1.5 flex h-5 w-5'>
-            <Icon name='article' />
+            <Icon name='note' />
           </span>
           <span className='block uppercase'>Latest Posts</span>
         </label>
         <Link
           href='/posts'
           target='_blank'
-          className='flex items-center gap-x-1 text-gray-500 underline-offset-4 hover:underline dark:text-gray-400'
+          className='flex items-center gap-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
         >
           All Posts
-          <span className='h-5 w-5 underline'>
-            <Icon name='externalLink' />
+          <span className='h-5 w-5'>
+            <Icon name='arrowSquareOut' />
           </span>
         </Link>
       </div>
