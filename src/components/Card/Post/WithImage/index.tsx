@@ -2,8 +2,8 @@ import { Label } from '~/components/UI';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import CardFooter from '~/components/Card/Footer';
-import CardWithImageAudio from '~/components/Card/WithImage/podcast';
+import CardFooter from '~/components/Card/Post/Footer';
+import CardWithImageAudio from '~/components/Card/Post/WithImage/podcast';
 import { Hover } from '~/components/Visual';
 import useInterval from '~/hooks/useInterval';
 import { openReader } from '~/components/Reader';
@@ -40,7 +40,7 @@ export default function CardWithImage({ item }: Props) {
 
   return (
     <div className='mb-6 w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-      <div className='p-5 lg:grid lg:grid-flow-col lg:grid-cols-3 lg:gap-9 lg:p-10'>
+      <div className='p-4 lg:grid lg:grid-flow-col lg:grid-cols-3 lg:gap-9 lg:p-10'>
         <Hover
           perspective={1000}
           max={25}
@@ -63,7 +63,7 @@ export default function CardWithImage({ item }: Props) {
           <div className='flex items-center space-x-3'>
             <div className='col-start-1 col-end-3 flex space-x-2'>
               <Link href={`/post/cate/${item.categories[0]}`}>
-                <Label type='primary' icon='cate'>
+                <Label type='primary' icon='folder'>
                   {item.categories[0]}
                 </Label>
               </Link>
@@ -71,7 +71,7 @@ export default function CardWithImage({ item }: Props) {
             <div className='hidden w-full justify-end lg:flex lg:w-auto'>
               <Label
                 type='secondary'
-                icon='preview'
+                icon='magifyingGlassPlus'
                 onClick={() => {
                   openReader(item);
                 }}

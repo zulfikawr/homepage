@@ -157,8 +157,8 @@ const EmploymentForm = ({
           <h1 className='text-lg font-semibold'>
             {employmentToEdit ? 'Edit Employment' : 'Add New Employment'}
           </h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -264,11 +264,11 @@ const EmploymentForm = ({
                       className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                     />
                     <Button
-                      type='default'
+                      type='destructive'
+                      icon='trashSimple'
                       onClick={() => handleRemoveResponsibility(index)}
-                      className='px-3 py-1.5'
                     >
-                      Remove
+                      <span className='hidden md:block md:ml-2'>Remove</span>
                     </Button>
                   </div>
                 ))}
@@ -282,10 +282,10 @@ const EmploymentForm = ({
                   />
                   <Button
                     type='primary'
+                    icon='plus'
                     onClick={handleAddResponsibility}
-                    className='px-3 py-1.5'
                   >
-                    Add
+                    <span className='hidden md:block md:ml-2'>Add</span>
                   </Button>
                 </div>
               </div>
@@ -329,12 +329,16 @@ const EmploymentForm = ({
             </div>
             <div className='flex justify-end space-x-4'>
               {employmentToEdit && (
-                <Button type='destructive' onClick={handleDelete}>
-                  Delete
+                <Button type='destructive' icon='trash' onClick={handleDelete}>
+                  <span className='hidden md:block md:ml-2'>
+                    Delete Employment
+                  </span>
                 </Button>
               )}
-              <Button type='primary' onClick={handleSubmit}>
-                {employmentToEdit ? 'Save Changes' : 'Add Employment'}
+              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                <span className='hidden md:block md:ml-2'>
+                  {employmentToEdit ? 'Save Changes' : 'Add Employment'}
+                </span>
               </Button>
             </div>
           </form>

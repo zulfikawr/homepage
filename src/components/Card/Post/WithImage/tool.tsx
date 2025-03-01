@@ -1,6 +1,6 @@
 import { Label } from '~/components/UI';
 import Link from 'next/link';
-import CardFooter from '~/components/Card/Footer';
+import CardFooter from '~/components/Card/Post/Footer';
 import { Post } from '~/types/post';
 import { trimStr } from '~/utilities/string';
 import { openReader } from '~/components/Reader';

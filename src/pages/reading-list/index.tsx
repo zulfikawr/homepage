@@ -67,10 +67,10 @@ const ReadingList: NextPageWithLayout = () => {
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 pl-5 pr-2'>
-              <p className='text-xl text-gray-500 dark:text-gray-400'>
+              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
-                  <span className='mr-2 h-6 w-6'>
-                    <Icon name='left' />
+                  <span className='mr-2 size-[16px]'>
+                    <Icon name='houseLine' />
                   </span>
                   Home
                 </Link>
@@ -116,7 +116,7 @@ const ReadingList: NextPageWithLayout = () => {
       <section className='mb-10'>
         <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 pb-1 pt-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
           <span className='mr-1.5 flex h-[22px] w-[22px] text-yellow-500'>
-            <Icon name='checkDouble' />
+            <Icon name='checks' />
           </span>
           <span className='uppercase'>Read</span>
         </label>
@@ -136,7 +136,7 @@ const ReadingList: NextPageWithLayout = () => {
       <section className='mb-28'>
         <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 pb-1 pt-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
           <span className='mr-1.5 flex h-5 w-5 text-blue-500'>
-            <Icon name='bookmark' />
+            <Icon name='bookmarks' />
           </span>
           <span className='uppercase'>To Read</span>
         </label>

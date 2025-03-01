@@ -47,11 +47,11 @@ const Template = ({
       type='button'
       className={`${
         className ? `${className} ` : ''
-      }${defaultClassName} effect-pressing`}
+      }${defaultClassName} flex items-center effect-pressing`}
       {...args}
     >
       {icon && (
-        <span className={`h-6 w-6 flex-shrink-0 ${children ? 'mr-1' : ''}`}>
+        <span className='h-5 w-5 flex-shrink-0'>
           <Icon name={icon} />
         </span>
       )}

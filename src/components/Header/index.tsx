@@ -53,14 +53,14 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
     {
       label: router.pathname === '/' ? 'Pages' : 'Home',
       className: 'hidden lg:block',
-      icon: router.pathname === '/' ? 'pages' : 'home',
+      icon: router.pathname === '/' ? 'folder' : 'houseLine',
       link: {
         internal: router.pathname === '/' ? '/pages' : '/',
       },
     },
     {
       label: router.pathname === '/about' ? 'Home' : 'About',
-      icon: router.pathname === '/about' ? 'home' : 'me',
+      icon: router.pathname === '/about' ? 'home' : 'info',
       link: {
         internal: router.pathname === '/about' ? '/' : '/about',
       },
@@ -68,7 +68,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
     {
       label: 'Search',
       className: 'lg:hidden',
-      icon: 'search',
+      icon: 'magnifyingGlass',
       hoverable: false,
       component: (
         <button

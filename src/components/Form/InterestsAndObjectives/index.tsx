@@ -87,8 +87,8 @@ const InterestsAndObjectivesForm = ({
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Interests & Objectives</h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -111,7 +111,7 @@ const InterestsAndObjectivesForm = ({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
-                rows={3}
+                rows={4}
                 required
               />
             </div>
@@ -134,10 +134,10 @@ const InterestsAndObjectivesForm = ({
                     />
                     <Button
                       type='destructive'
+                      icon='trashSimple'
                       onClick={() => handleRemoveObjective(index)}
-                      className='px-3 py-1.5'
                     >
-                      Remove
+                      <span className='hidden md:block md:ml-2'>Remove</span>
                     </Button>
                   </div>
                 ))}
@@ -151,10 +151,10 @@ const InterestsAndObjectivesForm = ({
                   />
                   <Button
                     type='primary'
+                    icon='plus'
                     onClick={handleAddObjective}
-                    className='px-3 py-1.5'
                   >
-                    Add
+                    <span className='hidden md:block md:ml-2'>Add</span>
                   </Button>
                 </div>
               </div>
@@ -167,16 +167,20 @@ const InterestsAndObjectivesForm = ({
                 value={conclusion}
                 onChange={(e) => setConclusion(e.target.value)}
                 className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                rows={3}
                 required
               />
             </div>
             <div className='flex justify-end space-x-4'>
               <Button
                 type='primary'
+                icon='floppyDisk'
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
+                <span className='hidden md:block md:ml-2'>
+                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                </span>
               </Button>
             </div>
           </form>

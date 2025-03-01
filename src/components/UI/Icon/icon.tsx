@@ -1,10 +1,7 @@
 import icons from './icons';
 import { IconNames } from '../types';
 
-export interface IconProps {
-  /**
-   * Specify the name of the icon
-   */
+interface IconProps {
   name: IconNames;
   className?: string;
 }

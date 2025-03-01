@@ -392,8 +392,8 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
           <h1 className='text-lg font-semibold'>
             {playlistToEdit ? 'Edit Playlist' : 'Create New Playlist'}
           </h1>
-          <Button type='default' onClick={() => drawer.close()}>
-            Close
+          <Button icon='close' onClick={() => drawer.close()}>
+            <span className='hidden md:block md:ml-2'>Close</span>
           </Button>
         </div>
       </div>

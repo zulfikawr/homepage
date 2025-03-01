@@ -86,7 +86,7 @@ const Podcasts: NextPageWithLayout = () => {
             onClick={handleAddPodcastClick}
             disabled={isAdding}
           >
-            {isAdding ? 'Adding...' : 'Add Book'}
+            {isAdding ? 'Adding...' : 'Add Podcast'}
           </Button>
         </div>
       )}

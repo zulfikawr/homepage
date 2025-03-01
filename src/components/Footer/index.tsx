@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 
 const themes = ['system', 'dark', 'light'];
 const icons = [
-  <Icon key='system' name='gear' />,
+  <Icon key='system' name='desktop' />,
   <Icon key='dark' name='moon' />,
   <Icon key='light' name='sun' />,
 ];
@@ -49,7 +49,7 @@ export default function Footer() {
             className='effect-pressing flex w-full cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white p-3 text-xl tracking-wider opacity-0 shadow-sm hover:shadow-inner focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'
           >
             <span className='h-7 w-7'>
-              <Icon name='arrowUp' />
+              <Icon name='caretUp' />
             </span>
           </button>
         </OffsetTransition>

@@ -1,6 +1,6 @@
 import { Label } from '~/components/UI';
 import Link from 'next/link';
-import CardFooter from '~/components/Card/Footer';
+import CardFooter from '~/components/Card/Post/Footer';
 import { openReader } from '~/components/Reader';
 import { trimStr } from '~/utilities/string';
 import { Post } from '~/types/post';
@@ -12,25 +12,24 @@ interface Props {
 export default function CardWithOutImage({ item }: Props) {
   return (
     <div className='mb-6 w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-      <div className='p-5 lg:p-10'>
+      <div className='p-5'>
         <div className='col-span-2 col-end-4'>
           <div className='flex items-center justify-between'>
             {item.categories && (
               <div className='flex space-x-2'>
                 <Link href={`/post/cate/${item.categories[0]}`}>
-                  <Label type='primary' icon='cate'>
+                  <Label type='primary' icon='folder'>
                     {item.categories[0]}
                   </Label>
                 </Link>
               </div>
             )}
             <div
-              className='hidden lg:flex'
               onClick={() => {
                 openReader(item);
               }}
             >
-              <Label type='secondary' icon='preview'>
+              <Label type='secondary' icon='magifyingGlassPlus'>
                 Preview
               </Label>
             </div>

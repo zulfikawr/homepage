@@ -29,6 +29,8 @@ const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
             className='z-10 h-full w-full rounded-tl-md rounded-tr-md'
             src={imageURL}
             alt={title}
+            width={200}
+            height={200}
           />
         </div>
         <div className='px-3.5 pb-5 pt-4.5'>
@@ -46,9 +48,11 @@ const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
       <div className='absolute left-5 top-8 hidden h-full w-40 overflow-hidden rounded-md opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 lg:block'>
         <div className='translate-y-1 transition-all duration-300 ease-in-out group-hover:translate-y-0'>
           <Image
-            className='mb-2 h-10 w-10 rounded-md border'
+            className='mb-2 h-10 w-10 rounded-md border border-gray-600'
             src={imageURL}
             alt={title}
+            width={40}
+            height={40}
           />
           <h2 className='mb-1 text-sm font-bold tracking-wider text-black dark:text-white'>
             {title}

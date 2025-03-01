@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Employment } from '~/types/employment';
 import { drawer } from '~/components/Drawer';
 import EmploymentViewer from '~/components/Viewer/Employment';
+import { trimStr } from '~/utilities/string';
 
 export interface EmploymentCardProps extends Employment {
   isInDrawer?: boolean;
@@ -25,7 +26,7 @@ const EmploymentCard = (props: EmploymentCardProps) => {
 
   return (
     <div
-      className={`group relative z-40 min-w-[16rem] lg:min-w-[27.5rem] flex cursor-${isInDrawer ? 'default' : 'pointer'} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
+      className={`group relative z-40 min-w-[18rem] lg:min-w-[27.5rem] flex cursor-pointer ${isInDrawer ? 'w-full' : ''} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
       onClick={() => {
         if (!isInDrawer) handleCardClick();
       }}
@@ -57,9 +58,9 @@ const EmploymentCard = (props: EmploymentCardProps) => {
       </div>
 
       {organizationIndustry && (
-        <div className='flex items-center justify-end lg:justify-between border-t border-gray-200 px-4.5 py-1.5 dark:border-gray-700 w-full'>
-          <p className='text-sm text-gray-500 dark:text-gray-400 hidden lg:block'>
-            {organizationIndustry}
+        <div className='flex items-center justify-between border-t border-gray-200 px-4.5 py-1.5 dark:border-gray-700 w-full'>
+          <p className='text-sm text-gray-500 dark:text-gray-400'>
+            {trimStr(organizationIndustry, 25)}
           </p>
           <p className='text-sm text-gray-500 dark:text-gray-400'>{jobType}</p>
         </div>

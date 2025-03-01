@@ -1,6 +1,6 @@
 import React from 'react';
-import CardWithImage from '~/components/Card/WithImage';
-import CardWithOutImage from '~/components/Card/WithOutImage';
+import CardWithImage from '~/components/Card/Post/WithImage';
+import CardWithOutImage from '~/components/Card/Post/WithOutImage';
 import { Post } from '~/types/post';
 
 export interface PostCardProps {

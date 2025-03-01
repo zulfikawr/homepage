@@ -256,18 +256,16 @@ const Schedule: NextPageWithLayout = () => {
         <div className='mb-4 flex items-center'>
           <div className='flex-1 items-center'>
             <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
-              <span className='mr-3 inline-block cursor-pointer hover:animate-spin'>
-                📑
-              </span>
+              <span className='mr-3 inline-block'>📑</span>
               Schedule
             </h1>
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 px-5'>
-              <p className='text-xl text-gray-500 dark:text-gray-400'>
+              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
-                  <span className='mr-2 h-6 w-6'>
-                    <Icon name='left' />
+                  <span className='mr-2 size-[16px]'>
+                    <Icon name='houseLine' />
                   </span>
                   Home
                 </Link>
@@ -465,12 +463,12 @@ const Schedule: NextPageWithLayout = () => {
 
           <div className='mt-6 flex justify-end'>
             <Button
-              type='default'
+              type='primary'
               onClick={handleScheduleClick}
               disabled={
                 !selectedDate || isSubmitting || availableTimeSlots.length === 0
               }
-              className='rounded-md bg-blue-500 px-4 py-2 text-white shadow-sm hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:bg-gray-400 disabled:hover:bg-gray-400 disabled:dark:bg-gray-600 disabled:dark:hover:bg-gray-600'
+              className='disabled:bg-gray-400 disabled:hover:bg-gray-400 disabled:dark:bg-gray-600 disabled:dark:hover:bg-gray-600'
             >
               {isSubmitting ? 'Scheduling...' : 'Schedule'}
             </Button>
