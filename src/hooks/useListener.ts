@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-type MouseEventHandler = (event: MouseEvent) => any;
+type MouseEventHandler = (event: MouseEvent) => void;
 
 /**
  * Hook to add a listener for mouseLeave event
@@ -28,27 +28,19 @@ export const useMouseLeaveListener = (
  */
 const useListener = (
   type: string,
-  listener: (event: Event) => any,
+  listener: (event: Event) => void,
   element?: HTMLElement | Document,
-) => {
+): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
   const [listening, setListening] = useState(true);
 
   useEffect(() => {
     const domElement = element || document;
     domElement.addEventListener(type, listener);
 
-    const removeListener = () => {
+    return () => {
       domElement.removeEventListener(type, listener);
     };
-
-    if (!listening) {
-      removeListener();
-    }
-
-    return () => {
-      removeListener();
-    };
-  }, [listening, element]);
+  }, [listening, element, listener, type]);
 
   return [listening, setListening];
 };

@@ -1,18 +1,31 @@
+import { useEffect, useState } from 'react';
 import MetricCard from './Card';
-import format from 'comma-number';
-import useSWR from 'swr';
-import fetcher from '~/lib/fetcher';
+import Fetcher from '~/lib/fetcher';
+import { commaNumber } from '~/utilities/commaNumber';
 
 export default function GithubStarMetric() {
-  const { data } = useSWR('api/github', fetcher);
+  const [stars, setStars] = useState(null);
 
-  const stars = format(data?.stars);
+  useEffect(() => {
+    const fetchGithubStars = async () => {
+      try {
+        const data = await Fetcher('api/github');
+        setStars(data.stars);
+      } catch (error) {
+        console.error('Error fetching github stars:', error);
+        setStars(null);
+      }
+    };
+
+    fetchGithubStars();
+  }, []);
+
   const link = 'https://github.com/zulfikawr';
 
   return (
     <MetricCard
       icon='star'
-      value={stars}
+      value={commaNumber(stars)}
       description='Github Stars'
       link={link}
       colorHex='#9CA3AF'

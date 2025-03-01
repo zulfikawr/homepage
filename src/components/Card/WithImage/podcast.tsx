@@ -3,8 +3,7 @@ import Link from 'next/link';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { Hover } from '~/components/Visual';
-import blurDataURL from '~/constants/blurDataURL';
-import { Post } from '~/constants/propTypes';
+import { Post } from '~/types/post';
 import { trimStr } from '~/utilities/string';
 
 interface Props {
@@ -24,8 +23,6 @@ const CardWithImageAudio = ({ item }: Props) => {
           <Image
             src={item.img}
             fill
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             className='rounded-md object-cover'
             alt={`podcast-episode-cover-art-${item.title}`}
             loading='lazy'

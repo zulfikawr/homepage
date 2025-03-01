@@ -3,7 +3,6 @@ import { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { Hover } from '~/components/Visual';
-import blurDataURL from '~/constants/blurDataURL';
 import { Song } from '~/types/playlist';
 
 interface Props {
@@ -28,8 +27,6 @@ const SongCard = ({ song }: Props) => {
           <Image
             src={song.imageUrl || '/placeholder.svg'}
             fill
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             className='rounded-md object-cover'
             alt={`song-cover-${song.title}`}
             loading='lazy'

@@ -1,4 +1,4 @@
-const Fetcher = async (route: string) => {
+export const Fetcher = async (route: string) => {
   return fetch(route, {
     next: {
       revalidate: 24 * 3600,

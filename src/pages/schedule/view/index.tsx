@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Icon, Button } from '~/components/UI';
@@ -56,7 +54,7 @@ const AdminSchedule: NextPageWithLayout = () => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         const appointmentsArray: Appointment[] = Object.entries(data).map(
-          ([id, appointment]: [string, any]) => ({
+          ([id, appointment]: [string, Omit<Appointment, 'id'>]) => ({
             id,
             ...appointment,
           }),
@@ -116,7 +114,8 @@ const AdminSchedule: NextPageWithLayout = () => {
 
   function convertTo24Hour(time12h: string) {
     const [time, modifier] = time12h.split(' ');
-    let [hours, minutes] = time.split(':');
+    let [hours] = time.split(':');
+    const [minutes] = time.split(':');
 
     if (hours === '12') {
       hours = '00';

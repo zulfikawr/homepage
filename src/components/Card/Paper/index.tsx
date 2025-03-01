@@ -30,7 +30,9 @@ const PaperCard = (props: PaperCardProps) => {
   return (
     <div
       onClick={() => {
-        defaultLink && window?.open(defaultLink, '_blank');
+        if (defaultLink) {
+          window.open(defaultLink, '_blank');
+        }
       }}
       className='group flex w-full cursor-pointer flex-col gap-y-2 rounded-md border bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
     >

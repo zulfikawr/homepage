@@ -4,6 +4,7 @@ import { useAuth } from '~/contexts/authContext';
 import { auth, signOut } from '~/lib/firebase';
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import Tabs, { type TabItemProps } from '~/components/Tabs';
+import { drawer } from '../Drawer';
 
 interface MenuSection {
   label: string;
@@ -15,7 +16,7 @@ export function KbarContent() {
   const { user } = useAuth();
   const { setTheme, resolvedTheme } = useTheme();
   const [search, setSearch] = useState('');
-  const [_selectedIndex, setSelectedIndex] = useState(0);
+  const [, setSelectedIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const isHomePage = router.pathname === '/';
@@ -231,7 +232,7 @@ export function KbarContent() {
         ],
       },
     ],
-    [resolvedTheme, user],
+    [resolvedTheme, user, isHomePage],
   );
 
   const filteredSections = useMemo(
@@ -258,7 +259,7 @@ export function KbarContent() {
         },
         ...section.items.map((item) => ({
           label: item.label,
-          onClick: () => handleAction(item.action),
+          onClick: () => handleAction(item.action) && drawer.close(),
           icon: item.icon,
         })),
       ]),

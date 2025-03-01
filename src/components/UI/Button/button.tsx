@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '../Icon/icon';
-import type { ButtonTypes, IconNames } from '../../Helpers/propTypes';
+import type { ButtonTypes, IconNames } from '../types';
 
 interface Props {
   /**
@@ -19,10 +19,13 @@ interface Props {
    * The content inside the button
    */
   children?: React.ReactNode;
-  [prop: string]: any;
+  [prop: string]: unknown; // Use unknown instead of any
 }
 
-type NativeAttrs = Omit<React.ButtonHTMLAttributes<any>, keyof Props>;
+type NativeAttrs = Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  keyof Props
+>;
 export type ButtonProps = Props & NativeAttrs;
 
 interface TemplateProps {
@@ -38,7 +41,7 @@ const Template = ({
   defaultClassName,
   icon,
   ...args
-}: TemplateProps) => {
+}: TemplateProps & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   return (
     <button
       type='button'

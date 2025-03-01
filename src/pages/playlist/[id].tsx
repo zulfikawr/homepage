@@ -7,7 +7,6 @@ import type { NextPageWithLayout } from '~/pages/_app';
 import { useRouter } from 'next/router';
 import SongCard from '~/components/Card/Song';
 import Image from 'next/image';
-import blurDataURL from '~/constants/blurDataURL';
 import { Playlist } from '~/types/playlist';
 
 const PlaylistDetailPage: NextPageWithLayout = () => {
@@ -82,8 +81,6 @@ const PlaylistDetailPage: NextPageWithLayout = () => {
           <Image
             src={playlist.imageUrl || '/placeholder.svg'}
             fill
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             className='rounded-md object-cover'
             alt={`playlist-cover-${playlist.name}`}
             loading='lazy'

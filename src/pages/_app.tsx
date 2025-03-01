@@ -3,7 +3,7 @@ import { AuthProvider } from '~/contexts/authContext';
 import { ThemeProvider } from 'next-themes';
 import type { AppProps } from 'next/app';
 import type { ReactElement, ReactNode } from 'react';
-import '~/assets/styles/vendors/tailwind.css';
+import '~/styles/tailwind.css';
 import '~/styles/global.css';
 import Drawer from '~/components/Drawer';
 import Modal from '~/components/Modal';

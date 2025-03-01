@@ -1,47 +1,56 @@
+import React, { useEffect, useState } from 'react';
 import { Button, Icon } from '~/components/UI';
 import Head from 'next/head';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import useSWR from 'swr';
 import { PodcastCard } from '~/components/Card/Podcast';
 import { pageLayout } from '~/components/Page';
-import fetcher from '~/lib/fetcher';
 import { NextPageWithLayout } from '~/pages/_app';
 import { Podcast } from '~/types/podcast';
 import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import PodcastForm from '~/components/Form/Podcast';
+import { getPodcasts } from '~/functions/podcasts';
 
 const Podcasts: NextPageWithLayout = () => {
   const { user } = useAuth();
-  const { data, error } = useSWR('/api/podcast', fetcher);
-  const [isAdding, _setIsAdding] = useState(false);
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isAdding] = useState(false);
+
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        const PodcastsData = await getPodcasts();
+        setPodcasts(PodcastsData);
+      } catch (err) {
+        setError('Failed to load reading list');
+        console.error('Error fetching books:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPodcasts();
+  }, []);
 
   const handleAddPodcastClick = () => {
     drawer.open(<PodcastForm />);
   };
 
   if (error) return <div>Failed to load podcast</div>;
-  if (!data) return <div>Loading...</div>;
-
-  const { podcasts }: { podcasts: Podcast[] } = data;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <Head>
         <title>Podcasts - Zulfikar</title>
-        <meta
-          name='description'
-          content="Podcasts that Zulfikar's Listening to"
-        />
       </Head>
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
           <div className='flex flex-1 items-center'>
             <div className='mr-4.5 mt-1 flex -rotate-6 cursor-pointer items-center'>
-              <span className='text-[35px] drop-shadow-lg hover:animate-spin'>
-                🎙️
-              </span>
+              <span className='text-[35px] drop-shadow-lg'>🎙️</span>
             </div>
             <div>
               <h2 className='flex items-center gap-x-1.5 text-[28px] font-medium tracking-wide text-black dark:text-white'>
@@ -84,6 +93,7 @@ const Podcasts: NextPageWithLayout = () => {
       <section className='mb-10 mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3'>
         {podcasts.map((podcast: Podcast) => (
           <PodcastCard
+            key={podcast.id}
             id={podcast.id}
             title={podcast.title}
             description={podcast.description}

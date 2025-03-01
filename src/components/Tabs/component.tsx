@@ -29,7 +29,7 @@ const Tabs = (props: TabsProps) => {
     currentIndex: number,
     direction: 'up' | 'down',
   ): number => {
-    let targetIndex =
+    const targetIndex =
       direction === 'down'
         ? currentIndex + 1 < items.length
           ? currentIndex + 1
@@ -129,32 +129,14 @@ const Tabs = (props: TabsProps) => {
       className,
     );
     setWithinWrapper(true);
-    index >= 0 && setHighlightedIndex(index);
-  };
-
-  const highlightFirstItem = (delay: number) => {
-    setTimeout(() => {
-      if (!listRef.current) return;
-      if (items[0] && direction === 'vertical' && defaultHighlighted) {
-        highlight(
-          listRef.current.children[0],
-          items[0].bgColor,
-          items[0].bgDark,
-          delay === 0 ? '' : 'animate-kbarHighlighter',
-          0,
-          'above',
-        );
-      } else {
-        reset();
-      }
-    }, delay);
+    if (index >= 0) setHighlightedIndex(index);
   };
 
   /* Vertical List Methods */
-  if (direction === 'vertical') {
-    useHotkeys(
-      'down',
-      (e) => {
+  useHotkeys(
+    'down',
+    (e) => {
+      if (direction === 'vertical') {
         e.preventDefault();
         const targetIndex = findNextValidTabIndex(highlightedIndex, 'down');
         highlight(
@@ -165,15 +147,18 @@ const Tabs = (props: TabsProps) => {
           targetIndex,
           'above',
         );
-      },
-      {
-        enableOnTags: ['INPUT'],
-      },
-      [highlightedIndex],
-    );
-    useHotkeys(
-      'up',
-      (e) => {
+      }
+    },
+    {
+      enableOnTags: ['INPUT'],
+    },
+    [highlightedIndex, direction],
+  );
+
+  useHotkeys(
+    'up',
+    (e) => {
+      if (direction === 'vertical') {
         e.preventDefault();
         const targetIndex = findNextValidTabIndex(highlightedIndex, 'up');
         highlight(
@@ -184,39 +169,34 @@ const Tabs = (props: TabsProps) => {
           targetIndex,
           'below',
         );
-      },
-      {
-        enableOnTags: ['INPUT'],
-      },
-      [highlightedIndex],
-    );
-    useHotkeys(
-      'enter',
-      (e) => {
+      }
+    },
+    {
+      enableOnTags: ['INPUT'],
+    },
+    [highlightedIndex, direction],
+  );
+
+  useHotkeys(
+    'enter',
+    (e) => {
+      if (direction === 'vertical') {
         e.preventDefault();
-        items[highlightedIndex].onClick !== null &&
-          items[highlightedIndex].onClick();
-      },
-      {
-        enableOnTags: ['INPUT'],
-      },
-      [highlightedIndex],
-    );
-  }
+        if (items[highlightedIndex]?.onClick) items[highlightedIndex].onClick();
+      }
+    },
+    {
+      enableOnTags: ['INPUT'],
+    },
+    [highlightedIndex, direction],
+  );
 
   useEffect(() => {
     if (direction !== 'vertical') return;
-    if (!listRef.current || !verticalListWrapper.current) return;
+    if (!listRef.current || !verticalListWrapper?.current) return;
     const listHeight = listRef.current.getBoundingClientRect().height;
     verticalListWrapper.current.style.height = `${listHeight >= 340 ? 360 : listHeight + 20}px`;
   }, [direction, defaultHighlighted, verticalListWrapper, listRef, items]);
-
-  useEffect(() => {
-    if (!listRef.current) return;
-    const listHeight = listRef.current.getBoundingClientRect().height;
-    const delay = listHeight <= 340 ? 0 : 100;
-    highlightFirstItem(highlightedIndex <= 0 ? delay : 0);
-  }, [defaultHighlighted, items, listRef]);
 
   useMouseLeaveListener(() => {
     reset(true);
@@ -232,7 +212,6 @@ const Tabs = (props: TabsProps) => {
     >
       <div ref={highlighterRef} className='tabs-highlighter z-0' />
       <ul
-        data-cy='tabs-list'
         className={`list-none items-center ${
           direction === 'vertical'
             ? 'grid grid-flow-row'

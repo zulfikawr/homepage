@@ -1,33 +1,29 @@
-import useSWR from 'swr';
-import fetcher from '~/lib/fetcher';
+import React from 'react';
 import Image from 'next/image';
-import { PersonalInfo } from '~/types/personalInfo';
 import { Button } from '~/components/UI';
 import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import PersonalInfoForm from '~/components/Form/PersonalInfo';
+import { getPersonalInfo } from '~/functions/personalInfo';
+import { useFetchData } from '~/lib/fetchData';
 
 const PersonalInfoSection = () => {
-  const { data, error } = useSWR('/api/personalInfo', fetcher);
   const { user } = useAuth();
 
-  if (error) return <div>Failed to load personal info</div>;
-  if (!data) {
-    return (
-      <div className='flex items-center justify-center h-screen text-gray-700 dark:text-gray-400'>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  const { personalInfo }: { personalInfo: PersonalInfo } = data;
+  const { data: personalInfo, loading, error } = useFetchData(getPersonalInfo);
 
   const handleEdit = () => {
-    drawer.open(<PersonalInfoForm initialData={personalInfo} />);
+    if (personalInfo) {
+      drawer.open(<PersonalInfoForm initialData={personalInfo} />);
+    }
   };
 
+  if (error) return <div>Failed to load personal info</div>;
+  if (loading) return <div>Loading...</div>;
+  if (!personalInfo) return <div>No personal information found</div>;
+
   return (
-    <div className='flex items-center justify-between gap-x-10 gap-y-8'>
+    <section className='flex items-center justify-between gap-x-10 gap-y-8'>
       <div className='-ml-1 flex flex-col gap-y-1'>
         <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
           <span className='mr-3 inline-block'>👋</span>
@@ -53,7 +49,7 @@ const PersonalInfoSection = () => {
           </Button>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

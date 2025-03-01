@@ -1,18 +1,31 @@
 import MetricCard from './Card';
-import format from 'comma-number';
-import useSWR from 'swr';
-import fetcher from '~/lib/fetcher';
+import { useEffect, useState } from 'react';
+import { getPosts } from '~/functions/posts';
+import { commaNumber } from '~/utilities/commaNumber';
 
 export default function PostsMetric() {
-  const { data } = useSWR('api/posts', fetcher);
+  const [postCount, setPostCount] = useState<number | null>(null);
 
-  const count = format(data?.count);
-  const link = 'https://blog.ouorz.com/wp-admin';
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const posts = await getPosts();
+        setPostCount(posts.length);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setPostCount(null);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const link = '/blog';
 
   return (
     <MetricCard
       icon='count'
-      value={count}
+      value={commaNumber(postCount)}
       description='Total Posts'
       link={link}
       colorHex='#F59E0B'

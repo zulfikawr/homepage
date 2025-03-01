@@ -2,7 +2,7 @@ import ScrollWrapper from './scroll';
 import React from 'react';
 
 interface Props {
-  componentRef: React.MutableRefObject<any>;
+  componentRef: React.MutableRefObject<HTMLElement | null>;
   children: React.ReactNode;
   disabled?: boolean;
 }

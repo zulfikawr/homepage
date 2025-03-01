@@ -6,9 +6,11 @@ import { modal } from '~/components/Modal';
 import { Button } from '~/components/UI';
 import { ProjectCard } from '~/components/Card/Project';
 import { toast } from '~/components/Toast';
+import { addProject, updateProject, deleteProject } from '~/functions/projects';
 
 const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
   const { user } = useAuth();
+
   const [name, setName] = useState(projectToEdit?.name || '');
   const [image, setImage] = useState(projectToEdit?.image || '');
   const [description, setDescription] = useState(
@@ -66,28 +68,24 @@ const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
       date,
     };
 
-    const method = projectToEdit ? 'PUT' : 'POST';
-    const url = '/api/projects';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(projectData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save project');
+      let result;
+      if (projectToEdit) {
+        result = await updateProject(projectData);
+      } else {
+        result = await addProject(projectData);
       }
 
-      drawer.close();
-      toast.show(
-        projectToEdit
-          ? 'Project updated successfully!'
-          : 'Project added successfully!',
-      );
+      if (result.success) {
+        drawer.close();
+        toast.show(
+          projectToEdit
+            ? 'Project updated successfully!'
+            : 'Project added successfully!',
+        );
+      } else {
+        throw new Error(result.error || 'Failed to save project');
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.show(`Error saving project: ${error.message}`);
@@ -101,16 +99,14 @@ const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
     if (!projectToEdit || !user) return;
 
     try {
-      const response = await fetch(`/api/projects?id=${projectToEdit.id}`, {
-        method: 'DELETE',
-      });
+      const result = await deleteProject(projectToEdit.id);
 
-      if (!response.ok) {
-        throw new Error('Failed to delete project');
+      if (result.success) {
+        drawer.close();
+        toast.show('Project deleted successfully!');
+      } else {
+        throw new Error(result.error || 'Failed to delete project');
       }
-
-      drawer.close();
-      toast.show('Project deleted successfully!');
     } catch (error) {
       if (error instanceof Error) {
         toast.show(`Error deleting project: ${error.message}`);

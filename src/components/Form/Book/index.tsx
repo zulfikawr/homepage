@@ -4,9 +4,12 @@ import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import { Button } from '~/components/UI';
 import { BookCard } from '~/components/Card/Book';
+import { addBook, updateBook, deleteBook } from '~/functions/books';
+import { toast } from '~/components/Toast';
 
 const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
   const { user } = useAuth();
+
   const [title, setTitle] = useState(bookToEdit?.title || '');
   const [author, setAuthor] = useState(bookToEdit?.author || '');
   const [imageURL, setImageURL] = useState(bookToEdit?.imageURL || '');
@@ -29,25 +32,30 @@ const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
         bookToEdit?.dateAdded || new Date().toISOString().split('T')[0],
     };
 
-    const method = bookToEdit ? 'PUT' : 'POST';
-    const url = '/api/reading-list';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save book');
+      let result;
+      if (bookToEdit) {
+        result = await updateBook(bookData);
+      } else {
+        result = await addBook(bookData);
       }
 
-      drawer.close();
+      if (result.success) {
+        drawer.close();
+        toast.show(
+          bookToEdit
+            ? 'Book updated successfully!'
+            : 'Book added successfully!',
+        );
+      } else {
+        throw new Error(result.error || 'Failed to save book');
+      }
     } catch (error) {
-      console.error('Error saving book:', error);
+      if (error instanceof Error) {
+        toast.show(`Error saving project: ${error.message}`);
+      } else {
+        toast.show('An unknown error occurred while saving the book.');
+      }
     }
   };
 
@@ -55,17 +63,20 @@ const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
     if (!bookToEdit || !user) return;
 
     try {
-      const response = await fetch(`/api/reading-list?id=${bookToEdit.id}`, {
-        method: 'DELETE',
-      });
+      const result = await deleteBook(bookToEdit.id);
 
-      if (!response.ok) {
-        throw new Error('Failed to delete book');
+      if (result.success) {
+        drawer.close();
+        toast.show('Book deleted successfully!');
+      } else {
+        throw new Error(result.error || 'Failed to delete book');
       }
-
-      drawer.close();
     } catch (error) {
-      console.error('Error deleting book:', error);
+      if (error instanceof Error) {
+        toast.show(`Error deleting project: ${error.message}`);
+      } else {
+        toast.show('An unknown error occurred while deleting the book.');
+      }
     }
   };
 

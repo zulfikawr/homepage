@@ -58,11 +58,10 @@ const Modal = () => {
   const [currentContent, setCurrentContent] = useState<React.ReactNode | null>(
     null,
   );
-  const [_bodyScrollable, setBodyScrollable] = useBodyScroll();
+  const [, setBodyScrollable] = useBodyScroll();
 
   useEffect(() => {
     if (isOpen) {
-      // Open the modal
       setIsVisible(true);
       setAnimation('out');
       setTimeout(() => {
@@ -70,19 +69,17 @@ const Modal = () => {
         setAnimation('in');
       }, 50);
     } else {
-      // Close the modal
       setAnimation('out');
       setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);
 
-        // If there's pending content, open the new modal after closing
         if (pendingContent) {
           modalInstance = { isOpen: true, content: pendingContent };
-          pendingContent = null; // Clear the pending content
+          pendingContent = null;
           subscribers.forEach((subscriber) => subscriber(modalInstance));
         }
-      }, 400); // Wait for the "out" animation to complete
+      }, 400);
     }
   }, [isOpen, content]);
 

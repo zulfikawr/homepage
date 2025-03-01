@@ -1,13 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { GITHUB_API } from '~/constants/apiURLs';
+
+const GITHUB_API = {
+  USER: 'https://api.github.com/users/zulfikawr',
+  REPOS: 'https://api.github.com/users/zulfikawr/repos',
+};
 
 type ResDataType = {
   followers: number;
   stars: number;
 };
 
+type Repository = {
+  fork: boolean;
+  stargazers_count: number;
+};
+
+type User = {
+  followers: number;
+};
+
 const headers = {
-  Authorization: process.env.GITHUB_TOKEN,
+  Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
 };
 
 const github = async (
@@ -21,18 +34,13 @@ const github = async (
     headers,
   });
 
-  const user = await userResponse.json();
-  const repositories = await userReposResponse.json();
+  const user: User = await userResponse.json();
+  const repositories: Repository[] = await userReposResponse.json();
 
-  const mine: any[] = Object.values(repositories).filter(
-    (repo: { fork: any }) => !repo.fork,
-  );
-  const stars = mine.reduce(
-    (accumulator: any, repository: { [x: string]: any }) => {
-      return accumulator + repository['stargazers_count'];
-    },
-    0,
-  );
+  const mine = repositories.filter((repo) => !repo.fork);
+  const stars = mine.reduce((accumulator, repository) => {
+    return accumulator + repository.stargazers_count;
+  }, 0);
 
   res.setHeader(
     'Cache-Control',

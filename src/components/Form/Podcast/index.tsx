@@ -4,9 +4,13 @@ import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import { Button } from '~/components/UI';
 import { PodcastCard } from '~/components/Card/Podcast';
+import { addPodcast, updatePodcast, deletePodcast } from '~/functions/podcasts';
+import { toast } from '~/components/Toast';
+import { modal } from '~/components/Modal';
 
 const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
   const { user } = useAuth();
+
   const [title, setTitle] = useState(podcastToEdit?.title || '');
   const [description, setDescription] = useState(
     podcastToEdit?.description || '',
@@ -14,39 +18,118 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
   const [imageURL, setImageURL] = useState(podcastToEdit?.imageURL || '');
   const [link, setLink] = useState(podcastToEdit?.link || '');
 
+  const generateId = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  };
+
+  const validateForm = () => {
+    if (!title.trim()) {
+      toast.show('Podcast title is required.');
+      return false;
+    }
+    if (!description.trim()) {
+      toast.show('Description is required.');
+      return false;
+    }
+    if (!imageURL.trim()) {
+      toast.show('Image URL is required.');
+      return false;
+    }
+    if (!link.trim()) {
+      toast.show('Link are required.');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user) return;
+    if (!user || !validateForm()) return;
 
     const podcastData = {
-      id: podcastToEdit?.id || Date.now().toString(),
+      id: podcastToEdit?.id || generateId(title),
       title,
       description,
-      imageURL: imageURL || '/images/podcasts/default.jpg',
+      imageURL: imageURL || '/images/placeholder.png',
       link,
     };
 
-    const method = podcastToEdit ? 'PUT' : 'POST';
-    const url = '/api/podcast-list';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(podcastData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save podcast');
+      let result;
+      if (podcastToEdit) {
+        result = await updatePodcast(podcastData);
+      } else {
+        result = await addPodcast(podcastData);
       }
 
-      drawer.close();
+      if (result.success) {
+        drawer.close();
+        toast.show(
+          podcastToEdit
+            ? 'Podcast updated successfully!'
+            : 'Podcast added successfully!',
+        );
+      } else {
+        throw new Error(result.error || 'Failed to save podcast');
+      }
     } catch (error) {
-      console.error('Error saving podcast:', error);
+      if (error instanceof Error) {
+        toast.show(`Error saving podcast: ${error.message}`);
+      } else {
+        toast.show('An unknown error occurred while saving the podcast.');
+      }
     }
+  };
+
+  const handleDelete = async () => {
+    if (!podcastToEdit || !user) return;
+
+    try {
+      const result = await deletePodcast(podcastToEdit.id);
+
+      if (result.success) {
+        drawer.close();
+        toast.show('Podcast deleted successfully!');
+      } else {
+        throw new Error(result.error || 'Failed to delete podcast');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.show(`Error deleting podcast: ${error.message}`);
+      } else {
+        toast.show('An unknown error occurred while deleting the podcast.');
+      }
+    }
+  };
+
+  const confirmDelete = () => {
+    modal.open(
+      <div className='p-6'>
+        <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
+        <p className='mb-6'>
+          Are you sure you want to delete this podcast? This action cannot be
+          undone.
+        </p>
+        <div className='flex justify-end space-x-4'>
+          <Button type='default' onClick={() => modal.close()}>
+            Cancel
+          </Button>
+          <Button
+            type='destructive'
+            onClick={() => {
+              handleDelete();
+              modal.close();
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>,
+    );
   };
 
   return (
@@ -119,7 +202,11 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
               />
             </div>
             <div className='flex justify-end space-x-4'>
-              <Button onClick={() => drawer.close()}>Cancel</Button>
+              {podcastToEdit && (
+                <Button type='destructive' onClick={confirmDelete}>
+                  Delete
+                </Button>
+              )}
               <Button type='primary' onClick={handleSubmit}>
                 {podcastToEdit ? 'Save Changes' : 'Add Podcast'}
               </Button>

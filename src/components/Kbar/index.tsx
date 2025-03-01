@@ -20,7 +20,6 @@ export function Kbar() {
         className='w-full rounded-md border border-gray-200 bg-white bg-opacity-90 cursor-pointer px-3 py-2 pl-14 text-sm text-gray-500 outline-none transition-shadow hover:bg-neutral-50 dark:border-gray-700 dark:bg-gray-800 dark:bg-opacity-50 dark:shadow-sm dark:hover:border-gray-700 dark:hover:bg-gray-800 dark:hover:bg-opacity-100'
         placeholder='Type your command or search...'
         onFocus={() => drawer.open(<KbarContent />)}
-        data-cy='cmdkbutton'
       />
     </div>
   );

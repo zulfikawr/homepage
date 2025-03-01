@@ -4,6 +4,7 @@ import { drawer } from '~/components/Drawer';
 import PodcastForm from '~/components/Form/Podcast';
 import { Button } from '~/components/UI';
 import { useAuth } from '~/contexts/authContext';
+import Image from 'next/image';
 
 const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
   const { title, description, imageURL, link, isInDrawer } = props;
@@ -24,7 +25,7 @@ const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
     >
       <div className='h-full overflow-hidden rounded-[5px] opacity-100 lg:group-hover:opacity-0'>
         <div className='h-auto w-full border-b bg-gray-200 dark:border-gray-700 dark:bg-gray-800 lg:h-[196px]'>
-          <img
+          <Image
             className='z-10 h-full w-full rounded-tl-md rounded-tr-md'
             src={imageURL}
             alt={title}
@@ -44,7 +45,7 @@ const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
       </div>
       <div className='absolute left-5 top-8 hidden h-full w-40 overflow-hidden rounded-md opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 lg:block'>
         <div className='translate-y-1 transition-all duration-300 ease-in-out group-hover:translate-y-0'>
-          <img
+          <Image
             className='mb-2 h-10 w-10 rounded-md border'
             src={imageURL}
             alt={title}

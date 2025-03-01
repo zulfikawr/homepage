@@ -13,7 +13,7 @@ const Feedback: NextPageWithLayout = () => {
     e.preventDefault();
     console.log('Feedback:', feedback);
     console.log('Contact:', contact);
-    // Reset the form after submission
+
     setFeedback('');
     setContact('');
   };
@@ -22,8 +22,6 @@ const Feedback: NextPageWithLayout = () => {
     <>
       <Head>
         <title>Feedback - Zulfikar</title>
-        <meta name='description' content='Feedback page' />
-        <meta name='robots' content='noindex' />
       </Head>
       <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
@@ -53,17 +51,17 @@ const Feedback: NextPageWithLayout = () => {
               <div>
                 <h2 className='text-xl font-semibold dark:text-white'>Why?</h2>
                 <p className='text-md text-gray-700 dark:text-gray-400'>
-                  I appreciate thoughtful feedback and believe that we don't get
-                  enough of them these days.
+                  I appreciate thoughtful feedback and believe that we
+                  don&apos;t get enough of them these days.
                 </p>
               </div>
 
               <div>
                 <h2 className='text-xl font-semibold dark:text-white'>How?</h2>
                 <p className='text-md text-gray-700 dark:text-gray-400'>
-                  Please use this form to share whatever you'd like with me.
-                  This form is anonymous (really). If you'd like me to respond,
-                  please feel free to leave your contact.
+                  Please use this form to share whatever you&apos;d like with
+                  me. This form is anonymous (really). If you&apos;d like me to
+                  respond, please feel free to leave your contact.
                 </p>
               </div>
             </div>
