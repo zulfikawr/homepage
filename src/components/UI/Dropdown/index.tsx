@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface DropdownProps {
   trigger: React.ReactNode;
@@ -10,24 +10,27 @@ const Dropdown = ({ trigger, children, onOpenChange }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setIsOpen(false);
-      if (onOpenChange) {
-        onOpenChange(false);
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+        if (onOpenChange) {
+          onOpenChange(false);
+        }
       }
-    }
-  };
+    },
+    [onOpenChange],
+  );
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   const toggleDropdown = () => {
     const newIsOpen = !isOpen;

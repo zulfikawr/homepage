@@ -1,36 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookCard } from '~/components/Card/Book';
 import { pageLayout } from '~/components/Page';
 import { NextPageWithLayout } from '~/pages/_app';
 import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import BookForm from '~/components/Form/Book';
-import useSWR from 'swr';
-import fetcher from '~/lib/fetcher';
 import { Book } from '~/types/book';
 import Head from 'next/head';
 import Link from 'next/link';
 import { Button, Icon } from '~/components/UI';
+import { getBooks } from '~/functions/books';
 
 const ReadingList: NextPageWithLayout = () => {
   const { user } = useAuth();
-  const { data, error } = useSWR('/api/reading-list', fetcher);
-  const [isAdding, _setIsAdding] = useState(false);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isAdding] = useState(false);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const booksData = await getBooks();
+        setBooks(booksData);
+      } catch (err) {
+        setError('Failed to load reading list');
+        console.error('Error fetching books:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   const handleAddBookClick = () => {
     drawer.open(<BookForm />);
   };
 
   if (error) return <div>Failed to load reading list</div>;
-  if (!data) return <div>Loading...</div>;
-
-  const { books }: { books: Book[] } = data;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <Head>
         <title>Reading List - Zulfikar</title>
-        <meta name='description' content="Zulfikar's Reading List" />
       </Head>
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>

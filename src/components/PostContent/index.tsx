@@ -1,7 +1,12 @@
 import 'highlight.js/styles/atom-one-dark.css';
-import Highlight from 'react-highlight';
+import Highlight, { HighlightProps } from 'react-highlight';
 
-const HighlightComponent = Highlight as any;
+interface CustomHighlightProps extends HighlightProps {
+  innerHTML?: boolean;
+}
+
+const HighlightComponent =
+  Highlight as React.ComponentType<CustomHighlightProps>;
 
 export default function PostContent({ content }: { content: string }) {
   return (

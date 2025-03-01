@@ -29,7 +29,7 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
     duration: '',
   });
 
-  const [editingSong, setEditingSong] = useState<Song | null>(null);
+  const [, setEditingSong] = useState<Song | null>(null);
 
   const generateId = (name: string) => {
     return name

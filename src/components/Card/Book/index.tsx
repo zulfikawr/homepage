@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import blurDataURL from '~/constants/blurDataURL';
 import { Book } from '~/types/book';
 import openLink from '~/utilities/externalLink';
 import { Button } from '~/components/UI';
@@ -35,8 +34,6 @@ const BookCard = (props: BookCardProps) => {
             src={imageURL}
             alt={title}
             className='rounded-sm border shadow-sm shadow-gray-200 dark:shadow-none'
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             loading='lazy'
           />
         </div>

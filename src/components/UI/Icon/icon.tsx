@@ -1,5 +1,5 @@
 import icons from './icons';
-import { IconNames } from '../../Helpers/propTypes';
+import { IconNames } from '../types';
 
 export interface IconProps {
   /**

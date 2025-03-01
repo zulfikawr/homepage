@@ -5,6 +5,11 @@ import { drawer } from '~/components/Drawer';
 import { Button } from '~/components/UI';
 import { EmploymentCard } from '~/components/Card/Employment';
 import { toast } from '~/components/Toast';
+import {
+  addEmployment,
+  updateEmployment,
+  deleteEmployment,
+} from '~/functions/employments';
 
 const EmploymentForm = ({
   employmentToEdit,
@@ -82,28 +87,24 @@ const EmploymentForm = ({
       organizationLocation,
     };
 
-    const method = employmentToEdit ? 'PUT' : 'POST';
-    const url = '/api/employments';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(employmentData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save employment');
+      let result;
+      if (employmentToEdit) {
+        result = await updateEmployment(employmentData);
+      } else {
+        result = await addEmployment(employmentData);
       }
 
-      drawer.close();
-      toast.show(
-        employmentToEdit
-          ? 'Employment updated successfully!'
-          : 'Employment added successfully!',
-      );
+      if (result.success) {
+        drawer.close();
+        toast.show(
+          employmentToEdit
+            ? 'Employment updated successfully!'
+            : 'Employment added successfully!',
+        );
+      } else {
+        throw new Error(result.error || 'Failed to save employment');
+      }
     } catch (error) {
       if (error instanceof Error) {
         toast.show(`Error saving employment: ${error.message}`);
@@ -117,19 +118,14 @@ const EmploymentForm = ({
     if (!employmentToEdit || !user) return;
 
     try {
-      const response = await fetch(
-        `/api/employments?id=${employmentToEdit.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
+      const result = await deleteEmployment(employmentToEdit.id);
 
-      if (!response.ok) {
-        throw new Error('Failed to delete employment');
+      if (result.success) {
+        drawer.close();
+        toast.show('Employment deleted successfully!');
+      } else {
+        throw new Error(result.error || 'Failed to delete employment');
       }
-
-      drawer.close();
-      toast.show('Employment deleted successfully!');
     } catch (error) {
       if (error instanceof Error) {
         toast.show(`Error deleting employment: ${error.message}`);

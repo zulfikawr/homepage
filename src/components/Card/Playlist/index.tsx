@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import blurDataURL from '~/constants/blurDataURL';
 import { Playlist } from '~/types/playlist';
 import openLink from '~/utilities/externalLink';
 import { Button } from '~/components/UI';
@@ -33,8 +32,6 @@ const PlaylistCard = (props: Playlist & { isInDrawer?: boolean }) => {
             src={imageUrl || '/images/playlists/default.jpg'}
             alt={name}
             className='rounded-md border shadow-sm shadow-gray-200 dark:shadow-none'
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             loading='lazy'
           />
         </div>

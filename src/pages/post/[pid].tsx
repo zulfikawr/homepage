@@ -1,44 +1,57 @@
-import useSWR from 'swr';
 import { Label } from '~/components/UI';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import TimeAgo from 'react-timeago';
 import { contentLayout } from '~/components/Content';
 import PostContent from '~/components/PostContent';
 import type { NextPageWithLayout } from '~/pages/_app';
 import { useTitle } from '~/contexts/titleContext';
-import fetcher from '~/lib/fetcher';
-import type { Post } from '~/constants/propTypes';
+import { Post } from '~/types/post';
+import { getPostById } from '~/functions/posts';
+import { getTimeAgo } from '~/utilities/timeAgo';
 
 const BlogPost: NextPageWithLayout = () => {
   const router = useRouter();
   const { setHeaderTitle } = useTitle();
   const { pid } = router.query;
 
-  const { data, error } = useSWR<{ posts: Post[] }>('/api/posts', fetcher);
-  const [isPostNotFound, setIsPostNotFound] = useState(false);
-
-  const post = data?.posts?.find((p) => p.slug === pid);
-  const title = post?.title || '';
+  const [post, setPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (data && !post) {
-      console.log('Post not found. Redirecting to 404...');
-      setIsPostNotFound(true);
-      router.replace('/404');
-    }
-  }, [data, post, router]);
+    const fetchPost = async () => {
+      if (!pid) return;
+
+      try {
+        const postData = await getPostById(pid as string);
+        if (postData) {
+          setPost(postData);
+        } else {
+          setError('Post not found');
+        }
+      } catch (err) {
+        setError('Failed to load post');
+        console.error('Error fetching post:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [pid]);
 
   useEffect(() => {
-    setHeaderTitle(title);
+    if (!post) return;
+
+    setHeaderTitle(post.title || '');
     return () => {
       setHeaderTitle('Zulfikar');
     };
-  }, [setHeaderTitle, title]);
+  }, [setHeaderTitle, post]);
 
-  if (!data && !error) {
+  if (loading) {
     return (
       <div className='mx-auto w-1/3 animate-pulse rounded-md border bg-white py-3 text-center shadow-sm'>
         <p className='text-sm font-light tracking-wide text-gray-500'>
@@ -53,13 +66,13 @@ const BlogPost: NextPageWithLayout = () => {
       <div className='mx-auto w-1/3 animate-pulse rounded-md border bg-white py-3 text-center shadow-sm'>
         <h1 className='text-lg font-medium'>Error</h1>
         <p className='text-sm font-light tracking-wide text-gray-500'>
-          Failed to load post. Please try again.
+          {error}
         </p>
       </div>
     );
   }
 
-  if (isPostNotFound) {
+  if (!post) {
     return (
       <div className='mx-auto w-1/3 animate-pulse rounded-md border bg-white py-3 text-center shadow-sm'>
         <h1 className='text-lg font-medium'>404 Not Found</h1>
@@ -73,16 +86,13 @@ const BlogPost: NextPageWithLayout = () => {
   return (
     <div>
       <Head>
-        <title>{title}</title>
+        <title>{post.title}</title>
       </Head>
-      <article
-        data-cy='postContent'
-        className='bg-white p-5 pt-24 dark:border-gray-800 dark:bg-gray-800 lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'
-      >
+      <article className='bg-white p-5 pt-24 dark:border-gray-800 dark:bg-gray-800 lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>
         <div className='mb-20'>
           <div className='mb-3 flex'>
-            {post?.categories?.map((category) => (
-              <Link href={`/cate/${category}`} key={category}>
+            {post.categories?.map((category) => (
+              <Link href={`/post/cate/${category}`} key={category}>
                 <Label type='primary' icon='cate'>
                   {category}
                 </Label>
@@ -90,15 +100,13 @@ const BlogPost: NextPageWithLayout = () => {
             ))}
           </div>
           <h1 className='text-1.5 font-medium leading-snug tracking-wider lg:text-postTitle'>
-            {post?.title}
+            {post.title}
           </h1>
           <p className='mt-2 flex space-x-2 whitespace-nowrap text-5 tracking-wide text-gray-500 lg:text-xl'>
-            <span>
-              Posted <TimeAgo date={post?.date} />
-            </span>
+            <span>Posted {getTimeAgo(post.date)}</span>
           </p>
         </div>
-        <PostContent content={post?.content || ''} />
+        <PostContent content={post.content || ''} />
       </article>
     </div>
   );

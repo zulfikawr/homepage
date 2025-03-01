@@ -10,9 +10,5 @@ export type { IconProps } from './Icon';
 export { default as Label } from './Label';
 export type { LabelProps } from './Label';
 
-// LabelGroup
-export { default as LabelGroup } from './LabelGroup';
-export type { LabelGroupProps } from './LabelGroup';
-
 // Dropdown
 export { default as Dropdown } from './Dropdown';

@@ -3,13 +3,20 @@ import { InterestsAndObjectives } from '~/types/interestsAndObjectives';
 import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import { Button } from '~/components/UI';
+import { updateInterestsAndObjectives } from '~/functions/interestsAndObjectives';
+import { toast } from '~/components/Toast';
 
 const InterestsAndObjectivesForm = ({
   initialData,
+  onUpdate,
 }: {
   initialData?: InterestsAndObjectives;
+  onUpdate?: (data: InterestsAndObjectives) => void;
 }) => {
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
   const [description, setDescription] = useState(
     initialData?.description || '',
   );
@@ -31,6 +38,7 @@ const InterestsAndObjectivesForm = ({
     e.preventDefault();
 
     if (!user) return;
+    setIsSubmitting(true);
 
     const interestsAndObjectivesData = {
       description,
@@ -38,25 +46,26 @@ const InterestsAndObjectivesForm = ({
       conclusion,
     };
 
-    const method = 'PUT';
-    const url = '/api/interestsAndObjectives';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(interestsAndObjectivesData),
-      });
+      const result = await updateInterestsAndObjectives(
+        interestsAndObjectivesData,
+      );
 
-      if (!response.ok) {
-        throw new Error('Failed to save interests and objectives');
+      if (result.success && result.data) {
+        if (onUpdate) {
+          onUpdate(result.data);
+        }
+        drawer.close();
+        toast.show('Interests and objectives succesfully updated!');
+      } else {
+        setError(result.error || 'Failed to save');
       }
-
-      drawer.close();
     } catch (error) {
       console.error('Error saving interests and objectives:', error);
+      setError('An unexpected error occurred');
+      toast.show('An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -89,6 +98,11 @@ const InterestsAndObjectivesForm = ({
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
+            {error && (
+              <div className='p-3 text-sm bg-red-50 text-red-600 rounded-md'>
+                {error}
+              </div>
+            )}
             <div>
               <label className='block text-sm font-medium mb-2'>
                 Description
@@ -119,7 +133,7 @@ const InterestsAndObjectivesForm = ({
                       className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                     />
                     <Button
-                      type='default'
+                      type='destructive'
                       onClick={() => handleRemoveObjective(index)}
                       className='px-3 py-1.5'
                     >
@@ -157,8 +171,12 @@ const InterestsAndObjectivesForm = ({
               />
             </div>
             <div className='flex justify-end space-x-4'>
-              <Button type='primary' onClick={handleSubmit}>
-                Save Changes
+              <Button
+                type='primary'
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </form>

@@ -4,13 +4,16 @@ import { useEffect, useState, useRef, Dispatch, SetStateAction } from 'react';
  * Hook to turn on/off body scrolling
  */
 const useBodyScroll = (): [boolean, Dispatch<SetStateAction<boolean>>] => {
-  if (typeof document === 'undefined') return [false, (t: boolean) => t];
-
-  const bodyRef = useRef<HTMLElement>(document.body);
+  const bodyRef = useRef<HTMLElement | null>(null);
   const [scrollable, setScrollable] = useState(true);
 
   useEffect(() => {
-    if (!bodyRef || !bodyRef.current) return;
+    bodyRef.current = document.body;
+  }, []);
+
+  useEffect(() => {
+    if (!bodyRef.current) return;
+
     if (scrollable) {
       bodyRef.current.style.overflow = 'auto';
     } else {
@@ -28,12 +31,16 @@ const useBodyPointerEvents = (): [
   boolean,
   Dispatch<SetStateAction<boolean>>,
 ] => {
-  if (typeof document === 'undefined') return [false, (t: boolean) => t];
-
-  const bodyRef = useRef<HTMLElement>(document.body);
+  const bodyRef = useRef<HTMLElement | null>(null);
   const [pointerEvents, setPointerEvents] = useState(true);
 
   useEffect(() => {
+    bodyRef.current = document.body;
+  }, []);
+
+  useEffect(() => {
+    if (!bodyRef.current) return;
+
     if (pointerEvents) {
       bodyRef.current.style.pointerEvents = 'auto';
     } else {

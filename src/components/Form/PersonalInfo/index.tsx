@@ -3,9 +3,20 @@ import { PersonalInfo } from '~/types/personalInfo';
 import { useAuth } from '~/contexts/authContext';
 import { drawer } from '~/components/Drawer';
 import { Button } from '~/components/UI';
+import { updatePersonalInfo } from '~/functions/personalInfo';
+import { toast } from '~/components/Toast';
 
-const PersonalInfoForm = ({ initialData }: { initialData?: PersonalInfo }) => {
+const PersonalInfoForm = ({
+  initialData,
+  onUpdate,
+}: {
+  initialData?: PersonalInfo;
+  onUpdate?: (data: PersonalInfo) => void;
+}) => {
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
   const [name, setName] = useState(initialData?.name || '');
   const [title, setTitle] = useState(initialData?.title || '');
   const [avatarUrl, setAvatarUrl] = useState(initialData?.avatarUrl || '');
@@ -20,34 +31,35 @@ const PersonalInfoForm = ({ initialData }: { initialData?: PersonalInfo }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
 
     if (!user) return;
+    setIsSubmitting(true);
 
-    const PersonalInfoData = {
+    const personalInfoData: PersonalInfo = {
       name,
       title,
       avatarUrl,
     };
 
-    const method = 'PUT';
-    const url = '/api/personalInfo';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(PersonalInfoData),
-      });
+      const result = await updatePersonalInfo(personalInfoData);
 
-      if (!response.ok) {
-        throw new Error('Failed to save personal info');
+      if (result.success && result.data) {
+        if (onUpdate) {
+          onUpdate(result.data);
+        }
+        drawer.close();
+        toast.show('Personal info succesfully updated!');
+      } else {
+        setError(result.error || 'Failed to save');
       }
-
-      drawer.close();
     } catch (error) {
       console.error('Error saving personal info:', error);
+      setError('An unexpected error occurred');
+      toast.show('An unexpected error occurred');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -68,6 +80,11 @@ const PersonalInfoForm = ({ initialData }: { initialData?: PersonalInfo }) => {
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
+            {error && (
+              <div className='p-3 text-sm bg-red-50 text-red-600 rounded-md'>
+                {error}
+              </div>
+            )}
             <div>
               <label className='block text-sm font-medium mb-2'>Name</label>
               <input
@@ -81,14 +98,14 @@ const PersonalInfoForm = ({ initialData }: { initialData?: PersonalInfo }) => {
               <label className='block text-sm font-medium mb-2'>Title</label>
               <input
                 value={title}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                 required
               />
             </div>
             <div>
               <label className='block text-sm font-medium mb-2'>
-                avatarUrl
+                Avatar URL
               </label>
               <input
                 value={avatarUrl}
@@ -98,8 +115,12 @@ const PersonalInfoForm = ({ initialData }: { initialData?: PersonalInfo }) => {
               />
             </div>
             <div className='flex justify-end space-x-4'>
-              <Button type='primary' onClick={handleSubmit}>
-                Save Changes
+              <Button
+                type='primary'
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </form>

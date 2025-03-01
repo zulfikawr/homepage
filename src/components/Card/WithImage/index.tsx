@@ -1,15 +1,14 @@
-import { Label, LabelGroup } from '~/components/UI';
+import { Label } from '~/components/UI';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import CardFooter from '~/components/Card/Footer';
 import CardWithImageAudio from '~/components/Card/WithImage/podcast';
 import { Hover } from '~/components/Visual';
-import blurDataURL from '~/constants/blurDataURL';
-import type { Post } from '~/constants/propTypes';
 import useInterval from '~/hooks/useInterval';
 import { openReader } from '~/components/Reader';
 import { trimStr } from '~/utilities/string';
+import { Post } from '~/types/post';
 
 interface Props {
   item: Post;
@@ -18,7 +17,7 @@ interface Props {
 export default function CardWithImage({ item }: Props) {
   const [outputText, setOutputText] = useState<string>('');
   const [outputting, setOutputting] = useState<boolean>(false);
-  const [showThumbnail, _setShowThumbnail] = useState<boolean>(true);
+  const [showThumbnail] = useState<boolean>(true);
 
   useInterval(
     () => {
@@ -53,8 +52,6 @@ export default function CardWithImage({ item }: Props) {
           <Image
             fill
             src={item.img || '/images/placeholder.png'}
-            placeholder='blur'
-            blurDataURL={blurDataURL}
             className='rounded-md object-cover'
             alt={`featured-image-${item.title}`}
             loading='lazy'
@@ -65,24 +62,22 @@ export default function CardWithImage({ item }: Props) {
         >
           <div className='flex items-center space-x-3'>
             <div className='col-start-1 col-end-3 flex space-x-2'>
-              <Link href={`/blog/cate/${item.categories[0]}`}>
+              <Link href={`/post/cate/${item.categories[0]}`}>
                 <Label type='primary' icon='cate'>
                   {item.categories[0]}
                 </Label>
               </Link>
             </div>
             <div className='hidden w-full justify-end lg:flex lg:w-auto'>
-              <LabelGroup className='h-[33px]'>
-                <Label
-                  type='secondary'
-                  icon='preview'
-                  onClick={() => {
-                    openReader(item);
-                  }}
-                >
-                  Preview
-                </Label>
-              </LabelGroup>
+              <Label
+                type='secondary'
+                icon='preview'
+                onClick={() => {
+                  openReader(item);
+                }}
+              >
+                Preview
+              </Label>
             </div>
           </div>
           <div className='mt-6 lg:mt-4'>

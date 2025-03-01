@@ -2,9 +2,7 @@ import Footer from '../Footer';
 import React, { PropsWithChildren } from 'react';
 import Header from '~/components/Header';
 
-interface Props extends PropsWithChildren<{}> {}
-
-const Content = (props: Props) => {
+const Content = (props: PropsWithChildren) => {
   const { children } = props;
   return (
     <div>

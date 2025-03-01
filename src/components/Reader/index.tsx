@@ -1,7 +1,7 @@
 import PostContent from '../PostContent';
-import TimeAgo from 'react-timeago';
 import { drawer } from '~/components/Drawer';
-import { Post } from '~/constants/propTypes';
+import { Post } from '~/types/post';
+import { getTimeAgo } from '~/utilities/timeAgo';
 
 interface ReaderProps {
   postData: Post;
@@ -14,9 +14,7 @@ export default function Reader({ postData }: ReaderProps) {
         {postData.title}
       </h1>
       <p className='mb-16 mt-2 flex space-x-2 text-xl tracking-wide text-gray-500 dark:text-gray-400'>
-        <span>
-          Posted <TimeAgo date={postData.date} />
-        </span>
+        <span>Posted {getTimeAgo(postData.date)}</span>
       </p>
       <PostContent content={postData.content} />
     </div>

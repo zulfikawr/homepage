@@ -1,5 +1,4 @@
 import { Icon } from '~/components/UI';
-import { GlowingBackground } from '~/components/Visual';
 import openLink from '~/utilities/externalLink';
 
 interface MetricCardProps {
@@ -29,7 +28,6 @@ export default function MetricCard(props: MetricCardProps) {
           }}
         />
       </div>
-      <GlowingBackground rounded='xl' />
       <div className='glowing-div-content'>
         <figure
           className='mb-9 h-[2.5rem] w-[2.5rem]'

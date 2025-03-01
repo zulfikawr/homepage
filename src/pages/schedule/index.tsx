@@ -7,6 +7,16 @@ import type { NextPageWithLayout } from '~/pages/_app';
 import Link from 'next/link';
 import { database, ref, set, push, get } from '~/lib/firebase';
 
+interface Appointment {
+  date: string;
+  time: string;
+  name: string;
+  email: string;
+  purpose?: string;
+  timestamp: number;
+  status: 'pending' | 'confirmed' | 'cancelled';
+}
+
 const Schedule: NextPageWithLayout = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string>('09:00 AM');
@@ -40,7 +50,7 @@ const Schedule: NextPageWithLayout = () => {
           const slots: { [key: string]: string[] } = {};
 
           // Process the data to get booked slots by date
-          Object.values(data).forEach((appointment: any) => {
+          Object.values(data).forEach((appointment: Appointment) => {
             const dateStr = appointment.date;
             const timeStr = appointment.time;
 

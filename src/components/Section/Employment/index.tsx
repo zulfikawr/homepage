@@ -1,42 +1,31 @@
-import { useState } from 'react';
 import Link from 'next/link';
 import { EmploymentCard } from '~/components/Card/Employment';
 import { Icon, Button } from '~/components/UI';
 import { drawer } from '~/components/Drawer';
 import EmploymentForm from '~/components/Form/Employment';
-import useSWR from 'swr';
-import fetcher from '~/lib/fetcher';
-import { Employment } from '~/types/employment';
+import { useState } from 'react';
+import { getEmployments } from '~/functions/employments';
+import { useAuth } from '~/contexts/authContext';
+import { sortByDate } from '~/utilities/sortByDate';
+import { useFetchData } from '~/lib/fetchData';
 
 const EmploymentSection = () => {
-  const { data, error } = useSWR('/api/employments', fetcher);
+  const { user } = useAuth();
   const [maskClass, setMaskClass] = useState('');
+  const { data: employments, loading, error } = useFetchData(getEmployments);
 
   const handleAddEmployment = () => {
     drawer.open(<EmploymentForm />);
   };
 
+  const sortedEmployments = employments ? sortByDate(employments) : [];
+
   if (error) return <div>Failed to load employments</div>;
-  if (!data) return <div>Loading...</div>;
-
-  const { employments }: { employments: Employment[] } = data;
-
-  const parseDate = (dateString: string) => {
-    if (dateString.includes('Present')) {
-      return new Date();
-    }
-    const [month, year] = dateString.split(' ');
-    return new Date(`${month} 1, ${year}`);
-  };
-
-  const sortedEmployments = employments.sort((a, b) => {
-    const dateA = parseDate(a.dateString);
-    const dateB = parseDate(b.dateString);
-    return dateB.getTime() - dateA.getTime();
-  });
+  if (loading) return <div>Loading...</div>;
+  if (!employments) return <div>No employments found</div>;
 
   return (
-    <section className='mt-14'>
+    <section>
       <div className='flex items-center justify-between'>
         <label className='inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-gray-600 dark:bg-gray-700'>
           <span className='mr-1.5 flex h-5 w-5'>
@@ -80,19 +69,20 @@ const EmploymentSection = () => {
         </div>
       </div>
 
-      {/* Add Employment Button */}
-      <div className='mt-6 flex justify-center'>
-        <Button
-          type='primary'
-          onClick={handleAddEmployment}
-          className='flex items-center gap-2'
-        >
-          <span className='h-5 w-5'>
-            <Icon name='plus' />
-          </span>
-          Add Employment
-        </Button>
-      </div>
+      {user && (
+        <div className='mt-6 flex justify-center'>
+          <Button
+            type='primary'
+            onClick={handleAddEmployment}
+            className='flex items-center gap-2'
+          >
+            <span className='h-5 w-5'>
+              <Icon name='plus' />
+            </span>
+            Add Employment
+          </Button>
+        </div>
+      )}
     </section>
   );
 };

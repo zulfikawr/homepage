@@ -7,6 +7,7 @@ import { NextPageWithLayout } from '../_app';
 import { auth, signInWithEmailAndPassword } from '~/lib/firebase';
 import Link from 'next/link';
 import { useAuth } from '~/contexts/authContext';
+import { toast } from '~/components/Toast';
 
 const Login: NextPageWithLayout = () => {
   const [email, setEmail] = useState('');
@@ -20,12 +21,12 @@ const Login: NextPageWithLayout = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/');
+      toast.show('You are now logged in!');
     } catch (err) {
       setError(err.message);
     }
   };
 
-  // If the user is already logged in, show a message and options to go home or logout
   if (user) {
     return (
       <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
@@ -59,7 +60,6 @@ const Login: NextPageWithLayout = () => {
     );
   }
 
-  // If the authentication status is still loading, show a loading message
   if (loading) {
     return (
       <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
@@ -72,13 +72,10 @@ const Login: NextPageWithLayout = () => {
     );
   }
 
-  // If the user is not logged in, show the login form
   return (
     <>
       <Head>
         <title>Login - Zulfikar</title>
-        <meta name='description' content='Login to access your account' />
-        <meta name='robots' content='noindex' />
       </Head>
       <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>

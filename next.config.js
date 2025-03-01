@@ -1,28 +1,17 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
-  assetPrefix: './',
-  // assetPrefix: '/assets',
-  poweredByHeader: false,
-  productionBrowserSourceMaps: true,
-  output: 'export',
-  compress: true,
+  // assetPrefix: './',
+  // output: 'export',
   images: {
     // unoptimized: true,
-    minimumCacheTTL: 3600,
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
       },
     ],
-    path: '/assets/_next/image',
-  },
-  compiler: {
-    styledComponents: true,
-    removeConsole: {
-      exclude: ['log', 'error'],
-    },
+    path: '/_next/image',
   },
 };
 

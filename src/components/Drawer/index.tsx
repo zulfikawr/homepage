@@ -19,12 +19,10 @@ let pendingContent: React.ReactNode | null = null;
 export const drawer = {
   open: (content: React.ReactNode) => {
     if (drawerInstance.isOpen) {
-      // Queue the new content and close the current drawer
       pendingContent = content;
       drawerInstance = { ...drawerInstance, isOpen: false };
       subscribers.forEach((subscriber) => subscriber(drawerInstance));
     } else {
-      // Open the drawer immediately if it's not already open
       drawerInstance = { isOpen: true, content };
       subscribers.forEach((subscriber) => subscriber(drawerInstance));
     }
@@ -58,11 +56,10 @@ const Drawer = () => {
   const [currentContent, setCurrentContent] = useState<React.ReactNode | null>(
     null,
   );
-  const [_bodyScrollable, setBodyScrollable] = useBodyScroll();
+  const [, setBodyScrollable] = useBodyScroll();
 
   useEffect(() => {
     if (isOpen) {
-      // Open the drawer
       setIsVisible(true);
       setAnimation('out');
       setTimeout(() => {
@@ -70,19 +67,17 @@ const Drawer = () => {
         setAnimation('in');
       }, 50);
     } else {
-      // Close the drawer
       setAnimation('out');
       setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);
 
-        // If there's pending content, open the new drawer after closing
         if (pendingContent) {
           drawerInstance = { isOpen: true, content: pendingContent };
-          pendingContent = null; // Clear the pending content
+          pendingContent = null;
           subscribers.forEach((subscriber) => subscriber(drawerInstance));
         }
-      }, 500); // Wait for the "out" animation to complete
+      }, 500);
     }
   }, [isOpen, content]);
 

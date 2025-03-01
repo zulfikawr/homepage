@@ -1,7 +1,7 @@
 import { Label } from '~/components/UI';
 import Link from 'next/link';
 import CardFooter from '~/components/Card/Footer';
-import { Post } from '~/constants/propTypes';
+import { Post } from '~/types/post';
 import { trimStr } from '~/utilities/string';
 import { openReader } from '~/components/Reader';
 
@@ -22,7 +22,7 @@ export const CardTool = ({
         <div className='hidden justify-end space-x-2 lg:flex'>
           {preview && (
             <Label
-              type='gray-icon'
+              type='secondary'
               icon='preview'
               onClick={() => {
                 openReader(item);

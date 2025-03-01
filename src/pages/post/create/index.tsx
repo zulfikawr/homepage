@@ -2,14 +2,15 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { Icon, Button } from '~/components/UI';
 import { pageLayout } from '~/components/Page';
-import { NextPageWithLayout } from '../../_app';
+import { NextPageWithLayout } from '~/pages/_app';
 import Link from 'next/link';
-import { database, ref, set } from '~/lib/firebase';
 import { Editor } from '~/components/Editor';
-import { Post } from '~/constants/propTypes';
+import { Post } from '~/types/post';
 import Image from 'next/image';
-import blurDataURL from '~/constants/blurDataURL';
 import { Hover } from '~/components/Visual';
+import { addPost } from '~/functions/posts';
+import { drawer } from '~/components/Drawer';
+import { toast } from '~/components/Toast';
 
 const CreatePost: NextPageWithLayout = () => {
   const [title, setTitle] = useState('');
@@ -39,6 +40,7 @@ const CreatePost: NextPageWithLayout = () => {
       .filter((cat) => cat.length > 0);
 
     const newPost: Post = {
+      id: slug,
       type: postType,
       img: imageUrl,
       title: title,
@@ -50,16 +52,23 @@ const CreatePost: NextPageWithLayout = () => {
       audioUrl: postType === 'audio' ? audioUrl : undefined,
     };
 
-    const postToSave = Object.fromEntries(
-      Object.entries(newPost).filter(([_, value]) => value !== undefined),
-    );
+    try {
+      const result = await addPost(newPost);
 
-    const postRef = ref(database, `posts/${slug}`);
-    await set(postRef, postToSave);
+      if (result.success) {
+        drawer.close();
+        toast.show('Post added successfully!');
+      } else {
+        throw new Error(result.error || 'Failed to add post');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.show(`Error adding post: ${error.message}`);
+      } else {
+        toast.show('An unknown error occurred while adding a post.');
+      }
+    }
 
-    console.log('New Post Added:', postToSave);
-
-    // Reset form fields
     setTitle('');
     setExcerpt('');
     setImageUrl('');
@@ -116,8 +125,6 @@ const CreatePost: NextPageWithLayout = () => {
                     alt='Preview'
                     fill
                     className='rounded-md object-cover'
-                    placeholder='blur'
-                    blurDataURL={blurDataURL}
                   />
                 ) : (
                   <div className='flex items-center justify-center p-4 text-center'>
