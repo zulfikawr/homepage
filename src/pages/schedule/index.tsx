@@ -262,7 +262,7 @@ const Schedule: NextPageWithLayout = () => {
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 px-5'>
-              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+              <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
                   <span className='mr-2 size-[16px]'>
                     <Icon name='houseLine' />

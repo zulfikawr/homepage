@@ -6,7 +6,9 @@ import Image from '@tiptap/extension-image';
 import Strike from '@tiptap/extension-strike';
 import { Level } from '@tiptap/extension-heading';
 import { useEffect, useState, useRef } from 'react';
-import { Dropdown } from '~/components/UI';
+import { Button, Dropdown } from '~/components/UI';
+import Tooltip from '../UI/Tooltip';
+import Toggle from '../UI/Toggle';
 
 interface EditorProps {
   content?: string;
@@ -37,6 +39,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
       Strike,
     ],
     content: content,
+    autofocus: false,
     editorProps: {
       attributes: {
         class: 'prose dark:prose-invert focus:outline-none min-h-[400px] p-4',
@@ -47,6 +50,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
         onUpdate(editor.getHTML());
       }
     },
+    immediatelyRender: false,
   });
 
   useEffect(() => {
@@ -95,11 +99,6 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
               {currentHeading}
             </span>
           }
-          onOpenChange={(isOpen) => {
-            if (!isOpen) {
-              editor.commands.focus();
-            }
-          }}
         >
           <div className='p-2'>
             {HEADING_OPTIONS.map((heading) => (
@@ -136,34 +135,41 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
           </div>
         </Dropdown>
 
-        <button
-          type='button'
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-3 py-2 text-sm w-8 text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${editor.isActive('bold') ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-        >
-          <strong>B</strong>
-        </button>
-        <button
-          type='button'
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-3 py-2 text-sm w-8 text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${editor.isActive('italic') ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-        >
-          <em>I</em>
-        </button>
-        <button
-          type='button'
-          onClick={() => editor.chain().focus().toggleUnderline().run()}
-          className={`px-3 py-2 text-sm w-8 text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${editor.isActive('underline') ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-        >
-          <u>U</u>
-        </button>
-        <button
-          type='button'
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`px-3 py-2 text-sm w-8 text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 ${editor.isActive('strike') ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
-        >
-          <s>S</s>
-        </button>
+        <Tooltip text='Bold' position='top'>
+          <Toggle
+            isActive={editor.isActive('bold')}
+            onChange={() => editor.chain().focus().toggleBold().run()}
+          >
+            <b>B</b>
+          </Toggle>
+        </Tooltip>
+
+        <Tooltip text='Italic' position='top'>
+          <Toggle
+            isActive={editor.isActive('italic')}
+            onChange={() => editor.chain().focus().toggleItalic().run()}
+          >
+            <i>I</i>
+          </Toggle>
+        </Tooltip>
+
+        <Tooltip text='Underline' position='top'>
+          <Toggle
+            isActive={editor.isActive('underline')}
+            onChange={() => editor.chain().focus().toggleUnderline().run()}
+          >
+            <u>U</u>
+          </Toggle>
+        </Tooltip>
+
+        <Tooltip text='Srikethrough' position='top'>
+          <Toggle
+            isActive={editor.isActive('strikethrough')}
+            onChange={() => editor.chain().focus().toggleStrike().run()}
+          >
+            <s>S</s>
+          </Toggle>
+        </Tooltip>
 
         <Dropdown
           trigger={
@@ -180,7 +186,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
               placeholder='Enter URL'
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
-              className='w-fit px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && linkUrl) {
                   editor.chain().setLink({ href: linkUrl }).focus().run();
@@ -189,8 +195,8 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
                 }
               }}
             />
-            <button
-              type='button'
+            <Button
+              type='primary'
               onClick={() => {
                 if (linkUrl) {
                   editor.chain().setLink({ href: linkUrl }).focus().run();
@@ -198,10 +204,10 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
                   setIsLinkDropdownOpen(false);
                 }
               }}
-              className='w-full px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600'
+              className='w-full'
             >
               Apply
-            </button>
+            </Button>
           </div>
         </Dropdown>
 
@@ -220,7 +226,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
               placeholder='Enter Image URL'
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              className='w-fit px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && imageUrl) {
                   editor.chain().setImage({ src: imageUrl }).focus().run();
@@ -229,8 +235,8 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
                 }
               }}
             />
-            <button
-              type='button'
+            <Button
+              type='primary'
               onClick={() => {
                 if (imageUrl) {
                   editor.chain().setImage({ src: imageUrl }).focus().run();
@@ -238,10 +244,10 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
                   setIsImageDropdownOpen(false);
                 }
               }}
-              className='w-full px-4 py-2 text-sm bg-blue-500 text-white rounded-md hover:bg-blue-600'
+              className='w-full'
             >
               Apply
-            </button>
+            </Button>
           </div>
         </Dropdown>
       </div>

@@ -21,10 +21,10 @@ const ProjectsDrawer = ({ projects }: { projects: Project[] }) => {
           <h1 className='text-lg font-semibold'>Edit Projects</h1>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddProject}>
-              <span className='hidden md:block md:ml-2'>Add Project</span>
+              <span className='hidden lg:block lg:ml-2'>Add Project</span>
             </Button>
             <Button icon='close' onClick={() => drawer.close()}>
-              <span className='hidden md:block md:ml-2'>Close</span>
+              <span className='hidden lg:block lg:ml-2'>Close</span>
             </Button>
           </div>
         </div>

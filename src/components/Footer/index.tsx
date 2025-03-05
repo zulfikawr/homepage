@@ -25,7 +25,7 @@ export default function Footer() {
   return (
     <footer className='mt-20 border-b border-t border-gray-200 bg-white py-4 text-center dark:border-gray-700 dark:bg-gray-800'>
       {/* Theme Toggle Button */}
-      <div className='fixed bottom-8 left-8 text-gray-500 dark:text-gray-300 z-[9999]'>
+      <div className='fixed bottom-8 left-8 text-gray-500 dark:text-gray-300 z-[9998]'>
         <button
           aria-label='change theme'
           onClick={() => {

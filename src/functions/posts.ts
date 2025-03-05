@@ -58,26 +58,16 @@ export async function addPost(
   data: Omit<Post, 'date'>,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
   try {
-    const {
-      id,
-      type,
-      title,
-      slug,
-      excerpt,
-      categories,
-      content,
-      img,
-      audioUrl,
-    } = data;
+    const { id, title, slug, excerpt, categories, content, img, audioUrl } =
+      data;
 
     // Validate required fields
-    if (!type || !slug) {
+    if (!id || !slug) {
       return { success: false, error: 'Type and slug are required fields' };
     }
 
     const newPost: Post = {
       id,
-      type,
       slug,
       title: title || '',
       excerpt: excerpt || '',
@@ -107,29 +97,19 @@ export async function updatePost(
   data: Post,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
   try {
-    const {
-      id,
-      type,
-      title,
-      slug,
-      excerpt,
-      categories,
-      content,
-      img,
-      audioUrl,
-    } = data;
+    const { id, title, slug, excerpt, categories, content, img, audioUrl } =
+      data;
 
     // Validate required fields
-    if (!id || !type || !slug) {
+    if (!id || !slug) {
       return {
         success: false,
-        error: 'ID, type, and slug are required fields',
+        error: 'ID and slug are required fields',
       };
     }
 
     const updatedPost: Post = {
       id,
-      type,
       slug,
       title: title || '',
       excerpt: excerpt || '',

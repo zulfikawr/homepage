@@ -4,9 +4,15 @@ interface DropdownProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
   onOpenChange?: (isOpen: boolean) => void;
+  position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-const Dropdown = ({ trigger, children, onOpenChange }: DropdownProps) => {
+const Dropdown = ({
+  trigger,
+  children,
+  onOpenChange,
+  position = 'bottom',
+}: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,15 +46,58 @@ const Dropdown = ({ trigger, children, onOpenChange }: DropdownProps) => {
     }
   };
 
+  const getPositionClass = () => {
+    switch (position) {
+      case 'top':
+        return 'bottom-full left-1/2 transform -translate-x-1/2 mb-2';
+      case 'bottom':
+        return 'top-full left-1/2 transform -translate-x-1/2 mt-2';
+      case 'left':
+        return 'right-full top-1/2 transform -translate-y-1/2 mr-2';
+      case 'right':
+        return 'left-full top-1/2 transform -translate-y-1/2 ml-2';
+      default:
+        return 'top-full left-1/2 transform -translate-x-1/2 mt-2';
+    }
+  };
+
+  const getTransitionClass = () => {
+    switch (position) {
+      case 'top':
+        return isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2';
+      case 'bottom':
+        return isOpen
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-2';
+      case 'left':
+        return isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2';
+      case 'right':
+        return isOpen
+          ? 'opacity-100 translate-x-0'
+          : 'opacity-0 -translate-x-2';
+      default:
+        return isOpen
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-2';
+    }
+  };
+
   return (
     <div className='relative' ref={dropdownRef}>
-      <div onClick={toggleDropdown}>{trigger}</div>
+      {/* Trigger Element */}
+      <div onClick={toggleDropdown} aria-expanded={isOpen} role='button'>
+        {trigger}
+      </div>
 
-      {isOpen && (
-        <div className='absolute z-10 mt-2 bg-white border rounded-md shadow-lg dark:bg-gray-700 dark:border-gray-600'>
-          {children}
-        </div>
-      )}
+      {/* Dropdown Menu */}
+      <div
+        className={`absolute ${getPositionClass()} z-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg transition-all duration-200 ease-in-out ${getTransitionClass()} ${
+          !isOpen ? 'pointer-events-none' : ''
+        }`}
+        role='menu'
+      >
+        {children}
+      </div>
     </div>
   );
 };

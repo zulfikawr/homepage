@@ -1,4 +1,3 @@
-import 'highlight.js/styles/atom-one-dark.css';
 import Highlight, { HighlightProps } from 'react-highlight';
 
 interface CustomHighlightProps extends HighlightProps {

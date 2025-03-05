@@ -151,7 +151,7 @@ const ProjectForm = ({ projectToEdit }: { projectToEdit?: Project }) => {
             {projectToEdit ? 'Edit Project' : 'Add New Project'}
           </h1>
           <Button icon='close' onClick={() => drawer.close()}>
-            <span className='hidden md:block md:ml-2'>Close</span>
+            <span className='hidden lg:block lg:ml-2'>Close</span>
           </Button>
         </div>
       </div>

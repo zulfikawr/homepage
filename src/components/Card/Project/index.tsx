@@ -23,22 +23,24 @@ const ProjectCard = (props: ProjectCardProps) => {
     >
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
         <Image
-          fill
           src={image}
           className='object-cover'
           alt={`featured-image-${name}`}
           loading='lazy'
+          height={480}
+          width={640}
         />
       </div>
 
       <div className='flex flex-1 flex-col items-center gap-4 p-4 sm:flex-row'>
         <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'>
           <Image
-            fill
             src={image}
             className='rounded-md object-cover'
             alt={`featured-image-${name}`}
             loading='lazy'
+            height={480}
+            width={640}
           />
         </div>
 

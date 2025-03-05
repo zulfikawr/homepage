@@ -22,7 +22,7 @@ const Pages: NextPageWithLayout = () => {
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 px-5'>
-              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+              <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
                   <span className='mr-2 size-[16px]'>
                     <Icon name='houseLine' />
@@ -34,7 +34,7 @@ const Pages: NextPageWithLayout = () => {
           </div>
         </div>
       </div>
-      <div className='glowing-area mt-5 grid grid-cols-2 gap-4'>
+      <div className='mt-5 grid grid-cols-2 gap-4'>
         <PageCard
           title='Dashboard'
           des='Track my metrics'
@@ -48,6 +48,20 @@ const Pages: NextPageWithLayout = () => {
           icon='bookOpen'
           className='text-green-500'
           href='/reading-list'
+        />
+        <PageCard
+          title='Projects'
+          des='See all of my projects'
+          icon='package'
+          className='text-gray-400'
+          href='/project'
+        />
+        <PageCard
+          title='Posts'
+          des='See all of my posts'
+          icon='note'
+          className='text-gray-400'
+          href='/post'
         />
         <PageCard
           title='Podcasts'
@@ -64,11 +78,11 @@ const Pages: NextPageWithLayout = () => {
           href='/feedback'
         />
         <PageCard
-          title='Analytics'
-          des='Website statistics'
-          icon='chartBar'
+          title='UI'
+          des='See all UI components'
+          icon='layout'
           className='text-gray-400'
-          href='https://analytics.ouorz.com/share/E4O9QpCn/ouorz-next'
+          href='/ui'
         />
         <PageCard
           title='Music Playlist'

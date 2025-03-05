@@ -2,8 +2,13 @@ import { Icon } from '~/components/UI';
 import { Post } from '~/types/post';
 import { getTimeAgo } from '~/utilities/timeAgo';
 
-export default function CardFooter({ item }: { item: Post }) {
-  const doShare = async () => {
+interface CardFooterProps {
+  item: Post;
+}
+
+export default function CardFooter({ item }: CardFooterProps) {
+  const doShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       await navigator.share({
         title: item.title,
@@ -25,7 +30,7 @@ export default function CardFooter({ item }: { item: Post }) {
             className='effect-pressing flex items-center gap-x-2 hover:text-gray-600 dark:hover:text-gray-300'
             onClick={doShare}
           >
-            <div className='size-5'>
+            <div className='size-[15px]'>
               <Icon name='share' />
             </div>
             Share

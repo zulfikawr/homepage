@@ -9,7 +9,7 @@ interface ReaderProps {
 
 export default function Reader({ postData }: ReaderProps) {
   return (
-    <div className='h-full overflow-y-auto px-6 py-8 md:px-20 md:py-16'>
+    <div className='h-full overflow-y-auto px-6 py-8 lg:px-20 lg:py-16'>
       <h1 className='text-postTitle font-medium leading-snug tracking-wider'>
         {postData.title}
       </h1>

@@ -31,10 +31,10 @@ const ProjectViewer = ({ project }: { project: Project }) => {
               icon='arrowSquareOut'
               onClick={() => window.open(project.link, '_blank')}
             >
-              <span className='hidden md:block md:ml-2'>Visit</span>
+              <span className='hidden lg:block lg:ml-2'>Visit</span>
             </Button>
             <Button icon='close' onClick={() => drawer.close()}>
-              <span className='hidden md:block md:ml-2'>Close</span>
+              <span className='hidden lg:block lg:ml-2'>Close</span>
             </Button>
           </div>
         </div>
@@ -58,9 +58,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           {/* Overview Section */}
           <section>
             <h2 className='text-xl sm:text-2xl font-medium mb-4'>Overview</h2>
-            <div className='prose dark:prose-invert max-w-none'>
-              <p>{project.description}</p>
-            </div>
+            <p className='text-md'>{project.description}</p>
           </section>
 
           {/* Technologies Section */}

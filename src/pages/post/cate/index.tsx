@@ -94,7 +94,7 @@ const CategoriesPage: NextPageWithLayout = () => {
           </div>
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 px-5'>
-              <p className='text-xl text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+              <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
                   <span className='mr-2 size-[16px]'>
                     <Icon name='houseLine' />
@@ -111,7 +111,7 @@ const CategoriesPage: NextPageWithLayout = () => {
         {categories.length === 0 ? (
           <p className='text-gray-500'>No categories found.</p>
         ) : (
-          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4'>
             {categories.map((category) => (
               <Link
                 href={`/cate/${category}`}

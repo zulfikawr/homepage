@@ -1,7 +1,5 @@
 import { Icon } from '~/components/UI';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { GlowingBackground, Hover } from '~/components/Visual';
 import openLink from '~/utilities/externalLink';
 
 interface Props {
@@ -35,59 +33,46 @@ export default function PageCard({
   };
 
   return (
-    <Hover>
-      <div
-        className='glowing-div relative flex cursor-pointer items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-shadow hover:shadow-md dark:border-0 dark:bg-gray-700'
-        onClick={handleClick}
-      >
-        <GlowingBackground />
-        <div className='glowing-div-content relative z-10 flex items-center overflow-hidden'>
-          {icon && (
-            <div
-              className={`mr-4 hidden h-auto w-20 items-center justify-center border-r border-r-gray-200 pr-3 dark:border-r-gray-600 lg:flex ${
-                className ? className : ''
-              }`}
-            >
-              {icon.indexOf('://') > -1 ? (
-                <Image
-                  src={icon || '/placeholder.svg'}
-                  width={35}
-                  height={35}
-                  alt={`remote image ${icon}`}
-                  loading='lazy'
-                />
-              ) : (
-                <Icon name={icon} />
-              )}
-            </div>
-          )}
-          <div className='w-full'>
-            <h1
-              className={`flex items-center text-2xl font-medium tracking-wide ${
-                iconSmall || wrappable ? '' : '-mb-1'
-              }`}
-            >
-              {iconSmall && (
-                <span
-                  className={`mr-1.5 hidden h-7 w-7 lg:block ${className ? className : ''}`}
-                >
-                  <Icon name={iconSmall} />
-                </span>
-              )}
-              {title}
-            </h1>
-            <p
-              className={`text-4 tracking-wide text-gray-600 dark:text-gray-400 ${
-                wrappable
-                  ? 'overflow-wrap-breakword mt-1 leading-tight'
-                  : 'whitespace-nowrap'
-              } overflow-hidden text-ellipsis`}
-            >
-              {des}
-            </p>
+    <div
+      className='relative flex cursor-pointer items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none'
+      onClick={handleClick}
+    >
+      <div className='relative z-10 flex items-center overflow-hidden'>
+        {icon && (
+          <div
+            className={`mr-4 flex h-auto w-20 items-center justify-center border-r border-r-gray-200 pr-3 dark:border-r-gray-600 ${
+              className ? className : ''
+            }`}
+          >
+            <Icon name={icon} className='size-8' />
           </div>
+        )}
+        <div className='w-full'>
+          <h1
+            className={`flex items-center text-md lg:text-xl font-medium tracking-wide ${
+              iconSmall || wrappable ? '' : '-mb-1'
+            }`}
+          >
+            {iconSmall && (
+              <span
+                className={`mr-1.5 hidden h-7 w-7 lg:block ${className ? className : ''}`}
+              >
+                <Icon name={iconSmall} />
+              </span>
+            )}
+            {title}
+          </h1>
+          <p
+            className={`text-4 tracking-wide text-gray-600 dark:text-gray-400 ${
+              wrappable
+                ? 'overflow-wrap-breakword mt-1 leading-tight'
+                : 'whitespace-nowrap'
+            } overflow-hidden text-ellipsis`}
+          >
+            {des}
+          </p>
         </div>
       </div>
-    </Hover>
+    </div>
   );
 }
