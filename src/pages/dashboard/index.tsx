@@ -11,7 +11,7 @@ import { NextPageWithLayout } from '~/pages/_app';
 
 const Dashboard: NextPageWithLayout = () => {
   return (
-    <>
+    <div>
       <Head>
         <title>Dashboard - Zulfikar</title>
       </Head>
@@ -37,7 +37,7 @@ const Dashboard: NextPageWithLayout = () => {
           </div>
         </div>
         <div className='my-2 flex w-full items-center rounded-md border bg-white px-5 py-3 shadow-sm dark:border-gray-800 dark:bg-gray-800'>
-          <p className='items-center text-xl tracking-wide text-gray-500 dark:text-gray-400'>
+          <p className='items-center text-sm lg:text-md tracking-wide text-gray-500 dark:text-gray-400'>
             Personal dashboard tracking various metrics of this website.
           </p>
         </div>
@@ -48,7 +48,7 @@ const Dashboard: NextPageWithLayout = () => {
         <PostsMetric />
         <PageViewsMetric />
       </div>
-    </>
+    </div>
   );
 };
 

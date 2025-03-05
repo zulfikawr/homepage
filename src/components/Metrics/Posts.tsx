@@ -20,11 +20,11 @@ export default function PostsMetric() {
     fetchPosts();
   }, []);
 
-  const link = '/blog';
+  const link = '/post';
 
   return (
     <MetricCard
-      icon='count'
+      icon='hash'
       value={commaNumber(postCount)}
       description='Total Posts'
       link={link}

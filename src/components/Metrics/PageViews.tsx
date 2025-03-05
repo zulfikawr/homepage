@@ -24,7 +24,7 @@ export default function PageViewsMetric() {
 
   return (
     <MetricCard
-      icon='growth'
+      icon='chartBar'
       value={commaNumber(views)}
       description='Page Views'
       link={link}

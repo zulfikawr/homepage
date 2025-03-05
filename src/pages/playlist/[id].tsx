@@ -68,7 +68,7 @@ const PlaylistDetailPage: NextPageWithLayout = () => {
               className='flex items-center text-sm lg:text-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 mb-4'
             >
               <span className='mr-2 h-6 w-6'>
-                <Icon name='left' />
+                <Icon name='arrowLeft' />
               </span>
               Back to Playlists
             </Link>

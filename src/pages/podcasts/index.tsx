@@ -67,7 +67,7 @@ const Podcasts: NextPageWithLayout = () => {
               <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
                 <Link href='/' className='flex items-center'>
                   <span className='mr-2 h-6 w-6'>
-                    <Icon name='left' />
+                    <Icon name='arrowLeft' />
                   </span>
                   Home
                 </Link>
