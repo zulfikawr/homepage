@@ -7,6 +7,9 @@ export const buttonTypes = propTypes.tuple(
   'primary',
   'menu-primary',
   'destructive',
+  'outline',
+  'ghost',
+  'link',
 );
 export const labelTypes = propTypes.tuple('primary', 'secondary');
 export const iconsNames = propTypes.tuple(...Object.keys(icons));

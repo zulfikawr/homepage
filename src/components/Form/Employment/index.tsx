@@ -158,7 +158,7 @@ const EmploymentForm = ({
             {employmentToEdit ? 'Edit Employment' : 'Add New Employment'}
           </h1>
           <Button icon='close' onClick={() => drawer.close()}>
-            <span className='hidden md:block md:ml-2'>Close</span>
+            <span className='hidden lg:block lg:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -268,7 +268,7 @@ const EmploymentForm = ({
                       icon='trashSimple'
                       onClick={() => handleRemoveResponsibility(index)}
                     >
-                      <span className='hidden md:block md:ml-2'>Remove</span>
+                      <span className='hidden lg:block lg:ml-2'>Remove</span>
                     </Button>
                   </div>
                 ))}
@@ -285,7 +285,7 @@ const EmploymentForm = ({
                     icon='plus'
                     onClick={handleAddResponsibility}
                   >
-                    <span className='hidden md:block md:ml-2'>Add</span>
+                    <span className='hidden lg:block lg:ml-2'>Add</span>
                   </Button>
                 </div>
               </div>
@@ -330,13 +330,11 @@ const EmploymentForm = ({
             <div className='flex justify-end space-x-4'>
               {employmentToEdit && (
                 <Button type='destructive' icon='trash' onClick={handleDelete}>
-                  <span className='hidden md:block md:ml-2'>
-                    Delete Employment
-                  </span>
+                  <span className='ml-2'>Delete</span>
                 </Button>
               )}
               <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                <span className='hidden md:block md:ml-2'>
+                <span className='ml-2'>
                   {employmentToEdit ? 'Save Changes' : 'Add Employment'}
                 </span>
               </Button>

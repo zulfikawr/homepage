@@ -27,7 +27,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
             </h1>
           </div>
           <Button icon='close' onClick={() => drawer.close()}>
-            <span className='hidden md:block md:ml-2'>Close</span>
+            <span className='hidden lg:block lg:ml-2'>Close</span>
           </Button>
         </div>
       </div>

@@ -16,7 +16,7 @@ export const trimStr = (str: string, n: number) => {
         tmpStr += str[i];
       }
     }
-    return tmpStr.replace(' ', '') + ' ...';
+    return tmpStr.trim() + '...';
   }
 };
 

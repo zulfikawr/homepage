@@ -233,7 +233,6 @@ const Tabs = (props: TabsProps) => {
           const { className, bgColor, bgDark, color, onClick, sectionLabel } =
             item;
 
-          // Handle section labels differently
           if (sectionLabel) {
             return (
               <li

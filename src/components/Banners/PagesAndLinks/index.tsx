@@ -20,7 +20,7 @@ const PagesAndLinks = () => {
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
-              <div className='size-5'>
+              <div className='size-[18px]'>
                 <Icon name='addressBook' />
               </div>
               <span>Contacts</span>
@@ -32,7 +32,7 @@ const PagesAndLinks = () => {
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
-              <div className='size-5'>
+              <div className='size-[18px]'>
                 <Icon name='file' />
               </div>
               <span>Curriculum Vitae</span>
@@ -44,7 +44,7 @@ const PagesAndLinks = () => {
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
-              <div className='size-5'>
+              <div className='size-[18px]'>
                 <Icon name='calendarPlus' />
               </div>
               <span>Schedule a Meeting</span>
@@ -56,7 +56,7 @@ const PagesAndLinks = () => {
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
-              <div className='size-5'>
+              <div className='size-[18px]'>
                 <Icon name='chatCenteredText' />
               </div>
               <span>Feedback</span>

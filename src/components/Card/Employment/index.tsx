@@ -26,7 +26,7 @@ const EmploymentCard = (props: EmploymentCardProps) => {
 
   return (
     <div
-      className={`group relative z-40 min-w-[18rem] lg:min-w-[27.5rem] flex cursor-pointer ${isInDrawer ? 'w-full' : ''} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
+      className={`group relative z-40 min-w-[18rem] lg:min-w-[25rem] flex cursor-pointer ${isInDrawer ? 'w-full' : ''} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
       onClick={() => {
         if (!isInDrawer) handleCardClick();
       }}

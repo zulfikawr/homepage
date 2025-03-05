@@ -99,7 +99,7 @@ const BlogPost: NextPageWithLayout = () => {
               </Link>
             ))}
           </div>
-          <h1 className='text-1.5 font-medium leading-snug tracking-wider lg:text-postTitle'>
+          <h1 className='text-1 font-medium leading-snug tracking-wider lg:text-postTitle'>
             {post.title}
           </h1>
           <p className='mt-2 flex space-x-2 whitespace-nowrap text-5 tracking-wide text-gray-500 lg:text-xl'>

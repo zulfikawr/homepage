@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import CardFooter from '~/components/Card/Post/Footer';
-import CardWithImageAudio from '~/components/Card/Post/WithImage/podcast';
 import { Hover } from '~/components/Visual';
 import useInterval from '~/hooks/useInterval';
 import { openReader } from '~/components/Reader';
@@ -11,10 +10,10 @@ import { trimStr } from '~/utilities/string';
 import { Post } from '~/types/post';
 
 interface Props {
-  item: Post;
+  post: Post;
 }
 
-export default function CardWithImage({ item }: Props) {
+export default function CardWithImage({ post }: Props) {
   const [outputText, setOutputText] = useState<string>('');
   const [outputting, setOutputting] = useState<boolean>(false);
   const [showThumbnail] = useState<boolean>(true);
@@ -34,10 +33,6 @@ export default function CardWithImage({ item }: Props) {
     outputting ? 200 : null,
   );
 
-  if (item.type === 'audio') {
-    return <CardWithImageAudio item={item} />;
-  }
-
   return (
     <div className='mb-6 w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
       <div className='p-4 lg:grid lg:grid-flow-col lg:grid-cols-3 lg:gap-9 lg:p-10'>
@@ -51,9 +46,9 @@ export default function CardWithImage({ item }: Props) {
         >
           <Image
             fill
-            src={item.img || '/images/placeholder.png'}
+            src={post.img || '/images/placeholder.png'}
             className='rounded-md object-cover'
-            alt={`featured-image-${item.title}`}
+            alt={`featured-image-${post.title}`}
             loading='lazy'
           />
         </Hover>
@@ -62,9 +57,9 @@ export default function CardWithImage({ item }: Props) {
         >
           <div className='flex items-center space-x-3'>
             <div className='col-start-1 col-end-3 flex space-x-2'>
-              <Link href={`/post/cate/${item.categories[0]}`}>
+              <Link href={`/post/cate/${post.categories[0]}`}>
                 <Label type='primary' icon='folder'>
-                  {item.categories[0]}
+                  {post.categories[0]}
                 </Label>
               </Link>
             </div>
@@ -73,7 +68,7 @@ export default function CardWithImage({ item }: Props) {
                 type='secondary'
                 icon='magifyingGlassPlus'
                 onClick={() => {
-                  openReader(item);
+                  openReader(post);
                 }}
               >
                 Preview
@@ -81,21 +76,21 @@ export default function CardWithImage({ item }: Props) {
             </div>
           </div>
           <div className='mt-6 lg:mt-4'>
-            <Link href={`/post/${item.slug}`}>
-              <h1 className='mb-5 text-2 font-bold text-gray-700 dark:text-white text-xl lg:text-3xl hover:underline'>
-                {item.title}
+            <Link href={`/post/${post.slug}`}>
+              <h1 className='mb-4 text-xl lg:text-2xl font-bold text-gray-700 dark:text-white hover:underline'>
+                {post.title}
               </h1>
             </Link>
             <p
-              className='leading-2 overflow-hidden text-ellipsis text-4 tracking-wide text-gray-500 dark:text-gray-400 lg:text-3'
+              className='leading-2 overflow-hidden text-ellipsis text-md tracking-wide text-gray-500 dark:text-gray-400'
               dangerouslySetInnerHTML={{
-                __html: trimStr(item.excerpt, 150),
+                __html: trimStr(post.excerpt, 150),
               }}
             />
           </div>
         </div>
       </div>
-      <CardFooter item={item} />
+      <CardFooter item={post} />
     </div>
   );
 }

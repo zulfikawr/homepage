@@ -4,8 +4,8 @@ const icons = {
   addressBook: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -15,8 +15,8 @@ const icons = {
   calendarPlus: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -26,8 +26,8 @@ const icons = {
   file: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -37,8 +37,8 @@ const icons = {
   chatCenteredText: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -48,8 +48,8 @@ const icons = {
   houseLine: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -59,8 +59,8 @@ const icons = {
   info: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -70,8 +70,8 @@ const icons = {
   magnifyingGlass: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -81,8 +81,8 @@ const icons = {
   presentationChart: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -92,8 +92,8 @@ const icons = {
   bookOpen: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -103,8 +103,8 @@ const icons = {
   sun: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -114,8 +114,8 @@ const icons = {
   moon: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -125,8 +125,8 @@ const icons = {
   desktop: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -136,8 +136,8 @@ const icons = {
   notePencil: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -147,8 +147,8 @@ const icons = {
   signIn: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -158,8 +158,8 @@ const icons = {
   signOut: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -169,8 +169,8 @@ const icons = {
   chartBar: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -180,8 +180,8 @@ const icons = {
   lightBulb: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -191,8 +191,8 @@ const icons = {
   x: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -219,8 +219,8 @@ const icons = {
   linkedin: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -230,8 +230,8 @@ const icons = {
   envelope: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -241,8 +241,8 @@ const icons = {
   arrowSquareOut: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -252,8 +252,8 @@ const icons = {
   close: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -272,8 +272,8 @@ const icons = {
   cube: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -283,8 +283,8 @@ const icons = {
   microscope: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -294,8 +294,8 @@ const icons = {
   package: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -305,8 +305,8 @@ const icons = {
   briefcase: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -316,8 +316,8 @@ const icons = {
   note: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -327,8 +327,8 @@ const icons = {
   arrowLeft: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -338,8 +338,8 @@ const icons = {
   arrowRight: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -349,8 +349,8 @@ const icons = {
   caretLeft: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -360,8 +360,8 @@ const icons = {
   caretRight: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -371,8 +371,8 @@ const icons = {
   caretUp: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -382,8 +382,8 @@ const icons = {
   plus: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -393,8 +393,8 @@ const icons = {
   floppyDisk: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -404,8 +404,8 @@ const icons = {
   trashSimple: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -415,8 +415,8 @@ const icons = {
   trash: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -426,8 +426,8 @@ const icons = {
   folder: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -437,8 +437,8 @@ const icons = {
   magifyingGlassPlus: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -448,8 +448,8 @@ const icons = {
   share: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -459,8 +459,8 @@ const icons = {
   musicNotes: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -470,8 +470,8 @@ const icons = {
   microphone: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -481,8 +481,8 @@ const icons = {
   eye: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -492,8 +492,8 @@ const icons = {
   bookmarks: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
@@ -503,12 +503,45 @@ const icons = {
   checks: (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      height='auto'
-      width='auto'
+      height='100%'
+      width='100%'
       fill='currentColor'
       viewBox='0 0 256 256'
     >
       <path d='M149.61,85.71l-89.6,88a8,8,0,0,1-11.22,0L10.39,136a8,8,0,1,1,11.22-11.41L54.4,156.79l84-82.5a8,8,0,1,1,11.22,11.42Zm96.1-11.32a8,8,0,0,0-11.32-.1l-84,82.5-18.83-18.5a8,8,0,0,0-11.21,11.42l24.43,24a8,8,0,0,0,11.22,0l89.6-88A8,8,0,0,0,245.71,74.39Z'></path>
+    </svg>
+  ),
+  warning: (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      width='100%'
+      height='100%'
+      fill='currentColor'
+      viewBox='0 0 256 256'
+    >
+      <path d='M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z'></path>
+    </svg>
+  ),
+  checkCircle: (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      width='100%'
+      height='100%'
+      fill='currentColor'
+      viewBox='0 0 256 256'
+    >
+      <path d='M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z'></path>
+    </svg>
+  ),
+  layout: (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      width='auto'
+      height='auto'
+      fill='currentColor'
+      viewBox='0 0 256 256'
+    >
+      <path d='M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,16V96H40V56ZM40,112H96v88H40Zm176,88H112V112H216v88Z'></path>
     </svg>
   ),
 };

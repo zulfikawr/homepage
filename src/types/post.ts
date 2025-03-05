@@ -1,6 +1,5 @@
 export interface Post {
   id: string;
-  type: 'text' | 'image' | 'audio';
   img?: string;
   title?: string;
   slug: string;

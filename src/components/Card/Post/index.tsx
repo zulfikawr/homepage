@@ -1,20 +1,35 @@
 import React from 'react';
+import CardText from '~/components/Card/Post/Text';
 import CardWithImage from '~/components/Card/Post/WithImage';
-import CardWithOutImage from '~/components/Card/Post/WithOutImage';
+import CardWithAudio from '~/components/Card/Post/WithAudio';
+import CardWithImageAndAudio from '~/components/Card/Post/WithImageAndAudio';
 import { Post } from '~/types/post';
 
 export interface PostCardProps {
   posts?: Post[];
+  isInDrawer?: boolean;
+  isInForm?: boolean;
 }
 
-const PostCard = ({ posts }: PostCardProps) => {
+const PostCard = ({ posts, isInDrawer, isInForm }: PostCardProps) => {
   return (
-    <div>
-      {posts.map((item: Post) => {
-        if (item.img) {
-          return <CardWithImage item={item} key={item.slug} />;
+    <div className='w-full'>
+      {posts.map((post: Post) => {
+        if (post.img && post.audioUrl) {
+          return <CardWithImageAndAudio post={post} key={post.slug} />;
+        } else if (post.img) {
+          return <CardWithImage post={post} key={post.slug} />;
+        } else if (post.audioUrl) {
+          return <CardWithAudio post={post} key={post.slug} />;
         } else {
-          return <CardWithOutImage item={item} key={item.slug} />;
+          return (
+            <CardText
+              post={post}
+              key={post.slug}
+              isInDrawer={isInDrawer}
+              isInForm={isInForm}
+            />
+          );
         }
       })}
     </div>

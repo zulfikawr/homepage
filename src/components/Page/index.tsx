@@ -11,7 +11,7 @@ export default function Page(props: Props) {
   return (
     <div>
       <Header />
-      <main className='mx-auto h-auto min-h-main w-full px-5 pt-0 lg:w-content lg:px-10 lg:pt-20'>
+      <main className='mx-auto h-auto min-h-main w-full px-5 pt-0 sm:w-content sm:px-10 sm:pt-20'>
         <>{children}</>
       </main>
       <Footer />

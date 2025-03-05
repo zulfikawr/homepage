@@ -88,7 +88,7 @@ const InterestsAndObjectivesForm = ({
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Interests & Objectives</h1>
           <Button icon='close' onClick={() => drawer.close()}>
-            <span className='hidden md:block md:ml-2'>Close</span>
+            <span className='hidden lg:block lg:ml-2'>Close</span>
           </Button>
         </div>
       </div>
@@ -137,7 +137,7 @@ const InterestsAndObjectivesForm = ({
                       icon='trashSimple'
                       onClick={() => handleRemoveObjective(index)}
                     >
-                      <span className='hidden md:block md:ml-2'>Remove</span>
+                      <span className='hidden lg:block lg:ml-2'>Remove</span>
                     </Button>
                   </div>
                 ))}
@@ -154,7 +154,7 @@ const InterestsAndObjectivesForm = ({
                     icon='plus'
                     onClick={handleAddObjective}
                   >
-                    <span className='hidden md:block md:ml-2'>Add</span>
+                    <span className='hidden lg:block lg:ml-2'>Add</span>
                   </Button>
                 </div>
               </div>
@@ -178,7 +178,7 @@ const InterestsAndObjectivesForm = ({
                 onClick={handleSubmit}
                 disabled={isSubmitting}
               >
-                <span className='hidden md:block md:ml-2'>
+                <span className='hidden lg:block lg:ml-2'>
                   {isSubmitting ? 'Saving...' : 'Save Changes'}
                 </span>
               </Button>
