@@ -71,7 +71,7 @@ const CategoryPage: NextPageWithLayout = () => {
           <div className='flex-1 items-center'>
             <h1 className='text-1 w-fit font-medium tracking-wide text-black dark:text-white'>
               {categorySlug && (
-                <Label type='primary' icon='cate' className='mr-2'>
+                <Label type='primary' icon='folder' className='mr-2'>
                   {categorySlug}
                 </Label>
               )}
@@ -84,7 +84,7 @@ const CategoryPage: NextPageWithLayout = () => {
                 className='flex items-center text-xl text-gray-500 hover:text-primary dark:text-gray-400'
               >
                 <span className='mr-2 h-6 w-6'>
-                  <Icon name='left' />
+                  <Icon name='arrowLeft' />
                 </span>
                 Categories
               </Link>

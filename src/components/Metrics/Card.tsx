@@ -50,7 +50,7 @@ export default function MetricCard(props: MetricCardProps) {
         <p className='flex items-center overflow-hidden text-ellipsis whitespace-nowrap font-medium tracking-wide text-gray-700 text-opacity-70 dark:text-gray-400'>
           <span>{description}</span>
           <span className='ml-0 mt-0.5 h-4.5 w-4.5 opacity-0 transition-all group-hover:ml-2 group-hover:opacity-100'>
-            <Icon name='right' />
+            <Icon name='arrowRight' />
           </span>
         </p>
       </div>
