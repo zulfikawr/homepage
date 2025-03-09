@@ -91,6 +91,7 @@ export default function Footer() {
         <OffsetTransition componentRef={backToTopRef}>
           <Button
             type='default'
+            ref={backToTopRef}
             icon='caretUp'
             aria-label='scroll to top'
             onClick={handleScrollToTop}
