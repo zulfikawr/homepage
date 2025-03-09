@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
-  // assetPrefix: './',
-  // output: 'export',
+  output: 'export',
   images: {
-    // unoptimized: true,
+    unoptimized: true,
     formats: ['image/webp'],
     remotePatterns: [
       {
@@ -11,8 +10,8 @@ const NextConfigs = {
         hostname: '**',
       },
     ],
-    path: '/_next/image',
   },
+  trailingSlash: true,
 };
 
 module.exports = NextConfigs;

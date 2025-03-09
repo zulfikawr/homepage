@@ -15,19 +15,25 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/*"],
+      "@/*": ["./*"],
       "react": ["./node_modules/@types/react"]
     },
-    "typeRoots": ["node_modules/@types", "./typings"],
-    "incremental": true
+    "typeRoots": ["node_modules/@types"],
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
-    "twin.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "next-env.d.ts",
     "next.config.js",
-    "src/components/Highlight/index.js"
+    "src/components/Highlight/index.js",
+    "twin.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
