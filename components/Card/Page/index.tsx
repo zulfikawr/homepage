@@ -1,0 +1,80 @@
+'use client';
+
+import { Icon } from 'components/UI';
+import { useRouter } from 'next/navigation';
+import openLink from 'utilities/externalLink';
+
+interface Props {
+  title: string;
+  des: string;
+  icon?: string;
+  iconSmall?: string;
+  className?: string;
+  href?: string;
+  wrappable?: boolean;
+}
+
+export default function PageCard({
+  title,
+  des,
+  icon,
+  iconSmall,
+  className,
+  href,
+  wrappable,
+}: Props) {
+  const router = useRouter();
+  const handleClick = () => {
+    if (href) {
+      if (href.indexOf('http') === -1) {
+        router.push(href);
+      } else {
+        openLink(href);
+      }
+    }
+  };
+
+  return (
+    <div
+      className='relative flex cursor-pointer items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none'
+      onClick={handleClick}
+    >
+      <div className='relative z-10 flex items-center overflow-hidden'>
+        {icon && (
+          <div
+            className={`mr-4 flex h-auto w-20 items-center justify-center border-r border-r-gray-200 pr-3 dark:border-r-gray-600 ${
+              className ? className : ''
+            }`}
+          >
+            <Icon name={icon} className='size-8' />
+          </div>
+        )}
+        <div className='w-full'>
+          <h1
+            className={`flex items-center text-md lg:text-xl font-medium tracking-wide ${
+              iconSmall || wrappable ? '' : '-mb-1'
+            }`}
+          >
+            {iconSmall && (
+              <span
+                className={`mr-1.5 hidden h-7 w-7 lg:block ${className ? className : ''}`}
+              >
+                <Icon name={iconSmall} />
+              </span>
+            )}
+            {title}
+          </h1>
+          <p
+            className={`text-4 tracking-wide text-gray-600 dark:text-gray-400 ${
+              wrappable
+                ? 'overflow-wrap-breakword mt-1 leading-tight'
+                : 'whitespace-nowrap'
+            } overflow-hidden text-ellipsis`}
+          >
+            {des}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
