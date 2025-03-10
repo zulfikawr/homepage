@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-// eslint-disable-next-line no-redeclare
 type Link = {
   label: string;
   href: string;
@@ -24,7 +23,6 @@ interface PaperCardProps {
 const PaperCard = (props: PaperCardProps) => {
   const { title, authors, venue, links, accepted } = props;
 
-  // Find the default link
   const defaultLink = (links.find((link) => link.default) ?? venue)?.href;
 
   return (
