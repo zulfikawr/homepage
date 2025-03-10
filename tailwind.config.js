@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable prettier/prettier */
-
 var flattenColorPalette =
   require('tailwindcss/lib/util/flattenColorPalette').default;
 const colors = require('tailwindcss/colors');
@@ -26,10 +23,6 @@ module.exports = {
         20: '60px',
       },
       colors: {
-        menu: '#ebeced',
-        green: colors.emerald,
-        yellow: colors.amber,
-        purple: colors.violet,
         gray: colors.neutral,
       },
       boxShadow: {
