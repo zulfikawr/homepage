@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
 import Separator from '@/components/UI/Separator';
 import { database, ref, set } from '@/lib/firebase';
 import { toast } from '@/components/Toast';
@@ -50,18 +49,13 @@ export default function FeedbackContent() {
     }
   };
 
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('📑 Feedback');
-  });
-
   return (
     <div>
       <PageTitle
         emoji='📑'
         title='Feedback'
         subtitle="I appreciate thoughtful feedback and believe that we don't get enough of them these days."
+        route='/feedback'
       />
 
       <div className='w-full rounded-md p-6 border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>

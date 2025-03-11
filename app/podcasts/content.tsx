@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { Button } from '@/components/UI';
 import { PodcastCard } from '@/components/Card/Podcast';
 import { useAuth } from '@/contexts/authContext';
@@ -10,15 +9,8 @@ import { useFetchData } from '@/lib/fetchData';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import PodcastDrawer from '@/components/Drawer/Podcast';
-import { useTitle } from '@/contexts/titleContext';
 
 export default function PodcastContent() {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('🎙️ Podcast');
-  });
-
   const { user } = useAuth();
 
   const { data: podcasts, loading, error, refetch } = useFetchData(getPodcasts);
@@ -35,6 +27,7 @@ export default function PodcastContent() {
         emoji='🎙️'
         title='Podcasts'
         subtitle='I have listened to a wide variety of audio podcasts over the years. Here are some of the ones that I really enjoyed.'
+        route='/podcasts'
       />
 
       {user && (

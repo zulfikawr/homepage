@@ -1,4 +1,3 @@
-// app/post/[action]/content.tsx
 'use client';
 
 import React from 'react';

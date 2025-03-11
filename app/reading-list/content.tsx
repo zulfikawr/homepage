@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { BookCard } from '@/components/Card/Book';
 import { useAuth } from '@/contexts/authContext';
 import { drawer } from '@/components/Drawer';
-import BookForm from '@/components/Form/Book';
 import { Button } from '@/components/UI';
 import { getBooks } from '@/functions/books';
 import { useFetchData } from '@/lib/fetchData';
@@ -12,15 +11,15 @@ import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';
 import { CardLoading } from '@/components/Card/Loading';
+import BookDrawer from '@/components/Drawer/Book';
 
 export default function ReadingListContent() {
   const { user } = useAuth();
-  const [isAdding] = useState(false);
 
-  const { data: books, loading, error } = useFetchData(getBooks);
+  const { data: books, loading, error, refetch } = useFetchData(getBooks);
 
-  const handleAddBookClick = () => {
-    drawer.open(<BookForm />);
+  const handleOpenBookDrawer = () => {
+    drawer.open(<BookDrawer books={books} onUpdate={refetch} />);
   };
 
   if (error) return <div>Failed to load reading list</div>;
@@ -35,16 +34,13 @@ export default function ReadingListContent() {
           color: 'yellow',
           text: '2025',
         }}
+        route='/reading-list'
       />
 
       {user && (
         <div className='mb-6 flex justify-end'>
-          <Button
-            type='primary'
-            onClick={handleAddBookClick}
-            disabled={isAdding}
-          >
-            {isAdding ? 'Adding...' : 'Add Book'}
+          <Button type='primary' onClick={handleOpenBookDrawer}>
+            Manage
           </Button>
         </div>
       )}

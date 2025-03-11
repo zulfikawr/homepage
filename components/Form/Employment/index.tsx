@@ -1,17 +1,17 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Employment } from 'types/employment';
-import { drawer } from 'components/Drawer';
-import { Button, Checkbox, FormLabel, Input } from 'components/UI';
-import { EmploymentCard } from 'components/Card/Employment';
-import { toast } from 'components/Toast';
+import { Employment } from '@/types/employment';
+import { drawer } from '@/components/Drawer';
+import { Button, Checkbox, FormLabel, Input } from '@/components/UI';
+import { EmploymentCard } from '@/components/Card/Employment';
+import { toast } from '@/components/Toast';
 import {
   addEmployment,
   updateEmployment,
   deleteEmployment,
-} from 'functions/employments';
-import { generateId } from 'utilities/generateId';
+} from '@/functions/employments';
+import { generateId } from '@/utilities/generateId';
 import DatePicker from '@/components/DatePicker';
 import { modal } from '@/components/Modal';
 

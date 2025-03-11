@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../UI';
-import Separator from '../UI/Separator';
+import { Button } from '@/components/UI';
+import Separator from '@/components/UI/Separator';
 import { CalendarStore } from './index';
-import { modal } from '../Modal';
+import { modal } from '@/components/Modal';
 
 interface CalendarModalProps {
   isRange: boolean;

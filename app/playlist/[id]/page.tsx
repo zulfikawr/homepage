@@ -1,4 +1,3 @@
-// app/playlist/[id]/page.tsx
 import { getPlaylists } from '@/functions/playlists';
 import { Metadata } from 'next';
 import PlaylistContent from './content';

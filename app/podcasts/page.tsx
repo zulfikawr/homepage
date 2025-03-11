@@ -1,4 +1,3 @@
-// app/podcast/page.tsx
 import { Metadata } from 'next';
 import PodcastContent from './content';
 

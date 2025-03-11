@@ -13,8 +13,8 @@ import Strike from '@tiptap/extension-strike';
 import Heading, { Level } from '@tiptap/extension-heading';
 import Paragraph from '@tiptap/extension-paragraph';
 import { Button, Dropdown } from '@/components/UI';
-import Tooltip from '../UI/Tooltip';
-import Toggle from '../UI/Toggle';
+import Tooltip from '@/components/UI/Tooltip';
+import Toggle from '@/components/UI/Toggle';
 
 interface EditorProps {
   content?: string;

@@ -1,7 +1,7 @@
 import MetricCard from './Card';
-import { commaNumber } from 'utilities/commaNumber';
-import { useFetchData } from 'lib/fetchData';
-import { getPosts } from 'functions/posts';
+import { commaNumber } from '@/utilities/commaNumber';
+import { useFetchData } from '@/lib/fetchData';
+import { getPosts } from '@/functions/posts';
 
 export default function PostsMetric() {
   const fetchPosts = async () => {

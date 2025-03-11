@@ -1,14 +1,19 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Book } from 'types/book';
-import { drawer } from 'components/Drawer';
-import { Button, FormLabel, Input } from 'components/UI';
-import { BookCard } from 'components/Card/Book';
-import { addBook, updateBook, deleteBook } from 'functions/books';
-import { toast } from 'components/Toast';
+import { Book } from '@/types/book';
+import { drawer } from '@/components/Drawer';
+import { Button, FormLabel, Input } from '@/components/UI';
+import { BookCard } from '@/components/Card/Book';
+import { addBook, updateBook, deleteBook } from '@/functions/books';
+import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import DatePicker from '@/components/DatePicker';
+
+interface BookFormProps {
+  bookToEdit?: Book;
+  onUpdate: () => Promise<void>;
+}
 
 const initialBookState: Book = {
   id: '',
@@ -20,7 +25,7 @@ const initialBookState: Book = {
   dateAdded: '',
 };
 
-const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
+const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
   const [book, setBook] = useState<Book>(bookToEdit || initialBookState);
 
   const selectedDate = useMemo(() => {
@@ -64,6 +69,7 @@ const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
         : await addBook(bookData);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show(
           bookToEdit
@@ -89,6 +95,7 @@ const BookForm = ({ bookToEdit }: { bookToEdit?: Book }) => {
       const result = await deleteBook(bookToEdit.id);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show('Book deleted successfully!');
       } else {

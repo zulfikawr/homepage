@@ -1,7 +1,3 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useTitle } from '@/contexts/titleContext';
 import PageTitle from '@/components/PageTitle';
 import { Icon } from '@/components/UI';
 import Link from 'next/link';
@@ -46,18 +42,13 @@ const contacts: ContactItem[] = [
 ];
 
 export default function ContactsContent() {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('📞 Contact');
-  });
-
   return (
     <div>
       <PageTitle
         emoji='📞'
         title='Contacts'
         subtitle="Let's connect! Here are the best ways to reach me."
+        route='/contacts'
       />
 
       <div className='grid gap-4 sm:grid-cols-2'>

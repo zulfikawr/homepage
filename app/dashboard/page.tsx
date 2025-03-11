@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 import { Metadata } from 'next';
 import DashboardContent from './content';
 

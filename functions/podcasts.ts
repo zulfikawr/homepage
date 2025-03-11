@@ -1,5 +1,5 @@
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Podcast } from 'types/podcast';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Podcast } from '@/types/podcast';
 
 /**
  * Fetch all podcasts from Firebase

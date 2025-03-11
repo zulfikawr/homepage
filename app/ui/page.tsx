@@ -1,4 +1,3 @@
-// app/ui/page.tsx
 import { Metadata } from 'next';
 import UIComponentsContent from './content';
 

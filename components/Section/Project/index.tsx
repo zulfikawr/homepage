@@ -1,10 +1,10 @@
-import { ProjectCard } from 'components/Card/Project';
-import { drawer } from 'components/Drawer';
-import { getProjects } from 'functions/projects';
-import { useAuth } from 'contexts/authContext';
-import { sortByDate } from 'utilities/sortByDate';
-import { useFetchData } from 'lib/fetchData';
-import ProjectsDrawer from './drawer';
+import { ProjectCard } from '@/components/Card/Project';
+import { drawer } from '@/components/Drawer';
+import { getProjects } from '@/functions/projects';
+import { useAuth } from '@/contexts/authContext';
+import { sortByDate } from '@/utilities/sortByDate';
+import { useFetchData } from '@/lib/fetchData';
+import ProjectsDrawer from '@/components/Drawer/Project';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';

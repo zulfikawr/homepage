@@ -1,9 +1,9 @@
-import { Icon, Label } from 'components/UI';
+import { Icon, Label } from '@/components/UI';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Hover } from 'components/Visual';
+import { Hover } from '@/components/Visual';
 import AudioPlayer from 'react-h5-audio-player';
-import { openReader } from 'components/Reader';
+import { openReader } from '@/components/Reader';
 import { trimStr } from 'utilities/string';
 import { Post } from 'types/post';
 import { drawer } from '@/components/Drawer';

@@ -4,8 +4,8 @@ import type { TabsProps } from '.';
 import TabItemComponent from './item';
 import React, { useEffect, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useMouseLeaveListener } from 'hooks';
-import scrollToItemWithinDiv from 'utilities/scrollTo';
+import { useMouseLeaveListener } from '@/hooks';
+import scrollToItemWithinDiv from '@/utilities/scrollTo';
 
 const Tabs = (props: TabsProps) => {
   const { items, direction, defaultHighlighted, verticalListWrapper } = props;

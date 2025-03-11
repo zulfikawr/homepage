@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Podcast } from 'types/podcast';
-import { drawer } from 'components/Drawer';
-import { Button, FormLabel, Input, Textarea } from 'components/UI';
-import { PodcastCard } from 'components/Card/Podcast';
-import { addPodcast, updatePodcast, deletePodcast } from 'functions/podcasts';
-import { toast } from 'components/Toast';
-import { modal } from 'components/Modal';
-import { generateId } from 'utilities/generateId';
+import { Podcast } from '@/types/podcast';
+import { drawer } from '@/components/Drawer';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { PodcastCard } from '@/components/Card/Podcast';
+import { addPodcast, updatePodcast, deletePodcast } from '@/functions/podcasts';
+import { toast } from '@/components/Toast';
+import { modal } from '@/components/Modal';
+import { generateId } from '@/utilities/generateId';
 
 interface PodcastFormProps {
   podcastToEdit?: Podcast;
@@ -125,7 +125,7 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
         </p>
         <div className='flex justify-center mb-6'>
           <PodcastCard
-            id={podcastToEdit?.id || Date.now().toString()}
+            id='preview'
             title={podcast.title || 'Podcast Title'}
             description={podcast.description || 'Podcast Description'}
             imageURL={podcast.imageURL || '/images/placeholder.png'}

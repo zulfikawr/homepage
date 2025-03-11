@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PersonalInfo } from 'types/personalInfo';
-import { drawer } from 'components/Drawer';
-import { Button, FormLabel, Input } from 'components/UI';
-import { updatePersonalInfo } from 'functions/personalInfo';
-import { toast } from 'components/Toast';
+import { PersonalInfo } from '@/types/personalInfo';
+import { drawer } from '@/components/Drawer';
+import { Button, FormLabel, Input } from '@/components/UI';
+import { updatePersonalInfo } from '@/functions/personalInfo';
+import { toast } from '@/components/Toast';
 
 interface PersonalInfoFormProps {
   data?: PersonalInfo;

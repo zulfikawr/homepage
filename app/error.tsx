@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'components/UI';
+import { Button } from '@/components/UI';
 import React from 'react';
 
 export default function Error({

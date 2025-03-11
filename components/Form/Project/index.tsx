@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Project } from 'types/project';
-import { drawer } from 'components/Drawer';
-import { modal } from 'components/Modal';
-import { Button, Checkbox, FormLabel, Input, Textarea } from 'components/UI';
-import { ProjectCard } from 'components/Card/Project';
-import { toast } from 'components/Toast';
-import { addProject, updateProject, deleteProject } from 'functions/projects';
-import { generateId } from 'utilities/generateId';
+import { Project } from '@/types/project';
+import { drawer } from '@/components/Drawer';
+import { modal } from '@/components/Modal';
+import { Button, Checkbox, FormLabel, Input, Textarea } from '@/components/UI';
+import { ProjectCard } from '@/components/Card/Project';
+import { toast } from '@/components/Toast';
+import { addProject, updateProject, deleteProject } from '@/functions/projects';
+import { generateId } from '@/utilities/generateId';
 import DatePicker from '@/components/DatePicker';
 import Tabs from '@/components/Tabs';
 import Separator from '@/components/UI/Separator';

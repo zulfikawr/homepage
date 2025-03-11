@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { EmploymentCard } from 'components/Card/Employment';
-import { drawer } from 'components/Drawer';
-import { getEmployments } from 'functions/employments';
-import { useAuth } from 'contexts/authContext';
-import { sortByDate } from 'utilities/sortByDate';
-import { useFetchData } from 'lib/fetchData';
-import EmploymentsDrawer from './drawer';
+import { EmploymentCard } from '@/components/Card/Employment';
+import { drawer } from '@/components/Drawer';
+import { getEmployments } from '@/functions/employments';
+import { useAuth } from '@/contexts/authContext';
+import { sortByDate } from '@/utilities/sortByDate';
+import { useFetchData } from '@/lib/fetchData';
+import EmploymentsDrawer from '@/components/Drawer/Employment';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 

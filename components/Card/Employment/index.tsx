@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import { Employment } from 'types/employment';
-import { drawer } from 'components/Drawer';
-import EmploymentViewer from 'components/Viewer/Employment';
-import { trimStr } from 'utilities/string';
-import { Card } from 'components/Card';
+import { Employment } from '@/types/employment';
+import { drawer } from '@/components/Drawer';
+import EmploymentViewer from '@/components/Viewer/Employment';
+import { trimStr } from '@/utilities/string';
+import { Card } from '@/components/Card';
 
 export interface EmploymentCardProps extends Employment {
   isInDrawer?: boolean;

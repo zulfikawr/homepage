@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import { ProjectCard } from '@/components/Card/Project';
 import { getProjects } from '@/functions/projects';
 import { sortByDate } from '@/utilities/sortByDate';
@@ -8,17 +7,10 @@ import { useFetchData } from '@/lib/fetchData';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';
-import { useTitle } from '@/contexts/titleContext';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 
 export default function ProjectsContent() {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('🚀 Projects');
-  });
-
   const { data: projects, loading, error } = useFetchData(getProjects);
   const sortedProjects = projects ? sortByDate(projects) : [];
 
@@ -44,6 +36,7 @@ export default function ProjectsContent() {
           color: 'blue',
           text: 'Active',
         }}
+        route='/projects'
       />
 
       {/* Work in Progress Section */}
@@ -87,7 +80,7 @@ export default function ProjectsContent() {
               <ProjectCard key={project.id} {...project} />
             ))
           ) : (
-            <CardEmpty message='No projects in progress.' />
+            <CardEmpty message='No projects completed.' />
           )}
         </div>
       </section>
@@ -111,7 +104,7 @@ export default function ProjectsContent() {
               <ProjectCard key={project.id} {...project} />
             ))
           ) : (
-            <CardEmpty message='No projects in progress.' />
+            <CardEmpty message='No upcoming projects.' />
           )}
         </div>
       </section>

@@ -1,5 +1,5 @@
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Playlist, Song } from 'types/playlist';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Playlist, Song } from '@/types/playlist';
 
 /**
  * Fetch all playlists from Firebase

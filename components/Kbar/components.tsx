@@ -2,13 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { useAuth } from 'contexts/authContext';
+import { useAuth } from '@/contexts/authContext';
 import { useEffect, useState, useRef, useMemo } from 'react';
-import Tabs, { type TabItemProps } from 'components/Tabs';
-import { drawer } from 'components/Drawer';
+import Tabs, { type TabItemProps } from '@/components/Tabs';
+import { drawer } from '@/components/Drawer';
 import { useRouteInfo } from '@/hooks/useRouteInfo';
 import { useAuthActions } from '@/hooks/useAuthActions';
-import { Input } from '../UI';
+import { Input } from '@/components/UI';
 
 interface MenuSection {
   label: string;

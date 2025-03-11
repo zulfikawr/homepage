@@ -1,8 +1,8 @@
-import { Post } from 'types/post';
-import { drawer } from 'components/Drawer';
-import PostForm from 'components/Form/Post';
-import { Button } from 'components/UI';
-import PostCard from 'components/Card/Post';
+import { Post } from '@/types/post';
+import { drawer } from '@/components/Drawer';
+import PostForm from '@/components/Form/Post';
+import { Button } from '@/components/UI';
+import PostCard from '@/components/Card/Post';
 
 const PostsDrawer = ({ posts }: { posts: Post[] }) => {
   const handleAddPost = () => {

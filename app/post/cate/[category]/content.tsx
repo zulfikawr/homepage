@@ -1,4 +1,3 @@
-// app/post/cate/[category]/category-content.tsx
 'use client';
 
 import Link from 'next/link';

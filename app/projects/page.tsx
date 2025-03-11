@@ -3,8 +3,7 @@ import ProjectsContent from './content';
 
 export const metadata: Metadata = {
   title: 'Projects - Zulfikar',
-  description:
-    "I'm reading or re-reading (on average) one book every month in 2024",
+  description: 'A collection of my projects, categorized by their status',
 };
 
 export default async function ReadingListPage() {

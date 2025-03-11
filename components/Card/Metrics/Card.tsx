@@ -1,5 +1,5 @@
-import { Icon } from 'components/UI';
-import openLink from 'utilities/externalLink';
+import { Icon } from '@/components/UI';
+import openLink from '@/utilities/externalLink';
 
 interface MetricCardProps {
   description: string;
