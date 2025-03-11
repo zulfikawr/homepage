@@ -1,5 +1,5 @@
-import { database, ref, get, set } from 'lib/firebase';
-import { PersonalInfo } from 'types/personalInfo';
+import { database, ref, get, set } from '@/lib/firebase';
+import { PersonalInfo } from '@/types/personalInfo';
 
 // Default personal info data
 const defaultPersonalInfo: PersonalInfo = {

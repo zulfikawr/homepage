@@ -1,23 +1,15 @@
 'use client';
 
-import { useEffect } from 'react';
 import PlaylistCard from '@/components/Card/Playlist';
 import { useAuth } from '@/contexts/authContext';
 import { drawer } from '@/components/Drawer';
 import { Button } from '@/components/UI';
 import { getPlaylists } from '@/functions/playlists';
 import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
 import { useFetchData } from '@/lib/fetchData';
 import PlaylistDrawer from '@/components/Drawer/Playlist';
 
 export default function PlaylistContent() {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('🎵 Playlists');
-  });
-
   const { user } = useAuth();
 
   const {
@@ -39,6 +31,7 @@ export default function PlaylistContent() {
         emoji='🎵'
         title='Playlists'
         subtitle='I made a playlist once in a while, so here you go.'
+        route='/playlist'
       />
 
       {user && (

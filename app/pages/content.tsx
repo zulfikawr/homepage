@@ -1,22 +1,7 @@
-'use client';
-
-import React, { useEffect } from 'react';
 import PageCard from '@/components/Card/Page';
-import { incrementPageViews } from '@/functions/analytics';
 import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
 
 export default function PagesContent() {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle('📑 Pages');
-  });
-
-  useEffect(() => {
-    incrementPageViews('/pages');
-  });
-
   const pages = [
     {
       title: 'Contacts',
@@ -108,6 +93,7 @@ export default function PagesContent() {
         emoji='📑'
         title='Pages'
         subtitle='Explore all pages in this website'
+        route='/pages'
       />
 
       <div className='grid grid-cols-2 gap-4'>

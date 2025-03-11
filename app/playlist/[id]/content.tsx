@@ -1,4 +1,3 @@
-// app/playlist/[id]/content.tsx
 'use client';
 
 import { Icon } from '@/components/UI';

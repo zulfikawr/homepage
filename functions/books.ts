@@ -1,6 +1,6 @@
 import { generateId } from '@/utilities/generateId';
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Book } from 'types/book';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Book } from '@/types/book';
 
 /**
  * Fetch all books from Firebase

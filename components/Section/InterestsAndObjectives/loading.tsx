@@ -1,6 +1,5 @@
 import Separator from '@/components/UI/Separator';
 
-// components/InterestsAndObjectives/loading.tsx
 const Loading = () => {
   return (
     <div className='animate-pulse flex flex-col px-1'>

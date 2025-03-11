@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from 'components/UI';
-import { Employment } from 'types/employment';
-import { drawer } from 'components/Drawer';
+import { Button } from '@/components/UI';
+import { Employment } from '@/types/employment';
+import { drawer } from '@/components/Drawer';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
   return (

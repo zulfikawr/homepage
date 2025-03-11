@@ -1,7 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/UI';
+import { useTitle } from '@/contexts/titleContext';
+import { incrementPageViews } from '@/functions/analytics';
 
 interface PageTitleProps {
   emoji: string;
@@ -11,10 +14,23 @@ interface PageTitleProps {
     color: 'red' | 'yellow' | 'green' | 'blue';
     text: string;
   };
+  route: string;
 }
 
-const PageTitle = ({ emoji, title, subtitle, badge }: PageTitleProps) => {
+const PageTitle = ({
+  emoji,
+  title,
+  subtitle,
+  badge,
+  route,
+}: PageTitleProps) => {
+  const { setHeaderTitle } = useTitle();
   const router = useRouter();
+
+  useEffect(() => {
+    setHeaderTitle(`${emoji} ${title}`);
+    incrementPageViews(route);
+  }, [emoji, title, setHeaderTitle, route]);
 
   const badgeStyles = {
     red: 'rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-500 dark:border-red-700 dark:bg-red-800 dark:text-red-400',

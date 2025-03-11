@@ -1,4 +1,3 @@
-// app/login/page.tsx
 import { Metadata } from 'next';
 import LoginContent from './content';
 

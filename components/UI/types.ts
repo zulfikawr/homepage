@@ -1,4 +1,4 @@
-import { propTypes } from 'utilities/propTypes';
+import { propTypes } from '@/utilities/propTypes';
 import icons from './Icon/icons';
 
 export const buttonTypes = propTypes.tuple(

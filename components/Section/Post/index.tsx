@@ -1,11 +1,11 @@
-import { getPosts } from 'functions/posts';
-import PostCard from 'components/Card/Post';
-import CardEmpty from 'components/Card/Empty';
-import { useAuth } from 'contexts/authContext';
-import { useFetchData } from 'lib/fetchData';
-import { sortByDate } from 'utilities/sortByDate';
-import PostsDrawer from './drawer';
-import { drawer } from 'components/Drawer';
+import { getPosts } from '@/functions/posts';
+import PostCard from '@/components/Card/Post';
+import CardEmpty from '@/components/Card/Empty';
+import { useAuth } from '@/contexts/authContext';
+import { useFetchData } from '@/lib/fetchData';
+import { sortByDate } from '@/utilities/sortByDate';
+import PostsDrawer from '@/components/Drawer/Post';
+import { drawer } from '@/components/Drawer';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 

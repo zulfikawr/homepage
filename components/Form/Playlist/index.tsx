@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Playlist, Song } from 'types/playlist';
-import { useAuth } from 'contexts/authContext';
-import { drawer } from 'components/Drawer';
-import { modal } from 'components/Modal';
-import { Button, FormLabel, Input, Textarea } from 'components/UI';
-import PlaylistCard from 'components/Card/Playlist';
-import SongCard from 'components/Card/Song';
-import { toast } from 'components/Toast';
-import { generateId } from 'utilities/generateId';
+import { Playlist, Song } from '@/types/playlist';
+import { useAuth } from '@/contexts/authContext';
+import { drawer } from '@/components/Drawer';
+import { modal } from '@/components/Modal';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import PlaylistCard from '@/components/Card/Playlist';
+import SongCard from '@/components/Card/Song';
+import { toast } from '@/components/Toast';
+import { generateId } from '@/utilities/generateId';
 import {
   addPlaylist,
   deletePlaylist,

@@ -1,11 +1,7 @@
 import Image from 'next/image';
-import { Book } from 'types/book';
-import openLink from 'utilities/externalLink';
-import { Button } from 'components/UI';
-import { drawer } from 'components/Drawer';
-import BookForm from 'components/Form/Book';
-import { useAuth } from 'contexts/authContext';
-import { Card } from 'components/Card';
+import { Book } from '@/types/book';
+import openLink from '@/utilities/externalLink';
+import { Card } from '@/components/Card';
 
 export interface BookCardProps extends Book {
   isInDrawer?: boolean;
@@ -13,12 +9,6 @@ export interface BookCardProps extends Book {
 
 const BookCard = (props: BookCardProps) => {
   const { title, author, imageURL, link, dateAdded, isInDrawer } = props;
-  const { user } = useAuth();
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    drawer.open(<BookForm bookToEdit={props} />);
-  };
 
   return (
     <Card
@@ -51,13 +41,6 @@ const BookCard = (props: BookCardProps) => {
         <span>Date Added</span>
         <span>{dateAdded}</span>
       </div>
-      {user && !isInDrawer && (
-        <div className='absolute top-2 right-2 hidden group-hover:flex'>
-          <Button type='primary' onClick={handleEdit}>
-            Edit
-          </Button>
-        </div>
-      )}
     </Card>
   );
 };

@@ -1,8 +1,8 @@
-import { drawer } from 'components/Drawer';
-import InterestsAndObjectivesForm from 'components/Form/InterestsAndObjectives';
-import { useAuth } from 'contexts/authContext';
-import { getInterestsAndObjectives } from 'functions/interestsAndObjectives';
-import { useFetchData } from 'lib/fetchData';
+import { drawer } from '@/components/Drawer';
+import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
+import { useAuth } from '@/contexts/authContext';
+import { getInterestsAndObjectives } from '@/functions/interestsAndObjectives';
+import { useFetchData } from '@/lib/fetchData';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';
 import Separator from '@/components/UI/Separator';

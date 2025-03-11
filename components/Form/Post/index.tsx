@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Post } from 'types/post';
-import { addPost, updatePost, deletePost } from 'functions/posts';
-import { toast } from 'components/Toast';
-import { drawer } from 'components/Drawer';
-import { generateId } from 'utilities/generateId';
-import { Button, FormLabel, Input, Textarea } from 'components/UI';
-import { modal } from 'components/Modal';
-import PostCard from 'components/Card/Post';
-import { Editor } from 'components/Editor';
-import DatePicker from 'components/DatePicker';
+import { Post } from '@/types/post';
+import { addPost, updatePost, deletePost } from '@/functions/posts';
+import { toast } from '@/components/Toast';
+import { drawer } from '@/components/Drawer';
+import { generateId } from '@/utilities/generateId';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { modal } from '@/components/Modal';
+import PostCard from '@/components/Card/Post';
+import { Editor } from '@/components/Editor';
+import DatePicker from '@/components/DatePicker';
 
 interface PostFormProps {
   postToEdit?: Post;

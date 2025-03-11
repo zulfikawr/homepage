@@ -1,8 +1,8 @@
 'use client';
 
-import { Icon } from 'components/UI';
+import { Icon } from '@/components/UI';
 import { useRouter } from 'next/navigation';
-import openLink from 'utilities/externalLink';
+import openLink from '@/utilities/externalLink';
 
 interface Props {
   title: string;

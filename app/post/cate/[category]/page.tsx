@@ -1,4 +1,3 @@
-// app/post/cate/[category]/page.tsx
 import { getPosts } from '@/functions/posts';
 import { Post } from '@/types/post';
 import { Metadata } from 'next';

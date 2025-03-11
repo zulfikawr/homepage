@@ -1,6 +1,6 @@
-import PostContent from '../PostContent';
-import { drawer } from 'components/Drawer';
-import { Post } from 'types/post';
+import PostContent from '@/components/PostContent';
+import { drawer } from '@/components/Drawer';
+import { Post } from '@/types/post';
 
 interface ReaderProps {
   postData: Post;

@@ -1,22 +1,22 @@
-import { PodcastCard } from '@/components/Card/Podcast';
-import { Podcast } from '@/types/podcast';
+import { BookCard } from '@/components/Card/Book';
+import { Book } from '@/types/book';
 import { drawer } from '@/components/Drawer';
-import PodcastForm from '@/components/Form/Podcast';
+import BookForm from '@/components/Form/Book';
 import { Button } from '@/components/UI';
 
-const PodcastDrawer = ({
-  podcasts,
+const BookDrawer = ({
+  books,
   onUpdate,
 }: {
-  podcasts: Podcast[];
+  books: Book[];
   onUpdate: () => Promise<void>;
 }) => {
-  const handleEditPodcast = (podcast: Podcast) => {
-    drawer.open(<PodcastForm podcastToEdit={podcast} onUpdate={onUpdate} />);
+  const handleEditBook = (book: Book) => {
+    drawer.open(<BookForm bookToEdit={book} onUpdate={onUpdate} />);
   };
 
   const handleAddPodcast = () => {
-    drawer.open(<PodcastForm onUpdate={onUpdate} />);
+    drawer.open(<BookForm onUpdate={onUpdate} />);
   };
 
   return (
@@ -36,17 +36,17 @@ const PodcastDrawer = ({
 
       {/* Scrollable Content */}
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-3 overflow-y-auto w-fit p-4'>
-        {podcasts.map((podcast, index) => (
+        {books.map((book, index) => (
           <div
             key={index}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              handleEditPodcast(podcast);
+              handleEditBook(book);
             }}
             className='cursor-pointer'
           >
-            <PodcastCard {...podcast} isInDrawer />
+            <BookCard {...book} isInDrawer />
           </div>
         ))}
       </div>
@@ -54,4 +54,4 @@ const PodcastDrawer = ({
   );
 };
 
-export default PodcastDrawer;
+export default BookDrawer;

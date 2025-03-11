@@ -1,4 +1,3 @@
-// app/pages/page.tsx
 import { Metadata } from 'next';
 import PagesContent from './content';
 

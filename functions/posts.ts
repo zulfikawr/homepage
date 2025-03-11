@@ -1,5 +1,5 @@
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Post } from 'types/post';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Post } from '@/types/post';
 
 /**
  * Fetch all posts from Firebase

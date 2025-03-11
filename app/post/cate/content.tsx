@@ -1,4 +1,3 @@
-// app/categories/categories-content.tsx
 'use client';
 
 import { Icon, Label } from '@/components/UI';

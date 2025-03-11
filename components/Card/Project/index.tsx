@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import { Project } from 'types/project';
-import { drawer } from 'components/Drawer';
-import ProjectViewer from 'components/Viewer/Project';
+import { Project } from '@/types/project';
+import { drawer } from '@/components/Drawer';
+import ProjectViewer from '@/components/Viewer/Project';
 import { Hover } from '@/components/Visual';
-import { Card } from 'components/Card';
+import { Card } from '@/components/Card';
 
 export interface ProjectCardProps extends Project {
   isInDrawer?: boolean;

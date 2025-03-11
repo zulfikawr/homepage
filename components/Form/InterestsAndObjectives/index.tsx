@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { InterestsAndObjectives } from 'types/interestsAndObjectives';
-import { useAuth } from 'contexts/authContext';
-import { drawer } from 'components/Drawer';
-import { Button, FormLabel, Input, Textarea } from 'components/UI';
-import { updateInterestsAndObjectives } from 'functions/interestsAndObjectives';
-import { toast } from 'components/Toast';
+import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { useAuth } from '@/contexts/authContext';
+import { drawer } from '@/components/Drawer';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { updateInterestsAndObjectives } from '@/functions/interestsAndObjectives';
+import { toast } from '@/components/Toast';
 
 const InterestsAndObjectivesForm = ({
   data,

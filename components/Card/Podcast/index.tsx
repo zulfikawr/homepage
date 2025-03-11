@@ -1,7 +1,7 @@
-import { Podcast } from 'types/podcast';
-import openLink from 'utilities/externalLink';
+import { Podcast } from '@/types/podcast';
+import openLink from '@/utilities/externalLink';
 import Image from 'next/image';
-import { Card } from 'components/Card';
+import { Card } from '@/components/Card';
 
 export interface PodcastCardProps extends Podcast {
   isInDrawer?: boolean;

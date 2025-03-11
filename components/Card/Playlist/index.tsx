@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import { Playlist } from 'types/playlist';
-import openLink from 'utilities/externalLink';
-import { Card } from 'components/Card';
+import { Playlist } from '@/types/playlist';
+import openLink from '@/utilities/externalLink';
+import { Card } from '@/components/Card';
 
 const PlaylistCard = (props: Playlist & { isInDrawer?: boolean }) => {
   const { id, name, description, imageUrl, songs, isInDrawer } = props;
- 
+
   return (
     <Card
       onClick={() => {

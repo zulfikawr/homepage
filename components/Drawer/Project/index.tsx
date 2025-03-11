@@ -1,8 +1,8 @@
-import { ProjectCard } from 'components/Card/Project';
-import { Project } from 'types/project';
-import { drawer } from 'components/Drawer';
-import ProjectForm from 'components/Form/Project';
-import { Button } from 'components/UI';
+import { ProjectCard } from '@/components/Card/Project';
+import { Project } from '@/types/project';
+import { drawer } from '@/components/Drawer';
+import ProjectForm from '@/components/Form/Project';
+import { Button } from '@/components/UI';
 
 const ProjectsDrawer = ({
   projects,

@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import { Hover } from 'components/Visual';
-import { Song } from 'types/playlist';
+import { Hover } from '@/components/Visual';
+import { Song } from '@/types/playlist';
 
 interface Props {
   song: Song;

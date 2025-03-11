@@ -1,4 +1,3 @@
-// app/post/[action]/[id]/page.tsx
 import { getPostById, getPosts } from '@/functions/posts';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

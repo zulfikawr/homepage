@@ -5,12 +5,12 @@ import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { drawer } from '@/components/Drawer';
-import { HeaderTransition, OffsetTransition } from '../Motion';
-import ScrollWrapper from '../Motion/scroll';
-import Tabs from '../Tabs';
-import { useTitle } from 'contexts/titleContext';
-import { Kbar } from '../Kbar';
-import { KbarContent } from '../Kbar/components';
+import { HeaderTransition, OffsetTransition } from '@/components/Motion';
+import ScrollWrapper from '@/components/Motion/scroll';
+import Tabs from '@/components/Tabs';
+import { useTitle } from '@/contexts/titleContext';
+import { Kbar } from '@/components/Kbar';
+import { KbarContent } from '@/components/Kbar/components';
 import { useRouteInfo } from '@/hooks/useRouteInfo';
 
 interface HeaderComponentProps {

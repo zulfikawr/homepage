@@ -1,5 +1,5 @@
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Project } from 'types/project';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Project } from '@/types/project';
 
 /**
  * Fetch all projects from Firebase

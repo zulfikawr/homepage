@@ -13,7 +13,7 @@ import LocationAndTime from '@/components/Banners/LocationAndTime';
 
 export default function Home() {
   useEffect(() => {
-    incrementPageViews('/');
+    incrementPageViews('/root');
   }, []);
 
   return (

@@ -1,8 +1,8 @@
-import PlaylistCard from 'components/Card/Playlist';
-import { Playlist } from 'types/playlist';
-import { drawer } from 'components/Drawer';
-import PlaylistForm from 'components/Form/Playlist';
-import { Button } from 'components/UI';
+import PlaylistCard from '@/components/Card/Playlist';
+import { Playlist } from '@/types/playlist';
+import { drawer } from '@/components/Drawer';
+import PlaylistForm from '@/components/Form/Playlist';
+import { Button } from '@/components/UI';
 
 const PlaylistDrawer = ({
   playlists,

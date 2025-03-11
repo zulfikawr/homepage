@@ -1,5 +1,5 @@
-import { database, ref, get, set, remove } from 'lib/firebase';
-import { Employment } from 'types/employment';
+import { database, ref, get, set, remove } from '@/lib/firebase';
+import { Employment } from '@/types/employment';
 
 /**
  * Fetch all employments from Firebase

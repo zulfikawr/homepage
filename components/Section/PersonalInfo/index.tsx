@@ -1,10 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
-import { useAuth } from 'contexts/authContext';
-import { drawer } from 'components/Drawer';
-import PersonalInfoForm from 'components/Form/PersonalInfo';
-import { getPersonalInfo } from 'functions/personalInfo';
-import { useFetchData } from 'lib/fetchData';
+import { useAuth } from '@/contexts/authContext';
+import { drawer } from '@/components/Drawer';
+import PersonalInfoForm from '@/components/Form/PersonalInfo';
+import { getPersonalInfo } from '@/functions/personalInfo';
+import { useFetchData } from '@/lib/fetchData';
 import Loading from './loading';
 import { Hover } from '@/components/Visual';
 

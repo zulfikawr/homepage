@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from 'components/UI';
-import { Project } from 'types/project';
-import { drawer } from 'components/Drawer';
+import { Button } from '@/components/UI';
+import { Project } from '@/types/project';
+import { drawer } from '@/components/Drawer';
 
 const ProjectViewer = ({ project }: { project: Project }) => {
   return (

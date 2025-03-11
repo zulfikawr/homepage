@@ -1,8 +1,8 @@
-import { EmploymentCard } from 'components/Card/Employment';
-import { Employment } from 'types/employment';
-import { drawer } from 'components/Drawer';
-import EmploymentForm from 'components/Form/Employment';
-import { Button } from 'components/UI';
+import { EmploymentCard } from '@/components/Card/Employment';
+import { Employment } from '@/types/employment';
+import { drawer } from '@/components/Drawer';
+import EmploymentForm from '@/components/Form/Employment';
+import { Button } from '@/components/UI';
 
 const EmploymentsDrawer = ({
   employments,

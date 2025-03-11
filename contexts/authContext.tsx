@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from 'lib/firebase';
+import { auth } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
 
 interface AuthContextType {

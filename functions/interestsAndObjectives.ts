@@ -1,5 +1,5 @@
-import { database, ref, get, set } from 'lib/firebase';
-import { InterestsAndObjectives } from 'types/interestsAndObjectives';
+import { database, ref, get, set } from '@/lib/firebase';
+import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 // Default interests and objectives data
 const defaultInterestsAndObjectives: InterestsAndObjectives = {

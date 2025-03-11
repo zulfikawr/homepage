@@ -1,6 +1,6 @@
 import React from 'react';
 import PostCardComponent from './component';
-import { Post } from 'types/post';
+import { Post } from '@/types/post';
 
 export interface PostCardProps {
   posts?: Post[];
