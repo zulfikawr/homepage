@@ -46,20 +46,20 @@ const BookCardLoading = () => (
 const EmploymentCardLoading = () => (
   <BaseCardLoading>
     <>
-      <div className='flex w-full min-w-[18rem] lg:min-w-[25rem] items-center justify-between gap-x-2.5 border-b border-gray-200 px-4.5 py-4 dark:border-gray-700'>
+      <div className='flex w-full min-w-[18rem] lg:min-w-[25rem] items-center justify-between gap-x-2.5 border-b border-gray-200 px-4.5 py-2.5 dark:border-gray-700'>
         <div className='flex items-center gap-x-2'>
-          <div className='h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700' />
+          <div className='h-[24px] w-[24px] rounded-full bg-gray-200 dark:bg-gray-700' />
           <div className='h-5 w-32 rounded bg-gray-200 dark:bg-gray-700' />
         </div>
-        <div className='h-5 w-24 rounded-full bg-gray-200 dark:bg-gray-700' />
+        <div className='h-5 w-24 rounded-full border bg-gray-100 dark:border-gray-600 dark:bg-gray-700' />
       </div>
       <div className='flex items-center justify-between gap-x-2.5 px-4.5 py-4'>
-        <div className='h-[13px] w-40 rounded bg-gray-200 dark:bg-gray-700' />
-        <div className='h-[13px] w-24 rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='h-[14px] w-40 rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='h-[14px] w-24 rounded bg-gray-200 dark:bg-gray-700' />
       </div>
       <div className='flex items-center justify-between border-t border-gray-200 px-4.5 py-[10px] dark:border-gray-700'>
-        <div className='h-4 w-32 rounded bg-gray-200 dark:bg-gray-700' />
-        <div className='h-4 w-20 rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='h-[12px] w-32 rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='h-[12px] w-20 rounded bg-gray-200 dark:bg-gray-700' />
       </div>
     </>
   </BaseCardLoading>

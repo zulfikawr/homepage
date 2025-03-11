@@ -13,7 +13,7 @@ const LoadingSkeleton = () => (
 
     <div className='flex items-center gap-4 p-4'>
       <div className='h-16 w-16 flex-shrink-0 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse' />
-      <div className='flex-1 space-y-3'>
+      <div className='flex-1 space-y-2'>
         <div className='h-5 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse' />
         <div className='h-4 w-1/2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse' />
         <div className='flex gap-x-2'>

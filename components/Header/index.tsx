@@ -75,8 +75,8 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       key: 'searchdesktop',
       label: 'Search',
       icon: 'magnifyingGlass',
-      className: nonHomePage ? 'lg:block' : 'hidden',
-      onClick: () => {
+      className: nonHomePage ? 'hidden lg:block' : 'hidden',
+      action: () => {
         drawer.open(<KbarContent />);
       },
     },
@@ -84,8 +84,8 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       key: 'searchmobile',
       label: 'Search',
       icon: 'magnifyingGlass',
-      className: 'block lg:hidden', // Always show on mobile
-      onClick: () => {
+      className: 'block lg:hidden',
+      action: () => {
         drawer.open(<KbarContent />);
       },
     },

@@ -1,24 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/UI';
 import { PodcastCard } from '@/components/Card/Podcast';
 import { useAuth } from '@/contexts/authContext';
 import { drawer } from '@/components/Drawer';
-import PodcastForm from '@/components/Form/Podcast';
 import { getPodcasts } from '@/functions/podcasts';
 import { useFetchData } from '@/lib/fetchData';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
+import PodcastDrawer from '@/components/Drawer/Podcast';
+import { useTitle } from '@/contexts/titleContext';
 
 export default function PodcastContent() {
+  const { setHeaderTitle } = useTitle();
+
+  useEffect(() => {
+    setHeaderTitle('🎙️ Podcast');
+  });
+
   const { user } = useAuth();
-  const [isAdding] = useState(false);
 
-  const { data: podcasts, loading, error } = useFetchData(getPodcasts);
+  const { data: podcasts, loading, error, refetch } = useFetchData(getPodcasts);
 
-  const handleAddPodcastClick = () => {
-    drawer.open(<PodcastForm />);
+  const handleOpenPodcastDrawer = () => {
+    drawer.open(<PodcastDrawer podcasts={podcasts} onUpdate={refetch} />);
   };
 
   if (error) return <div>Failed to load podcast</div>;
@@ -33,12 +39,8 @@ export default function PodcastContent() {
 
       {user && (
         <div className='mb-6 flex justify-end'>
-          <Button
-            type='primary'
-            onClick={handleAddPodcastClick}
-            disabled={isAdding}
-          >
-            {isAdding ? 'Adding...' : 'Add Podcast'}
+          <Button type='primary' onClick={handleOpenPodcastDrawer}>
+            Manage
           </Button>
         </div>
       )}

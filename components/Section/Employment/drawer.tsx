@@ -31,9 +31,7 @@ const EmploymentsDrawer = ({
             <Button type='primary' icon='plus' onClick={handleAddEmployment}>
               <span className='hidden lg:block'>Add Employment</span>
             </Button>
-            <Button icon='close' onClick={() => drawer.close()}>
-              <span className='hidden lg:block'>Close</span>
-            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
       </div>

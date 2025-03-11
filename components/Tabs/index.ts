@@ -16,8 +16,7 @@ export interface TabItemProps {
   color?: string;
   bgColor?: string;
   bgDark?: string;
-  onClick?: () => void;
-  action?: string;
+  action?: () => void;
   hidden?: boolean;
 }
 

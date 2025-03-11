@@ -16,8 +16,8 @@ export default function ProjectsContent() {
   const { setHeaderTitle } = useTitle();
 
   useEffect(() => {
-    setHeaderTitle('Projects');
-  }, [setHeaderTitle]);
+    setHeaderTitle('🚀 Projects');
+  });
 
   const { data: projects, loading, error } = useFetchData(getProjects);
   const sortedProjects = projects ? sortByDate(projects) : [];

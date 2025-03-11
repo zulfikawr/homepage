@@ -16,7 +16,6 @@ const PagesAndLinks = () => {
         <div className='flex items-center gap-x-2.5'>
           <Link
             href='/contacts'
-            target='_blank'
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
@@ -29,18 +28,18 @@ const PagesAndLinks = () => {
           <Link
             href='/documents/resume.pdf'
             target='_blank'
+            rel='noopener noreferrer'
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
               <div className='size-[18px]'>
                 <Icon name='file' />
               </div>
-              <span>Curriculum Vitae</span>
+              <span>Résumé</span>
             </span>
           </Link>
           <Link
             href='/schedule'
-            target='_blank'
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>
@@ -52,7 +51,6 @@ const PagesAndLinks = () => {
           </Link>
           <Link
             href='/feedback'
-            target='_blank'
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-600'
           >
             <span className='flex items-center gap-x-2'>

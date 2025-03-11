@@ -5,7 +5,7 @@ import { Playlist, Song } from 'types/playlist';
 import { useAuth } from 'contexts/authContext';
 import { drawer } from 'components/Drawer';
 import { modal } from 'components/Modal';
-import { Button } from 'components/UI';
+import { Button, FormLabel, Input, Textarea } from 'components/UI';
 import PlaylistCard from 'components/Card/Playlist';
 import SongCard from 'components/Card/Song';
 import { toast } from 'components/Toast';
@@ -20,9 +20,13 @@ import {
 
 interface PlaylistFormProps {
   playlistToEdit?: Playlist;
+  onUpdate: () => Promise<void>;
 }
 
-const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
+const PlaylistForm: React.FC<PlaylistFormProps> = ({
+  playlistToEdit,
+  onUpdate,
+}) => {
   const { user } = useAuth();
   const [name, setName] = useState(playlistToEdit?.name || '');
   const [description, setDescription] = useState(
@@ -82,6 +86,7 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
         : await addPlaylist(playlistData);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show(
           playlistToEdit
@@ -105,6 +110,7 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
       const result = await deletePlaylist(playlistToEdit.id);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show('Playlist deleted successfully!');
       } else {
@@ -259,10 +265,10 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
           className='space-y-4'
         >
           <div>
-            <label className='block text-sm font-medium mb-2'>
-              Title <span className='text-red-500'>*</span>
-            </label>
-            <input
+            <FormLabel htmlFor='title' required>
+              Title
+            </FormLabel>
+            <Input
               type='text'
               value={song.title}
               onChange={(e) =>
@@ -272,15 +278,14 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
                   ),
                 )
               }
-              className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
               required
             />
           </div>
           <div>
-            <label className='block text-sm font-medium mb-2'>
-              Artist <span className='text-red-500'>*</span>
-            </label>
-            <input
+            <FormLabel htmlFor='artist' required>
+              Artist
+            </FormLabel>
+            <Input
               type='text'
               value={song.artist}
               onChange={(e) =>
@@ -290,15 +295,14 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
                   ),
                 )
               }
-              className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
               required
             />
           </div>
           <div>
-            <label className='block text-sm font-medium mb-2'>
-              Audio URL <span className='text-red-500'>*</span>
-            </label>
-            <input
+            <FormLabel htmlFor='audioUrl' required>
+              Audio URL
+            </FormLabel>
+            <Input
               type='text'
               value={song.audioUrl}
               onChange={(e) =>
@@ -308,13 +312,12 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
                   ),
                 )
               }
-              className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
               required
             />
           </div>
           <div>
-            <label className='block text-sm font-medium mb-2'>Image URL</label>
-            <input
+            <FormLabel htmlFor='imageUrl'>Title</FormLabel>
+            <Input
               type='text'
               value={song.imageUrl}
               onChange={(e) =>
@@ -324,10 +327,9 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
                   ),
                 )
               }
-              className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
             />
           </div>
-          <div className='flex justify-end space-x-4'>
+          <div className='flex justify-end space-x-4 pt-4'>
             <Button type='default' onClick={() => modal.close()}>
               Cancel
             </Button>
@@ -376,40 +378,38 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div>
-              <label className='block text-sm font-medium mb-2'>
-                Name <span className='text-red-500'>*</span>
-              </label>
-              <input
+              <FormLabel htmlFor='name' required>
+                Name
+              </FormLabel>
+              <Input
                 type='text'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder='Playlist name'
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                 required
               />
             </div>
             <div>
-              <label className='block text-sm font-medium mb-2'>
-                Description <span className='text-red-500'>*</span>
-              </label>
-              <textarea
+              <FormLabel htmlFor='description' required>
+                Description
+              </FormLabel>
+              <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder='Playlist description'
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                rows={4}
                 required
               />
             </div>
             <div>
-              <label className='block text-sm font-medium mb-2'>
-                Image URL <span className='text-red-500'>*</span>
-              </label>
-              <input
+              <FormLabel htmlFor='imageUrl' required>
+                Image URL
+              </FormLabel>
+              <Input
                 type='text'
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder='https://playlist-image-url.com'
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                 required
               />
             </div>
@@ -419,62 +419,58 @@ const PlaylistForm: React.FC<PlaylistFormProps> = ({ playlistToEdit }) => {
               <h2 className='text-lg font-semibold'>Songs</h2>
               <form onSubmit={handleAddSong} className='space-y-4'>
                 <div>
-                  <label className='block text-sm font-medium mb-2'>
-                    Title <span className='text-red-500'>*</span>
-                  </label>
-                  <input
+                  <FormLabel htmlFor='title' required>
+                    Title
+                  </FormLabel>
+                  <Input
                     type='text'
                     value={newSong.title}
                     onChange={(e) =>
                       setNewSong({ ...newSong, title: e.target.value })
                     }
                     placeholder='Song title'
-                    className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                     required
                   />
                 </div>
                 <div>
-                  <label className='block text-sm font-medium mb-2'>
-                    Artist <span className='text-red-500'>*</span>
-                  </label>
-                  <input
+                  <FormLabel htmlFor='artist' required>
+                    Artist
+                  </FormLabel>
+                  <Input
                     type='text'
                     value={newSong.artist}
                     onChange={(e) =>
                       setNewSong({ ...newSong, artist: e.target.value })
                     }
                     placeholder='Song artist'
-                    className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                     required
                   />
                 </div>
                 <div>
-                  <label className='block text-sm font-medium mb-2'>
+                  <FormLabel htmlFor='audioUrl' required>
                     Audio URL
-                  </label>
-                  <input
+                  </FormLabel>
+                  <Input
                     type='text'
                     value={newSong.audioUrl}
                     onChange={(e) =>
                       setNewSong({ ...newSong, audioUrl: e.target.value })
                     }
                     placeholder='https://song-audio-url.com'
-                    className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                     required
                   />
                 </div>
                 <div>
-                  <label className='block text-sm font-medium mb-2'>
+                  <FormLabel htmlFor='imageUrl' required>
                     Image URL
-                  </label>
-                  <input
+                  </FormLabel>
+                  <Input
                     type='text'
                     value={newSong.imageUrl}
                     onChange={(e) =>
                       setNewSong({ ...newSong, imageUrl: e.target.value })
                     }
                     placeholder='https://song-image-url.com'
-                    className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                   />
                 </div>
                 <Button icon='plus' type='primary' onClick={handleAddSong}>

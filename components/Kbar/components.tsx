@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { useAuth } from 'contexts/authContext';
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import Tabs, { type TabItemProps } from 'components/Tabs';
 import { drawer } from 'components/Drawer';
 import { useRouteInfo } from '@/hooks/useRouteInfo';
 import { useAuthActions } from '@/hooks/useAuthActions';
+import { Input } from '../UI';
 
 interface MenuSection {
   label: string;
@@ -25,115 +26,89 @@ export function KbarContent() {
 
   const { isHomePage } = useRouteInfo();
 
-  const handleAction = useCallback(
-    async (action: string) => {
-      const actionMap: {
-        [key: string]: () => void | Promise<void> | Promise<boolean>;
-      } = {
-        // Navigation actions
-        back: () => router.back(),
-        goHome: () => router.push('/'),
-        goAbout: () => router.push('/about'),
-        goDashboard: () => router.push('/dashboard'),
-        goReadingList: () => router.push('/reading-list'),
-        goLogin: () => router.push('/login'),
-        goFeedback: () => router.push('/feedback'),
-
-        // Theme actions
-        setDarkTheme: () => setTheme('dark'),
-        setLightTheme: () => setTheme('light'),
-        setSystemTheme: () => setTheme('system'),
-
-        // Auth actions
-        logout: () => {
-          confirmLogout();
-        },
-        goToCreatePost: () => router.push('/post/create'),
-
-        // External links
-        openAnalytics: () => {
-          window.open(
-            'https://analytics.ouorz.com/share/E4O9QpCn/ouorz-next',
-            '_blank',
-          );
-          return void 0;
-        },
-        openThoughts: () => {
-          window.open('https://notion.ouorz.com', '_blank');
-          return void 0;
-        },
-        openTwitter: () => {
-          window.open('https://x.com/ttttonyhe', '_blank');
-          return void 0;
-        },
-        openGitHub: () => {
-          window.open('https://github.com/zulfikawr', '_blank');
-          return void 0;
-        },
-        openLinkedIn: () => {
-          window.open(
-            'https://www.linkedin.com/in/zulfikar-muhammad',
-            '_blank',
-          );
-          return void 0;
-        },
-
-        // Email action
-        email: () => {
-          window.location.href = 'mailto:zulfikawr@gmail.com';
-          return void 0;
-        },
-      };
-
-      const actionFn = actionMap[action];
-      if (actionFn) {
-        await actionFn();
-      }
-    },
-    [router, setTheme, confirmLogout],
-  );
-
   const allItems: MenuSection[] = useMemo(
     () => [
       {
-        label: 'Navigation',
+        label: 'Pages',
         items: [
           !isHomePage
             ? {
                 key: 'back',
                 label: 'Go Back',
-                action: 'back',
+                action: () => router.back(),
                 icon: 'arrowLeft',
               }
             : {
                 key: 'home',
                 label: 'Home',
-                action: 'goHome',
+                action: () => router.push('/'),
                 icon: 'houseLine',
               },
           {
-            key: 'about',
-            label: 'About',
-            action: 'goAbout',
-            icon: 'info',
+            key: 'contacts',
+            label: 'Contacts',
+            action: () => router.push('/contacts'),
+            icon: 'addressBook',
           },
           {
             key: 'dashboard',
             label: 'Dashboard',
-            action: 'goDashboard',
+            action: () => router.push('/dashboard'),
             icon: 'presentationChart',
-          },
-          {
-            key: 'reading-list',
-            label: 'Reading List',
-            action: 'goReadingList',
-            icon: 'bookOpen',
           },
           {
             key: 'feedback',
             label: 'Feedback',
-            action: 'goFeedback',
+            action: () => router.push('/feedback'),
             icon: 'chatCenteredText',
+          },
+          {
+            key: 'playlist',
+            label: 'Playlist',
+            action: () => router.push('/playlist'),
+            icon: 'musicNotes',
+          },
+          {
+            key: 'podcast',
+            label: 'Podcast',
+            action: () => router.push('/podcast'),
+            icon: 'microphone',
+          },
+          {
+            key: 'post',
+            label: 'Post',
+            action: () => router.push('/post'),
+            icon: 'note',
+          },
+          {
+            key: 'projects',
+            label: 'Projects',
+            action: () => router.push('/projects'),
+            icon: 'package',
+          },
+          {
+            key: 'reading-list',
+            label: 'Reading List',
+            action: () => router.push('/reading-list'),
+            icon: 'bookOpen',
+          },
+          {
+            key: 'schedule',
+            label: 'Schedule a Meeting',
+            action: () => router.push('/schedule'),
+            icon: 'calendarPlus',
+          },
+          {
+            key: 'resume',
+            label: 'Resume',
+            action: () => router.push('/documents/resume.pdf'),
+            icon: 'file',
+          },
+          {
+            key: 'ui',
+            label: 'UI Components',
+            action: () => router.push('/ui'),
+            icon: 'layout',
           },
         ],
       },
@@ -143,22 +118,57 @@ export function KbarContent() {
           {
             key: 'theme-dark',
             label: 'Switch to Dark Theme',
-            action: 'setDarkTheme',
+            action: () => setTheme('dark'),
             hidden: resolvedTheme === 'dark',
             icon: 'moon',
           },
           {
             key: 'theme-light',
             label: 'Switch to Light Theme',
-            action: 'setLightTheme',
+            action: () => setTheme('light'),
             hidden: resolvedTheme === 'light',
             icon: 'sun',
           },
           {
             key: 'theme-system',
             label: 'Use System Theme',
-            action: 'setSystemTheme',
+            action: () => setTheme('system'),
             icon: 'desktop',
+          },
+        ],
+      },
+      {
+        label: 'Social',
+        items: [
+          {
+            key: 'twitter',
+            label: 'Twitter',
+            action: () => window.open('https://x.com/ttttonyhe', '_blank'),
+            icon: 'x',
+          },
+          {
+            key: 'github',
+            label: 'GitHub',
+            action: () => window.open('https://github.com/zulfikawr', '_blank'),
+            icon: 'github',
+          },
+          {
+            key: 'linkedin',
+            label: 'LinkedIn',
+            action: () =>
+              window.open(
+                'https://www.linkedin.com/in/zulfikar-muhammad',
+                '_blank',
+              ),
+            icon: 'linkedin',
+          },
+          {
+            key: 'email',
+            label: 'Email',
+            action: () => {
+              window.location.href = 'mailto:zulfikawr@gmail.com';
+            },
+            icon: 'envelope',
           },
         ],
       },
@@ -169,13 +179,13 @@ export function KbarContent() {
               {
                 key: 'create-post',
                 label: 'Create Post',
-                action: 'goToCreatePost',
+                action: () => router.push('/post/create'),
                 icon: 'edit',
               },
               {
                 key: 'logout',
                 label: 'Logout',
-                action: 'logout',
+                action: () => confirmLogout(),
                 icon: 'signOut',
               },
             ]
@@ -183,59 +193,13 @@ export function KbarContent() {
               {
                 key: 'login',
                 label: 'Login',
-                action: 'goLogin',
+                action: () => router.push('/login'),
                 icon: 'signIn',
               },
             ],
       },
-      {
-        label: 'Links',
-        items: [
-          {
-            key: 'analytics',
-            label: 'Analytics',
-            action: 'openAnalytics',
-            icon: 'chartBar',
-          },
-          {
-            key: 'thoughts',
-            label: 'Thoughts',
-            action: 'openThoughts',
-            icon: 'lightBulb',
-          },
-        ],
-      },
-      {
-        label: 'Social',
-        items: [
-          {
-            key: 'twitter',
-            label: 'Twitter',
-            action: 'openTwitter',
-            icon: 'x',
-          },
-          {
-            key: 'github',
-            label: 'GitHub',
-            action: 'openGitHub',
-            icon: 'github',
-          },
-          {
-            key: 'linkedin',
-            label: 'LinkedIn',
-            action: 'openLinkedIn',
-            icon: 'linkedin',
-          },
-          {
-            key: 'email',
-            label: 'Email',
-            action: 'email',
-            icon: 'envelope',
-          },
-        ],
-      },
     ],
-    [resolvedTheme, user, isHomePage],
+    [resolvedTheme, user, isHomePage, router, setTheme, confirmLogout],
   );
 
   const filteredSections = useMemo(
@@ -263,11 +227,16 @@ export function KbarContent() {
         ...section.items.map((item) => ({
           key: item.key,
           label: item.label,
-          onClick: () => handleAction(item.action) && drawer.close(),
+          action: () => {
+            if (item.action) {
+              item.action();
+              drawer.close();
+            }
+          },
           icon: item.icon,
         })),
       ]),
-    [filteredSections, handleAction],
+    [filteredSections],
   );
 
   useEffect(() => {
@@ -277,12 +246,11 @@ export function KbarContent() {
   return (
     <div className='flex h-full flex-col pt-4 px-4'>
       <div className='flex items-center gap-2 border-b pb-4 dark:border-gray-700'>
-        <input
+        <Input
           type='text'
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder='Type to search...'
-          className='w-full rounded-md border border-gray-200 bg-white bg-opacity-90 px-3 py-2 text-sm text-gray-500 outline-none transition-shadow hover:bg-neutral-50 dark:border-gray-700 dark:bg-gray-800 dark:bg-opacity-50 dark:shadow-sm dark:hover:border-gray-700 dark:hover:bg-gray-800 dark:hover:bg-opacity-100'
           autoFocus
         />
       </div>
