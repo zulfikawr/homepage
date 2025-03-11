@@ -12,7 +12,7 @@ export default function DashboardContent() {
   const { setHeaderTitle } = useTitle();
 
   useEffect(() => {
-    setHeaderTitle('Dashboard');
+    setHeaderTitle('📊 Dashboard');
   });
 
   return (

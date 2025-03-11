@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Podcast } from 'types/podcast';
-import { useAuth } from 'contexts/authContext';
 import { drawer } from 'components/Drawer';
 import { Button, FormLabel, Input, Textarea } from 'components/UI';
 import { PodcastCard } from 'components/Card/Podcast';
@@ -11,47 +10,62 @@ import { toast } from 'components/Toast';
 import { modal } from 'components/Modal';
 import { generateId } from 'utilities/generateId';
 
-const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
-  const { user } = useAuth();
+interface PodcastFormProps {
+  podcastToEdit?: Podcast;
+  onUpdate: () => Promise<void>;
+}
 
-  const [title, setTitle] = useState(podcastToEdit?.title || '');
-  const [description, setDescription] = useState(
-    podcastToEdit?.description || '',
+const initialPodcastState: Podcast = {
+  id: '',
+  title: '',
+  description: '',
+  imageURL: '',
+  link: '',
+};
+
+const PodcastForm: React.FC<PodcastFormProps> = ({
+  podcastToEdit,
+  onUpdate,
+}) => {
+  const [podcast, setPodcast] = useState<Podcast>(
+    podcastToEdit || initialPodcastState,
   );
-  const [imageURL, setImageURL] = useState(podcastToEdit?.imageURL || '');
-  const [link, setLink] = useState(podcastToEdit?.link || '');
 
   const validateForm = () => {
-    if (!title.trim()) {
+    if (!podcast.title.trim()) {
       toast.show('Podcast title is required.');
       return false;
     }
-    if (!description.trim()) {
+    if (!podcast.description.trim()) {
       toast.show('Description is required.');
       return false;
     }
-    if (!imageURL.trim()) {
+    if (!podcast.imageURL.trim()) {
       toast.show('Image URL is required.');
       return false;
     }
-    if (!link.trim()) {
+    if (!podcast.link.trim()) {
       toast.show('Link are required.');
       return false;
     }
     return true;
   };
 
+  const handleChange = (
+    field: keyof Podcast,
+    value: string | string[] | Date,
+  ) => {
+    setPodcast((prev) => ({ ...prev, [field]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!user || !validateForm()) return;
+    if (!validateForm()) return;
 
     const podcastData = {
-      id: podcastToEdit?.id || generateId(title),
-      title,
-      description,
-      imageURL: imageURL || '/images/placeholder.png',
-      link,
+      ...podcast,
+      id: podcastToEdit?.id || generateId(podcast.title),
     };
 
     try {
@@ -60,6 +74,7 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
         : await addPodcast(podcastData);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show(
           podcastToEdit
@@ -79,12 +94,13 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
   };
 
   const handleDelete = async () => {
-    if (!podcastToEdit || !user) return;
+    if (!podcastToEdit) return;
 
     try {
       const result = await deletePodcast(podcastToEdit.id);
 
       if (result.success) {
+        await onUpdate();
         drawer.close();
         toast.show('Podcast deleted successfully!');
       } else {
@@ -110,10 +126,10 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
         <div className='flex justify-center mb-6'>
           <PodcastCard
             id={podcastToEdit?.id || Date.now().toString()}
-            title={title || 'Podcast Title'}
-            description={description || 'Podcast Description'}
-            imageURL={imageURL || '/images/placeholder.png'}
-            link={link || '#'}
+            title={podcast.title || 'Podcast Title'}
+            description={podcast.description || 'Podcast Description'}
+            imageURL={podcast.imageURL || '/images/placeholder.png'}
+            link={podcast.link || '#'}
             isInDrawer
           />
         </div>
@@ -150,11 +166,11 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           <div className='flex justify-center'>
             <PodcastCard
-              id={podcastToEdit?.id || Date.now().toString()}
-              title={title || 'Podcast Title'}
-              description={description || 'Podcast Description'}
-              imageURL={imageURL || '/images/placeholder.png'}
-              link={link || '#'}
+              id='preview'
+              title={podcast.title || 'Podcast Title'}
+              description={podcast.description || 'Podcast Description'}
+              imageURL={podcast.imageURL || '/images/placeholder.png'}
+              link={podcast.link || '#'}
               isInDrawer
             />
           </div>
@@ -166,8 +182,8 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
               </FormLabel>
               <Input
                 type='text'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={podcast.title}
+                onChange={(e) => handleChange('title', e.target.value)}
                 required
               />
             </div>
@@ -176,8 +192,8 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
                 Description
               </FormLabel>
               <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={podcast.description}
+                onChange={(e) => handleChange('description', e.target.value)}
                 rows={4}
                 required
               />
@@ -188,8 +204,8 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
               </FormLabel>
               <Input
                 type='text'
-                value={imageURL}
-                onChange={(e) => setImageURL(e.target.value)}
+                value={podcast.imageURL}
+                onChange={(e) => handleChange('imageURL', e.target.value)}
                 required
               />
             </div>
@@ -199,8 +215,8 @@ const PodcastForm = ({ podcastToEdit }: { podcastToEdit?: Podcast }) => {
               </FormLabel>
               <Input
                 type='text'
-                value={link}
-                onChange={(e) => setLink(e.target.value)}
+                value={podcast.link}
+                onChange={(e) => handleChange('link', e.target.value)}
                 required
               />
             </div>

@@ -18,9 +18,7 @@ const PostsDrawer = ({ posts }: { posts: Post[] }) => {
             <Button type='primary' icon='plus' onClick={handleAddPost}>
               <span className='hidden lg:block'>Add Post</span>
             </Button>
-            <Button icon='close' onClick={() => drawer.close()}>
-              <span className='hidden lg:block'>Close</span>
-            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { Project } from 'types/project';
 import { drawer } from 'components/Drawer';
 import ProjectViewer from 'components/Viewer/Project';
 import { Hover } from '@/components/Visual';
+import { Card } from 'components/Card';
 
 export interface ProjectCardProps extends Project {
   isInDrawer?: boolean;
@@ -16,36 +17,27 @@ const ProjectCard = (props: ProjectCardProps) => {
   };
 
   return (
-    <div
-      className={`group relative z-40 flex cursor-pointer ${isInDrawer ? 'w-full' : ''} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
+    <Card
       onClick={() => {
         if (!isInDrawer) handleCardClick();
       }}
     >
-      <Hover
-        perspective={1000}
-        max={25}
-        scale={1.01}
-        className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'
-      >
-        <Image
-          src={image}
-          className='object-cover dark:brightness-[95%]'
-          alt={`featured-image-${name}`}
-          loading='lazy'
-          height={480}
-          width={640}
-        />
-      </Hover>
+      <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
+        <Hover perspective={1000} max={25} scale={1.01}>
+          <Image
+            src={image}
+            className='object-cover dark:brightness-[95%]'
+            alt={`featured-image-${name}`}
+            loading='lazy'
+            height={480}
+            width={640}
+          />
+        </Hover>
+      </div>
 
       <div className='flex flex-1 flex-col items-center gap-4 p-4 sm:flex-row'>
-        <Hover
-          perspective={1000}
-          max={25}
-          scale={1.01}
-          className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'
-        >
-          <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'>
+        <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'>
+          <Hover perspective={1000} max={25} scale={1.01}>
             <Image
               src={image}
               className='rounded-md object-cover dark:brightness-[95%]'
@@ -54,8 +46,8 @@ const ProjectCard = (props: ProjectCardProps) => {
               height={480}
               width={640}
             />
-          </div>
-        </Hover>
+          </Hover>
+        </div>
 
         <div className='flex w-full flex-col justify-between gap-y-2'>
           <p className='border-b border-gray-200 pb-2 text-lg font-semibold text-gray-700 dark:border-gray-700 dark:text-white'>
@@ -78,7 +70,7 @@ const ProjectCard = (props: ProjectCardProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

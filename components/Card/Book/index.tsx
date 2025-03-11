@@ -5,6 +5,7 @@ import { Button } from 'components/UI';
 import { drawer } from 'components/Drawer';
 import BookForm from 'components/Form/Book';
 import { useAuth } from 'contexts/authContext';
+import { Card } from 'components/Card';
 
 export interface BookCardProps extends Book {
   isInDrawer?: boolean;
@@ -20,11 +21,11 @@ const BookCard = (props: BookCardProps) => {
   };
 
   return (
-    <div
-      className={`relative group z-40 flex cursor-${isInDrawer ? 'default' : 'pointer'} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
+    <Card
       onClick={() => {
         if (!isInDrawer) openLink(link);
       }}
+      isInDrawer={isInDrawer}
     >
       <div className='flex flex-1 items-center lg:justify-center'>
         <div className='flex-shrink-0 px-4.5 py-4'>
@@ -57,7 +58,7 @@ const BookCard = (props: BookCardProps) => {
           </Button>
         </div>
       )}
-    </div>
+    </Card>
   );
 };
 

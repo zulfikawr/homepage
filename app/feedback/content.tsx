@@ -28,9 +28,9 @@ export default function FeedbackContent() {
         month: 'short',
         year: 'numeric',
       });
-      
+
       const feedbackRef = ref(database, `feedback/${timestampLocale}`);
-      
+
       const feedbackData = {
         feedback: feedback.trim(),
         contact: contact.trim() || 'Anonymous',
@@ -38,7 +38,7 @@ export default function FeedbackContent() {
       };
 
       await set(feedbackRef, feedbackData);
-      
+
       setFeedback('');
       setContact('');
       toast.success('Thank you for your feedback!');
@@ -53,8 +53,8 @@ export default function FeedbackContent() {
   const { setHeaderTitle } = useTitle();
 
   useEffect(() => {
-    setHeaderTitle('Feedback');
-  }, [setHeaderTitle]);
+    setHeaderTitle('📑 Feedback');
+  });
 
   return (
     <div>
@@ -89,20 +89,18 @@ export default function FeedbackContent() {
           </div>
 
           <div>
-            <FormLabel htmlFor='contact'>
-              Your contact (optional)
-            </FormLabel>
+            <FormLabel htmlFor='contact'>Your contact (optional)</FormLabel>
             <Input
               id='contact'
               type='text'
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              placeholder="Email or other contact information"
+              placeholder='Email or other contact information'
             />
           </div>
 
           <div className='flex justify-end pt-4'>
-            <Button 
+            <Button
               type='primary'
               disabled={isSubmitting || !feedback.trim()}
               onClick={handleSubmit}

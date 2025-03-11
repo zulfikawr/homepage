@@ -4,77 +4,125 @@ import React, { useEffect } from 'react';
 import PageCard from '@/components/Card/Page';
 import { incrementPageViews } from '@/functions/analytics';
 import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
 
 export default function PagesContent() {
+  const { setHeaderTitle } = useTitle();
+
+  useEffect(() => {
+    setHeaderTitle('📑 Pages');
+  });
+
   useEffect(() => {
     incrementPageViews('/pages');
-  }, []);
+  });
+
+  const pages = [
+    {
+      title: 'Contacts',
+      desc: 'Get in touch',
+      icon: 'addressBook',
+      href: '/contacts',
+    },
+    {
+      title: 'Dashboard',
+      desc: 'View my stats',
+      icon: 'presentationChart',
+      href: '/dashboard',
+    },
+    {
+      title: 'Feedback',
+      desc: 'Share your thoughts',
+      icon: 'chatCenteredText',
+      href: '/feedback',
+    },
+    {
+      title: 'Playlist',
+      desc: 'My favorite tunes',
+      icon: 'musicNotes',
+      href: '/playlist',
+    },
+    {
+      title: 'Podcasts',
+      desc: 'Recommended listens',
+      icon: 'microphone',
+      href: '/podcasts',
+    },
+    {
+      title: 'Posts',
+      desc: 'Browse my posts',
+      icon: 'note',
+      href: '/post',
+    },
+    {
+      title: 'Projects',
+      desc: 'See my work',
+      icon: 'package',
+      href: '/projects',
+    },
+    {
+      title: 'Reading List',
+      desc: 'Books I love',
+      icon: 'bookOpen',
+      href: '/reading-list',
+    },
+    {
+      title: 'Resume',
+      desc: 'View my CV',
+      icon: 'file',
+      href: '/documents/resume.pdf',
+    },
+    {
+      title: 'Schedule',
+      desc: 'Book a meeting',
+      icon: 'calendarPlus',
+      href: '/schedule',
+    },
+    {
+      title: 'UI',
+      desc: 'Explore UI components',
+      icon: 'layout',
+      href: '/ui',
+    },
+  ];
+
+  const colors = [
+    'text-red-500',
+    'text-orange-500',
+    'text-yellow-500',
+    'text-green-500',
+    'text-teal-500',
+    'text-blue-500',
+    'text-indigo-500',
+    'text-purple-500',
+    'text-pink-500',
+    'text-gray-500',
+    'text-violet-500',
+  ];
+
+  const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
 
   return (
     <div>
       <PageTitle
         emoji='📑'
         title='Pages'
-        subtitle='Explore all the pages on my site'
+        subtitle='Explore all pages in this website'
       />
 
       <div className='grid grid-cols-2 gap-4'>
-        <PageCard
-          title='Dashboard'
-          des='Track my metrics'
-          icon='presentationChart'
-          className='text-blue-500'
-          href='/dashboard'
-        />
-        <PageCard
-          title='Reading List'
-          des='My book shelf'
-          icon='bookOpen'
-          className='text-green-500'
-          href='/reading-list'
-        />
-        <PageCard
-          title='Projects'
-          des='See all of my projects'
-          icon='package'
-          className='text-gray-400'
-          href='/projects'
-        />
-        <PageCard
-          title='Posts'
-          des='See all of my posts'
-          icon='note'
-          className='text-gray-400'
-          href='/post'
-        />
-        <PageCard
-          title='Podcasts'
-          des='My recommendations'
-          icon='microphone'
-          className='text-yellow-500'
-          href='/podcasts'
-        />
-        <PageCard
-          title='Feedback'
-          des='Leave your feedback'
-          icon='chatCenteredText'
-          className='text-red-400'
-          href='/feedback'
-        />
-        <PageCard
-          title='UI'
-          des='See all UI components'
-          icon='layout'
-          className='text-gray-400'
-          href='/ui'
-        />
-        <PageCard
-          title='Playlist'
-          des='My music playlist'
-          icon='musicNotes'
-          className='text-gray-400'
-          href='/playlist'
-        />
+        {pages
+          .sort((a, b) => a.title.localeCompare(b.title))
+          .map((page, index) => (
+            <PageCard
+              key={index}
+              title={page.title}
+              desc={page.desc}
+              icon={page.icon}
+              className={shuffledColors[index % shuffledColors.length]}
+              href={page.href}
+            />
+          ))}
       </div>
     </div>
   );

@@ -74,7 +74,7 @@ const Tabs = (props: TabsProps) => {
       highlighterRef.current.className = [
         'tabs-highlighter z-0',
         className || '',
-        bgColor || 'bg-menu',
+        bgColor || 'bg-[#ebeced]',
         bgDark || 'dark:bg-gray-700/40 backdrop-blur-sm',
       ].join(' ');
     } else {
@@ -194,7 +194,7 @@ const Tabs = (props: TabsProps) => {
     (e) => {
       if (direction === 'vertical') {
         e.preventDefault();
-        if (items[highlightedIndex]?.onClick) items[highlightedIndex].onClick();
+        if (items[highlightedIndex]?.action) items[highlightedIndex].action();
       }
     },
     {
@@ -232,7 +232,7 @@ const Tabs = (props: TabsProps) => {
         ref={listRef}
       >
         {items.map((item, index) => {
-          const { className, bgColor, bgDark, color, onClick, sectionLabel } =
+          const { className, bgColor, bgDark, color, action, sectionLabel } =
             item;
 
           if (sectionLabel) {
@@ -261,7 +261,7 @@ const Tabs = (props: TabsProps) => {
                     reset();
                   }
                 }}
-                onClick={onClick}
+                onClick={action}
               >
                 <>
                   {item.component || (

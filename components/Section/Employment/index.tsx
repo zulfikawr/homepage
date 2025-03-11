@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { EmploymentCard } from 'components/Card/Employment';
 import { drawer } from 'components/Drawer';
 import { getEmployments } from 'functions/employments';
@@ -13,7 +13,6 @@ import { CardLoading } from '@/components/Card/Loading';
 
 const EmploymentSection = () => {
   const { user } = useAuth();
-  const [maskClass, setMaskClass] = useState('');
   const {
     data: employments,
     loading,
@@ -22,11 +21,23 @@ const EmploymentSection = () => {
   } = useFetchData(getEmployments);
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftMask, setShowLeftMask] = useState(false);
+  const [showRightMask, setShowRightMask] = useState(true);
 
   const handleOpenEmploymentsDrawer = () => {
     drawer.open(
       <EmploymentsDrawer employments={sortedEmployments} onUpdate={refetch} />,
     );
+  };
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
+      setShowLeftMask(scrollLeft > 0);
+      setShowRightMask(scrollLeft < scrollWidth - clientWidth);
+    }
   };
 
   if (error) return <div>Failed to load employments</div>;
@@ -44,25 +55,23 @@ const EmploymentSection = () => {
         isClickable={!!user}
       />
       <div className='flex flex-col gap-y-4'>
-        <div
-          onScroll={(e) => {
-            const target = e.target as HTMLDivElement;
-            let maskClass = '';
-            if (
-              target.scrollLeft > 0 &&
-              target.scrollLeft < target.scrollWidth - target.clientWidth
-            ) {
-              maskClass = 'mask-x-full';
-            } else if (target.scrollLeft === 0) {
-              maskClass = 'mask-x-r';
-            } else {
-              maskClass = 'mask-x-l';
-            }
-            setMaskClass(maskClass);
-          }}
-          className={`relative ${maskClass}`}
-        >
-          <div className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px]'>
+        <div className='relative'>
+          {/* Left Mask */}
+          {showLeftMask && (
+            <div className='absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-gray-900 dark:via-gray-900/50' />
+          )}
+
+          {/* Right Mask */}
+          {showRightMask && (
+            <div className='absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-gray-900 dark:via-gray-900/50' />
+          )}
+
+          {/* Scrollable Container */}
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
+          >
             {loading
               ? Array(3)
                   .fill(0)

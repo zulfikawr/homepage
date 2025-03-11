@@ -221,7 +221,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             {
               key: 'inProgress',
               label: 'Work in Progress',
-              onClick: () => {
+              action: () => {
                 handleChange('status', 'inProgress');
                 modal.close();
               },
@@ -229,7 +229,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             {
               key: 'completed',
               label: 'Completed',
-              onClick: () => {
+              action: () => {
                 handleChange('status', 'completed');
                 modal.close();
               },
@@ -237,7 +237,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             {
               key: 'upcoming',
               label: 'Upcoming',
-              onClick: () => {
+              action: () => {
                 handleChange('status', 'upcoming');
                 modal.close();
               },

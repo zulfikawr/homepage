@@ -29,9 +29,7 @@ const ProjectsDrawer = ({
             <Button type='primary' icon='plus' onClick={handleAddProject}>
               <span className='hidden lg:block'>Add Project</span>
             </Button>
-            <Button icon='close' onClick={() => drawer.close()}>
-              <span className='hidden lg:block'>Close</span>
-            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
       </div>

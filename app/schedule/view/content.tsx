@@ -141,7 +141,7 @@ export default function ViewScheduleContent() {
     {
       key: 'all',
       label: 'All',
-      onClick: () => setFilter('all'),
+      action: () => setFilter('all'),
       bgColor:
         filter === 'all' ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700',
       color: filter === 'all' ? 'text-white' : '',
@@ -149,7 +149,7 @@ export default function ViewScheduleContent() {
     {
       key: 'pending',
       label: 'Pending',
-      onClick: () => setFilter('pending'),
+      action: () => setFilter('pending'),
       bgColor:
         filter === 'pending' ? 'bg-yellow-500' : 'bg-gray-200 dark:bg-gray-700',
       color: filter === 'pending' ? 'text-white' : '',
@@ -157,7 +157,7 @@ export default function ViewScheduleContent() {
     {
       key: 'confirmed',
       label: 'Confirmed',
-      onClick: () => setFilter('confirmed'),
+      action: () => setFilter('confirmed'),
       bgColor:
         filter === 'confirmed'
           ? 'bg-green-500'
@@ -167,7 +167,7 @@ export default function ViewScheduleContent() {
     {
       key: 'cancelled',
       label: 'Cancelled',
-      onClick: () => setFilter('cancelled'),
+      action: () => setFilter('cancelled'),
       bgColor:
         filter === 'cancelled' ? 'bg-red-500' : 'bg-gray-200 dark:bg-gray-700',
       color: filter === 'cancelled' ? 'text-white' : '',

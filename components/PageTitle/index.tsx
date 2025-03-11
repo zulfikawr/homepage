@@ -53,7 +53,7 @@ const PageTitle = ({ emoji, title, subtitle, badge }: PageTitleProps) => {
                 onClick={() => router.back()}
                 className='flex items-center text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
               >
-                <span className='mr-2 h-6 w-6'>
+                <span className='mr-2 h-5 w-5'>
                   <Icon name='arrowLeft' />
                 </span>
                 Back

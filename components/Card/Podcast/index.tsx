@@ -1,27 +1,21 @@
 import { Podcast } from 'types/podcast';
 import openLink from 'utilities/externalLink';
-import { drawer } from 'components/Drawer';
-import PodcastForm from 'components/Form/Podcast';
-import { Button } from 'components/UI';
-import { useAuth } from 'contexts/authContext';
 import Image from 'next/image';
+import { Card } from 'components/Card';
 
-const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
+export interface PodcastCardProps extends Podcast {
+  isInDrawer?: boolean;
+}
+
+const PodcastCard = (props: PodcastCardProps) => {
   const { title, description, imageURL, link, isInDrawer } = props;
 
-  const { user } = useAuth();
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    drawer.open(<PodcastForm podcastToEdit={props} />);
-  };
-
   return (
-    <div
-      className={`relative group z-40 flex ${isInDrawer ? 'w-56' : 'w-full'} cursor-${isInDrawer ? 'default' : 'pointer'} flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
+    <Card
       onClick={() => {
         if (!isInDrawer) openLink(link);
       }}
+      className={`${isInDrawer ? 'max-w-[13rem]' : ''}`}
     >
       <div className='h-full overflow-hidden rounded-[5px] opacity-100 lg:group-hover:opacity-0'>
         <div className='h-auto w-full border-b bg-gray-200 dark:border-gray-700 dark:bg-gray-800 lg:h-[196px]'>
@@ -69,14 +63,7 @@ const PodcastCard = (props: Podcast & { isInDrawer?: boolean }) => {
         <span>Podcast</span>
         <span>Listen Now</span>
       </div>
-      {user && !isInDrawer && (
-        <div className='absolute top-2 right-2 hidden group-hover:flex'>
-          <Button type='primary' onClick={handleEdit}>
-            Edit
-          </Button>
-        </div>
-      )}
-    </div>
+    </Card>
   );
 };
 

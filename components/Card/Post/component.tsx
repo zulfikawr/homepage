@@ -8,7 +8,7 @@ import { trimStr } from 'utilities/string';
 import { Post } from 'types/post';
 import { drawer } from '@/components/Drawer';
 import PostForm from '@/components/Form/Post';
-import 'react-h5-audio-player/lib/styles.css';
+import { Card } from 'components/Card';
 
 interface PostCardComponentProps {
   post: Post;
@@ -87,12 +87,7 @@ export default function PostCardComponent({
   };
 
   return (
-    <div
-      className={`group relative z-40 flex cursor-pointer ${
-        isInDrawer || isInForm ? 'w-full' : ''
-      } flex-col rounded-md border bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none`}
-      onClick={handleCardClick}
-    >
+    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
       <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
         {renderMedia()}
 
@@ -144,6 +139,6 @@ export default function PostCardComponent({
           </span>
         </p>
       </div>
-    </div>
+    </Card>
   );
 }

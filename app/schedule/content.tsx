@@ -2,7 +2,7 @@
 
 import type React from 'react';
 import { useState, useEffect } from 'react';
-import { Icon, Button } from '@/components/UI';
+import { Icon, Button, FormLabel, Input } from '@/components/UI';
 import Link from 'next/link';
 import { database, ref, set, push, get } from '@/lib/firebase';
 
@@ -404,34 +404,26 @@ export default function ScheduleContent() {
                 Your Information
               </h3>
               <div>
-                <label
-                  htmlFor='name'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300'
-                >
+                <FormLabel htmlFor='name' required>
                   Name
-                </label>
-                <input
+                </FormLabel>
+                <Input
                   type='text'
                   id='name'
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className='mt-1 w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                   required
                 />
               </div>
               <div>
-                <label
-                  htmlFor='email'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300'
-                >
+                <FormLabel htmlFor='email' required>
                   Email
-                </label>
-                <input
+                </FormLabel>
+                <Input
                   type='email'
                   id='email'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className='mt-1 w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
                   required
                 />
               </div>

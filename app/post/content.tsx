@@ -13,11 +13,8 @@ export default function PostsContent() {
   const { setHeaderTitle } = useTitle();
 
   useEffect(() => {
-    setHeaderTitle('All Posts');
-    return () => {
-      setHeaderTitle('Zulfikar');
-    };
-  }, [setHeaderTitle]);
+    setHeaderTitle('📰 Posts');
+  });
 
   const { data: posts, loading, error } = useFetchData(getPosts);
 
@@ -27,7 +24,7 @@ export default function PostsContent() {
     <div>
       <PageTitle
         emoji='📰'
-        title='All Posts'
+        title='Posts'
         subtitle='A collection of all my posts.'
       />
 
