@@ -38,7 +38,7 @@ export const toast = {
         toastInstances = toastInstances.filter((t) => t.id !== oldestToast.id);
         toastInstances.push(newToast);
         toastSubscribers.forEach((subscriber) =>
-          subscriber([...toastInstances]),
+          subscriber([...toastInstances])
         );
 
         setTimeout(() => {
@@ -46,10 +46,10 @@ export const toast = {
           if (addedToast) {
             addedToast.isVisible = true;
             toastSubscribers.forEach((subscriber) =>
-              subscriber([...toastInstances]),
+              subscriber([...toastInstances])
             );
           }
-        }, 10);
+        }, 50);
       }, 300);
     } else {
       toastInstances.push(newToast);
@@ -60,10 +60,10 @@ export const toast = {
         if (addedToast) {
           addedToast.isVisible = true;
           toastSubscribers.forEach((subscriber) =>
-            subscriber([...toastInstances]),
+            subscriber([...toastInstances])
           );
         }
-      }, 10);
+      }, 50);
     }
 
     setTimeout(() => {
@@ -72,13 +72,13 @@ export const toast = {
         toastToHide.isVisible = false;
         toastToHide.isRemoving = true;
         toastSubscribers.forEach((subscriber) =>
-          subscriber([...toastInstances]),
+          subscriber([...toastInstances])
         );
 
         setTimeout(() => {
           toastInstances = toastInstances.filter((t) => t.id !== newToast.id);
           toastSubscribers.forEach((subscriber) =>
-            subscriber([...toastInstances]),
+            subscriber([...toastInstances])
           );
         }, 300);
       }
@@ -186,19 +186,29 @@ const ToastItem = ({
   index: number;
 }) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const variantProps = getVariantProps(toast.variant);
 
   useEffect(() => {
     setIsMounted(true);
+    
+    const visibilityTimeout = setTimeout(() => {
+      setIsVisible(toast.isVisible);
+    }, 50);
 
     if (toast.isRemoving) {
-      const timeout = setTimeout(() => {
+      const removalTimeout = setTimeout(() => {
         setIsMounted(false);
       }, 300);
 
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(visibilityTimeout);
+        clearTimeout(removalTimeout);
+      };
     }
-  }, [toast.isRemoving]);
+
+    return () => clearTimeout(visibilityTimeout);
+  }, [toast.isVisible, toast.isRemoving]);
 
   if (!isMounted) {
     return null;
@@ -207,7 +217,7 @@ const ToastItem = ({
   return (
     <div
       className={`fixed z-[9999] top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
-        toast.isVisible
+        isVisible
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 -translate-y-8'
       }`}
