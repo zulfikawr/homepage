@@ -103,7 +103,7 @@ const Drawer = () => {
   }
 
   return (
-    <div className={`fixed inset-0 z-[9997] ${isVisible ? 'block' : 'hidden'}`}>
+    <div className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}>
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-500 ${
           animation === 'in'

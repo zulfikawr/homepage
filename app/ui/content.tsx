@@ -89,7 +89,7 @@ export default function UIComponentsContent() {
         <div className='w-full rounded-md border shadow-sm dark:border-gray-700'>
           <div className='flex w-full items-center border-b border-gray-200 px-4.5 py-2.5 dark:border-gray-700'>
             <div className='flex items-center text-[15px] font-medium tracking-wide text-gray-700 dark:text-white'>
-              <span>Button Variants</span>
+              <span>Buttons</span>
             </div>
           </div>
           <div className='flex flex-wrap justify-center gap-4 my-6 px-4'>
@@ -112,7 +112,7 @@ export default function UIComponentsContent() {
         <div className='w-full rounded-md border shadow-sm dark:border-gray-700'>
           <div className='flex w-full items-center border-b border-gray-200 px-4.5 py-2.5 dark:border-gray-700'>
             <div className='flex items-center text-[15px] font-medium tracking-wide text-gray-700 dark:text-white'>
-              <span>Icon</span>
+              <span>Icons</span>
             </div>
           </div>
           <div className='flex justify-center gap-4 my-6'>

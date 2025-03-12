@@ -65,15 +65,6 @@ module.exports = {
         4: '14px',
         5: '12px',
       },
-      keyframes: {
-        twinkle: {
-          '0%, 100%': { opacity: 1, transform: 'scale(1)' },
-          '50%': { opacity: 0.3, transform: 'scale(0.9)' },
-        },
-      },
-      animation: {
-        twinkle: 'twinkle 4s ease-in-out infinite',
-      },
     },
   },
   plugins: [
