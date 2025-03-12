@@ -6,7 +6,7 @@ const TabItemComponent = (props: TabItemComponentProps) => {
   const { label, icon, link } = props;
 
   const TabButton = () => (
-    <button className='flex cursor-pointer items-center justify-center rounded-md px-4 py-2 text-sm md:text-md tracking-wider focus:outline-none'>
+    <button className='flex cursor-pointer items-center justify-center rounded-md px-4 py-2 text-sm md:text-md tracking-wider focus:outline-none select-none'>
       {icon && (
         <span className='mr-3 h-5 w-5'>
           <Icon name={icon} />

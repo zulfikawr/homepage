@@ -4,6 +4,12 @@ import PageTitle from '@/components/PageTitle';
 export default function PagesContent() {
   const pages = [
     {
+      title: 'Certifications',
+      desc: 'Get in touch',
+      icon: 'certificate',
+      href: '/certs',
+    },
+    {
       title: 'Contacts',
       desc: 'Get in touch',
       icon: 'addressBook',

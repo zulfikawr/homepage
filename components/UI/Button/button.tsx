@@ -36,7 +36,7 @@ const Template = ({
       type='button'
       className={twMerge(
         defaultClassName,
-        `flex items-center effect-pressing ${icon ? 'gap-2' : ''}`,
+        `flex items-center effect-pressing select-none ${icon ? 'gap-2' : ''}`,
         className,
       )}
       {...args}

@@ -32,7 +32,7 @@ export default function PageCard({
 
   return (
     <div
-      className='relative flex cursor-pointer items-center rounded-md border bg-white px-2 md:px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none'
+      className='relative flex cursor-pointer items-center rounded-md border bg-white px-2 md:px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none select-none'
       onClick={handleClick}
     >
       <div className='relative z-10 flex items-center overflow-hidden'>

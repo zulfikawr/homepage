@@ -77,7 +77,7 @@ export default function Footer() {
 
   return (
     <footer className='mt-20 border-b border-t border-gray-200 bg-white py-4 text-center dark:border-gray-700 dark:bg-gray-800'>
-      <div className='fixed bottom-8 left-8 z-[9998] text-gray-500 dark:text-gray-300'>
+      <div className='fixed bottom-8 left-8 z-[9997] text-gray-500 dark:text-gray-300'>
         <Button
           type='default'
           aria-label={`Change theme (current: ${theme})`}
@@ -87,7 +87,7 @@ export default function Footer() {
         />
       </div>
 
-      <div className='fixed bottom-8 right-8 z-[9998] text-gray-500 dark:text-gray-300'>
+      <div className='fixed bottom-8 right-8 z-[9997] text-gray-500 dark:text-gray-300'>
         <OffsetTransition componentRef={backToTopRef}>
           <Button
             type='default'
