@@ -1,10 +1,18 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import { modal } from '@/components/Modal';
-import { Button, Checkbox, FormLabel, Input, Textarea } from '@/components/UI';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  FormLabel,
+  Input,
+  Textarea,
+} from '@/components/UI';
 import { ProjectCard } from '@/components/Card/Project';
 import { toast } from '@/components/Toast';
 import { addProject, updateProject, deleteProject } from '@/functions/projects';
@@ -28,6 +36,7 @@ const initialProjectState: Project = {
   favicon: '',
   dateString: '',
   status: 'inProgress',
+  pinned: false,
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = ({
@@ -70,6 +79,38 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
   const handleDateChange = (range: { start: Date; end: Date }) => {
     setDateRange(range);
+  };
+
+  const togglePin = async () => {
+    const newPinnedStatus = !project.pinned;
+
+    try {
+      const result = await updateProject({
+        ...project,
+        pinned: newPinnedStatus,
+      });
+
+      if (result.success) {
+        setProject((prevProject) => ({
+          ...prevProject,
+          pinned: newPinnedStatus,
+        }));
+        await onUpdate();
+        toast.show(
+          `Project ${newPinnedStatus ? 'pinned' : 'unpinned'} successfully!`,
+        );
+      } else {
+        throw new Error(result.error || 'Failed to update pinned status');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.show(`Error: ${error.message}`);
+      } else {
+        toast.show(
+          'An unknown error occurred while updating the pinned status.',
+        );
+      }
+    }
   };
 
   const validateForm = () => {
@@ -170,7 +211,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
-        <p className='mb-6 text-gray-800 dark:text-gray-300'>
+        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
           Are you sure you want to delete the following project? This action
           cannot be undone.
         </p>
@@ -183,8 +224,18 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             tools={project.tools.length ? project.tools : ['Project Tools']}
             link={project.link || '#'}
             dateString={
-              projectToEdit?.dateString ||
-              new Date().toLocaleDateString('en-GB').split('T')[0]
+              project.dateString ||
+              `${dateRange.start.toLocaleDateString('en-GB', {
+                month: 'short',
+                year: 'numeric',
+              })} - ${
+                isPresent
+                  ? 'Present'
+                  : dateRange.end.toLocaleDateString('en-GB', {
+                      month: 'short',
+                      year: 'numeric',
+                    })
+              }`
             }
             status={project.status}
             isInDrawer
@@ -252,18 +303,127 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>
-            {projectToEdit ? 'Edit Project' : 'Add New Project'}
+          <h1 className='text-xl md:text-2xl font-medium tracking-wide text-black dark:text-white'>
+            {projectToEdit ? (
+              <div className='flex items-center'>
+                {project.favicon && (
+                  <span className='mr-3 inline-block'>
+                    <Image
+                      src={project.favicon}
+                      height={30}
+                      width={30}
+                      alt={project.name}
+                    />
+                  </span>
+                )}
+                {project.name}
+              </div>
+            ) : (
+              'New Project'
+            )}
           </h1>
-          <Button icon='close' onClick={() => drawer.close()} />
+          <div className='hidden md:flex space-x-4'>
+            {projectToEdit && (
+              <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                <span className='hidden md:inline-flex'>Delete</span>
+              </Button>
+            )}
+
+            {projectToEdit &&
+              (project.pinned ? (
+                <Button
+                  icon='pushPinSlash'
+                  onClick={togglePin}
+                  className='w-full'
+                >
+                  <span>Unpin</span>
+                </Button>
+              ) : (
+                <Button icon='pushPin' onClick={togglePin} className='w-full'>
+                  <span>Pin</span>
+                </Button>
+              ))}
+
+            {projectToEdit ? (
+              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                <span className='hidden md:inline-flex'>Save</span>
+              </Button>
+            ) : (
+              <Button type='primary' icon='plus' onClick={handleSubmit}>
+                <span className='hidden md:inline-flex'>Add</span>
+              </Button>
+            )}
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
+
+          <div className='block md:hidden'>
+            <Dropdown
+              trigger={<Button icon='dotsThree' />}
+              position='bottomLeft'
+            >
+              <div className='flex flex-col p-2 space-y-2'>
+                {projectToEdit && (
+                  <Button
+                    type='destructive'
+                    icon='trash'
+                    onClick={confirmDelete}
+                    className='w-full'
+                  >
+                    <span>Delete</span>
+                  </Button>
+                )}
+
+                {projectToEdit &&
+                  (project.pinned ? (
+                    <Button
+                      icon='pushPinSlash'
+                      onClick={togglePin}
+                      className='w-full'
+                    >
+                      <span>Unpin</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      icon='pushPin'
+                      onClick={togglePin}
+                      className='w-full'
+                    >
+                      <span>Pin</span>
+                    </Button>
+                  ))}
+
+                {projectToEdit ? (
+                  <Button
+                    type='primary'
+                    icon='floppyDisk'
+                    onClick={handleSubmit}
+                    className='w-full'
+                  >
+                    <span>Save</span>
+                  </Button>
+                ) : (
+                  <Button
+                    type='primary'
+                    icon='plus'
+                    onClick={handleSubmit}
+                    className='w-full'
+                  >
+                    <span>Add</span>
+                  </Button>
+                )}
+              </div>
+            </Dropdown>
+          </div>
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Project Preview */}
           <div className='flex justify-center'>
             <ProjectCard
@@ -274,8 +434,18 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               tools={project.tools.length ? project.tools : ['Project Tools']}
               link={project.link || '#'}
               dateString={
-                projectToEdit?.dateString ||
-                new Date().toLocaleDateString('en-GB').split('T')[0]
+                project.dateString ||
+                `${dateRange.start.toLocaleDateString('en-GB', {
+                  month: 'short',
+                  year: 'numeric',
+                })} - ${
+                  isPresent
+                    ? 'Present'
+                    : dateRange.end.toLocaleDateString('en-GB', {
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                }`
               }
               status={project.status}
               isInDrawer
@@ -365,17 +535,18 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <FormLabel htmlFor='status' required>
                 Status
               </FormLabel>
-              <button
+              <Input
                 type='button'
                 onClick={openStatusModal}
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white text-left'
-              >
-                {project.status === 'inProgress'
-                  ? 'Work in Progress'
-                  : project.status === 'completed'
-                    ? 'Completed'
-                    : 'Upcoming'}
-              </button>
+                value={
+                  project.status === 'inProgress'
+                    ? 'Work in Progress'
+                    : project.status === 'completed'
+                      ? 'Completed'
+                      : 'Upcoming'
+                }
+                className='text-left cursor-pointer'
+              />
             </div>
             <div>
               <FormLabel htmlFor='link'>Link</FormLabel>
@@ -394,16 +565,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 onChange={(e) => handleChange('favicon', e.target.value)}
                 placeholder='https://project-favicon.com'
               />
-            </div>
-            <div className='flex justify-end space-x-4 pt-4'>
-              {projectToEdit && (
-                <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                {projectToEdit ? 'Save Changes' : 'Add Project'}
-              </Button>
             </div>
           </form>
         </div>

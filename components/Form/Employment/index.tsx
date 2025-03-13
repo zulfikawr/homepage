@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import Image from 'next/image';
 import { Employment } from '@/types/employment';
 import { drawer } from '@/components/Drawer';
 import { Button, Checkbox, FormLabel, Input } from '@/components/UI';
@@ -14,6 +15,7 @@ import {
 import { generateId } from '@/utilities/generateId';
 import DatePicker from '@/components/DatePicker';
 import { modal } from '@/components/Modal';
+import Separator from '@/components/UI/Separator';
 
 interface EmploymentFormProps {
   employmentToEdit?: Employment;
@@ -174,7 +176,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
-        <p className='mb-6 text-gray-800 dark:text-gray-300'>
+        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
           Are you sure you want to delete the following employment? This action
           cannot be undone.
         </p>
@@ -194,7 +196,20 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             jobTitle={employment.jobTitle || 'Job Title'}
             jobType={employment.jobType || 'Job Type'}
             responsibilities={employment.responsibilities}
-            dateString={employmentToEdit?.dateString || 'Date Range'}
+            dateString={
+              employment.dateString ||
+              `${dateRange.start.toLocaleDateString('en-GB', {
+                month: 'short',
+                year: 'numeric',
+              })} - ${
+                isPresent
+                  ? 'Present'
+                  : dateRange.end.toLocaleDateString('en-GB', {
+                      month: 'short',
+                      year: 'numeric',
+                    })
+              }`
+            }
             isInDrawer
           />
         </div>
@@ -236,18 +251,49 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>
-            {employmentToEdit ? 'Edit Employment' : 'Add New Employment'}
+          <h1 className='text-xl sm:text-2xl font-medium tracking-wide'>
+            {employmentToEdit ? (
+              <div className='flex items-center'>
+                <span className='mr-3 inline-block'>
+                  {employment.orgLogoSrc && (
+                    <Image
+                      src={employment.orgLogoSrc}
+                      alt={employment.organization}
+                      width={30}
+                      height={30}
+                      className='rounded-full border bg-white dark:border-neutral-700'
+                    />
+                  )}
+                </span>
+                {employment.organization}
+              </div>
+            ) : (
+              'Add New Employment'
+            )}
           </h1>
-          <Button icon='close' onClick={() => drawer.close()} />
+          <div className='flex space-x-4'>
+            {employmentToEdit && (
+              <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                <span className='hidden md:inline-flex'>Delete</span>
+              </Button>
+            )}
+            <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+              <span className='hidden md:inline-flex'>
+                {employmentToEdit ? 'Save' : 'Add'}
+              </span>
+            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Employment Preview */}
           <div className='flex justify-center'>
             <EmploymentCard
@@ -265,17 +311,20 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
               jobTitle={employment.jobTitle || 'Job Title'}
               jobType={employment.jobType || 'Job Type'}
               responsibilities={employment.responsibilities}
-              dateString={`${dateRange.start.toLocaleDateString('en-GB', {
-                month: 'short',
-                year: 'numeric',
-              })} - ${
-                isPresent
-                  ? 'Present'
-                  : dateRange.end.toLocaleDateString('en-GB', {
-                      month: 'short',
-                      year: 'numeric',
-                    })
-              }`}
+              dateString={
+                employment.dateString ||
+                `${dateRange.start.toLocaleDateString('en-GB', {
+                  month: 'short',
+                  year: 'numeric',
+                })} - ${
+                  isPresent
+                    ? 'Present'
+                    : dateRange.end.toLocaleDateString('en-GB', {
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                }`
+              }
               isInDrawer
             />
           </div>
@@ -326,7 +375,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
               <select
                 value={employment.jobType}
                 onChange={(e) => handleChange('jobType', e.target.value)}
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 required
               >
                 <option value='Full-time'>Full-time</option>
@@ -427,16 +476,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 }
                 placeholder='Organization location'
               />
-            </div>
-            <div className='flex justify-end space-x-4 pt-4'>
-              {employmentToEdit && (
-                <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                {employmentToEdit ? 'Save Changes' : 'Add Employment'}
-              </Button>
             </div>
           </form>
         </div>

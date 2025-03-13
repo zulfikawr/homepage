@@ -22,7 +22,7 @@ const PlaylistDrawer = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Playlist</h1>
           <div className='flex items-center space-x-2'>
@@ -35,7 +35,7 @@ const PlaylistDrawer = ({
       </div>
 
       {/* Scrollable Content */}
-      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 overflow-y-auto w-fit p-4'>
+      <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 overflow-y-auto w-full p-4'>
         {playlists.map((playlist, index) => (
           <div
             key={index}

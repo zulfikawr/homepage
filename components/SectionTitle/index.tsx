@@ -27,11 +27,11 @@ const SectionTitle = ({
     >
       <div
         onClick={isClickable ? onClick : undefined}
-        className={`inline-flex items-center rounded-full border border-gray-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm ${
+        className={`inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm ${
           isClickable
-            ? 'cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600'
+            ? 'cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-600'
             : ''
-        } dark:border-gray-600 dark:bg-gray-700`}
+        } dark:border-neutral-600 dark:bg-neutral-700`}
       >
         <span className={`mr-1.5 flex h-5 w-5 ${iconClassName}`}>
           <Icon name={icon} />
@@ -42,7 +42,7 @@ const SectionTitle = ({
         <Link
           href={link.href}
           target='_blank'
-          className='flex items-center gap-x-2 text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+          className='flex items-center gap-x-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
         >
           {link.label}
           <span className='h-5 w-5'>

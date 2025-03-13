@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Icon from '@/components/UI/Icon/icon';
-import type { IconNames } from '@/components/UI/types';
+import { Icon } from '@/components/UI/Icon';
 
 type ToastVariant = 'default' | 'info' | 'success' | 'error';
 
@@ -38,7 +37,7 @@ export const toast = {
         toastInstances = toastInstances.filter((t) => t.id !== oldestToast.id);
         toastInstances.push(newToast);
         toastSubscribers.forEach((subscriber) =>
-          subscriber([...toastInstances])
+          subscriber([...toastInstances]),
         );
 
         setTimeout(() => {
@@ -46,7 +45,7 @@ export const toast = {
           if (addedToast) {
             addedToast.isVisible = true;
             toastSubscribers.forEach((subscriber) =>
-              subscriber([...toastInstances])
+              subscriber([...toastInstances]),
             );
           }
         }, 50);
@@ -60,7 +59,7 @@ export const toast = {
         if (addedToast) {
           addedToast.isVisible = true;
           toastSubscribers.forEach((subscriber) =>
-            subscriber([...toastInstances])
+            subscriber([...toastInstances]),
           );
         }
       }, 50);
@@ -72,13 +71,13 @@ export const toast = {
         toastToHide.isVisible = false;
         toastToHide.isRemoving = true;
         toastSubscribers.forEach((subscriber) =>
-          subscriber([...toastInstances])
+          subscriber([...toastInstances]),
         );
 
         setTimeout(() => {
           toastInstances = toastInstances.filter((t) => t.id !== newToast.id);
           toastSubscribers.forEach((subscriber) =>
-            subscriber([...toastInstances])
+            subscriber([...toastInstances]),
           );
         }, 300);
       }
@@ -130,7 +129,7 @@ export const useToast = () => {
 const getVariantProps = (
   variant: ToastVariant,
 ): {
-  icon?: IconNames;
+  icon?: string;
   bgClass: string;
   textClass: string;
   borderClass: string;
@@ -159,9 +158,9 @@ const getVariantProps = (
       };
     default:
       return {
-        bgClass: 'bg-white dark:bg-gray-800',
-        textClass: 'text-gray-800 dark:text-white',
-        borderClass: 'border-gray-300 dark:border-gray-600',
+        bgClass: 'bg-white dark:bg-neutral-800',
+        textClass: 'text-neutral-800 dark:text-white',
+        borderClass: 'border-neutral-300 dark:border-neutral-600',
       };
   }
 };
@@ -191,7 +190,7 @@ const ToastItem = ({
 
   useEffect(() => {
     setIsMounted(true);
-    
+
     const visibilityTimeout = setTimeout(() => {
       setIsVisible(toast.isVisible);
     }, 50);
@@ -217,9 +216,7 @@ const ToastItem = ({
   return (
     <div
       className={`fixed z-[9999] top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
-        isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-8'
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
       }`}
       style={{ marginTop: `${index * 50}px` }}
     >

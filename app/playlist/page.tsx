@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import PlaylistContent from './content';
+import SpotifyPlaylistContent from './spotify';
 
 export const metadata: Metadata = {
   title: 'Playlist - Zulfikar',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function PlaylistPage() {
-  return <PlaylistContent />;
+  return <SpotifyPlaylistContent />;
 }

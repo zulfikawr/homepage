@@ -32,7 +32,7 @@ const PersonalInfoSection = () => {
           <span className='mr-3 inline-block'>👋</span>
           {personalInfo.name}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-4 font-light leading-relaxed text-gray-500 dark:text-gray-300 lg:text-2'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-4 font-light leading-relaxed text-neutral-500 dark:text-neutral-300 lg:text-2'>
           <p>{personalInfo.title}</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ const PersonalInfoSection = () => {
           width={105}
           alt={personalInfo.name}
           priority
-          className='rounded-xl bg-gray-200 shadow-sm dark:border dark:border-gray-600'
+          className='rounded-xl bg-neutral-200 shadow-sm dark:border dark:border-neutral-600'
         />
       </Hover>
     </section>

@@ -57,7 +57,7 @@ const PageTitle = ({
                 )}
               </h2>
               {subtitle && (
-                <p className='-mt-1 text-sm text-neutral-500 dark:text-gray-400'>
+                <p className='-mt-1 text-sm text-neutral-500 dark:text-neutral-400'>
                   {subtitle}
                 </p>
               )}
@@ -67,7 +67,7 @@ const PageTitle = ({
             <div className='flex-1 pl-5 pr-3'>
               <button
                 onClick={() => router.back()}
-                className='flex items-center text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
               >
                 <span className='mr-2 h-5 w-5'>
                   <Icon name='arrowLeft' />
@@ -79,7 +79,7 @@ const PageTitle = ({
         </div>
       </section>
       <div className='my-5'>
-        <hr className='dark:border-gray-600' />
+        <hr className='dark:border-neutral-600' />
       </div>
     </>
   );

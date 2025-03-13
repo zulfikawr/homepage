@@ -19,131 +19,52 @@ body {
 }
 
 .rhap_container {
-  @apply dark:!bg-gray-800;
+  @apply dark:!bg-neutral-800;
 }
 
 .rhap_time {
-  @apply dark:!text-gray-400;
+  @apply dark:!text-neutral-400;
 }
 
 .rhap_progress-bar-show-download {
-  @apply dark:bg-gray-700;
+  @apply dark:bg-neutral-700;
 }
 
 .rhap_progress-filled {
-  @apply dark:bg-gray-500;
+  @apply dark:bg-neutral-500;
 }
 
 .rhap_download-progress {
-  @apply dark:bg-gray-400;
+  @apply dark:bg-neutral-400;
 }
 
 .rhap_progress-indicator {
-  @apply dark:bg-gray-600;
+  @apply dark:bg-neutral-600;
 }
 
 .rhap_main-controls-button {
-  @apply dark:text-gray-500;
+  @apply dark:text-neutral-500;
 }
 
 .rhap_volume-bar {
-  @apply dark:bg-gray-700;
+  @apply dark:bg-neutral-700;
 }
 
 .rhap_volume-button {
-  @apply dark:text-gray-500;
+  @apply dark:text-neutral-500;
 }
 
 .rhap_volume-indicator {
-  @apply dark:bg-gray-600;
+  @apply dark:bg-neutral-600;
 }
 
 .rhap_repeat-button {
-  @apply dark:text-gray-500;
+  @apply dark:text-neutral-500;
 }
 
 .podcast-image-placeholder {
   width: 160px !important;
   height: 160px !important;
-}
-
-.mask-y {
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-}
-
-.mask-x-r {
-  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 24px);
-  mask-image: linear-gradient(to left, transparent 0, #000 24px);
-}
-
-.mask-x-l {
-  -webkit-mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 0px,
-    #000 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 0px,
-    #000 95%,
-    transparent 100%
-  );
-}
-
-.mask-x-full {
-  -webkit-mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-}
-
-.mask-x {
-  -webkit-mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to left,
-    transparent 0,
-    #000 24px,
-    #000 95%,
-    transparent 100%
-  );
-}
-
-@media screen and (min-width: 1280px) {
-  .mask-x {
-    mask-image: none !important;
-  }
 }
 
 .tabs-highlighter {
@@ -194,7 +115,7 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 hover:bg-gray-400;
+  @apply bg-neutral-300 hover:bg-neutral-400;
   border: 4px solid transparent;
   border-radius: 8px;
   background-clip: padding-box;
@@ -206,7 +127,7 @@ body::-webkit-scrollbar {
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 hover:bg-gray-500;
+  @apply bg-neutral-600 hover:bg-neutral-500;
 }
 
 .header {
@@ -257,7 +178,7 @@ body::-webkit-scrollbar {
 .prose p {
   overflow: hidden;
   overflow-x: auto;
-  @apply rounded-md text-gray-800 dark:text-gray-200;
+  @apply rounded-md text-neutral-800 dark:text-neutral-200;
 }
 
 .prose blockquote {
@@ -273,7 +194,7 @@ body::-webkit-scrollbar {
   font-style: normal;
   padding: 15px 20px 15px 80px;
   color: #777;
-  @apply rounded-r-md bg-gray-50 dark:border-gray-500 dark:bg-gray-700;
+  @apply rounded-r-md bg-neutral-50 dark:border-neutral-500 dark:bg-neutral-700;
 }
 
 .prose blockquote p {
@@ -284,7 +205,7 @@ body::-webkit-scrollbar {
 
 .dark .prose blockquote p {
   margin: 0px;
-  @apply !text-gray-300;
+  @apply !text-neutral-300;
 }
 
 .prose img {
@@ -310,7 +231,7 @@ h5 {
   box-sizing: border-box;
   color: rgba(0, 0, 0, 0.6);
   margin: 15px 0;
-  @apply rounded-md border shadow-sm dark:border-gray-500 dark:bg-gray-700 dark:bg-none;
+  @apply rounded-md border shadow-sm dark:border-neutral-500 dark:bg-neutral-700 dark:bg-none;
 }
 
 .prose .warp-post-embed:hover {
@@ -332,7 +253,7 @@ h5 {
   font-size: 13px;
   font-style: normal;
   color: #888;
-  @apply dark:text-gray-400;
+  @apply dark:text-neutral-400;
   line-height: 1.5;
   margin-bottom: 10px;
   margin-top: 0px;
@@ -341,8 +262,8 @@ h5 {
 .prose .warp-post-embed .embed-content b {
   background: #eee;
   color: #999;
-  @apply dark:text-gray-200;
-  @apply dark:bg-gray-600;
+  @apply dark:text-neutral-200;
+  @apply dark:bg-neutral-600;
   font-weight: 500 !important;
   padding: 1px 8px 3px 9px;
   border-radius: 50px;
@@ -350,7 +271,7 @@ h5 {
 
 .prose .warp-post-embed .embed-content h2 {
   color: rgba(0, 0, 0, 0.8);
-  @apply dark:text-gray-100;
+  @apply dark:text-neutral-100;
   display: block;
   margin-bottom: 8px;
   margin-top: 4%;
@@ -378,7 +299,7 @@ h5 {
 }
 
 .prose ul li::before {
-  @apply bg-gray-800;
+  @apply bg-neutral-800;
   @apply dark:bg-white;
   @apply w-3;
   @apply h-3;
@@ -401,11 +322,11 @@ h5 {
 .prose table {
   border: 1px solid #e5e7eb;
   @apply dark:text-white;
-  @apply dark:border-gray-500;
+  @apply dark:border-neutral-500;
 }
 
 .prose tbody tr {
-  @apply dark:border-b-gray-500;
+  @apply dark:border-b-neutral-500;
 }
 
 .prose tbody tr td {
@@ -413,7 +334,7 @@ h5 {
   @apply whitespace-nowrap;
   @apply overflow-hidden;
   @apply text-ellipsis;
-  @apply dark:border-r-gray-500;
+  @apply dark:border-r-neutral-500;
 }
 
 .prose tbody tr td:last-child {
@@ -429,11 +350,11 @@ h5 {
 }
 
 .prose pre {
-  @apply dark:bg-gray-700;
+  @apply dark:bg-neutral-700;
 }
 
 .prose code {
-  @apply dark:text-gray-400;
+  @apply dark:text-neutral-400;
 }
 
 .prose pre code::-webkit-scrollbar {

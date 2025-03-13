@@ -1,7 +1,3 @@
-var flattenColorPalette =
-  require('tailwindcss/lib/util/flattenColorPalette').default;
-const colors = require('tailwindcss/colors');
-
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
@@ -21,9 +17,6 @@ module.exports = {
         9: '27px',
         10: '30px',
         20: '60px',
-      },
-      colors: {
-        gray: colors.neutral,
       },
       boxShadow: {
         header: '0 4px 8px rgba(0,0,0,.04)',
@@ -67,29 +60,4 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    ({ addUtilities, theme }) => {
-      const colors = flattenColorPalette(theme('borderColor'));
-      delete colors['default'];
-
-      const colorMap = Object.keys(colors).map((color) => ({
-        [`.border-t-${color}`]: {
-          borderTopColor: colors[color],
-        },
-        [`.border-r-${color}`]: {
-          borderRightColor: colors[color],
-        },
-        [`.border-b-${color}`]: {
-          borderBottomColor: colors[color],
-        },
-        [`.border-l-${color}`]: {
-          borderLeftColor: colors[color],
-        },
-      }));
-      const utilities = Object.assign({}, ...colorMap);
-
-      addUtilities(utilities);
-    },
-    require('@tailwindcss/typography'),
-  ],
 };

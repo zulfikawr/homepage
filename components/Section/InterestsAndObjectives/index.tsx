@@ -42,7 +42,7 @@ const InterestsAndObjectivesSection = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className='-mt-2 flex flex-col font-light text-gray-500 dark:text-gray-300'>
+        <div className='-mt-2 flex flex-col font-light text-neutral-500 dark:text-neutral-300'>
           <p>{interestsAndObjectives.description}</p>
           <Separator margin='4' />
           <p>My general objectives are to:</p>

@@ -98,7 +98,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
       <Separator />
 
       {isRange && selectingEnd && selectedStartDate && (
-        <p className='text-sm text-gray-600 dark:text-gray-400 mb-5'>
+        <p className='text-sm text-neutral-600 dark:text-neutral-400 mb-5'>
           Start date:{' '}
           {selectedStartDate.toLocaleDateString('en-GB', {
             day: 'numeric',
@@ -114,7 +114,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             type='ghost'
             icon='caretLeft'
             onClick={() => handleMonthChange('prev')}
-            className='hover:bg-gray-200 dark:hover:bg-gray-600'
+            className='hover:bg-neutral-200 dark:hover:bg-neutral-600'
           />
           <span className='text-lg font-semibold'>
             {new Date(year, month).toLocaleString('default', {
@@ -126,15 +126,15 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
             type='ghost'
             icon='caretRight'
             onClick={() => handleMonthChange('next')}
-            className='hover:bg-gray-200 dark:hover:bg-gray-600'
+            className='hover:bg-neutral-200 dark:hover:bg-neutral-600'
           />
         </div>
 
-        <div className='grid grid-cols-7 gap-2 border dark:border-gray-600 rounded-md px-2 py-4'>
+        <div className='grid grid-cols-7 gap-2 border dark:border-neutral-600 rounded-md px-2 py-4'>
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div
               key={day}
-              className='text-center text-sm font-medium text-gray-500 dark:text-gray-400 mb-2'
+              className='text-center text-sm font-medium text-neutral-500 dark:text-neutral-400 mb-2'
             >
               {day}
             </div>
@@ -148,7 +148,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
               className={`
                 text-center px-2 py-3 text-sm rounded-md
                 ${day ? 'cursor-pointer' : ''}
-                ${day && !isDateDisabled(day) ? 'hover:bg-gray-100 dark:hover:bg-gray-600' : ''}
+                ${day && !isDateDisabled(day) ? 'hover:bg-neutral-100 dark:hover:bg-neutral-600' : ''}
                 ${isDateInRange(day) ? 'bg-blue-100 dark:bg-blue-900' : ''}
                 ${
                   (selectedStartDate?.getDate() === day &&
@@ -160,7 +160,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
                     ? 'bg-blue-500 text-white hover:bg-blue-600'
                     : ''
                 }
-                ${isDateDisabled(day) ? 'text-gray-400 dark:text-gray-600 cursor-default' : ''}
+                ${isDateDisabled(day) ? 'text-neutral-400 dark:text-neutral-600 cursor-default' : ''}
               `}
               onClick={() => day && !isDateDisabled(day) && handleDayClick(day)}
             >
@@ -171,7 +171,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
       </div>
       <div className='flex justify-between mt-5'>
         {selectingEnd && selectedStartDate && (
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-neutral-600 dark:text-neutral-400'>
             Start date:{' '}
             {selectedStartDate.toLocaleDateString('en-GB', {
               day: 'numeric',
@@ -182,7 +182,7 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
         )}
 
         {isRange && selectingEnd && !disabled && (
-          <div className='text-sm text-gray-600 dark:text-gray-400'>
+          <div className='text-sm text-neutral-600 dark:text-neutral-400'>
             Click a date to set the end date
           </div>
         )}

@@ -37,7 +37,7 @@ export async function addProject(
   data: Project,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const { id, name, description, tools, status } = data;
+    const { id, name, description, tools, status, pinned } = data;
 
     if (!id || !name || !description || !tools || !status) {
       return {
@@ -48,6 +48,7 @@ export async function addProject(
 
     const newProject: Project = {
       ...data,
+      pinned: pinned ?? false,
     };
 
     const newProjectRef = ref(database, `projects/${id}`);
@@ -75,7 +76,7 @@ export async function updateProject(
   data: Project,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const { id, name, description, tools, status } = data;
+    const { id, name, description, tools, status, pinned } = data;
 
     if (!id || !name || !description || !tools || !status) {
       return {
@@ -86,6 +87,7 @@ export async function updateProject(
 
     const updatedProject: Project = {
       ...data,
+      pinned: pinned ?? false,
     };
 
     const projectRef = ref(database, `projects/${id}`);

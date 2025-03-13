@@ -58,12 +58,12 @@ const EmploymentSection = () => {
         <div className='relative'>
           {/* Left Mask */}
           {showLeftMask && (
-            <div className='absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-gray-900 dark:via-gray-900/50' />
+            <div className='absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50' />
           )}
 
           {/* Right Mask */}
           {showRightMask && (
-            <div className='absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-gray-900 dark:via-gray-900/50' />
+            <div className='absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50' />
           )}
 
           {/* Scrollable Container */}

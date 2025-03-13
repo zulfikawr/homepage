@@ -6,7 +6,7 @@ interface DropdownProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
   onOpenChange?: (isOpen: boolean) => void;
-  position?: 'top' | 'bottom' | 'left' | 'right';
+  position?: 'top' | 'bottom' | 'left' | 'right' | 'bottomLeft';
 }
 
 const Dropdown = ({
@@ -58,6 +58,8 @@ const Dropdown = ({
         return 'right-full top-1/2 transform -translate-y-1/2 mr-2';
       case 'right':
         return 'left-full top-1/2 transform -translate-y-1/2 ml-2';
+      case 'bottomLeft':
+        return 'top-full right-1/2 transform translate-x-1/4 mt-2 -mr-[1px]';
       default:
         return 'top-full left-1/2 transform -translate-x-1/2 mt-2';
     }
@@ -93,7 +95,7 @@ const Dropdown = ({
 
       {/* Dropdown Menu */}
       <div
-        className={`w-full absolute ${getPositionClass()} z-[9998] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg transition-all duration-200 ease-in-out ${getTransitionClass()} ${
+        className={`absolute ${getPositionClass()} z-[9998] bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-md shadow-lg transition-all duration-200 ease-in-out ${getTransitionClass()} ${
           !isOpen ? 'pointer-events-none' : ''
         }`}
         role='menu'
@@ -104,4 +106,6 @@ const Dropdown = ({
   );
 };
 
-export default Dropdown;
+Dropdown.displayName = 'Dropdown';
+
+export { Dropdown };

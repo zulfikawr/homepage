@@ -22,7 +22,7 @@ const PodcastDrawer = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Podcasts</h1>
           <div className='flex items-center space-x-2'>

@@ -58,16 +58,16 @@ export default function ContactsContent() {
             href={contact.link}
             target='_blank'
             rel='noopener noreferrer'
-            className='flex cursor-pointer gap-4 items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:shadow-none'
+            className='flex cursor-pointer gap-4 items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600 dark:hover:shadow-none'
           >
             <div
-              className={`flex size-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700 ${contact.color}`}
+              className={`flex size-10 items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-700 ${contact.color}`}
             >
               <Icon name={contact.icon} className='size-5' />
             </div>
             <div>
               <h3 className='font-medium'>{contact.platform}</h3>
-              <p className='text-sm text-gray-600 dark:text-gray-400'>
+              <p className='text-sm text-neutral-600 dark:text-neutral-400'>
                 {contact.username}
               </p>
             </div>
@@ -75,9 +75,9 @@ export default function ContactsContent() {
         ))}
       </div>
 
-      <div className='mt-8 rounded-lg border bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+      <div className='mt-8 rounded-lg border bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800'>
         <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
-        <p className='text-sm text-gray-600 dark:text-gray-400'>
+        <p className='text-sm text-neutral-600 dark:text-neutral-400'>
           Prefer to send a private message? Feel free to use the{' '}
           <a
             href='/feedback'

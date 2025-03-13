@@ -25,4 +25,6 @@ const FormLabel = ({
   );
 };
 
-export default FormLabel;
+FormLabel.displayName = 'FormLabel';
+
+export { FormLabel };

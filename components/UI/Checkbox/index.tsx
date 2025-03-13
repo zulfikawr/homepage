@@ -26,11 +26,11 @@ const Checkbox = ({
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled}
-        className='rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer'
+        className='rounded border-neutral-300 text-blue-600 focus:ring-blue-500 cursor-pointer'
       />
       <label
         htmlFor={id}
-        className='text-sm text-gray-600 dark:text-gray-400 cursor-pointer'
+        className='text-sm text-neutral-600 dark:text-neutral-400 cursor-pointer'
       >
         {label}
       </label>
@@ -38,4 +38,6 @@ const Checkbox = ({
   );
 };
 
-export default Checkbox;
+Checkbox.displayName = 'Checkbox';
+
+export { Checkbox };

@@ -55,7 +55,7 @@ export default function PostCardComponent({
           perspective={1000}
           max={25}
           scale={1.01}
-          className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-gray-200 shadow-sm transition-all hover:shadow-md dark:opacity-90'
+          className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-neutral-200 shadow-sm transition-all hover:shadow-md dark:opacity-90'
         >
           <Image
             fill
@@ -107,12 +107,12 @@ export default function PostCardComponent({
             </div>
           </div>
 
-          <h1 className='text-xl lg:text-2xl font-bold tracking-wider text-gray-700 dark:text-white'>
+          <h1 className='text-xl lg:text-2xl font-bold tracking-wider text-neutral-700 dark:text-white'>
             {post.title}
           </h1>
 
           <p
-            className='leading-relaxed overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-gray-500 dark:text-gray-400 line-clamp-2'
+            className='leading-relaxed overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-neutral-500 dark:text-neutral-400 line-clamp-2'
             dangerouslySetInnerHTML={{
               __html: trimStr(post.excerpt, 150),
             }}
@@ -121,14 +121,14 @@ export default function PostCardComponent({
       </div>
       {renderAudio()}
 
-      <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-gray-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-gray-700'>
-        <p className='leading-2 flex items-center justify-between whitespace-nowrap text-5 tracking-wide text-gray-500 dark:text-gray-400 lg:text-4 lg:leading-8'>
+      <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-neutral-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-neutral-700'>
+        <p className='leading-2 flex items-center justify-between whitespace-nowrap text-5 tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-4 lg:leading-8'>
           <span className='flex items-center gap-x-2'>
             <span>Posted {post.dateString}</span>
           </span>
           <span className='flex items-center'>
             <button
-              className='effect-pressing flex items-center gap-x-2 hover:text-gray-600 dark:hover:text-gray-300'
+              className='effect-pressing flex items-center gap-x-2 hover:text-neutral-600 dark:hover:text-neutral-300'
               onClick={handleShare}
             >
               <div className='size-[15px]'>

@@ -58,8 +58,8 @@ export default function FeedbackContent() {
         route='/feedback'
       />
 
-      <div className='w-full rounded-md p-6 border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-        <p className='text-sm text-gray-700 dark:text-gray-400'>
+      <div className='w-full rounded-md p-6 border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+        <p className='text-sm text-neutral-700 dark:text-neutral-400'>
           Please use this form to share whatever you&apos;d like with me. This
           form is anonymous (really). If you&apos;d like me to respond, please
           feel free to leave your contact.

@@ -1,18 +1,20 @@
+import { Icon } from "@/components/UI";
+
 const LoadingSkeleton = () => (
-  <div className='overflow-hidden min-h-[120px] relative w-full rounded-md border bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 shadow-sm dark:border-gray-700'>
+  <div className='overflow-hidden min-h-[120px] relative w-full rounded-md border bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-900 shadow-sm dark:border-neutral-700'>
     {/* Glass overlay */}
     <div className='absolute inset-0 bg-white/5 backdrop-blur-[2px]' />
 
     {/* Content */}
-    <div className='relative z-10 p-6'>
+    <div className='relative px-4.5 py-2.5'>
       <div className='flex flex-col items-start space-y-4'>
         {/* Location and Date */}
         <div className='flex items-center justify-between w-full'>
           <div className='flex items-center gap-2'>
-            <div className='w-5 h-5 bg-white/20 rounded animate-pulse' />
+            <Icon name='mapPin' className='size-5' />
             <div className='h-5 w-32 bg-white/20 rounded animate-pulse' />
           </div>
-          <div className='h-5 w-24 bg-white/20 rounded animate-pulse' />
+          <div className='h-5 w-16 bg-white/20 rounded animate-pulse' />
         </div>
 
         {/* Clock Skeleton */}

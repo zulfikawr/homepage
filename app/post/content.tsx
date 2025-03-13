@@ -34,7 +34,7 @@ export default function PostsContent() {
       ) : (
         <div className='grid grid-cols-1 gap-6'>
           {posts.map((post) => (
-            <PostCard key={post.id} {...post} />
+            <PostCard key={post.id} posts={[post]} />
           ))}
         </div>
       )}

@@ -255,7 +255,7 @@ export default function ScheduleContent() {
         </div>
         <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
           <div className='flex-1 px-5'>
-            <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+            <p className='text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'>
               <Link href='/' className='flex items-center'>
                 <span className='mr-2 size-[16px]'>
                   <Icon name='houseLine' />
@@ -267,7 +267,7 @@ export default function ScheduleContent() {
         </div>
       </div>
 
-      <div className='w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-4'>
+      <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-4'>
         {submitMessage && (
           <div
             className={`mb-4 p-3 rounded-md ${submitMessage.type === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'}`}
@@ -289,7 +289,7 @@ export default function ScheduleContent() {
                 currentMonth === new Date().getMonth() &&
                 currentYear === new Date().getFullYear()
               }
-              className='px-4 py-2 bg-gray-200 rounded-md dark:bg-gray-700 dark:text-gray-300 disabled:bg-gray-400 disabled:dark:bg-gray-600'
+              className='px-4 py-2 bg-neutral-200 rounded-md dark:bg-neutral-700 dark:text-neutral-300 disabled:bg-neutral-400 disabled:dark:bg-neutral-600'
             >
               Previous
             </button>
@@ -301,19 +301,19 @@ export default function ScheduleContent() {
             </span>
             <button
               onClick={() => handleMonthChange('next')}
-              className='px-4 py-2 bg-gray-200 rounded-md dark:bg-gray-700 dark:text-gray-300'
+              className='px-4 py-2 bg-neutral-200 rounded-md dark:bg-neutral-700 dark:text-neutral-300'
             >
               Next
             </button>
           </div>
 
           {/* Calendar */}
-          <div className='grid grid-cols-7 gap-2 rounded-md border border-gray-300 bg-gray-50 p-2.5 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-white'>
+          <div className='grid grid-cols-7 gap-2 rounded-md border border-neutral-300 bg-neutral-50 p-2.5 shadow-sm dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'>
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
               (day, idx) => (
                 <div
                   key={idx}
-                  className='text-center font-semibold text-sm text-gray-600 dark:text-gray-400 border-b dark:border-gray-600 pb-2'
+                  className='text-center font-semibold text-sm text-neutral-600 dark:text-neutral-400 border-b dark:border-neutral-600 pb-2'
                 >
                   {day}
                 </div>
@@ -345,16 +345,16 @@ export default function ScheduleContent() {
                   key={idx}
                   className={`text-center p-2 ${
                     day && hasAvailableSlots
-                      ? 'cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'
+                      ? 'cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-600'
                       : day
-                        ? 'bg-gray-300 dark:bg-gray-600 opacity-50 cursor-not-allowed'
+                        ? 'bg-neutral-300 dark:bg-neutral-600 opacity-50 cursor-not-allowed'
                         : ''
                   } 
                   ${
                     day === new Date().getDate() &&
                     currentMonth === new Date().getMonth() &&
                     currentYear === new Date().getFullYear() &&
-                    'border border-gray-300 dark:border-gray-500'
+                    'border border-neutral-300 dark:border-neutral-500'
                   }
                   ${
                     selectedDate?.getDate() === day &&
@@ -384,7 +384,7 @@ export default function ScheduleContent() {
                 <select
                   value={selectedTime}
                   onChange={handleTimeChange}
-                  className='mt-2 w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                  className='mt-2 w-full rounded-md border border-neutral-300 bg-neutral-50 p-2.5 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 >
                   {availableTimeSlots.map((time) => (
                     <option key={time} value={time}>
@@ -430,7 +430,7 @@ export default function ScheduleContent() {
               <div>
                 <label
                   htmlFor='purpose'
-                  className='block text-sm font-medium text-gray-700 dark:text-gray-300'
+                  className='block text-sm font-medium text-neutral-700 dark:text-neutral-300'
                 >
                   Purpose of Meeting (Optional)
                 </label>
@@ -438,7 +438,7 @@ export default function ScheduleContent() {
                   id='purpose'
                   value={purpose}
                   onChange={(e) => setPurpose(e.target.value)}
-                  className='mt-1 w-full rounded-md border border-gray-300 bg-gray-50 p-2.5 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                  className='mt-1 w-full rounded-md border border-neutral-300 bg-neutral-50 p-2.5 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                   rows={3}
                 />
               </div>
@@ -453,7 +453,7 @@ export default function ScheduleContent() {
             disabled={
               !selectedDate || isSubmitting || availableTimeSlots.length === 0
             }
-            className='disabled:bg-gray-400 disabled:hover:bg-gray-400 disabled:dark:bg-gray-600 disabled:dark:hover:bg-gray-600'
+            className='disabled:bg-neutral-400 disabled:hover:bg-neutral-400 disabled:dark:bg-neutral-600 disabled:dark:hover:bg-neutral-600'
           >
             {isSubmitting ? 'Scheduling...' : 'Schedule'}
           </Button>

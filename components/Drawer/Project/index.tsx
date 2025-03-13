@@ -3,6 +3,7 @@ import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import ProjectForm from '@/components/Form/Project';
 import { Button } from '@/components/UI';
+import Separator from '@/components/UI/Separator';
 
 const ProjectsDrawer = ({
   projects,
@@ -22,21 +23,23 @@ const ProjectsDrawer = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>Edit Projects</h1>
+          <h1 className='text-xl md:text-2xl font-semibold'>Projects</h1>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddProject}>
-              <span className='hidden lg:block'>Add Project</span>
+              <span className='hidden md:block'>Add</span>
             </Button>
             <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {projects.map((project, index) => (
             <div
               key={index}

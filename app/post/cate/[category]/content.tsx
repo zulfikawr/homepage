@@ -44,7 +44,7 @@ export default function CategoryContent({
             <div className='flex-1 px-5'>
               <Link
                 href='/post/cate'
-                className='flex items-center text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
               >
                 <span className='mr-2 h-6 w-6'>
                   <Icon name='arrowLeft' />
@@ -56,10 +56,10 @@ export default function CategoryContent({
         </div>
       </div>
 
-      <div className='bg-white dark:bg-gray-800 lg:rounded-xl lg:border lg:border-gray-200 lg:p-6 lg:shadow-sm dark:lg:border-gray-700'>
+      <div className='bg-white dark:bg-neutral-800 lg:rounded-xl lg:border lg:border-neutral-200 lg:p-6 lg:shadow-sm dark:lg:border-neutral-700'>
         {posts.length === 0 ? (
           <div className='flex flex-col items-center justify-center space-y-6 py-12'>
-            <p className='text-xl font-medium text-gray-700 dark:text-gray-200'>
+            <p className='text-xl font-medium text-neutral-700 dark:text-neutral-200'>
               No posts found in {category}
             </p>
             <div className='flex justify-center space-x-4'>
@@ -71,7 +71,7 @@ export default function CategoryContent({
               </Link>
               <Link
                 href='/'
-                className='rounded-md border border-gray-200 px-4 py-2 text-sm hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700'
+                className='rounded-md border border-neutral-200 px-4 py-2 text-sm hover:bg-neutral-50 dark:border-neutral-700 dark:hover:bg-neutral-700'
               >
                 Return to Home
               </Link>

@@ -13,9 +13,9 @@ interface ManagePostContentProps {
 }
 
 const ErrorState = ({ message }: { message: string }) => (
-  <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-gray-700 py-3 text-center shadow-sm'>
+  <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-neutral-700 py-3 text-center shadow-sm'>
     <h1 className='text-lg font-medium'>Error</h1>
-    <p className='text-sm font-light tracking-wide text-gray-500 dark:text-gray-400'>
+    <p className='text-sm font-light tracking-wide text-neutral-500 dark:text-neutral-400'>
       {message}
     </p>
     <Link
@@ -28,8 +28,8 @@ const ErrorState = ({ message }: { message: string }) => (
 );
 
 const UnauthorizedState = () => (
-  <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-gray-700 py-6 text-center shadow-sm'>
-    <p className='text-sm font-light tracking-wide text-gray-500 dark:text-gray-400'>
+  <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-neutral-700 py-6 text-center shadow-sm'>
+    <p className='text-sm font-light tracking-wide text-neutral-500 dark:text-neutral-400'>
       Please login to manage posts.
     </p>
     <Link href='/' className='mt-4 inline-block text-blue-500 hover:underline'>
@@ -70,7 +70,7 @@ export default function ManagePostContent({
                   {isEdit ? 'Edit' : 'New'}
                 </span>
               </h2>
-              <p className='-mt-1 text-sm text-neutral-500 dark:text-gray-400'>
+              <p className='-mt-1 text-sm text-neutral-500 dark:text-neutral-400'>
                 {isEdit
                   ? 'Update your existing post'
                   : 'Create and publish your thoughts, ideas, and stories'}
@@ -81,7 +81,7 @@ export default function ManagePostContent({
             <div className='flex-1 pl-5 pr-2'>
               <Link
                 href='/posts'
-                className='flex items-center text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
               >
                 <span className='mr-2 size-[16px]'>
                   <Icon name='arrowLeft' />
@@ -94,11 +94,11 @@ export default function ManagePostContent({
       </section>
 
       <div className='my-5'>
-        <hr className='dark:border-gray-600' />
+        <hr className='dark:border-neutral-600' />
       </div>
 
       <section className='mb-28'>
-        <div className='rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
+        <div className='rounded-lg border border-neutral-200 bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
           <PostForm postToEdit={post} isInDrawer={false} />
         </div>
       </section>

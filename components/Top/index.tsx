@@ -52,7 +52,7 @@ export default function Top() {
           <Button
             type='default'
             icon='github'
-            className='w-full text-3 leading-14 text-gray-800'
+            className='w-full text-3 leading-14 text-neutral-800'
           >
             <span className='tracking-normal'>GitHub</span>
           </Button>
