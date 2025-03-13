@@ -2,18 +2,38 @@ import { ProjectCard } from '@/components/Card/Project';
 import { drawer } from '@/components/Drawer';
 import { getProjects } from '@/functions/projects';
 import { useAuth } from '@/contexts/authContext';
-import { sortByDate } from '@/utilities/sortByDate';
+import { parseDate } from '@/utilities/sortByDate';
 import { useFetchData } from '@/lib/fetchData';
 import ProjectsDrawer from '@/components/Drawer/Project';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { Project } from '@/types/project';
 
 const ProjectSection = () => {
   const { user } = useAuth();
   const { data: projects, loading, error, refetch } = useFetchData(getProjects);
 
-  const sortedProjects = projects ? sortByDate(projects) : [];
+  function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
+    const pinnedProjects = projects.filter((p) => p.pinned);
+    const nonPinnedProjects = projects.filter((p) => !p.pinned);
+
+    const sortedPinnedProjects = pinnedProjects
+      .sort(
+        (a, b) =>
+          parseDate(b.dateString).getTime() - parseDate(a.dateString).getTime(),
+      )
+      .slice(0, 5);
+
+    const sortedNonPinnedProjects = nonPinnedProjects.sort(
+      (a, b) =>
+        parseDate(b.dateString).getTime() - parseDate(a.dateString).getTime(),
+    );
+
+    return [...sortedPinnedProjects, ...sortedNonPinnedProjects];
+  }
+
+  const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];
 
   const handleOpenProjectsDrawer = () => {
     drawer.open(
@@ -27,7 +47,7 @@ const ProjectSection = () => {
     <section>
       <SectionTitle
         icon='package'
-        title='Selected Projects'
+        title='Pinned Projects'
         link={{
           href: '/projects',
           label: 'All Projects',

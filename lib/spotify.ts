@@ -19,7 +19,7 @@ export const getSpotifyAuthUrl = () => {
   return `${SPOTIFY_AUTH_URL}?${params.toString()}`;
 };
 
-const getAccessToken = async () => {
+export const getAccessToken = async () => {
   try {
     const tokensRef = ref(database, 'spotify/tokens');
     const snapshot = await get(tokensRef);

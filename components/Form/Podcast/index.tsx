@@ -119,7 +119,7 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
-        <p className='mb-6 text-gray-800 dark:text-gray-300'>
+        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
           Are you sure you want to delete the following podcast? This action
           cannot be undone.
         </p>
@@ -153,17 +153,27 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
 
   return (
     <>
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>
             {podcastToEdit ? 'Edit Podcast' : 'Add New Podcast'}
           </h1>
-          <Button icon='close' onClick={() => drawer.close()} />
+          <div className='flex space-x-4'>
+            {podcastToEdit && (
+              <Button type='destructive' onClick={confirmDelete}>
+                Delete
+              </Button>
+            )}
+            <Button type='primary' onClick={handleSubmit}>
+              {podcastToEdit ? 'Save' : 'Add'}
+            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
         </div>
       </div>
 
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           <div className='flex justify-center'>
             <PodcastCard
               id='preview'
@@ -219,16 +229,6 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
                 onChange={(e) => handleChange('link', e.target.value)}
                 required
               />
-            </div>
-            <div className='flex justify-end space-x-4 pt-4'>
-              {podcastToEdit && (
-                <Button type='destructive' onClick={confirmDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type='primary' onClick={handleSubmit}>
-                {podcastToEdit ? 'Save Changes' : 'Add Podcast'}
-              </Button>
             </div>
           </form>
         </div>

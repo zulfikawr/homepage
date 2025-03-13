@@ -30,7 +30,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       hoverable: false,
       component: (
         <div className='group mx-auto flex h-full cursor-pointer items-center justify-center space-x-3 px-5'>
-          <div className='flex h-[18px] w-[18px] flex-shrink-0 items-center rounded-full border border-gray-300 dark:border-gray-500'>
+          <div className='flex h-[18px] w-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
             <Image
               className='rounded-full'
               src={resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'}
@@ -42,7 +42,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
           </div>
           <div className='text-3 font-medium text-black'>
             <Link href='/' passHref>
-              <h3 className='text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-300'>
+              <h3 className='text-neutral-700 dark:text-neutral-400 dark:group-hover:text-neutral-300'>
                 Zulfikar
               </h3>
             </Link>

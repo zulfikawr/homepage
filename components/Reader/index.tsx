@@ -12,7 +12,7 @@ export default function Reader({ postData }: ReaderProps) {
       <h1 className='text-1 font-medium leading-snug tracking-wider'>
         {postData.title}
       </h1>
-      <p className='mb-16 mt-2 flex space-x-2 text-md tracking-wide text-gray-500 dark:text-gray-400'>
+      <p className='mb-16 mt-2 flex space-x-2 text-md tracking-wide text-neutral-500 dark:text-neutral-400'>
         <span>Posted {postData.dateString}</span>
       </p>
       <PostContent content={postData.content} />

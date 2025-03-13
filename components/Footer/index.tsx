@@ -38,7 +38,7 @@ const FooterLink = ({
 );
 
 const FooterContent = () => (
-  <div className='text-4 tracking-wide text-gray-500 dark:text-gray-400'>
+  <div className='text-4 tracking-wide text-neutral-500 dark:text-neutral-400'>
     <FooterLink href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>
       CC BY-NC-SA 4.0
     </FooterLink>
@@ -69,25 +69,25 @@ export default function Footer() {
 
   if (!mounted) {
     return (
-      <footer className='mt-20 border-b border-t border-gray-200 bg-white py-4 text-center dark:border-gray-700 dark:bg-gray-800'>
+      <footer className='mt-20 border-b border-t border-neutral-200 bg-white py-4 text-center dark:border-neutral-700 dark:bg-neutral-800'>
         <FooterContent />
       </footer>
     );
   }
 
   return (
-    <footer className='mt-20 border-b border-t border-gray-200 bg-white py-4 text-center dark:border-gray-700 dark:bg-gray-800'>
-      <div className='fixed bottom-8 left-8 z-[9997] text-gray-500 dark:text-gray-300'>
+    <footer className='mt-20 border-b border-t border-neutral-200 bg-white py-4 text-center dark:border-neutral-700 dark:bg-neutral-800'>
+      <div className='fixed bottom-8 left-8 z-[9997] text-neutral-500 dark:text-neutral-300'>
         <Button
           type='default'
           aria-label={`Change theme (current: ${theme})`}
           onClick={handleThemeChange}
-          className='bg-white dark:bg-gray-800 dark:hover:bg-gray-700 w-10 h-10'
+          className='bg-white dark:bg-neutral-800 dark:hover:bg-neutral-700 w-10 h-10'
           icon={ThemeIcon({ theme: theme as (typeof themes)[number] })}
         />
       </div>
 
-      <div className='fixed bottom-8 right-8 z-[9997] text-gray-500 dark:text-gray-300'>
+      <div className='fixed bottom-8 right-8 z-[9997] text-neutral-500 dark:text-neutral-300'>
         <OffsetTransition componentRef={backToTopRef}>
           <Button
             type='default'
@@ -95,7 +95,7 @@ export default function Footer() {
             icon='caretUp'
             aria-label='scroll to top'
             onClick={handleScrollToTop}
-            className='bg-white dark:bg-gray-800 dark:hover:bg-gray-700 w-10 h-10'
+            className='bg-white dark:bg-neutral-800 dark:hover:bg-neutral-700 w-10 h-10'
           />
         </OffsetTransition>
       </div>

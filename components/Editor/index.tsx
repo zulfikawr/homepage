@@ -103,10 +103,10 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
 
   return (
     <div>
-      <div className='mt-4 flex space-x-2 border p-2 dark:border-gray-700 rounded-t-md'>
+      <div className='mt-4 flex space-x-2 border p-2 dark:border-neutral-700 rounded-t-md'>
         <Dropdown
           trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700'>
+            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
               {currentHeading}
             </span>
           }
@@ -123,9 +123,9 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
                     .toggleHeading({ level: heading.level })
                     .run()
                 }
-                className={`block w-full px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md ${
+                className={`block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md ${
                   editor.isActive('heading', { level: heading.level })
-                    ? 'bg-gray-200 dark:bg-gray-700'
+                    ? 'bg-neutral-200 dark:bg-neutral-700'
                     : ''
                 }`}
               >
@@ -135,9 +135,9 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
             <button
               type='button'
               onClick={() => editor.chain().focus().setParagraph().run()}
-              className={`block w-full px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md ${
+              className={`block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md ${
                 editor.isActive('paragraph')
-                  ? 'bg-gray-200 dark:bg-gray-700'
+                  ? 'bg-neutral-200 dark:bg-neutral-700'
                   : ''
               }`}
             >
@@ -184,7 +184,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
 
         <Dropdown
           trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700'>
+            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
               Link
             </span>
           }
@@ -197,7 +197,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
               placeholder='Enter URL'
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
-              className='w-fit p-3 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md mb-2 focus:outline-none'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && linkUrl) {
                   editor.chain().setLink({ href: linkUrl }).focus().run();
@@ -224,7 +224,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
 
         <Dropdown
           trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-gray-200 dark:hover:bg-gray-700'>
+            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
               Image
             </span>
           }
@@ -237,7 +237,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
               placeholder='Enter Image URL'
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              className='w-fit p-3 text-sm border border-gray-200 dark:border-gray-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md mb-2 focus:outline-none'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && imageUrl) {
                   editor.chain().setImage({ src: imageUrl }).focus().run();
@@ -263,7 +263,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
         </Dropdown>
       </div>
 
-      <div className='cursor-text border-b border-r border-l dark:border-gray-700 rounded-b-md'>
+      <div className='cursor-text border-b border-r border-l dark:border-neutral-700 rounded-b-md'>
         <EditorContent editor={editor} />
       </div>
     </div>

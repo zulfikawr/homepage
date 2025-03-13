@@ -26,9 +26,31 @@ const LocationAndTime = () => {
     date: '',
   });
   const [isDaytime, setIsDaytime] = useState(true);
+  const [stars, setStars] = useState<
+    Array<{
+      top: number;
+      left: number;
+      size: number;
+      opacity: number;
+      delay: number;
+    }>
+  >([]);
 
   useEffect(() => {
     setMounted(true);
+
+    const generateStars = () => {
+      const starsArray = Array.from({ length: 50 }).map(() => ({
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        size: Math.random() * 3,
+        opacity: Math.random() * 0.8 + 0.2,
+        delay: Math.random() * 2,
+      }));
+      setStars(starsArray);
+    };
+
+    generateStars();
 
     const updateTime = () => {
       const now = new Date();
@@ -73,49 +95,69 @@ const LocationAndTime = () => {
 
   return (
     <div
-      className={`relative w-full min-h-[120px] rounded-md border shadow-sm dark:border-gray-700 dark:bg-gray-800 overflow-hidden
-        ${isDaytime 
+      className={`relative w-full min-h-[120px] rounded-md border shadow-sm dark:border-neutral-700 dark:bg-neutral-800 overflow-hidden
+        ${
+          isDaytime
             ? 'bg-gradient-to-br from-blue-400 to-yellow-300'
             : 'bg-gradient-to-br from-[#0B1026] to-[#1B103F]'
         }
       `}
     >
-      {/* Background Elements */}
       {isDaytime ? (
-        <div className="absolute top-4 right-4 w-10 h-10 bg-yellow-300 rounded-full" />
+        <div className='absolute top-4 right-4 w-10 h-10 bg-yellow-300 rounded-full' />
       ) : (
-        <div className="absolute inset-0 bg-stars" />
+        <>
+          <div className='absolute top-4 right-4 w-10 h-10 bg-white/30 rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.2)]' />
+          <div className='absolute inset-0 overflow-hidden'>
+            {stars.map((star, index) => (
+              <div
+                key={index}
+                className='absolute bg-white rounded-full twinkling-star'
+                style={{
+                  top: `${star.top}%`,
+                  left: `${star.left}%`,
+                  width: `${star.size}px`,
+                  height: `${star.size}px`,
+                  opacity: star.opacity,
+                  animationDelay: `${star.delay}s`,
+                }}
+              />
+            ))}
+          </div>
+        </>
       )}
 
       {/* Content */}
-      <div className="relative z-10 p-6">
-        <div className="flex flex-col items-start space-y-4">
-          {/* Location and Date */}
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-2">
-              <Icon name="mapPin" className="w-5 h-5 text-white/90" />
-              <h2 className="text-[15px] font-medium text-white">
+      <div className='relative px-4.5 py-2.5'>
+        <div className='flex flex-col items-start space-y-4'>
+          <div className='flex items-center justify-between w-full'>
+            <div className='flex items-center gap-2'>
+              <Icon name='mapPin' className='size-5' />
+              <h2 className='text-[15px] font-medium text-white'>
                 Jakarta, Indonesia
               </h2>
             </div>
-            <div className="text-white/80 text-sm font-medium">
+            <div className='text-white/80 text-sm font-medium'>
               {timeData.date}
             </div>
           </div>
 
-          {/* Flip Clock */}
-          <div className="flex items-center justify-center w-full">
-            <div className="flex items-center">
+          <div className='flex items-center justify-center w-full'>
+            <div className='flex items-center'>
               <FlipNumber number={timeData.hours} />
               <Separator />
               <FlipNumber number={timeData.minutes} />
               <Separator />
               <FlipNumber number={timeData.seconds} />
-              <div className="ml-2 flex flex-col justify-between h-12">
-                <span className={`text-xs font-medium ${timeData.ampm === 'AM' ? 'text-white' : 'text-white/50'}`}>
+              <div className='ml-2 flex flex-col justify-between h-12'>
+                <span
+                  className={`text-xs font-medium ${timeData.ampm === 'AM' ? 'text-white' : 'text-white/50'}`}
+                >
                   AM
                 </span>
-                <span className={`text-xs font-medium ${timeData.ampm === 'PM' ? 'text-white' : 'text-white/50'}`}>
+                <span
+                  className={`text-xs font-medium ${timeData.ampm === 'PM' ? 'text-white' : 'text-white/50'}`}
+                >
                   PM
                 </span>
               </div>
@@ -124,14 +166,21 @@ const LocationAndTime = () => {
         </div>
       </div>
 
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/20 to-transparent" />
+      <div className='absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/20 to-transparent' />
 
       <style jsx>{`
-        .bg-stars {
-          background-image: radial-gradient(white 1px, transparent 0);
-          background-size: 20px 20px;
-          opacity: 0.8;
+        .twinkling-star {
+          animation: twinkle 2s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+          0%,
+          100% {
+            opacity: 0.2;
+          }
+          50% {
+            opacity: 1;
+          }
         }
       `}</style>
     </div>

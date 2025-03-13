@@ -245,7 +245,7 @@ export function KbarContent() {
 
   return (
     <div className='flex h-full flex-col pt-4 px-4'>
-      <div className='flex items-center gap-2 border-b pb-4 dark:border-gray-700'>
+      <div className='flex items-center gap-2 border-b pb-4 dark:border-neutral-700'>
         <Input
           type='text'
           value={search}

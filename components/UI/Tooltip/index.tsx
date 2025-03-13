@@ -41,7 +41,7 @@ const Tooltip: React.FC<TooltipProps> = ({
 
       {/* Tooltip */}
       <div
-        className={`absolute ${getPositionClass()} px-3 py-2 text-sm text-gray-800 bg-white dark:bg-gray-800 dark:text-gray-200 rounded-md shadow-lg whitespace-nowrap transition-all duration-200 ${
+        className={`absolute ${getPositionClass()} px-3 py-2 text-sm text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 rounded-md shadow-lg whitespace-nowrap transition-all duration-200 ${
           isVisible ? 'opacity-100 translate-y-0 translate-x-0' : 'opacity-0'
         }`}
         style={{

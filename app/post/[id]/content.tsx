@@ -24,7 +24,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   }, [setHeaderTitle, post?.title]);
 
   return (
-    <article className='bg-white p-5 pt-24 dark:border-gray-800 dark:bg-gray-800 lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>
+    <article className='bg-white p-5 pt-24 dark:border-neutral-800 dark:bg-neutral-800 lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>
       <div className='mb-20'>
         <div className='mb-3 flex flex-wrap gap-2'>
           {post.categories?.map((category) => (
@@ -38,7 +38,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         <h1 className='text-1 font-medium leading-snug tracking-wider lg:text-postTitle'>
           {post.title}
         </h1>
-        <div className='mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400'>
+        <div className='mt-4 flex flex-wrap items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400'>
           <span className='flex items-center'>
             Posted {post.dateString ? post.dateString : 'recently'}
           </span>

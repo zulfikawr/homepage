@@ -30,7 +30,7 @@ export default function LoginContent() {
           </div>
         </div>
       ) : user ? (
-        <div className='w-full max-w-[400px] mx-auto rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
+        <div className='w-full max-w-[400px] mx-auto rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
           <div className='px-6 py-12'>
             <p className='text-center text-lg dark:text-white'>
               You are already logged in.
@@ -52,7 +52,7 @@ export default function LoginContent() {
               e.preventDefault();
               handleLogin(email, password);
             }}
-            className='space-y-4 max-w-[400px] mx-auto rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900 p-6'
+            className='space-y-4 max-w-[400px] mx-auto rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-900 p-6'
           >
             <div>
               <FormLabel htmlFor='email' required>

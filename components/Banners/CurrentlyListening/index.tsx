@@ -100,9 +100,9 @@ const CurrentlyListening = () => {
 
   if (!isAuthorized) {
     return (
-      <div className='w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-        <div className='flex w-full items-center border-b border-gray-200 px-4.5 py-2.5 dark:border-gray-700'>
-          <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-gray-700 dark:text-white'>
+      <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+        <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+          <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
             <span className='h-4.5 w-4.5 lg:h-7 lg:w-7'>
               <Icon name='musicNotes' />
             </span>
@@ -126,20 +126,20 @@ const CurrentlyListening = () => {
   if (!currentTrack) return null;
 
   return (
-    <div className='w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-      <div className='flex w-full items-center border-b border-gray-200 px-4.5 py-2.5 dark:border-gray-700'>
-        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-gray-700 dark:text-white'>
-          <span className='h-4.5 w-4.5 lg:h-7 lg:w-7'>
+    <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+      <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <span className='size-5'>
             <Icon name='musicNotes' />
           </span>
-          <span>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>
+          <span className='h-5'>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>
         </div>
       </div>
 
       <Link
         href={currentTrack.external_urls.spotify}
         target='_blank'
-        className='group relative flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50'
+        className='group relative flex items-center gap-4 p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50'
       >
         <Hover
           perspective={1000}
@@ -165,18 +165,19 @@ const CurrentlyListening = () => {
         </Hover>
 
         <div className='flex-1 min-w-0'>
-          <h3 className='font-medium text-md text-gray-900 dark:text-white truncate'>
+          <h3 className='font-medium text-md text-neutral-900 dark:text-white truncate'>
             {currentTrack.name}
           </h3>
-          <p className='text-sm text-gray-500 dark:text-gray-400 truncate'>
+          <p className='text-sm text-neutral-500 dark:text-neutral-400 truncate'>
             {currentTrack.artists.map((artist) => artist.name).join(', ')}
           </p>
           <div className='flex items-center gap-x-2 mt-1'>
-            <span className='flex items-center gap-x-1 text-xs text-gray-500 dark:text-gray-400'>
-              <Icon name='spotifyLogo' className='size-4' />
-              <span>Spotify</span>
+            <span className='text-xs text-neutral-500 dark:text-neutral-400'>
+              {currentTrack.album.name}
             </span>
-            <span className='text-xs text-gray-500 dark:text-gray-40'>|</span>
+            <span className='text-xs text-neutral-500 dark:text-neutral-40'>
+              |
+            </span>
             {isPlaying ? (
               <span className='flex items-center gap-x-1 text-xs text-green-500'>
                 <span className='size-2 rounded-full bg-green-500 animate-pulse' />
@@ -184,7 +185,7 @@ const CurrentlyListening = () => {
               </span>
             ) : (
               lastPlayedAt && (
-                <span className='text-xs text-gray-500 dark:text-gray-400'>
+                <span className='text-xs text-neutral-500 dark:text-neutral-400'>
                   Played {getTimeAgo(lastPlayedAt)}
                 </span>
               )

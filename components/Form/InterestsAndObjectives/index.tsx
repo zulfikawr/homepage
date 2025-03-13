@@ -78,7 +78,7 @@ const InterestsAndObjectivesForm = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>Edit Interests & Objectives</h1>
           <Button icon='close' onClick={() => drawer.close()} />
@@ -87,7 +87,7 @@ const InterestsAndObjectivesForm = ({
 
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div>

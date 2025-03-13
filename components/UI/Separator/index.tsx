@@ -7,7 +7,7 @@ export default function Separator({ margin }: SeparatorProps) {
 
   return (
     <div style={{ marginTop: marginValue, marginBottom: marginValue }}>
-      <hr className='dark:border-gray-600' />
+      <hr className='dark:border-neutral-600' />
     </div>
   );
 }

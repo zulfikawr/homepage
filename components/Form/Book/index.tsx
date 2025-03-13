@@ -113,7 +113,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-lg font-semibold'>
             {bookToEdit ? 'Edit Book' : 'Add New Book'}
@@ -154,7 +154,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
                 onChange={(e) =>
                   handleChange('type', e.target.value as Book['type'])
                 }
-                className='w-full rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 required
               >
                 <option value='currentlyReading'>Currently Reading</option>

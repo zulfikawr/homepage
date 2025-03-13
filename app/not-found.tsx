@@ -13,7 +13,7 @@ export default function NotFound() {
         <h1 className='mb-0.5 text-3xl font-medium leading-14 tracking-wide text-black dark:text-white lg:text-1'>
           Oops
         </h1>
-        <p className='text-3 font-light leading-14 tracking-wide text-gray-500 lg:text-2'>
+        <p className='text-3 font-light leading-14 tracking-wide text-neutral-500 lg:text-2'>
           404 Not Found
         </p>
         <div className='mt-4 inline-block justify-center'>

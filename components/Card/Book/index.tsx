@@ -24,7 +24,7 @@ const BookCard = (props: BookCardProps) => {
             height={52}
             src={imageURL}
             alt={title}
-            className='rounded-sm border shadow-sm shadow-gray-200 dark:shadow-none'
+            className='rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none'
             loading='lazy'
           />
         </div>
@@ -32,12 +32,12 @@ const BookCard = (props: BookCardProps) => {
           <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
             {title}
           </p>
-          <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-gray-500 dark:text-gray-400 lg:text-sm'>
+          <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm'>
             by {author}
           </p>
         </div>
       </div>
-      <div className='flex w-full items-center justify-between border-t border-gray-100 px-4.5 py-2 text-xs font-light text-gray-500 dark:border-gray-700 dark:text-gray-400'>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
         <span>Date Added</span>
         <span>{dateAdded}</span>
       </div>

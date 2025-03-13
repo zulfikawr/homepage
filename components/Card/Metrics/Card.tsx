@@ -18,7 +18,7 @@ export default function MetricCard(props: MetricCardProps) {
   return (
     <div
       onClick={() => openLink(link)}
-      className='glowing-div group flex cursor-pointer items-center overflow-hidden rounded-xl border bg-white px-7 py-5 shadow-sm dark:border-gray-800 dark:bg-gray-800'
+      className='glowing-div group flex cursor-pointer items-center overflow-hidden rounded-xl border bg-white px-7 py-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-800'
     >
       <div className='absolute left-0 top-0 flex h-full w-full items-start justify-end blur-3xl'>
         <div
@@ -47,7 +47,7 @@ export default function MetricCard(props: MetricCardProps) {
             {denominatorLoaded && '/' + denominator}
           </span>
         </h1>
-        <p className='flex items-center overflow-hidden text-ellipsis whitespace-nowrap font-medium tracking-wide text-gray-700 text-opacity-70 dark:text-gray-400'>
+        <p className='flex items-center overflow-hidden text-ellipsis whitespace-nowrap font-medium tracking-wide text-neutral-700 text-opacity-70 dark:text-neutral-400'>
           <span>{description}</span>
           <span className='ml-0 mt-0.5 h-4.5 w-4.5 opacity-0 transition-all group-hover:ml-2 group-hover:opacity-100'>
             <Icon name='arrowRight' />

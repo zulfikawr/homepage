@@ -161,7 +161,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
     <>
       {/* Header */}
       {isInDrawer && (
-        <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-gray-700'>
+        <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
           <div className='flex flex-row justify-between items-center'>
             <h1 className='text-lg font-semibold'>
               {postToEdit ? 'Edit Post' : 'Add New Post'}
@@ -186,7 +186,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
 
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
+        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Post Preview */}
           <div className='flex justify-center'>
             <PostCard

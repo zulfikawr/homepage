@@ -15,7 +15,7 @@ const SongCard = ({ song }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className='mb-6 w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800'>
+    <div className='mb-6 w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
       <div
         className='p-5 lg:grid lg:grid-flow-col lg:grid-cols-3 lg:gap-9 lg:p-6 cursor-pointer'
         onClick={() => setExpanded(!expanded)}
@@ -24,7 +24,7 @@ const SongCard = ({ song }: Props) => {
           perspective={1000}
           max={25}
           scale={1.01}
-          className='song-image-placeholder relative col-span-1 h-48 w-full rounded-md border border-gray-200 bg-gray-50 shadow-sm hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:opacity-90 lg:h-auto lg:w-full'
+          className='song-image-placeholder relative col-span-1 h-48 w-full rounded-md border border-neutral-200 bg-neutral-50 shadow-sm hover:shadow-md dark:border-neutral-700 dark:bg-neutral-800 dark:opacity-90 lg:h-auto lg:w-full'
         >
           <Image
             src={song.imageUrl || '/images/placeholder.png'}
@@ -36,10 +36,10 @@ const SongCard = ({ song }: Props) => {
         </Hover>
 
         <div className='col-span-2 mt-6 lg:mt-0'>
-          <h2 className='mb-2 text-2 font-medium tracking-wider text-gray-700 dark:text-white lg:text-listTitle'>
+          <h2 className='mb-2 text-2 font-medium tracking-wider text-neutral-700 dark:text-white lg:text-listTitle'>
             {song.title}
           </h2>
-          <p className='leading-2 text-4 tracking-wide text-gray-500 dark:text-gray-400 lg:text-3'>
+          <p className='leading-2 text-4 tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-3'>
             {song.artist}
           </p>
         </div>

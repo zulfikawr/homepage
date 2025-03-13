@@ -8,4 +8,5 @@ export interface Project {
   status: 'inProgress' | 'completed' | 'upcoming';
   link?: string;
   favicon?: string;
+  pinned?: boolean;
 }

@@ -1,10 +1,11 @@
 import React from 'react';
-import Icon from '../Icon/icon';
-import type { LabelTypes, IconNames } from '../types';
+import { Icon } from '../Icon';
+
+type LabelTypes = 'primary' | 'secondary';
 
 interface Props {
   type: LabelTypes;
-  icon?: IconNames;
+  icon?: string;
   children?: React.ReactNode;
 }
 
@@ -40,7 +41,7 @@ const Label = ({
       return (
         <label
           {...props}
-          className='cursor-pointer focus:animate-pulse justify-center font-medium items-center flex w-auto lg:px-4 px-2 py-1 lg:py-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-center rounded-md text-4 tracking-wide text-gray-500 dark:text-gray-300 align-middle effect-pressing'
+          className='cursor-pointer focus:animate-pulse justify-center font-medium items-center flex w-auto lg:px-4 px-2 py-1 lg:py-1 bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-center rounded-md text-4 tracking-wide text-neutral-500 dark:text-neutral-300 align-middle effect-pressing'
         >
           {icon && (
             <span className='mr-2 size-5'>
@@ -55,4 +56,4 @@ const Label = ({
 
 Label.displayName = 'Label';
 
-export default Label;
+export { Label };

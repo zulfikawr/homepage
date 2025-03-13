@@ -15,17 +15,12 @@ const Tabs = (props: TabsProps) => {
   const [withinWrapper, setWithinWrapper] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
-  /**
-   * Remove the highlighter
-   */
   const reset = (skipVertical?: boolean) => {
     if (skipVertical && direction === 'vertical') return;
     setWithinWrapper(false);
     styleHighlighter(false);
     setHighlightedIndex(-1);
   };
-
-  /* Highlighting Methods */
 
   const findNextValidTabIndex = (
     currentIndex: number,
@@ -40,7 +35,6 @@ const Tabs = (props: TabsProps) => {
           ? currentIndex - 1
           : items.length - 1;
 
-    // Skip section labels when navigating
     if (items[targetIndex]?.sectionLabel) {
       return findNextValidTabIndex(targetIndex, direction);
     }
@@ -75,7 +69,7 @@ const Tabs = (props: TabsProps) => {
         'tabs-highlighter z-0',
         className || '',
         bgColor || 'bg-[#ebeced]',
-        bgDark || 'dark:bg-gray-700/40 backdrop-blur-sm',
+        bgDark || 'dark:bg-neutral-700/40 backdrop-blur-sm',
       ].join(' ');
     } else {
       highlighterRef.current.style.width = '0';
@@ -93,7 +87,6 @@ const Tabs = (props: TabsProps) => {
     index?: number,
     from?: 'above' | 'below',
   ) => {
-    // Skip section labels
     if (items[index]?.sectionLabel) {
       return;
     }
@@ -144,7 +137,6 @@ const Tabs = (props: TabsProps) => {
     if (index >= 0) setHighlightedIndex(index);
   };
 
-  /* Vertical List Methods */
   useHotkeys(
     'down',
     (e) => {
@@ -252,7 +244,7 @@ const Tabs = (props: TabsProps) => {
                 aria-label='tab'
                 className={`${direction !== 'vertical' && 'whitespace-nowrap'} ${
                   color ||
-                  'text-gray-500 dark:text-gray-400 dark:transition-colors'
+                  'text-neutral-500 dark:text-neutral-400 dark:transition-colors'
                 } ${className || ''} z-10 cursor-pointer rounded-md`}
                 onMouseOver={(e) => {
                   if (item.hoverable !== false) {

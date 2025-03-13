@@ -44,7 +44,7 @@ export default function PlaylistContent() {
 
       {loading ? (
         <div className='flex justify-center py-10'>
-          <div className='animate-pulse text-gray-500 dark:text-gray-400'>
+          <div className='animate-pulse text-neutral-500 dark:text-neutral-400'>
             Loading playlists...
           </div>
         </div>
@@ -55,8 +55,8 @@ export default function PlaylistContent() {
           ))}
         </div>
       ) : (
-        <div className='mt-8 rounded-md border border-gray-200 bg-white p-6 text-center shadow-sm dark:border-gray-700 dark:bg-gray-800'>
-          <p className='text-gray-500 dark:text-gray-400'>
+        <div className='mt-8 rounded-md border border-neutral-200 bg-white p-6 text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+          <p className='text-neutral-500 dark:text-neutral-400'>
             No playlists found.
           </p>
         </div>

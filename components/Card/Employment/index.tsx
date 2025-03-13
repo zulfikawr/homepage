@@ -33,7 +33,7 @@ const EmploymentCard = (props: EmploymentCardProps) => {
       isInDrawer={isInDrawer}
       className='min-w-[18rem] lg:min-w-[25rem]'
     >
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-gray-200 px-4.5 py-2.5 font-medium tracking-wide text-gray-700 dark:border-gray-700 dark:text-white'>
+      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-neutral-200 px-4.5 py-2.5 font-medium tracking-wide text-neutral-700 dark:border-neutral-700 dark:text-white'>
         <div className='flex items-center gap-x-2'>
           {orgLogoSrc && (
             <Image
@@ -41,30 +41,32 @@ const EmploymentCard = (props: EmploymentCardProps) => {
               height={24}
               width={24}
               alt={`${organization} logo`}
-              className='rounded-full border bg-white dark:border-gray-700'
+              className='rounded-full border bg-white dark:border-neutral-700'
             />
           )}
           <p>{organization}</p>
         </div>
-        <label className='rounded-full border bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400'>
+        <label className='rounded-full border bg-neutral-100 px-2.5 py-0.5 text-xs text-neutral-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400'>
           {organizationLocation}
         </label>
       </div>
       <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
-        <div className='text-sm tracking-wide text-gray-600 dark:text-gray-300'>
+        <div className='text-sm tracking-wide text-neutral-600 dark:text-neutral-300'>
           <p>{jobTitle}</p>
         </div>
-        <div className='flex flex-col items-start text-xs font-medium text-gray-500 lg:items-center'>
+        <div className='flex flex-col items-start text-xs font-medium text-neutral-500 lg:items-center'>
           {dateString}
         </div>
       </div>
 
       {organizationIndustry && (
-        <div className='flex items-center justify-between border-t border-gray-200 px-4.5 py-1.5 dark:border-gray-700 w-full'>
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
+        <div className='flex items-center justify-between border-t border-neutral-200 px-4.5 py-1.5 dark:border-neutral-700 w-full'>
+          <p className='text-sm text-neutral-500 dark:text-neutral-400'>
             {trimStr(organizationIndustry, 25)}
           </p>
-          <p className='text-sm text-gray-500 dark:text-gray-400'>{jobType}</p>
+          <p className='text-sm text-neutral-500 dark:text-neutral-400'>
+            {jobType}
+          </p>
         </div>
       )}
     </Card>

@@ -143,7 +143,7 @@ export default function ViewScheduleContent() {
       label: 'All',
       action: () => setFilter('all'),
       bgColor:
-        filter === 'all' ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700',
+        filter === 'all' ? 'bg-blue-500' : 'bg-neutral-200 dark:bg-neutral-700',
       color: filter === 'all' ? 'text-white' : '',
     },
     {
@@ -151,7 +151,9 @@ export default function ViewScheduleContent() {
       label: 'Pending',
       action: () => setFilter('pending'),
       bgColor:
-        filter === 'pending' ? 'bg-yellow-500' : 'bg-gray-200 dark:bg-gray-700',
+        filter === 'pending'
+          ? 'bg-yellow-500'
+          : 'bg-neutral-200 dark:bg-neutral-700',
       color: filter === 'pending' ? 'text-white' : '',
     },
     {
@@ -161,7 +163,7 @@ export default function ViewScheduleContent() {
       bgColor:
         filter === 'confirmed'
           ? 'bg-green-500'
-          : 'bg-gray-200 dark:bg-gray-700',
+          : 'bg-neutral-200 dark:bg-neutral-700',
       color: filter === 'confirmed' ? 'text-white' : '',
     },
     {
@@ -169,7 +171,9 @@ export default function ViewScheduleContent() {
       label: 'Cancelled',
       action: () => setFilter('cancelled'),
       bgColor:
-        filter === 'cancelled' ? 'bg-red-500' : 'bg-gray-200 dark:bg-gray-700',
+        filter === 'cancelled'
+          ? 'bg-red-500'
+          : 'bg-neutral-200 dark:bg-neutral-700',
       color: filter === 'cancelled' ? 'text-white' : '',
     },
   ];
@@ -185,7 +189,7 @@ export default function ViewScheduleContent() {
         </div>
         <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
           <div className='flex-1 px-5'>
-            <p className='text-sm lg:text-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+            <p className='text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'>
               <Link href='/' className='flex items-center'>
                 <span className='mr-2 size-[16px]'>
                   <Icon name='houseLine' />
@@ -197,7 +201,7 @@ export default function ViewScheduleContent() {
         </div>
       </div>
 
-      <div className='w-full rounded-md border bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800 p-4'>
+      <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-4'>
         {!user ? null : (
           <>
             <div className='flex items-center mb-6'>
@@ -208,13 +212,13 @@ export default function ViewScheduleContent() {
 
             <div className='mb-4 flex justify-between items-center'>
               <div className='flex items-center space-x-2'>
-                <span className='text-sm text-gray-600 dark:text-gray-400'>
+                <span className='text-sm text-neutral-600 dark:text-neutral-400'>
                   Sort by:
                 </span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as 'date' | 'name')}
-                  className='rounded-md border border-gray-300 bg-gray-50 p-1.5 text-sm shadow-sm focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                  className='rounded-md border border-neutral-300 bg-neutral-50 p-1.5 text-sm shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
                 >
                   <option value='date'>Date</option>
                   <option value='name'>Name</option>
@@ -224,7 +228,7 @@ export default function ViewScheduleContent() {
                   onClick={() =>
                     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
                   }
-                  className='px-2 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-sm'
+                  className='px-2 py-1 rounded-md bg-neutral-200 dark:bg-neutral-700 text-sm'
                 >
                   {sortOrder === 'asc' ? '↑' : '↓'}
                 </Button>
@@ -232,7 +236,7 @@ export default function ViewScheduleContent() {
               <Button
                 type='default'
                 onClick={fetchAppointments}
-                className='px-3 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-sm'
+                className='px-3 py-1 rounded-md bg-neutral-200 dark:bg-neutral-700 text-sm'
               >
                 Refresh
               </Button>
@@ -240,13 +244,13 @@ export default function ViewScheduleContent() {
 
             {isLoading ? (
               <div className='text-center py-10'>
-                <p className='text-gray-600 dark:text-gray-400'>
+                <p className='text-neutral-600 dark:text-neutral-400'>
                   Loading appointments...
                 </p>
               </div>
             ) : sortedAppointments.length === 0 ? (
               <div className='text-center py-10'>
-                <p className='text-gray-600 dark:text-gray-400'>
+                <p className='text-neutral-600 dark:text-neutral-400'>
                   No appointments found.
                 </p>
               </div>
@@ -254,26 +258,26 @@ export default function ViewScheduleContent() {
               <div className='overflow-x-auto'>
                 <table className='w-full border-collapse'>
                   <thead>
-                    <tr className='bg-gray-100 dark:bg-gray-700'>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                    <tr className='bg-neutral-100 dark:bg-neutral-700'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Date
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Time
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Name
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Email
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Purpose
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Status
                       </th>
-                      <th className='border border-gray-300 dark:border-gray-600 px-4 py-2 text-left'>
+                      <th className='border border-neutral-300 dark:border-neutral-600 px-4 py-2 text-left'>
                         Actions
                       </th>
                     </tr>
@@ -282,24 +286,24 @@ export default function ViewScheduleContent() {
                     {sortedAppointments.map((appointment) => (
                       <tr
                         key={appointment.id}
-                        className='hover:bg-gray-50 dark:hover:bg-gray-900'
+                        className='hover:bg-neutral-50 dark:hover:bg-neutral-900'
                       >
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           {formatDate(appointment.date)}
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           {appointment.time}
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           {appointment.name}
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           {appointment.email}
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           {appointment.purpose || '-'}
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           <span
                             className={`px-2 py-1 rounded-full text-xs ${
                               appointment.status === 'pending'
@@ -313,7 +317,7 @@ export default function ViewScheduleContent() {
                               appointment.status.slice(1)}
                           </span>
                         </td>
-                        <td className='border border-gray-300 dark:border-gray-600 px-4 py-2'>
+                        <td className='border border-neutral-300 dark:border-neutral-600 px-4 py-2'>
                           <div className='flex space-x-2'>
                             {appointment.status !== 'confirmed' && (
                               <Button
