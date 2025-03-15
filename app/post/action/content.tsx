@@ -1,31 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '@/contexts/authContext';
 import PostForm from '@/components/Form/Post';
 import Link from 'next/link';
 import { Icon } from '@/components/UI';
 import type { Post } from '@/types/post';
+import { useTitle } from '@/contexts/titleContext';
 
 interface ManagePostContentProps {
   post: Post | null;
   action: string;
 }
-
-const ErrorState = ({ message }: { message: string }) => (
-  <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-neutral-700 py-3 text-center shadow-sm'>
-    <h1 className='text-lg font-medium'>Error</h1>
-    <p className='text-sm font-light tracking-wide text-neutral-500 dark:text-neutral-400'>
-      {message}
-    </p>
-    <Link
-      href='/posts'
-      className='mt-4 inline-block text-blue-500 hover:underline'
-    >
-      Return to Posts
-    </Link>
-  </div>
-);
 
 const UnauthorizedState = () => (
   <div className='mx-auto w-full max-w-md rounded-md border bg-white dark:bg-neutral-700 py-6 text-center shadow-sm'>
@@ -42,15 +28,22 @@ export default function ManagePostContent({
   post,
   action,
 }: ManagePostContentProps) {
+  const { setHeaderTitle } = useTitle();
+
+  useEffect(() => {
+    if (post?.title) {
+      setHeaderTitle(post.title);
+    }
+    return () => {
+      setHeaderTitle('✍️ Create Post');
+    };
+  }, [setHeaderTitle, post?.title]);
+
   const { user } = useAuth();
   const isEdit = action === 'edit';
 
   if (!user) {
     return <UnauthorizedState />;
-  }
-
-  if (isEdit && !post) {
-    return <ErrorState message='Post not found' />;
   }
 
   return (
@@ -80,7 +73,7 @@ export default function ManagePostContent({
           <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
             <div className='flex-1 pl-5 pr-2'>
               <Link
-                href='/posts'
+                href='/post'
                 className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
               >
                 <span className='mr-2 size-[16px]'>

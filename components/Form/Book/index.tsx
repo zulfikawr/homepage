@@ -9,6 +9,7 @@ import { addBook, updateBook, deleteBook } from '@/functions/books';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import DatePicker from '@/components/DatePicker';
+import { modal } from '@/components/Modal';
 
 interface BookFormProps {
   bookToEdit?: Book;
@@ -110,15 +111,73 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
     }
   };
 
+  const confirmDelete = () => {
+    modal.open(
+      <div className='p-6'>
+        <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
+        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
+          Are you sure you want to delete the following book? This action
+          cannot be undone.
+        </p>
+        <div className='flex justify-center mb-6'>
+          <BookCard
+            id='preview'
+            type={book.type}
+            title={book.title || 'Book Title'}
+            author={book.author || 'Book Author'}
+            imageURL={book.imageURL || '/images/placeholder-portrait.png'}
+            link={book.link || '#'}
+            dateAdded={selectedDate.toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}
+            isInDrawer
+          />
+        </div>
+        <div className='flex justify-end space-x-4'>
+          <Button type='default' onClick={() => modal.close()}>
+            Cancel
+          </Button>
+          <Button
+            type='destructive'
+            onClick={() => {
+              handleDelete();
+              modal.close();
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </div>,
+    );
+  };
+
   return (
     <>
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>
-            {bookToEdit ? 'Edit Book' : 'Add New Book'}
+          <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
+            {bookToEdit ? `${bookToEdit.title}` : 'Add New Book'}
           </h1>
-          <Button icon='close' onClick={() => drawer.close()} />
+          <div className='flex space-x-4'>
+            {bookToEdit ? (
+              <div className='flex space-x-4'>
+                <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                  Delete
+                </Button>
+                <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <Button type='primary' icon='plus' onClick={handleSubmit}>
+                Add
+              </Button>
+            )}
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
         </div>
       </div>
 
@@ -132,7 +191,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
               type={book.type}
               title={book.title || 'Book Title'}
               author={book.author || 'Book Author'}
-              imageURL={book.imageURL || '/images/placeholder.png'}
+              imageURL={book.imageURL || '/images/placeholder-portrait.png'}
               link={book.link || '#'}
               dateAdded={selectedDate.toLocaleDateString('en-GB', {
                 day: 'numeric',
@@ -145,23 +204,6 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <FormLabel htmlFor='type' required>
-                Type
-              </FormLabel>
-              <select
-                value={book.type}
-                onChange={(e) =>
-                  handleChange('type', e.target.value as Book['type'])
-                }
-                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-                required
-              >
-                <option value='currentlyReading'>Currently Reading</option>
-                <option value='read'>Read</option>
-                <option value='toRead'>To Read</option>
-              </select>
-            </div>
             <div>
               <FormLabel htmlFor='title' required>
                 Title
@@ -206,6 +248,23 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
               />
             </div>
             <div>
+              <FormLabel htmlFor='type' required>
+                Type
+              </FormLabel>
+              <select
+                value={book.type}
+                onChange={(e) =>
+                  handleChange('type', e.target.value as Book['type'])
+                }
+                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+                required
+              >
+                <option value='currentlyReading'>Currently Reading</option>
+                <option value='read'>Read</option>
+                <option value='toRead'>To Read</option>
+              </select>
+            </div>
+            <div>
               <FormLabel htmlFor='dateAdded' required>
                 Date Added
               </FormLabel>
@@ -214,16 +273,6 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
                 onChange={handleDateChange}
                 isRange={false}
               />
-            </div>
-            <div className='flex justify-end space-x-4'>
-              {bookToEdit && (
-                <Button type='destructive' onClick={handleDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type='primary' onClick={handleSubmit}>
-                {bookToEdit ? 'Save Changes' : 'Add Book'}
-              </Button>
             </div>
           </form>
         </div>

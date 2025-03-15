@@ -305,7 +305,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl md:text-2xl font-medium tracking-wide text-black dark:text-white'>
+          <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
             {projectToEdit ? (
               <div className='flex items-center'>
                 {project.favicon && (
@@ -324,45 +324,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               'New Project'
             )}
           </h1>
-          <div className='hidden md:flex space-x-4'>
-            {projectToEdit && (
-              <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                <span className='hidden md:inline-flex'>Delete</span>
-              </Button>
-            )}
 
-            {projectToEdit &&
-              (project.pinned ? (
-                <Button
-                  icon='pushPinSlash'
-                  onClick={togglePin}
-                  className='w-full'
-                >
-                  <span>Unpin</span>
-                </Button>
-              ) : (
-                <Button icon='pushPin' onClick={togglePin} className='w-full'>
-                  <span>Pin</span>
-                </Button>
-              ))}
-
-            {projectToEdit ? (
-              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                <span className='hidden md:inline-flex'>Save</span>
-              </Button>
-            ) : (
-              <Button type='primary' icon='plus' onClick={handleSubmit}>
-                <span className='hidden md:inline-flex'>Add</span>
-              </Button>
-            )}
-            <Button icon='close' onClick={() => drawer.close()} />
-          </div>
-
-          <div className='block md:hidden'>
-            <Dropdown
-              trigger={<Button icon='dotsThree' />}
-              position='bottomLeft'
-            >
+          <div className='flex justify-end space-x-4'>
+            <Dropdown trigger={<Button icon='dotsThree' />} position='bottom'>
               <div className='flex flex-col p-2 space-y-2'>
                 {projectToEdit && (
                   <Button
@@ -415,6 +379,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 )}
               </div>
             </Dropdown>
+
+            <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
       </div>

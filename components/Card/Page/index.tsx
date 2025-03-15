@@ -10,6 +10,7 @@ interface Props {
   icon?: string;
   className?: string;
   href?: string;
+  onClick?: () => void;
 }
 
 export default function PageCard({
@@ -18,10 +19,14 @@ export default function PageCard({
   icon,
   className,
   href,
+  onClick,
 }: Props) {
   const router = useRouter();
+
   const handleClick = () => {
-    if (href) {
+    if (onClick) {
+      onClick();
+    } else if (href) {
       if (href.indexOf('http') === -1) {
         router.push(href);
       } else {
@@ -42,17 +47,14 @@ export default function PageCard({
               className ? className : ''
             }`}
           >
-            <Icon
-              name={icon}
-              className='h-[28px] w-[28px] md:h-[32px] md:w-[32px]'
-            />
+            <Icon name={icon} className='size-[28px] md:size-[32px]' />
           </div>
         )}
         <div className='w-full'>
-          <h1 className='flex items-center text-md md:text-xl font-medium tracking-wide'>
+          <h1 className='text-md md:text-xl font-medium tracking-wide line-clamp-1 text-ellipsis'>
             {title}
           </h1>
-          <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 overflow-hidden text-ellipsis'>
+          <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
             {desc}
           </p>
         </div>

@@ -1,7 +1,7 @@
 import { getPostById, getPosts } from '@/functions/posts';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import ManagePostContent from './content';
+import ManagePostContent from '../../content';
 
 type Props = {
   params: Promise<{
@@ -17,12 +17,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (isEdit && id !== 'new') {
     const post = await getPostById(id);
     return {
-      title: post ? `Edit: ${post.title} - Zulfikar` : 'Edit Post - Zulfikar',
+      title: post ? `Edit: ${post.title}` : 'Edit Post',
     };
   }
 
   return {
-    title: 'Create Post - Zulfikar',
+    title: 'Create Post',
   };
 }
 

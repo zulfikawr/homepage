@@ -3,14 +3,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogPostContent from './content';
 import { Suspense } from 'react';
+import LoadingSkeleton from './loading';
 
 type Params = {
   id: string;
 };
-
-function PostLoading() {
-  return <div>Loading...</div>;
-}
 
 async function PostLoader({ params }: { params: Promise<Params> }) {
   const resolvedParams = await params;
@@ -57,7 +54,7 @@ export async function generateMetadata({
 
 export default function Page({ params }: { params: Promise<Params> }) {
   return (
-    <Suspense fallback={<PostLoading />}>
+    <Suspense fallback={<LoadingSkeleton />}>
       <PostLoader params={params} />
     </Suspense>
   );

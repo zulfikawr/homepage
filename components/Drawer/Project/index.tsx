@@ -2,7 +2,7 @@ import { ProjectCard } from '@/components/Card/Project';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import ProjectForm from '@/components/Form/Project';
-import { Button } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 import Separator from '@/components/UI/Separator';
 
 const ProjectsDrawer = ({
@@ -10,7 +10,7 @@ const ProjectsDrawer = ({
   onUpdate,
 }: {
   projects: Project[];
-  onUpdate: () => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }) => {
   const handleEditProject = (project: Project) => {
     drawer.open(<ProjectForm projectToEdit={project} onUpdate={onUpdate} />);
@@ -25,7 +25,10 @@ const ProjectsDrawer = ({
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl md:text-2xl font-semibold'>Projects</h1>
+          <div className='flex items-center space-x-4'>
+            <Icon name='package' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>Projects</h1>
+          </div>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddProject}>
               <span className='hidden md:block'>Add</span>

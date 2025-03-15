@@ -32,8 +32,8 @@ const BookCardLoading = () => (
         <div className='h-[52px] w-[35px] rounded-sm bg-neutral-200 dark:bg-neutral-700' />
       </div>
       <div className='py-2 pr-4 space-y-2'>
-        <div className='h-4 w-40 rounded bg-neutral-200 dark:bg-neutral-700' />
-        <div className='h-3 w-32 rounded bg-neutral-200 dark:bg-neutral-700' />
+        <div className='h-4 w-24 md:w-40 rounded bg-neutral-200 dark:bg-neutral-700' />
+        <div className='h-3 w-16 md:w-32 rounded bg-neutral-200 dark:bg-neutral-700' />
       </div>
     </div>
     <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-3 dark:border-neutral-700'>
@@ -118,8 +118,59 @@ const PostCardLoading = () => (
   </BaseCardLoading>
 );
 
+const PlaylistCardLoading = () => (
+  <BaseCardLoading>
+    <>
+      {/* Image and Title Section */}
+      <div className='grid grid-cols-4 items-center gap-4 p-4'>
+        {/* Image Placeholder */}
+        <div className='col-span-1 flex justify-center aspect-square'>
+          <div className='h-20 w-20 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+        </div>
+        {/* Title and Subtitle Placeholder */}
+        <div className='col-span-3 space-y-1'>
+          <div className='h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
+          <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+        </div>
+      </div>
+      {/* Footer Section */}
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+      </div>
+    </>
+  </BaseCardLoading>
+);
+
+const CertificateCardLoading = () => (
+  <BaseCardLoading>
+    <>
+      <div className='grid grid-cols-4 items-center gap-4 p-4'>
+        <div className='col-span-1 flex justify-center aspect-square'>
+          <div className='h-20 w-20 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+        </div>
+        <div className='col-span-3 space-y-1'>
+          <div className='h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
+          <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+        </div>
+      </div>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+      </div>
+    </>
+  </BaseCardLoading>
+);
+
 type CardLoadingProps = {
-  type: 'podcast' | 'book' | 'employment' | 'project' | 'post';
+  type:
+    | 'podcast'
+    | 'book'
+    | 'employment'
+    | 'project'
+    | 'post'
+    | 'playlist'
+    | 'certificate';
 };
 
 const CardLoading = ({ type }: CardLoadingProps) => {
@@ -134,6 +185,10 @@ const CardLoading = ({ type }: CardLoadingProps) => {
       return <ProjectCardLoading />;
     case 'post':
       return <PostCardLoading />;
+    case 'playlist':
+      return <PlaylistCardLoading />;
+    case 'certificate':
+      return <CertificateCardLoading />;
     default:
       return <PodcastCardLoading />;
   }

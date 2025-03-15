@@ -1,7 +1,7 @@
 import { Post } from '@/types/post';
 import { drawer } from '@/components/Drawer';
 import PostForm from '@/components/Form/Post';
-import { Button } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 import PostCard from '@/components/Card/Post';
 
 const PostsDrawer = ({ posts }: { posts: Post[] }) => {
@@ -13,10 +13,13 @@ const PostsDrawer = ({ posts }: { posts: Post[] }) => {
     <>
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>Edit Posts</h1>
+          <div className='flex items-center space-x-4'>
+            <Icon name='note' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>Posts</h1>
+          </div>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddPost}>
-              <span className='hidden lg:block'>Add Post</span>
+              <span className='hidden lg:block'>Add</span>
             </Button>
             <Button icon='close' onClick={() => drawer.close()} />
           </div>

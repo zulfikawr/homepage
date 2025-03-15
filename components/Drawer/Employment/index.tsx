@@ -2,7 +2,7 @@ import { EmploymentCard } from '@/components/Card/Employment';
 import { Employment } from '@/types/employment';
 import { drawer } from '@/components/Drawer';
 import EmploymentForm from '@/components/Form/Employment';
-import { Button } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 import Separator from '@/components/UI/Separator';
 
 const EmploymentsDrawer = ({
@@ -10,7 +10,7 @@ const EmploymentsDrawer = ({
   onUpdate,
 }: {
   employments: Employment[];
-  onUpdate: () => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }) => {
   const handleEditEmployment = (employment: Employment) => {
     drawer.open(
@@ -27,9 +27,10 @@ const EmploymentsDrawer = ({
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl sm:text-2xl font-medium tracking-wide'>
-            Edit Employments
-          </h1>
+          <div className='flex items-center space-x-4'>
+            <Icon name='briefcase' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>Employments</h1>
+          </div>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddEmployment}>
               <span className='hidden lg:block'>Add</span>

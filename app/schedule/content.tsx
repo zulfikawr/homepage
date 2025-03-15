@@ -2,9 +2,9 @@
 
 import type React from 'react';
 import { useState, useEffect } from 'react';
-import { Icon, Button, FormLabel, Input } from '@/components/UI';
-import Link from 'next/link';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { database, ref, set, push, get } from '@/lib/firebase';
+import PageTitle from '@/components/PageTitle';
 
 interface Appointment {
   date: string;
@@ -245,27 +245,13 @@ export default function ScheduleContent() {
   const availableTimeSlots = getAvailableTimeSlots();
 
   return (
-    <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
-      <div className='mb-4 flex items-center'>
-        <div className='flex-1 items-center'>
-          <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
-            <span className='mr-3 inline-block'>📑</span>
-            Schedule
-          </h1>
-        </div>
-        <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
-          <div className='flex-1 px-5'>
-            <p className='text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'>
-              <Link href='/' className='flex items-center'>
-                <span className='mr-2 size-[16px]'>
-                  <Icon name='houseLine' />
-                </span>
-                Home
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+    <div>
+      <PageTitle
+        emoji='📆'
+        title='Schedule a Meeting'
+        subtitle='Use this form to schedule a meeting wih me'
+        route='/schedule'
+      />
 
       <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-4'>
         {submitMessage && (
@@ -283,28 +269,23 @@ export default function ScheduleContent() {
 
           {/* Month Navigation */}
           <div className='flex justify-between mb-4'>
-            <button
+            <Button
               onClick={() => handleMonthChange('prev')}
               disabled={
                 currentMonth === new Date().getMonth() &&
                 currentYear === new Date().getFullYear()
               }
-              className='px-4 py-2 bg-neutral-200 rounded-md dark:bg-neutral-700 dark:text-neutral-300 disabled:bg-neutral-400 disabled:dark:bg-neutral-600'
+              className='disabled:bg-neutral-400 disabled:dark:bg-neutral-600 disabled:cursor-default'
             >
               Previous
-            </button>
+            </Button>
             <span className='text-xl font-semibold dark:text-white'>
               {new Date(currentYear, currentMonth).toLocaleString('default', {
                 month: 'long',
                 year: 'numeric',
               })}
             </span>
-            <button
-              onClick={() => handleMonthChange('next')}
-              className='px-4 py-2 bg-neutral-200 rounded-md dark:bg-neutral-700 dark:text-neutral-300'
-            >
-              Next
-            </button>
+            <Button onClick={() => handleMonthChange('next')}>Next</Button>
           </div>
 
           {/* Calendar */}
@@ -347,7 +328,7 @@ export default function ScheduleContent() {
                     day && hasAvailableSlots
                       ? 'cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-600'
                       : day
-                        ? 'bg-neutral-300 dark:bg-neutral-600 opacity-50 cursor-not-allowed'
+                        ? 'opacity-50 cursor-default'
                         : ''
                   } 
                   ${
@@ -428,13 +409,8 @@ export default function ScheduleContent() {
                 />
               </div>
               <div>
-                <label
-                  htmlFor='purpose'
-                  className='block text-sm font-medium text-neutral-700 dark:text-neutral-300'
-                >
-                  Purpose of Meeting (Optional)
-                </label>
-                <textarea
+                <FormLabel htmlFor='purpose'>Purpose of Meeting</FormLabel>
+                <Textarea
                   id='purpose'
                   value={purpose}
                   onChange={(e) => setPurpose(e.target.value)}
@@ -453,7 +429,7 @@ export default function ScheduleContent() {
             disabled={
               !selectedDate || isSubmitting || availableTimeSlots.length === 0
             }
-            className='disabled:bg-neutral-400 disabled:hover:bg-neutral-400 disabled:dark:bg-neutral-600 disabled:dark:hover:bg-neutral-600'
+            className='disabled:bg-neutral-400 disabled:hover:bg-neutral-400 disabled:dark:bg-neutral-600 disabled:dark:hover:bg-neutral-600 disabled:border-none'
           >
             {isSubmitting ? 'Scheduling...' : 'Schedule'}
           </Button>

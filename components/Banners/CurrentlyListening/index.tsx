@@ -132,7 +132,9 @@ const CurrentlyListening = () => {
           <span className='size-5'>
             <Icon name='musicNotes' />
           </span>
-          <span className='h-5'>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>
+          <span className='h-5'>
+            {isPlaying ? 'Currently Listening' : 'Last Played'}
+          </span>
         </div>
       </div>
 
