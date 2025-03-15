@@ -2,14 +2,14 @@ import { PodcastCard } from '@/components/Card/Podcast';
 import { Podcast } from '@/types/podcast';
 import { drawer } from '@/components/Drawer';
 import PodcastForm from '@/components/Form/Podcast';
-import { Button } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 
 const PodcastDrawer = ({
   podcasts,
   onUpdate,
 }: {
   podcasts: Podcast[];
-  onUpdate: () => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }) => {
   const handleEditPodcast = (podcast: Podcast) => {
     drawer.open(<PodcastForm podcastToEdit={podcast} onUpdate={onUpdate} />);
@@ -24,10 +24,13 @@ const PodcastDrawer = ({
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>Edit Podcasts</h1>
+          <div className='flex items-center space-x-4'>
+            <Icon name='microphone' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>Podcasts</h1>
+          </div>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddPodcast}>
-              <span className='hidden lg:block'>Add Podcast</span>
+              <span className='hidden lg:block'>Add</span>
             </Button>
             <Button icon='close' onClick={() => drawer.close()} />
           </div>

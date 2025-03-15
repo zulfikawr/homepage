@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
 import PlaylistCard from '@/components/Card/Playlist/Spotify';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyPlaylist } from '@/types/spotifyPlaylist';
+import { CardLoading } from '@/components/Card/Loading';
+import CardEmpty from '@/components/Card/Empty';
 
 export default function SpotifyPlaylistContent() {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
@@ -42,7 +44,7 @@ export default function SpotifyPlaylistContent() {
     }
   };
 
-  const loadPlaylists = async () => {
+  const loadPlaylists = useCallback(async () => {
     try {
       setLoading(true);
       const fetchedPlaylists = await fetchSpotifyPlaylists();
@@ -53,11 +55,11 @@ export default function SpotifyPlaylistContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPlaylists();
-  });
+  }, [loadPlaylists]);
 
   if (error) {
     return (
@@ -80,10 +82,12 @@ export default function SpotifyPlaylistContent() {
       />
 
       {loading ? (
-        <div className='flex justify-center py-10'>
-          <div className='animate-pulse text-neutral-500 dark:text-neutral-400'>
-            Loading playlists...
-          </div>
+        <div className='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2'>
+          {Array(6)
+            .fill(0)
+            .map((_, index) => (
+              <CardLoading key={index} type='playlist' />
+            ))}
         </div>
       ) : playlists.length > 0 ? (
         <div className='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2'>
@@ -93,9 +97,7 @@ export default function SpotifyPlaylistContent() {
         </div>
       ) : (
         <div className='mt-8 rounded-md border border-neutral-200 bg-white p-6 text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
-          <p className='text-neutral-500 dark:text-neutral-400'>
-            No playlists found.
-          </p>
+          <CardEmpty message='No playlist found' />
         </div>
       )}
     </div>

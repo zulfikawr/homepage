@@ -60,7 +60,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       link: {
         internal: '/',
       },
-      className: nonHomePage ? 'block' : 'hidden',
+      className: nonHomePage ? 'hidden sm:block' : 'hidden',
     },
     {
       key: 'pages',
@@ -69,7 +69,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       link: {
         internal: '/pages',
       },
-      className: isPagesPage ? 'hidden' : 'sm:block',
+      className: isPagesPage ? 'hidden' : 'block',
     },
     {
       key: 'searchdesktop',

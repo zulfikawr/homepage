@@ -15,9 +15,9 @@ const BookCard = (props: BookCardProps) => {
       onClick={() => {
         if (!isInDrawer) openLink(link);
       }}
-      isInDrawer={isInDrawer}
+      className={`${isInDrawer ? 'w-full max-w-[20rem]' : ''}`}
     >
-      <div className='flex flex-1 items-center lg:justify-center'>
+      <div className='flex flex-1 items-center'>
         <div className='flex-shrink-0 px-4.5 py-4'>
           <Image
             width={35}

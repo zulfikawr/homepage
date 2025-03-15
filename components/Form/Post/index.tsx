@@ -6,7 +6,7 @@ import { addPost, updatePost, deletePost } from '@/functions/posts';
 import { toast } from '@/components/Toast';
 import { drawer } from '@/components/Drawer';
 import { generateId } from '@/utilities/generateId';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { Button, Dropdown, FormLabel, Input, Textarea } from '@/components/UI';
 import { modal } from '@/components/Modal';
 import PostCard from '@/components/Card/Post';
 import { Editor } from '@/components/Editor';
@@ -164,21 +164,76 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
         <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
           <div className='flex flex-row justify-between items-center'>
             <h1 className='text-lg font-semibold'>
-              {postToEdit ? 'Edit Post' : 'Add New Post'}
+              {postToEdit ? `${post.title}` : 'Add New Post'}
             </h1>
-            <div className='flex items-center space-x-2'>
+            <div className='hidden md:flex space-x-4'>
+              {postToEdit && (
+                <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                  Delete
+                </Button>
+              )}
+              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                {postToEdit ? 'Save' : 'Add'}
+              </Button>
               <Button
-                type='primary'
                 icon='arrowSquareOut'
                 onClick={() =>
                   (window.location.href = postToEdit
-                    ? `/post/action/?action=edit&id=${postToEdit.id}`
-                    : '/post/action/?action=create')
+                    ? `/post/action/edit/${postToEdit.id}`
+                    : '/post/action/create/new')
                 }
               >
                 <span className='hidden lg:block'>Open in full screen</span>
               </Button>
               <Button icon='close' onClick={() => drawer.close()} />
+            </div>
+
+            <div className='block md:hidden'>
+              <Dropdown trigger={<Button icon='dotsThree' />} position='left'>
+                <div className='flex flex-col p-2 space-y-2'>
+                  <Button
+                    icon='arrowSquareOut'
+                    onClick={() =>
+                      (window.location.href = postToEdit
+                        ? `/post/action/edit/${postToEdit.id}`
+                        : '/post/action/create/new')
+                    }
+                  >
+                    <span>Open in full screen</span>
+                  </Button>
+
+                  {postToEdit && (
+                    <Button
+                      type='destructive'
+                      icon='trash'
+                      onClick={confirmDelete}
+                      className='w-full'
+                    >
+                      <span>Delete</span>
+                    </Button>
+                  )}
+
+                  {postToEdit ? (
+                    <Button
+                      type='primary'
+                      icon='floppyDisk'
+                      onClick={handleSubmit}
+                      className='w-full'
+                    >
+                      <span>Save</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      type='primary'
+                      icon='plus'
+                      onClick={handleSubmit}
+                      className='w-full'
+                    >
+                      <span>Add</span>
+                    </Button>
+                  )}
+                </div>
+              </Dropdown>
             </div>
           </div>
         </div>
@@ -289,16 +344,6 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
                 onChange={(e) => handleChange('audioUrl', e.target.value)}
                 placeholder='https://audio-url.com'
               />
-            </div>
-            <div className='flex justify-end space-x-4 pt-4'>
-              {postToEdit && (
-                <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                  Delete
-                </Button>
-              )}
-              <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                {postToEdit ? 'Save Changes' : 'Add Post'}
-              </Button>
             </div>
           </form>
         </div>

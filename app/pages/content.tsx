@@ -5,7 +5,7 @@ export default function PagesContent() {
   const pages = [
     {
       title: 'Certifications',
-      desc: 'Get in touch',
+      desc: 'Certs and licences',
       icon: 'certificate',
       href: '/certs',
     },
@@ -20,6 +20,12 @@ export default function PagesContent() {
       desc: 'View my stats',
       icon: 'presentationChart',
       href: '/dashboard',
+    },
+    {
+      title: 'Database',
+      desc: 'Manage my database',
+      icon: 'presentationChart',
+      href: '/database',
     },
     {
       title: 'Feedback',

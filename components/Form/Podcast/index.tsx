@@ -155,18 +155,24 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
     <>
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>
-            {podcastToEdit ? 'Edit Podcast' : 'Add New Podcast'}
+          <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
+            {podcastToEdit ? `${podcastToEdit.title}` : 'Add New Podcast'}
           </h1>
           <div className='flex space-x-4'>
-            {podcastToEdit && (
-              <Button type='destructive' onClick={confirmDelete}>
-                Delete
+            {podcastToEdit ? (
+              <div className='flex space-x-4'>
+                <Button type='destructive' icon='trash' onClick={confirmDelete}>
+                  Delete
+                </Button>
+                <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <Button type='primary' icon='plus' onClick={handleSubmit}>
+                Add
               </Button>
             )}
-            <Button type='primary' onClick={handleSubmit}>
-              {podcastToEdit ? 'Save' : 'Add'}
-            </Button>
             <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>

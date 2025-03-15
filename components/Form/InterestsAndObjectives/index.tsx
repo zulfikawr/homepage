@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { useAuth } from '@/contexts/authContext';
 import { drawer } from '@/components/Drawer';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { Button, FormLabel, Icon, Input, Textarea } from '@/components/UI';
 import { updateInterestsAndObjectives } from '@/functions/interestsAndObjectives';
 import { toast } from '@/components/Toast';
 
@@ -14,7 +14,6 @@ const InterestsAndObjectivesForm = ({
   onUpdate?: (data: InterestsAndObjectives) => void;
 }) => {
   const { user } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [description, setDescription] = useState(data?.description || '');
   const [objectives, setObjectives] = useState<string[]>(
@@ -35,7 +34,6 @@ const InterestsAndObjectivesForm = ({
     e.preventDefault();
 
     if (!user) return;
-    setIsSubmitting(true);
 
     const interestsAndObjectivesData = {
       description,
@@ -58,8 +56,6 @@ const InterestsAndObjectivesForm = ({
     } catch (error) {
       console.error('Error saving interests and objectives:', error);
       toast.show('An unexpected error occurred');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -80,8 +76,18 @@ const InterestsAndObjectivesForm = ({
       {/* Header */}
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-lg font-semibold'>Edit Interests & Objectives</h1>
-          <Button icon='close' onClick={() => drawer.close()} />
+          <div className='flex items-center space-x-4'>
+            <Icon name='microscope' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>
+              Interests & Objectives
+            </h1>
+          </div>
+          <div className='flex justify-end space-x-4'>
+            <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
+              <span className='hidden lg:block'>Save</span>
+            </Button>
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
         </div>
       </div>
 
@@ -149,18 +155,6 @@ const InterestsAndObjectivesForm = ({
                 rows={3}
                 required
               />
-            </div>
-            <div className='flex justify-end space-x-4 pt-4'>
-              <Button
-                type='primary'
-                icon='floppyDisk'
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-              >
-                <span className='hidden lg:block'>
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </span>
-              </Button>
             </div>
           </form>
         </div>
