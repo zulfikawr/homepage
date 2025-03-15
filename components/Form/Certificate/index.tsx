@@ -96,21 +96,21 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
         <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
-          Are you sure you want to delete the following certifications? This action
-          cannot be undone.
+          Are you sure you want to delete the following certifications? This
+          action cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
           <CertificateCard
-              id='preview'
-              title={certificate.title || 'Certificate Title'}
-              issuedBy={certificate.issuedBy || 'Issued By'}
-              dateIssued={certificate.dateIssued || 'Date Issued'}
-              credentialId={certificate.credentialId || 'Credential ID'}
-              imageUrl={certificate.imageUrl || '/images/placeholder.png'}
-              organizationLogoUrl={certificate.organizationLogoUrl || ''}
-              link={certificate.link || '#'}
-              isInDrawer
-            />
+            id='preview'
+            title={certificate.title || 'Certificate Title'}
+            issuedBy={certificate.issuedBy || 'Issued By'}
+            dateIssued={certificate.dateIssued || 'Date Issued'}
+            credentialId={certificate.credentialId || 'Credential ID'}
+            imageUrl={certificate.imageUrl || '/images/placeholder.png'}
+            organizationLogoUrl={certificate.organizationLogoUrl || ''}
+            link={certificate.link || '#'}
+            isInDrawer
+          />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -135,7 +135,9 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
       <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
-            {certificateToEdit ? `${certificateToEdit.title}` : 'Add New Certifications'}
+            {certificateToEdit
+              ? `${certificateToEdit.title}`
+              : 'Add New Certifications'}
           </h1>
           <div className='flex space-x-4'>
             {certificateToEdit ? (
