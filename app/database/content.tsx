@@ -43,9 +43,7 @@ export default function DatabaseContent() {
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
       onClick: () =>
-        drawer.open(
-          <CertificateDrawer certificates={certificates} />,
-        ),
+        drawer.open(<CertificateDrawer certificates={certificates} />),
     },
     {
       title: 'Employments',

@@ -28,7 +28,9 @@ const CertificateDrawer = ({
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-4'>
             <Icon name='certificate' className='size-[28px] md:size-[32px]' />
-            <h1 className='text-xl md:text-2xl font-semibold'>Certifications</h1>
+            <h1 className='text-xl md:text-2xl font-semibold'>
+              Certifications
+            </h1>
           </div>
           <div className='flex items-center space-x-2'>
             <Button type='primary' icon='plus' onClick={handleAddCertificate}>

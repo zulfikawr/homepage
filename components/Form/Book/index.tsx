@@ -116,8 +116,8 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
         <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
-          Are you sure you want to delete the following book? This action
-          cannot be undone.
+          Are you sure you want to delete the following book? This action cannot
+          be undone.
         </p>
         <div className='flex justify-center mb-6'>
           <BookCard
