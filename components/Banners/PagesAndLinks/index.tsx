@@ -1,4 +1,5 @@
 import { Icon } from '@/components/UI';
+import Tooltip from '@/components/UI/Tooltip';
 import Link from 'next/link';
 
 const PagesAndLinks = () => {
@@ -12,12 +13,14 @@ const PagesAndLinks = () => {
           <span>Pages & Links</span>
         </div>
         <div>
-          <Link
-            href='/pages'
-            className='h-[25px] w-[25px] effect-pressing flex items-center justify-center rounded-full border p-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <Icon name='caretRight' />
-          </Link>
+          <Tooltip text='All Pages'>
+            <Link
+              href='/pages'
+              className='h-[25px] w-[25px] effect-pressing flex items-center justify-center rounded-full border p-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
+            >
+              <Icon name='caretRight' />
+            </Link>
+          </Tooltip>
         </div>
       </div>
       <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4 text-sm text-neutral-600 dark:text-neutral-300'>

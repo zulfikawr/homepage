@@ -2,34 +2,19 @@
 
 import { useState, useRef } from 'react';
 import { EmploymentCard } from '@/components/Card/Employment';
-import { drawer } from '@/components/Drawer';
 import { getEmployments } from '@/functions/employments';
-import { useAuth } from '@/contexts/authContext';
 import { sortByDate } from '@/utilities/sortByDate';
 import { useFetchData } from '@/lib/fetchData';
-import EmploymentsDrawer from '@/components/Drawer/Employment';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 
 const EmploymentSection = () => {
-  const { user } = useAuth();
-  const {
-    data: employments,
-    loading,
-    error,
-    refetch,
-  } = useFetchData(getEmployments);
+  const { data: employments, loading, error } = useFetchData(getEmployments);
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftMask, setShowLeftMask] = useState(false);
   const [showRightMask, setShowRightMask] = useState(true);
-
-  const handleOpenEmploymentsDrawer = () => {
-    drawer.open(
-      <EmploymentsDrawer employments={sortedEmployments} onUpdate={refetch} />,
-    );
-  };
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -51,20 +36,24 @@ const EmploymentSection = () => {
           href: 'https://www.linkedin.com/in/zulfikar-muhammad',
           label: 'LinkedIn',
         }}
-        onClick={handleOpenEmploymentsDrawer}
-        isClickable={!!user}
       />
       <div className='flex flex-col gap-y-4'>
         <div className='relative'>
           {/* Left Mask */}
-          {showLeftMask && (
-            <div className='absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50' />
-          )}
+          <div
+            className={`absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50 
+            transition-opacity duration-300 ease-in-out ${
+              showLeftMask ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
 
           {/* Right Mask */}
-          {showRightMask && (
-            <div className='absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50' />
-          )}
+          <div
+            className={`absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50 
+            transition-opacity duration-300 ease-in-out ${
+              showRightMask ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
 
           {/* Scrollable Container */}
           <div

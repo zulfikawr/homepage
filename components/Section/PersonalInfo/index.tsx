@@ -1,32 +1,18 @@
 import React from 'react';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/authContext';
-import { drawer } from '@/components/Drawer';
-import PersonalInfoForm from '@/components/Form/PersonalInfo';
 import { getPersonalInfo } from '@/functions/personalInfo';
 import { useFetchData } from '@/lib/fetchData';
 import Loading from './loading';
 import { Hover } from '@/components/Visual';
 
 const PersonalInfoSection = () => {
-  const { user } = useAuth();
-
   const { data: personalInfo, loading, error } = useFetchData(getPersonalInfo);
-
-  const handleEdit = () => {
-    if (personalInfo) {
-      drawer.open(<PersonalInfoForm data={personalInfo} />);
-    }
-  };
 
   if (error) return <div>Failed to load personal info</div>;
   if (loading) return <Loading />;
 
   return (
-    <section
-      onClick={user ? handleEdit : undefined}
-      className={`flex items-center justify-between gap-x-10 gap-y-8 ${user ? 'cursor-pointer' : ''}`}
-    >
+    <section className='flex items-center justify-between gap-x-10 gap-y-8'>
       <div className='flex flex-col gap-y-1'>
         <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
           <span className='mr-3 inline-block'>👋</span>

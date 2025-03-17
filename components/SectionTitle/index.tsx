@@ -9,8 +9,6 @@ interface SectionTitleProps {
     href: string;
     label: string;
   };
-  onClick?: () => void;
-  isClickable?: boolean;
 }
 
 const SectionTitle = ({
@@ -18,21 +16,12 @@ const SectionTitle = ({
   title,
   link,
   iconClassName = '',
-  onClick,
-  isClickable = false,
 }: SectionTitleProps) => {
   return (
     <div
       className={`flex items-center relative z-10 mb-5 ${link ? 'justify-between' : 'justify-start'}`}
     >
-      <div
-        onClick={isClickable ? onClick : undefined}
-        className={`inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm ${
-          isClickable
-            ? 'cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-600'
-            : ''
-        } dark:border-neutral-600 dark:bg-neutral-700`}
-      >
+      <div className='inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-neutral-600 dark:bg-neutral-700'>
         <span className={`mr-1.5 flex h-5 w-5 ${iconClassName}`}>
           <Icon name={icon} />
         </span>

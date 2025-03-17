@@ -12,6 +12,9 @@ import {
 import { Hover } from '@/components/Visual';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import LoadingSkeleton from './loading';
+import { drawer } from '@/components/Drawer';
+import SpotifyListeningHistory from '@/components/Drawer/ListeningHistory';
+import Tooltip from '@/components/UI/Tooltip';
 
 interface SpotifyTrack {
   name: string;
@@ -44,6 +47,10 @@ const CurrentlyListening = () => {
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleOpenListeningHistoryDrawer = () => {
+    drawer.open(<SpotifyListeningHistory />);
+  };
 
   const fetchTracks = async () => {
     try {
@@ -127,15 +134,21 @@ const CurrentlyListening = () => {
 
   return (
     <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
-      <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
-          <span className='size-5'>
-            <Icon name='musicNotes' />
-          </span>
+      <div className='flex w-full items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+        <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <Icon name='musicNotes' className='size-5' />
           <span className='h-5'>
             {isPlaying ? 'Currently Listening' : 'Last Played'}
           </span>
         </div>
+        <Tooltip text='Listening History'>
+          <div
+            onClick={handleOpenListeningHistoryDrawer}
+            className='cursor-pointer'
+          >
+            <Icon name='clockCounterClockwise' className='size-5' />
+          </div>
+        </Tooltip>
       </div>
 
       <Link

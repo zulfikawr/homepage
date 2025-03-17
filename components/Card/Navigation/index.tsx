@@ -6,26 +6,26 @@ import openLink from '@/utilities/externalLink';
 
 interface Props {
   title: string;
-  desc: string;
+  desc?: string;
   icon?: string;
   className?: string;
   href?: string;
-  onClick?: () => void;
+  action?: () => void;
 }
 
-export default function PageCard({
+export default function NavigationCard({
   title,
   desc,
   icon,
   className,
   href,
-  onClick,
+  action,
 }: Props) {
   const router = useRouter();
 
   const handleClick = () => {
-    if (onClick) {
-      onClick();
+    if (action) {
+      action();
     } else if (href) {
       if (href.indexOf('http') === -1) {
         router.push(href);
@@ -54,9 +54,11 @@ export default function PageCard({
           <h1 className='text-md md:text-xl font-medium tracking-wide line-clamp-1 text-ellipsis'>
             {title}
           </h1>
-          <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
-            {desc}
-          </p>
+          {desc && 
+            <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
+              {desc}
+            </p>
+          }
         </div>
       </div>
     </div>
