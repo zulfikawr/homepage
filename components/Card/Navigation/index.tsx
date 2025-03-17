@@ -54,11 +54,11 @@ export default function NavigationCard({
           <h1 className='text-md md:text-xl font-medium tracking-wide line-clamp-1 text-ellipsis'>
             {title}
           </h1>
-          {desc && 
+          {desc && (
             <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
               {desc}
             </p>
-          }
+          )}
         </div>
       </div>
     </div>

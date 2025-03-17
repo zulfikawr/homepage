@@ -21,7 +21,10 @@ const SkeletonLoader = () => {
         </thead>
         <tbody>
           {Array.from({ length: 10 }).map((_, index) => (
-            <tr key={index} className='border-b border-neutral-200 dark:border-neutral-800'>
+            <tr
+              key={index}
+              className='border-b border-neutral-200 dark:border-neutral-800'
+            >
               <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700 w-1/3'>
                 <div className='animate-pulse'>
                   <div className='h-6 w-24 rounded bg-neutral-100 dark:bg-neutral-900' />
@@ -44,7 +47,9 @@ export default function AnalyticsContent() {
   const { data: pageViews, loading, error } = useFetchData(getAllPageViews);
 
   const sortedPageViews = pageViews
-    ? Object.entries(pageViews).sort(([, viewsA], [, viewsB]) => viewsB - viewsA)
+    ? Object.entries(pageViews).sort(
+        ([, viewsA], [, viewsB]) => viewsB - viewsA,
+      )
     : [];
 
   const formatRoute = (route: string) => {

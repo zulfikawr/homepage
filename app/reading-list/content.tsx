@@ -36,17 +36,21 @@ export default function ReadingListContent() {
           iconClassName='text-green-500'
         />
         <div className='mt-4'>
-          <div className={`grid ${books.filter((book) => book.type === 'currentlyReading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-            {loading
-              ? Array(2)
-                  .fill(0)
-                  .map((_, index) => <CardLoading key={index} type='book' />)
-              : books.filter((book) => book.type === 'currentlyReading').length > 0
-              ? books
-                  .filter((book) => book.type === 'currentlyReading')
-                  .map((book) => <BookCard key={book.id} {...book} />)
-              : <CardEmpty message='No books currently being read' />
-            }
+          <div
+            className={`grid ${books.filter((book) => book.type === 'currentlyReading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+          >
+            {loading ? (
+              Array(2)
+                .fill(0)
+                .map((_, index) => <CardLoading key={index} type='book' />)
+            ) : books.filter((book) => book.type === 'currentlyReading')
+                .length > 0 ? (
+              books
+                .filter((book) => book.type === 'currentlyReading')
+                .map((book) => <BookCard key={book.id} {...book} />)
+            ) : (
+              <CardEmpty message='No books currently being read' />
+            )}
           </div>
         </div>
       </section>
@@ -61,17 +65,20 @@ export default function ReadingListContent() {
           iconClassName='text-yellow-500'
         />
         <div className='mt-4'>
-          <div className={`grid ${books.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-            {loading
-              ? Array(2)
-                  .fill(0)
-                  .map((_, index) => <CardLoading key={index} type='book' />)
-              : books.filter((book) => book.type === 'read').length > 0
-              ? books
-                  .filter((book) => book.type === 'read')
-                  .map((book) => <BookCard key={book.id} {...book} />)
-              : <CardEmpty message='No books read yet' />
-            }
+          <div
+            className={`grid ${books.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+          >
+            {loading ? (
+              Array(2)
+                .fill(0)
+                .map((_, index) => <CardLoading key={index} type='book' />)
+            ) : books.filter((book) => book.type === 'read').length > 0 ? (
+              books
+                .filter((book) => book.type === 'read')
+                .map((book) => <BookCard key={book.id} {...book} />)
+            ) : (
+              <CardEmpty message='No books read yet' />
+            )}
           </div>
         </div>
       </section>
@@ -86,17 +93,20 @@ export default function ReadingListContent() {
           iconClassName='text-blue-500'
         />
         <div className='mt-4'>
-          <div className={`grid ${books.filter((book) => book.type === 'toRead').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
-            {loading
-              ? Array(2)
-                  .fill(0)
-                  .map((_, index) => <CardLoading key={index} type='book' />)
-              : books.filter((book) => book.type === 'toRead').length > 0
-              ? books
-                  .filter((book) => book.type === 'toRead')
-                  .map((book) => <BookCard key={book.id} {...book} />)
-              : <CardEmpty message='No books to read yet' />
-            }
+          <div
+            className={`grid ${books.filter((book) => book.type === 'toRead').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+          >
+            {loading ? (
+              Array(2)
+                .fill(0)
+                .map((_, index) => <CardLoading key={index} type='book' />)
+            ) : books.filter((book) => book.type === 'toRead').length > 0 ? (
+              books
+                .filter((book) => book.type === 'toRead')
+                .map((book) => <BookCard key={book.id} {...book} />)
+            ) : (
+              <CardEmpty message='No books to read yet' />
+            )}
           </div>
         </div>
       </section>

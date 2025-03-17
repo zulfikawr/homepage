@@ -1,7 +1,5 @@
 import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
-import { Icon } from '@/components/UI';
-import Link from 'next/link';
 
 interface ContactItem {
   platform: string;
