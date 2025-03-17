@@ -212,7 +212,9 @@ body::-webkit-scrollbar {
   @apply m-0 rounded-md dark:bg-slate-50;
 }
 
-.prose h1, h2, h3 {
+.prose h1,
+h2,
+h3 {
   @apply tracking-wide;
   @apply dark:!text-white;
   margin-bottom: 0.1em;

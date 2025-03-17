@@ -29,16 +29,17 @@ export default function PodcastContent() {
               : 'grid-cols-2 lg:grid-cols-3'
           } gap-4`}
         >
-          {loading
-            ? Array(6)
-                .fill(0)
-                .map((_, index) => <CardLoading key={index} type='podcast' />)
-            : podcasts && podcasts.length > 0
-            ? podcasts.map((podcast) => (
-                <PodcastCard key={podcast.id} {...podcast} />
-              ))
-            : <CardEmpty message='No podcasts available' />
-          }
+          {loading ? (
+            Array(6)
+              .fill(0)
+              .map((_, index) => <CardLoading key={index} type='podcast' />)
+          ) : podcasts && podcasts.length > 0 ? (
+            podcasts.map((podcast) => (
+              <PodcastCard key={podcast.id} {...podcast} />
+            ))
+          ) : (
+            <CardEmpty message='No podcasts available' />
+          )}
         </div>
       </section>
     </div>
