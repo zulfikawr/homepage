@@ -175,7 +175,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
 
         <Tooltip text='Srikethrough' position='top'>
           <Toggle
-            isActive={editor.isActive('strikethrough')}
+            isActive={editor.isActive('strike')}
             onChange={() => editor.chain().focus().toggleStrike().run()}
           >
             <s>S</s>

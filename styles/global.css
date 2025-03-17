@@ -212,14 +212,24 @@ body::-webkit-scrollbar {
   @apply m-0 rounded-md dark:bg-slate-50;
 }
 
-.prose h1,
-h2,
-h3,
-h4,
-h5 {
+.prose h1, h2, h3 {
   @apply tracking-wide;
   @apply dark:!text-white;
+  margin-bottom: 0.1em;
 }
+
+.prose h1 {
+  font-size: 2.5rem;
+}
+
+.prose h2 {
+  font-size: 2rem;
+}
+
+.prose h3 {
+  font-size: 1.75rem;
+}
+
 .prose .warp-post-embed {
   position: relative;
   overflow: hidden;
@@ -304,15 +314,6 @@ h5 {
   @apply w-3;
   @apply h-3;
   margin-top: -0.125rem;
-}
-
-.prose h5 {
-  color: #111827;
-  @apply dark:text-white;
-  font-weight: 600;
-  margin-bottom: 0.6em;
-  line-height: 1.6;
-  font-size: 1.1em;
 }
 
 .prose strong {

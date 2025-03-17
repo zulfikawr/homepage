@@ -82,9 +82,12 @@ export const getRecentlyPlayed = async () => {
   const access_token = await getAccessToken();
   if (!access_token) return null;
 
-  return fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
+  return fetch(
+    'https://api.spotify.com/v1/me/player/recently-played?limit=10',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     },
-  });
+  );
 };

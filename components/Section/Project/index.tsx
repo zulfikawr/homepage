@@ -1,18 +1,14 @@
 import { ProjectCard } from '@/components/Card/Project';
-import { drawer } from '@/components/Drawer';
 import { getProjects } from '@/functions/projects';
-import { useAuth } from '@/contexts/authContext';
 import { parseDate } from '@/utilities/sortByDate';
 import { useFetchData } from '@/lib/fetchData';
-import ProjectsDrawer from '@/components/Drawer/Project';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { Project } from '@/types/project';
 
 const ProjectSection = () => {
-  const { user } = useAuth();
-  const { data: projects, loading, error, refetch } = useFetchData(getProjects);
+  const { data: projects, loading, error } = useFetchData(getProjects);
 
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);
@@ -35,12 +31,6 @@ const ProjectSection = () => {
 
   const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];
 
-  const handleOpenProjectsDrawer = () => {
-    drawer.open(
-      <ProjectsDrawer projects={sortedProjects} onUpdate={refetch} />,
-    );
-  };
-
   if (error) return <div>Failed to load projects</div>;
 
   return (
@@ -52,8 +42,6 @@ const ProjectSection = () => {
           href: '/projects',
           label: 'All Projects',
         }}
-        onClick={handleOpenProjectsDrawer}
-        isClickable={!!user}
       />
       <div className='flex flex-col gap-y-4'>
         {loading ? (

@@ -1,4 +1,4 @@
-import PageCard from '@/components/Card/Page';
+import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
 
 export default function PagesContent() {
@@ -24,7 +24,7 @@ export default function PagesContent() {
     {
       title: 'Database',
       desc: 'Manage my database',
-      icon: 'presentationChart',
+      icon: 'database',
       href: '/database',
     },
     {
@@ -112,7 +112,7 @@ export default function PagesContent() {
         {pages
           .sort((a, b) => a.title.localeCompare(b.title))
           .map((page, index) => (
-            <PageCard
+            <NavigationCard
               key={index}
               title={page.title}
               desc={page.desc}

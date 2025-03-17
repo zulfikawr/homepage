@@ -1,23 +1,14 @@
 'use client';
 
-import { Button } from '@/components/UI';
 import { PodcastCard } from '@/components/Card/Podcast';
-import { useAuth } from '@/contexts/authContext';
-import { drawer } from '@/components/Drawer';
 import { getPodcasts } from '@/functions/podcasts';
 import { useFetchData } from '@/lib/fetchData';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import PodcastDrawer from '@/components/Drawer/Podcast';
+import CardEmpty from '@/components/Card/Empty';
 
 export default function PodcastContent() {
-  const { user } = useAuth();
-
-  const { data: podcasts, loading, error, refetch } = useFetchData(getPodcasts);
-
-  const handleOpenPodcastDrawer = () => {
-    drawer.open(<PodcastDrawer podcasts={podcasts} onUpdate={refetch} />);
-  };
+  const { data: podcasts, loading, error } = useFetchData(getPodcasts);
 
   if (error) return <div>Failed to load podcast</div>;
 
@@ -30,22 +21,25 @@ export default function PodcastContent() {
         route='/podcasts'
       />
 
-      {user && (
-        <div className='mb-6 flex justify-end'>
-          <Button type='primary' onClick={handleOpenPodcastDrawer}>
-            Manage
-          </Button>
+      <section className='mb-10 mt-4'>
+        <div
+          className={`grid ${
+            !loading && (!podcasts || podcasts.length === 0)
+              ? 'grid-cols-1'
+              : 'grid-cols-2 lg:grid-cols-3'
+          } gap-4`}
+        >
+          {loading
+            ? Array(6)
+                .fill(0)
+                .map((_, index) => <CardLoading key={index} type='podcast' />)
+            : podcasts && podcasts.length > 0
+            ? podcasts.map((podcast) => (
+                <PodcastCard key={podcast.id} {...podcast} />
+              ))
+            : <CardEmpty message='No podcasts available' />
+          }
         </div>
-      )}
-
-      <section className='mb-10 mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3'>
-        {loading
-          ? Array(6)
-              .fill(0)
-              .map((_, index) => <CardLoading key={index} type='podcast' />)
-          : podcasts.map((podcast) => (
-              <PodcastCard key={podcast.id} {...podcast} />
-            ))}
       </section>
     </div>
   );

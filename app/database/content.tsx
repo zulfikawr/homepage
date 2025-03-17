@@ -3,7 +3,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/authContext';
 import PageTitle from '@/components/PageTitle';
-import PageCard from '@/components/Card/Page';
+import NavigationCard from '@/components/Card/Navigation';
 import { drawer } from '@/components/Drawer';
 import { useFetchData } from '@/lib/fetchData';
 import { getPersonalInfo } from '@/functions/personalInfo';
@@ -42,21 +42,21 @@ export default function DatabaseContent() {
       title: 'Certifications',
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
-      onClick: () =>
+      action: () =>
         drawer.open(<CertificateDrawer certificates={certificates} />),
     },
     {
       title: 'Employments',
       desc: 'Manage your employments',
       icon: 'briefcase',
-      onClick: () =>
+      action: () =>
         drawer.open(<EmploymentsDrawer employments={employments} />),
     },
     {
       title: 'Interests & Objectives',
       desc: 'Manage your interests and objectives',
       icon: 'microscope',
-      onClick: () =>
+      action: () =>
         drawer.open(
           <InterestsAndObjectivesForm data={interestsAndObjectives} />,
         ),
@@ -65,7 +65,7 @@ export default function DatabaseContent() {
       title: 'Personal Info',
       desc: 'Manage your personal information',
       icon: 'userCircle',
-      onClick: () =>
+      action: () =>
         drawer.open(
           <PersonalInfoForm data={personalInfo} onUpdate={() => {}} />,
         ),
@@ -74,25 +74,25 @@ export default function DatabaseContent() {
       title: 'Podcasts',
       desc: 'Manage your podcasts',
       icon: 'microphone',
-      onClick: () => drawer.open(<PodcastDrawer podcasts={podcasts} />),
+      action: () => drawer.open(<PodcastDrawer podcasts={podcasts} />),
     },
     {
       title: 'Posts',
       desc: 'Manage your posts',
       icon: 'note',
-      onClick: () => drawer.open(<PostsDrawer posts={posts} />),
+      action: () => drawer.open(<PostsDrawer posts={posts} />),
     },
     {
       title: 'Projects',
       desc: 'Manage your projects',
       icon: 'package',
-      onClick: () => drawer.open(<ProjectsDrawer projects={projects} />),
+      action: () => drawer.open(<ProjectsDrawer projects={projects} />),
     },
     {
       title: 'Reading Lists',
       desc: 'Manage your reading lists',
       icon: 'bookOpen',
-      onClick: () => drawer.open(<BookDrawer books={books} />),
+      action: () => drawer.open(<BookDrawer books={books} />),
     },
   ];
 
@@ -130,13 +130,13 @@ export default function DatabaseContent() {
       ) : (
         <div className='grid grid-cols-2 gap-4'>
           {databaseCategories.map((category, index) => (
-            <PageCard
+            <NavigationCard
               key={index}
               title={category.title}
               desc={category.desc}
               icon={category.icon}
               className={shuffledColors[index % shuffledColors.length]}
-              onClick={category.onClick}
+              action={category.action}
             />
           ))}
         </div>
