@@ -35,12 +35,12 @@ export async function getBooks(): Promise<Book[]> {
  * @returns Promise with operation result
  */
 export async function addBook(
-  data: Omit<Book, 'id' | 'dateAdded'>,
+  data: Omit<Book, 'id'>,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   try {
-    const { title, author, imageURL, link, type } = data;
+    const { title, author, imageURL, link, type, dateAdded } = data;
 
-    if (!title || !author || !link || !type) {
+    if (!title || !author || !link || !type || !dateAdded) {
       return { success: false, error: 'Missing required fields' };
     }
 
@@ -51,7 +51,7 @@ export async function addBook(
       author,
       imageURL,
       link,
-      dateAdded: new Date().toLocaleDateString('en-GB').split('T')[0],
+      dateAdded,
     };
 
     const newBookRef = ref(database, `reading-list/${newBook.id}`);
@@ -73,9 +73,9 @@ export async function updateBook(
   data: Book,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   try {
-    const { id, title, author, imageURL, link, type } = data;
+    const { id, title, author, imageURL, link, type, dateAdded } = data;
 
-    if (!id || !title || !author || !link || !type) {
+    if (!id || !title || !author || !link || !type || !dateAdded) {
       return { success: false, error: 'Missing required fields' };
     }
 
@@ -86,7 +86,7 @@ export async function updateBook(
       author,
       imageURL,
       link,
-      dateAdded: new Date().toLocaleDateString('en-GB').split('T')[0],
+      dateAdded,
     };
 
     const bookRef = ref(database, `reading-list/${id}`);

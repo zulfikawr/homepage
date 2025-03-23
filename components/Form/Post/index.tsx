@@ -10,10 +10,10 @@ import { Button, Dropdown, FormLabel, Input, Textarea } from '@/components/UI';
 import { modal } from '@/components/Modal';
 import PostCard from '@/components/Card/Post';
 import { Editor } from '@/components/Editor';
-import DatePicker from '@/components/DatePicker';
 
 interface PostFormProps {
   postToEdit?: Post;
+  onUpdate?: () => Promise<void>;
   isInDrawer?: boolean;
 }
 
@@ -28,29 +28,30 @@ const initialPostState: Post = {
   audioUrl: '',
 };
 
-const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
+const PostForm: React.FC<PostFormProps> = ({
+  postToEdit,
+  onUpdate,
+  isInDrawer,
+}) => {
   const [post, setPost] = useState<Post>(postToEdit || initialPostState);
 
-  const selectedDate = useMemo(() => {
-    return postToEdit?.dateString
+  const initialDate = useMemo(() => {
+    const date = postToEdit?.dateString
       ? new Date(postToEdit.dateString)
       : new Date();
+    return {
+      day: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+    };
   }, [postToEdit]);
+
+  const [selectedDay, setSelectedDay] = useState(initialDate.day);
+  const [selectedMonth, setSelectedMonth] = useState(initialDate.month);
+  const [selectedYear, setSelectedYear] = useState(initialDate.year);
 
   const handleChange = (field: keyof Post, value: string | string[] | Date) => {
     setPost((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleDateChange = (dates: { start: Date; end: Date }) => {
-    const newDate = dates.start;
-    handleChange(
-      'dateString',
-      newDate.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-    );
   };
 
   const validateForm = () => {
@@ -62,7 +63,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
       toast.show('Content is required.');
       return false;
     }
-    if (!selectedDate) {
+    if (!post.dateString) {
       toast.show('Publication date is required.');
       return false;
     }
@@ -74,16 +75,19 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
 
     if (!validateForm()) return;
 
-    const formattedDate = selectedDate!.toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
-
     const newPost = {
       ...post,
       id: postToEdit?.id || generateId(post.title),
-      dateString: formattedDate,
+      dateString:
+        postToEdit?.dateString ||
+        new Date(selectedYear, selectedMonth, selectedDay).toLocaleDateString(
+          'en-GB',
+          {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          },
+        ),
     };
 
     try {
@@ -92,6 +96,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
         : await addPost(newPost);
 
       if (result.success) {
+        await onUpdate?.();
         drawer.close();
         toast.show(
           postToEdit
@@ -117,6 +122,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
       const result = await deletePost(postToEdit.id);
 
       if (result.success) {
+        await onUpdate?.();
         drawer.close();
         toast.show('Post deleted successfully!');
       } else {
@@ -154,6 +160,71 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
           </Button>
         </div>
       </div>,
+    );
+  };
+
+  const renderDateSelect = () => {
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const years = Array.from(
+      { length: 50 },
+      (_, i) => new Date().getFullYear() - i,
+    );
+
+    return (
+      <div className='flex gap-2 w-full'>
+        {/* Day Select */}
+        <select
+          value={selectedDay}
+          onChange={(e) => setSelectedDay(Number(e.target.value))}
+          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {days.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+
+        {/* Month Select */}
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {months.map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
+
+        {/* Year Select */}
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
     );
   };
 
@@ -252,13 +323,17 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
                   title: post.title || 'Untitled Post',
                   excerpt: post.excerpt || 'This is a post excerpt.',
                   categories: post.categories || ['Post category'],
-                  dateString: selectedDate
-                    ? selectedDate.toLocaleDateString('en-GB', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })
-                    : 'Today',
+                  dateString:
+                    post.dateString ||
+                    new Date(
+                      selectedYear,
+                      selectedMonth,
+                      selectedDay,
+                    ).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    }),
                 },
               ]}
               isInForm
@@ -321,11 +396,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
               <FormLabel htmlFor='publicationDate' required>
                 Publication Date
               </FormLabel>
-              <DatePicker
-                value={{ start: selectedDate, end: selectedDate }}
-                onChange={handleDateChange}
-                isRange={false}
-              />
+              {renderDateSelect()}
             </div>
             <div>
               <FormLabel htmlFor='imgUrl'>Image URL</FormLabel>

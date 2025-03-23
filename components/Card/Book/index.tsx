@@ -15,18 +15,20 @@ const BookCard = (props: BookCardProps) => {
       onClick={() => {
         if (!isInDrawer) openLink(link);
       }}
-      className={`${isInDrawer ? 'w-full max-w-[20rem]' : ''}`}
+      className={`${isInDrawer ? 'w-full' : ''}`}
     >
       <div className='flex flex-1 items-center'>
         <div className='flex-shrink-0 px-4.5 py-4'>
-          <Image
-            width={35}
-            height={52}
-            src={imageURL}
-            alt={title}
-            className='rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none'
-            loading='lazy'
-          />
+          <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
+            <Image
+              width={35}
+              height={52}
+              src={imageURL}
+              alt={title}
+              className='h-full w-full object-cover'
+              loading='lazy'
+            />
+          </div>
         </div>
         <div className='py-2 pr-4 space-y-1'>
           <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>

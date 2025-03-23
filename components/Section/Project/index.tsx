@@ -12,7 +12,6 @@ const ProjectSection = () => {
 
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);
-    const nonPinnedProjects = projects.filter((p) => !p.pinned);
 
     const sortedPinnedProjects = pinnedProjects
       .sort(
@@ -20,13 +19,7 @@ const ProjectSection = () => {
           parseDate(b.dateString).getTime() - parseDate(a.dateString).getTime(),
       )
       .slice(0, 5);
-
-    const sortedNonPinnedProjects = nonPinnedProjects.sort(
-      (a, b) =>
-        parseDate(b.dateString).getTime() - parseDate(a.dateString).getTime(),
-    );
-
-    return [...sortedPinnedProjects, ...sortedNonPinnedProjects];
+    return [...sortedPinnedProjects];
   }
 
   const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];

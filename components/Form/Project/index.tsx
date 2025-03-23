@@ -17,13 +17,12 @@ import { ProjectCard } from '@/components/Card/Project';
 import { toast } from '@/components/Toast';
 import { addProject, updateProject, deleteProject } from '@/functions/projects';
 import { generateId } from '@/utilities/generateId';
-import DatePicker from '@/components/DatePicker';
 import Tabs from '@/components/Tabs';
 import Separator from '@/components/UI/Separator';
 
 interface ProjectFormProps {
   projectToEdit?: Project;
-  onUpdate: () => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }
 
 const initialProjectState: Project = {
@@ -68,7 +67,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     };
   }, [projectToEdit]);
 
-  const [dateRange, setDateRange] = useState(initialDates);
+  const [startDate, setStartDate] = useState(initialDates.start);
+  const [endDate, setEndDate] = useState(initialDates.end);
 
   const handleChange = (
     field: keyof Project,
@@ -77,8 +77,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     setProject((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (range: { start: Date; end: Date }) => {
-    setDateRange(range);
+  const handleStartDateChange = (day: number, month: number, year: number) => {
+    const newDate = new Date(startDate);
+    newDate.setDate(day);
+    newDate.setMonth(month);
+    newDate.setFullYear(year);
+    setStartDate(newDate);
+  };
+
+  const handleEndDateChange = (day: number, month: number, year: number) => {
+    const newDate = new Date(endDate);
+    newDate.setDate(day);
+    newDate.setMonth(month);
+    newDate.setFullYear(year);
+    setEndDate(newDate);
   };
 
   const togglePin = async () => {
@@ -95,7 +107,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           ...prevProject,
           pinned: newPinnedStatus,
         }));
-        await onUpdate();
+        await onUpdate?.();
         toast.show(
           `Project ${newPinnedStatus ? 'pinned' : 'unpinned'} successfully!`,
         );
@@ -130,7 +142,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       toast.show('Tools are required.');
       return false;
     }
-    if (!dateRange.start || !dateRange.end) {
+    if (!startDate || !endDate) {
       toast.show('Date range is required.');
       return false;
     }
@@ -142,17 +154,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
     if (!validateForm()) return;
 
-    const startDate = dateRange.start.toLocaleDateString('en-GB', {
+    const startDateStr = startDate.toLocaleDateString('en-GB', {
       month: 'short',
       year: 'numeric',
     });
-    const endDate = isPresent
+    const endDateStr = isPresent
       ? 'Present'
-      : dateRange.end.toLocaleDateString('en-GB', {
+      : endDate.toLocaleDateString('en-GB', {
           month: 'short',
           year: 'numeric',
         });
-    const formattedDate = `${startDate} - ${endDate}`;
+    const formattedDate = `${startDateStr} - ${endDateStr}`;
 
     const projectData = {
       ...project,
@@ -166,7 +178,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         : await addProject(projectData);
 
       if (result.success) {
-        await onUpdate();
+        await onUpdate?.();
         drawer.close();
         toast.show(
           projectToEdit
@@ -192,7 +204,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       const result = await deleteProject(projectToEdit.id);
 
       if (result.success) {
-        await onUpdate();
+        await onUpdate?.();
         drawer.close();
         toast.show('Project deleted successfully!');
       } else {
@@ -225,13 +237,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
             link={project.link || '#'}
             dateString={
               project.dateString ||
-              `${dateRange.start.toLocaleDateString('en-GB', {
+              `${startDate.toLocaleDateString('en-GB', {
                 month: 'short',
                 year: 'numeric',
               })} - ${
                 isPresent
                   ? 'Present'
-                  : dateRange.end.toLocaleDateString('en-GB', {
+                  : endDate.toLocaleDateString('en-GB', {
                       month: 'short',
                       year: 'numeric',
                     })
@@ -297,6 +309,84 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           direction='vertical'
         />
       </div>,
+    );
+  };
+
+  const renderDateSelect = (
+    date: Date,
+    onChange: (day: number, month: number, year: number) => void,
+  ) => {
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const years = Array.from(
+      { length: 50 },
+      (_, i) => new Date().getFullYear() - i,
+    );
+
+    return (
+      <div className='flex gap-2'>
+        {/* Day Select */}
+        <select
+          value={date.getDate()}
+          onChange={(e) =>
+            onChange(
+              Number(e.target.value),
+              date.getMonth(),
+              date.getFullYear(),
+            )
+          }
+          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {days.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+
+        {/* Month Select */}
+        <select
+          value={date.getMonth()}
+          onChange={(e) =>
+            onChange(date.getDate(), Number(e.target.value), date.getFullYear())
+          }
+          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {months.map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
+
+        {/* Year Select */}
+        <select
+          value={date.getFullYear()}
+          onChange={(e) =>
+            onChange(date.getDate(), date.getMonth(), Number(e.target.value))
+          }
+          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
     );
   };
 
@@ -401,13 +491,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               link={project.link || '#'}
               dateString={
                 project.dateString ||
-                `${dateRange.start.toLocaleDateString('en-GB', {
+                `${startDate.toLocaleDateString('en-GB', {
                   month: 'short',
                   year: 'numeric',
                 })} - ${
                   isPresent
                     ? 'Present'
-                    : dateRange.end.toLocaleDateString('en-GB', {
+                    : endDate.toLocaleDateString('en-GB', {
                         month: 'short',
                         year: 'numeric',
                       })
@@ -473,29 +563,28 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
                 required
               />
             </div>
-            <div>
-              <FormLabel htmlFor='dateRange' required>
-                Date Range
-              </FormLabel>
-              <div className='space-y-2'>
-                <DatePicker
-                  isRange
-                  value={dateRange}
-                  onChange={handleDateChange}
-                  disabled={isPresent}
-                />
-                <Checkbox
-                  id='isPresent'
-                  checked={isPresent}
-                  onChange={(checked) => {
-                    setIsPresent(checked);
-                    if (checked) {
-                      setDateRange((prev) => ({ ...prev, end: new Date() }));
-                    }
-                  }}
-                  label='Still working on this project'
-                />
+            <div className='space-y-2'>
+              <div className='flex justify-between'>
+                <div>
+                  <FormLabel required>Start Date</FormLabel>
+                  {renderDateSelect(startDate, handleStartDateChange)}
+                </div>
+                <div>
+                  <FormLabel>End Date</FormLabel>
+                  {renderDateSelect(endDate, handleEndDateChange)}
+                </div>
               </div>
+              <Checkbox
+                id='isPresent'
+                checked={isPresent}
+                onChange={(checked) => {
+                  setIsPresent(checked);
+                  if (checked) {
+                    setEndDate(new Date());
+                  }
+                }}
+                label='I currently working on this project'
+              />
             </div>
             <div>
               <FormLabel htmlFor='status' required>

@@ -26,16 +26,22 @@ import { getCertificates } from '@/functions/certificates';
 export default function DatabaseContent() {
   const { user } = useAuth();
 
-  const { data: personalInfo } = useFetchData(getPersonalInfo);
-  const { data: interestsAndObjectives } = useFetchData(
-    getInterestsAndObjectives,
-  );
-  const { data: projects } = useFetchData(getProjects);
-  const { data: employments } = useFetchData(getEmployments);
-  const { data: posts } = useFetchData(getPosts);
-  const { data: books } = useFetchData(getBooks);
-  const { data: podcasts } = useFetchData(getPodcasts);
-  const { data: certificates } = useFetchData(getCertificates);
+  const { data: personalInfo, refetch: refetchPersonalInfo } =
+    useFetchData(getPersonalInfo);
+  const {
+    data: interestsAndObjectives,
+    refetch: refetchInterestsAndObjectives,
+  } = useFetchData(getInterestsAndObjectives);
+  const { data: projects, refetch: refetchProjects } =
+    useFetchData(getProjects);
+  const { data: employments, refetch: refetchEmployments } =
+    useFetchData(getEmployments);
+  const { data: posts, refetch: refetchPosts } = useFetchData(getPosts);
+  const { data: books, refetch: refetchBooks } = useFetchData(getBooks);
+  const { data: podcasts, refetch: refetchPodcasts } =
+    useFetchData(getPodcasts);
+  const { data: certificates, refetch: refetchCertificates } =
+    useFetchData(getCertificates);
 
   const databaseCategories = [
     {
@@ -43,14 +49,24 @@ export default function DatabaseContent() {
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
       action: () =>
-        drawer.open(<CertificateDrawer certificates={certificates} />),
+        drawer.open(
+          <CertificateDrawer
+            certificates={certificates}
+            onUpdate={refetchCertificates}
+          />,
+        ),
     },
     {
       title: 'Employments',
       desc: 'Manage your employments',
       icon: 'briefcase',
       action: () =>
-        drawer.open(<EmploymentsDrawer employments={employments} />),
+        drawer.open(
+          <EmploymentsDrawer
+            employments={employments}
+            onUpdate={refetchEmployments}
+          />,
+        ),
     },
     {
       title: 'Interests & Objectives',
@@ -58,7 +74,10 @@ export default function DatabaseContent() {
       icon: 'microscope',
       action: () =>
         drawer.open(
-          <InterestsAndObjectivesForm data={interestsAndObjectives} />,
+          <InterestsAndObjectivesForm
+            data={interestsAndObjectives}
+            onUpdate={refetchInterestsAndObjectives}
+          />,
         ),
     },
     {
@@ -67,32 +86,43 @@ export default function DatabaseContent() {
       icon: 'userCircle',
       action: () =>
         drawer.open(
-          <PersonalInfoForm data={personalInfo} onUpdate={() => {}} />,
+          <PersonalInfoForm
+            data={personalInfo}
+            onUpdate={refetchPersonalInfo}
+          />,
         ),
     },
     {
       title: 'Podcasts',
       desc: 'Manage your podcasts',
       icon: 'microphone',
-      action: () => drawer.open(<PodcastDrawer podcasts={podcasts} />),
+      action: () =>
+        drawer.open(
+          <PodcastDrawer podcasts={podcasts} onUpdate={refetchPodcasts} />,
+        ),
     },
     {
       title: 'Posts',
       desc: 'Manage your posts',
       icon: 'note',
-      action: () => drawer.open(<PostsDrawer posts={posts} />),
+      action: () =>
+        drawer.open(<PostsDrawer posts={posts} onUpdate={refetchPosts} />),
     },
     {
       title: 'Projects',
       desc: 'Manage your projects',
       icon: 'package',
-      action: () => drawer.open(<ProjectsDrawer projects={projects} />),
+      action: () =>
+        drawer.open(
+          <ProjectsDrawer projects={projects} onUpdate={refetchProjects} />,
+        ),
     },
     {
       title: 'Reading Lists',
       desc: 'Manage your reading lists',
       icon: 'bookOpen',
-      action: () => drawer.open(<BookDrawer books={books} />),
+      action: () =>
+        drawer.open(<BookDrawer books={books} onUpdate={refetchBooks} />),
     },
   ];
 

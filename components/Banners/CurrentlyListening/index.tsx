@@ -141,14 +141,24 @@ const CurrentlyListening = () => {
             {isPlaying ? 'Currently Listening' : 'Last Played'}
           </span>
         </div>
-        <Tooltip text='Listening History'>
+        <div className='hidden md:flex md:items-center'>
+          <Tooltip text='Listening History'>
+            <div
+              onClick={handleOpenListeningHistoryDrawer}
+              className='cursor-pointer'
+            >
+              <Icon name='clockCounterClockwise' className='size-5' />
+            </div>
+          </Tooltip>
+        </div>
+        <div className='block md:hidden'>
           <div
             onClick={handleOpenListeningHistoryDrawer}
             className='cursor-pointer'
           >
             <Icon name='clockCounterClockwise' className='size-5' />
           </div>
-        </Tooltip>
+        </div>
       </div>
 
       <Link
@@ -179,15 +189,15 @@ const CurrentlyListening = () => {
           )}
         </Hover>
 
-        <div className='flex-1 min-w-0'>
+        <div className='flex-1 min-w-0 space-y-1'>
           <h3 className='font-medium text-md text-neutral-900 dark:text-white truncate'>
             {currentTrack.name}
           </h3>
           <p className='text-sm text-neutral-500 dark:text-neutral-400 truncate'>
             {currentTrack.artists.map((artist) => artist.name).join(', ')}
           </p>
-          <div className='flex items-center gap-x-2 mt-1'>
-            <span className='text-xs text-neutral-500 dark:text-neutral-400'>
+          <div className='flex items-center gap-x-2'>
+            <span className='text-xs text-neutral-500 dark:text-neutral-400 truncate'>
               {currentTrack.album.name}
             </span>
             <span className='text-xs text-neutral-500 dark:text-neutral-40'>
@@ -200,7 +210,7 @@ const CurrentlyListening = () => {
               </span>
             ) : (
               lastPlayedAt && (
-                <span className='text-xs text-neutral-500 dark:text-neutral-400'>
+                <span className='text-xs text-neutral-500 dark:text-neutral-400 flex-shrink-0'>
                   Played {getTimeAgo(lastPlayedAt)}
                 </span>
               )
