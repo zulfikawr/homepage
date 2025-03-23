@@ -8,12 +8,11 @@ import { BookCard } from '@/components/Card/Book';
 import { addBook, updateBook, deleteBook } from '@/functions/books';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
-import DatePicker from '@/components/DatePicker';
 import { modal } from '@/components/Modal';
 
 interface BookFormProps {
   bookToEdit?: Book;
-  onUpdate: () => Promise<void>;
+  onUpdate?: () => Promise<void>;
 }
 
 const initialBookState: Book = {
@@ -29,24 +28,23 @@ const initialBookState: Book = {
 const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
   const [book, setBook] = useState<Book>(bookToEdit || initialBookState);
 
-  const selectedDate = useMemo(() => {
-    return bookToEdit?.dateAdded ? new Date(bookToEdit.dateAdded) : new Date();
+  const initialDate = useMemo(() => {
+    const date = bookToEdit?.dateAdded
+      ? new Date(bookToEdit.dateAdded)
+      : new Date();
+    return {
+      day: date.getDate(),
+      month: date.getMonth(),
+      year: date.getFullYear(),
+    };
   }, [bookToEdit]);
+
+  const [selectedDay, setSelectedDay] = useState(initialDate.day);
+  const [selectedMonth, setSelectedMonth] = useState(initialDate.month);
+  const [selectedYear, setSelectedYear] = useState(initialDate.year);
 
   const handleChange = (field: keyof Book, value: string | Book['type']) => {
     setBook((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleDateChange = (dates: { start: Date; end: Date }) => {
-    const newDate = dates.start;
-    handleChange(
-      'dateAdded',
-      newDate.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,11 +55,14 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
       id: bookToEdit?.id || generateId(book.title),
       dateAdded:
         bookToEdit?.dateAdded ||
-        selectedDate.toLocaleDateString('en-GB', {
-          day: 'numeric',
-          month: 'short',
-          year: 'numeric',
-        }),
+        new Date(selectedYear, selectedMonth, selectedDay).toLocaleDateString(
+          'en-GB',
+          {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          },
+        ),
     };
 
     try {
@@ -70,7 +71,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
         : await addBook(bookData);
 
       if (result.success) {
-        await onUpdate();
+        await onUpdate?.();
         drawer.close();
         toast.show(
           bookToEdit
@@ -96,7 +97,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
       const result = await deleteBook(bookToEdit.id);
 
       if (result.success) {
-        await onUpdate();
+        await onUpdate?.();
         drawer.close();
         toast.show('Book deleted successfully!');
       } else {
@@ -127,11 +128,18 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
             author={book.author || 'Book Author'}
             imageURL={book.imageURL || '/images/placeholder-portrait.png'}
             link={book.link || '#'}
-            dateAdded={selectedDate.toLocaleDateString('en-GB', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })}
+            dateAdded={
+              book.dateAdded ||
+              new Date(
+                selectedYear,
+                selectedMonth,
+                selectedDay,
+              ).toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })
+            }
             isInDrawer
           />
         </div>
@@ -150,6 +158,71 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
           </Button>
         </div>
       </div>,
+    );
+  };
+
+  const renderDateSelect = () => {
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const years = Array.from(
+      { length: 50 },
+      (_, i) => new Date().getFullYear() - i,
+    );
+
+    return (
+      <div className='flex gap-2'>
+        {/* Day Select */}
+        <select
+          value={selectedDay}
+          onChange={(e) => setSelectedDay(Number(e.target.value))}
+          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {days.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+
+        {/* Month Select */}
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(Number(e.target.value))}
+          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {months.map((month, index) => (
+            <option key={month} value={index}>
+              {month}
+            </option>
+          ))}
+        </select>
+
+        {/* Year Select */}
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(Number(e.target.value))}
+          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
     );
   };
 
@@ -193,11 +266,18 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
               author={book.author || 'Book Author'}
               imageURL={book.imageURL || '/images/placeholder-portrait.png'}
               link={book.link || '#'}
-              dateAdded={selectedDate.toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })}
+              dateAdded={
+                book.dateAdded ||
+                new Date(
+                  selectedYear,
+                  selectedMonth,
+                  selectedDay,
+                ).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                })
+              }
               isInDrawer
             />
           </div>
@@ -268,11 +348,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
               <FormLabel htmlFor='dateAdded' required>
                 Date Added
               </FormLabel>
-              <DatePicker
-                value={{ start: selectedDate, end: selectedDate }}
-                onChange={handleDateChange}
-                isRange={false}
-              />
+              {renderDateSelect()}
             </div>
           </form>
         </div>

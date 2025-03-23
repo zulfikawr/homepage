@@ -4,9 +4,15 @@ import PostForm from '@/components/Form/Post';
 import { Button, Icon } from '@/components/UI';
 import PostCard from '@/components/Card/Post';
 
-const PostsDrawer = ({ posts }: { posts: Post[] }) => {
+const PostsDrawer = ({
+  posts,
+  onUpdate,
+}: {
+  posts: Post[];
+  onUpdate?: () => Promise<void>;
+}) => {
   const handleAddPost = () => {
-    drawer.open(<PostForm isInDrawer />);
+    drawer.open(<PostForm isInDrawer onUpdate={onUpdate} />);
   };
 
   return (

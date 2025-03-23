@@ -12,7 +12,7 @@ const PagesAndLinks = () => {
           </span>
           <span>Pages & Links</span>
         </div>
-        <div>
+        <div className='hidden md:block'>
           <Tooltip text='All Pages'>
             <Link
               href='/pages'
@@ -21,6 +21,14 @@ const PagesAndLinks = () => {
               <Icon name='caretRight' />
             </Link>
           </Tooltip>
+        </div>
+        <div className='block md:hidden'>
+          <Link
+            href='/pages'
+            className='h-[25px] w-[25px] effect-pressing flex items-center justify-center rounded-full border p-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
+          >
+            <Icon name='caretRight' />
+          </Link>
         </div>
       </div>
       <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4 text-sm text-neutral-600 dark:text-neutral-300'>
