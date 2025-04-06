@@ -1,71 +1,73 @@
-import Image from 'next/image';
 import { Card } from '@/components/Card';
 import openLink from '@/utilities/externalLink';
 import { Certificate } from '@/types/certificate';
 import Separator from '@/components/UI/Separator';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { drawer } from '@/components/Drawer';
+import CertificateForm from '@/components/Form/Certificate';
 
-export interface CertificateCardProps extends Certificate {
+interface CertificateCardProps {
+  certificate: Certificate;
   isInDrawer?: boolean;
+  isInForm?: boolean;
 }
 
-const CertificateCard = (props: CertificateCardProps) => {
-  const {
-    title,
-    issuedBy,
-    dateIssued,
-    credentialId,
-    imageUrl,
-    organizationLogoUrl,
-    link,
-    isInDrawer,
-  } = props;
+export default function CertificateCard({
+  certificate,
+  isInDrawer,
+  isInForm,
+}: CertificateCardProps) {
+  const handleCardClick = () => {
+    if (isInForm) return;
 
-  const handleClick = () => {
-    if (!isInDrawer) {
-      openLink(link);
+    if (isInDrawer) {
+      drawer.open(<CertificateForm certificateToEdit={certificate} />);
+    } else {
+      openLink(certificate.link);
     }
   };
 
   return (
-    <Card onClick={handleClick} isInDrawer={isInDrawer}>
-      {/* Mobile Layout: Stacked */}
+    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
       <div className='block md:hidden'>
+        {/* Mobile layout */}
         <div className='w-full'>
           <div className='w-full aspect-video'>
-            <Image
+            <ImageWithFallback
               width={300}
               height={200}
-              src={imageUrl || '/images/placeholder.png'}
-              alt={title}
+              src={certificate.imageUrl}
+              alt={certificate.title}
               className='w-full h-full rounded-t-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
               loading='lazy'
             />
           </div>
           <div className='flex w-full border-b border-neutral-100 px-4 py-3 dark:border-neutral-700 dark:text-neutral-400'>
             <p className='line-clamp-1 text-ellipsis text-md font-medium leading-tight tracking-wider dark:text-white'>
-              {title}
+              {certificate.title}
             </p>
           </div>
           <div className='p-4 space-y-1'>
             <div className='flex items-center space-x-2'>
-              {organizationLogoUrl && (
-                <Image
+              {certificate.organizationLogoUrl && (
+                <ImageWithFallback
                   width={14}
                   height={14}
-                  src={organizationLogoUrl || '/images/placeholder.png'}
-                  alt={title}
+                  src={certificate.organizationLogoUrl}
+                  alt={certificate.title}
                   loading='lazy'
+                  type='square'
                 />
               )}
               <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-                {issuedBy}
+                {certificate.issuedBy}
               </p>
             </div>
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-              Issued {dateIssued}
+              Issued {certificate.dateIssued}
             </p>
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-              Credential ID: {credentialId}
+              Credential ID: {certificate.credentialId}
             </p>
           </div>
         </div>
@@ -74,41 +76,42 @@ const CertificateCard = (props: CertificateCardProps) => {
       {/* Desktop Layout: Side-by-Side */}
       <div className='hidden md:grid md:grid-cols-4 items-center gap-4 p-4'>
         <div className='col-span-1 flex justify-center aspect-video'>
-          <Image
+          <ImageWithFallback
             width={200}
             height={150}
-            src={imageUrl || '/images/placeholder.png'}
-            alt={title}
+            src={certificate.imageUrl}
+            alt={certificate.title}
             className='rounded-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
             loading='lazy'
           />
         </div>
         <div className='col-span-3 space-y-2'>
           <p className='text-normal line-clamp-1 text-ellipsis font-medium leading-tight tracking-wider dark:text-white'>
-            {title}
+            {certificate.title}
           </p>
           <Separator margin='2' />
           <div className='flex items-center space-x-2'>
-            {organizationLogoUrl && (
-              <Image
+            {certificate.organizationLogoUrl && (
+              <ImageWithFallback
                 width={14}
                 height={14}
-                src={organizationLogoUrl || '/images/placeholder.png'}
-                alt={title}
+                src={certificate.organizationLogoUrl}
+                alt={certificate.title}
                 loading='lazy'
+                type='square'
               />
             )}
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-              {issuedBy}
+              {certificate.issuedBy}
             </p>
           </div>
           <div className='flex items-center space-x-2'>
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-              Issued {dateIssued}
+              Issued {certificate.dateIssued}
             </p>
             <span className='text-neutral-400 font-light text-xs'>|</span>
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-              Credential ID: {credentialId}
+              Credential ID: {certificate.credentialId}
             </p>
           </div>
         </div>
@@ -121,6 +124,4 @@ const CertificateCard = (props: CertificateCardProps) => {
       </div>
     </Card>
   );
-};
-
-export default CertificateCard;
+}

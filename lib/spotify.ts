@@ -6,6 +6,7 @@ const SCOPES = [
   'user-read-currently-playing',
   'user-read-recently-played',
   'user-read-playback-state',
+  'user-top-read',
 ].join(' ');
 
 export const getSpotifyAuthUrl = () => {
@@ -84,6 +85,20 @@ export const getRecentlyPlayed = async () => {
 
   return fetch(
     'https://api.spotify.com/v1/me/player/recently-played?limit=10',
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    },
+  );
+};
+
+export const getTopTracks = async () => {
+  const access_token = await getAccessToken();
+  if (!access_token) return null;
+
+  return fetch(
+    'https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=short_term',
     {
       headers: {
         Authorization: `Bearer ${access_token}`,

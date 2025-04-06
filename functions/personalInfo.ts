@@ -1,12 +1,26 @@
-import { database, ref, get, set } from '@/lib/firebase';
+import { database, ref, get, set, onValue } from '@/lib/firebase';
 import { PersonalInfo } from '@/types/personalInfo';
 
 // Default personal info data
 const defaultPersonalInfo: PersonalInfo = {
   name: 'Zulfikar',
   title: 'IR student, journalist, and web developer.',
-  avatarUrl: '/tony.png',
+  avatarUrl: '/tetris.jpg',
 };
+
+/**
+ * Subscribe to personal info changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function personalInfoData(callback: (data: PersonalInfo) => void) {
+  const personalInfoRef = ref(database, 'personalInfo');
+
+  return onValue(personalInfoRef, (snapshot) => {
+    const data = snapshot.exists() ? snapshot.val() : defaultPersonalInfo;
+    callback(data);
+  });
+}
 
 /**
  * Fetch personal info from Firebase

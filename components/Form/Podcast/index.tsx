@@ -4,15 +4,15 @@ import React, { useState } from 'react';
 import { Podcast } from '@/types/podcast';
 import { drawer } from '@/components/Drawer';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
-import { PodcastCard } from '@/components/Card/Podcast';
+import PodcastCard from '@/components/Card/Podcast';
 import { addPodcast, updatePodcast, deletePodcast } from '@/functions/podcasts';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
 import { generateId } from '@/utilities/generateId';
+import Separator from '@/components/UI/Separator';
 
 interface PodcastFormProps {
   podcastToEdit?: Podcast;
-  onUpdate: () => Promise<void>;
 }
 
 const initialPodcastState: Podcast = {
@@ -23,13 +23,18 @@ const initialPodcastState: Podcast = {
   link: '',
 };
 
-const PodcastForm: React.FC<PodcastFormProps> = ({
-  podcastToEdit,
-  onUpdate,
-}) => {
+const PodcastForm: React.FC<PodcastFormProps> = ({ podcastToEdit }) => {
   const [podcast, setPodcast] = useState<Podcast>(
     podcastToEdit || initialPodcastState,
   );
+
+  const currentPreviewPodcast: Podcast = {
+    id: podcast.id || 'preview',
+    title: podcast.title || 'Podcast Title',
+    description: podcast.description || 'Podcast Description',
+    imageURL: podcast.imageURL,
+    link: podcast.link || '#',
+  };
 
   const validateForm = () => {
     if (!podcast.title.trim()) {
@@ -74,7 +79,6 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
         : await addPodcast(podcastData);
 
       if (result.success) {
-        await onUpdate();
         drawer.close();
         toast.show(
           podcastToEdit
@@ -100,7 +104,6 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
       const result = await deletePodcast(podcastToEdit.id);
 
       if (result.success) {
-        await onUpdate();
         drawer.close();
         toast.show('Podcast deleted successfully!');
       } else {
@@ -124,14 +127,7 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
           cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <PodcastCard
-            id='preview'
-            title={podcast.title || 'Podcast Title'}
-            description={podcast.description || 'Podcast Description'}
-            imageURL={podcast.imageURL || '/images/placeholder.png'}
-            link={podcast.link || '#'}
-            isInDrawer
-          />
+          <PodcastCard podcast={currentPreviewPodcast} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -153,7 +149,7 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
 
   return (
     <>
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
             {podcastToEdit ? `${podcastToEdit.title}` : 'Add New Podcast'}
@@ -178,17 +174,12 @@ const PodcastForm: React.FC<PodcastFormProps> = ({
         </div>
       </div>
 
+      <Separator margin='0' />
+
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           <div className='flex justify-center'>
-            <PodcastCard
-              id='preview'
-              title={podcast.title || 'Podcast Title'}
-              description={podcast.description || 'Podcast Description'}
-              imageURL={podcast.imageURL || '/images/placeholder.png'}
-              link={podcast.link || '#'}
-              isInDrawer
-            />
+            <PodcastCard podcast={currentPreviewPodcast} isInForm />
           </div>
 
           <form onSubmit={handleSubmit} className='space-y-4'>

@@ -3,7 +3,7 @@ export interface Employment {
   organization: string;
   organizationIndustry?: string;
   jobTitle: string;
-  jobType: string;
+  jobType: 'fullTime' | 'partTime' | 'contract' | 'freelance' | 'internship';
   responsibilities: string[];
   dateString: string;
   orgLogoSrc?: string;

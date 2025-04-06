@@ -2,16 +2,16 @@
 
 import React from 'react';
 import { BookCard } from '@/components/Card/Book';
-import { getBooks } from '@/functions/books';
-import { useFetchData } from '@/lib/fetchData';
+import { booksData } from '@/functions/books';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { useRealtimeData } from '@/hooks';
 
 export default function ReadingListContent() {
-  const { data: books, loading, error } = useFetchData(getBooks);
+  const { data: books, loading, error } = useRealtimeData(booksData);
 
   const booksArray = Array.isArray(books) ? books : [];
 
@@ -49,7 +49,7 @@ export default function ReadingListContent() {
                 .length > 0 ? (
               booksArray
                 .filter((book) => book.type === 'currentlyReading')
-                .map((book) => <BookCard key={book.id} {...book} />)
+                .map((book) => <BookCard key={book.id} book={book} />)
             ) : (
               <CardEmpty message='No books currently being read' />
             )}
@@ -77,7 +77,7 @@ export default function ReadingListContent() {
             ) : booksArray.filter((book) => book.type === 'read').length > 0 ? (
               booksArray
                 .filter((book) => book.type === 'read')
-                .map((book) => <BookCard key={book.id} {...book} />)
+                .map((book) => <BookCard key={book.id} book={book} />)
             ) : (
               <CardEmpty message='No books read yet' />
             )}
@@ -106,7 +106,7 @@ export default function ReadingListContent() {
               0 ? (
               booksArray
                 .filter((book) => book.type === 'toRead')
-                .map((book) => <BookCard key={book.id} {...book} />)
+                .map((book) => <BookCard key={book.id} book={book} />)
             ) : (
               <CardEmpty message='No books to read yet' />
             )}

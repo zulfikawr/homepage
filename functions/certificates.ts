@@ -1,6 +1,27 @@
 import { generateId } from '@/utilities/generateId';
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Certificate } from '@/types/certificate';
+
+/**
+ * Subscribe to certificates changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function certificatesData(callback: (data: Certificate[]) => void) {
+  const certificatesRef = ref(database, 'certificates');
+
+  return onValue(certificatesRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, certificate]: [string, Omit<Certificate, 'id'>]) => ({
+            id,
+            ...certificate,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all certificates from Firebase

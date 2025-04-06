@@ -1,49 +1,43 @@
-import Image from 'next/image';
 import { Card } from '@/components/Card';
 import openLink from '@/utilities/externalLink';
-import { SpotifyPlaylist } from '@/types/spotifyPlaylist';
+import { SpotifyPlaylist } from '@/types/spotify';
 import { Icon } from '@/components/UI';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
-const PlaylistCard = ({
-  playlist,
-  isInDrawer,
-}: {
+interface PlaylistCardProps {
   playlist: SpotifyPlaylist;
-  isInDrawer?: boolean;
-}) => {
-  const { name, description, images, tracks, external_urls } = playlist;
-  const imageUrl = images[0]?.url || '/images/placeholder.png';
+}
 
-  const handleClick = () => {
-    if (!isInDrawer) {
-      openLink(external_urls.spotify);
-    }
+export default function PlaylistCard({ playlist }: PlaylistCardProps) {
+  const handleCardClick = () => {
+    openLink(playlist.external_urls.spotify);
   };
 
   return (
-    <Card onClick={handleClick} isInDrawer={isInDrawer}>
+    <Card onClick={handleCardClick}>
       <div className='grid grid-cols-4 items-center gap-4 p-4'>
         <div className='col-span-1 flex justify-center aspect-square'>
-          <Image
+          <ImageWithFallback
             width={80}
             height={80}
-            src={imageUrl}
-            alt={name}
+            src={playlist.images[0]?.url}
+            alt={playlist.name}
             className='rounded-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none'
             loading='lazy'
+            type='square'
           />
         </div>
         <div className='col-span-3 space-y-1'>
           <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
-            {name}
+            {playlist.name}
           </p>
-          {description && (
+          {playlist.description && (
             <p className='text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1'>
-              {description}
+              {playlist.description}
             </p>
           )}
           <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
-            {tracks.total} songs
+            {playlist.tracks?.total || 0} songs
           </p>
         </div>
       </div>
@@ -56,6 +50,4 @@ const PlaylistCard = ({
       </div>
     </Card>
   );
-};
-
-export default PlaylistCard;
+}

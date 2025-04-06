@@ -12,6 +12,7 @@ import {
   child,
   orderByChild,
   equalTo,
+  onValue,
 } from 'firebase/database';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
@@ -42,6 +43,7 @@ export {
   child,
   orderByChild,
   equalTo,
+  onValue,
   auth,
   signInWithEmailAndPassword,
   signOut,

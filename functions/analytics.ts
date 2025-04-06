@@ -1,4 +1,4 @@
-import { ref, get, set, increment } from 'firebase/database';
+import { ref, get, set, increment, onValue } from 'firebase/database';
 import { database } from '@/lib/firebase';
 
 /**
@@ -16,42 +16,35 @@ export async function incrementPageViews(path: string): Promise<void> {
 }
 
 /**
- * Fetch total page views for a specific path
+ * Subscribe to page views changes for a specific path
  * @param path The path to the page (e.g., '/home', '/blog/post-1')
- * @returns Promise with the total page views
+ * @param callback Function to call when data changes with the view count
+ * @returns Unsubscribe function
  */
-export async function getPageViews(path: string): Promise<number> {
-  try {
-    const viewsRef = ref(database, `pageViews${path}`);
-    const snapshot = await get(viewsRef);
+export function getPageViews(
+  path: string,
+  callback: (views: number) => void,
+): () => void {
+  const viewsRef = ref(database, `pageViews${path}`);
 
-    if (snapshot.exists()) {
-      return snapshot.val();
-    } else {
-      return 0;
-    }
-  } catch (error) {
-    console.error('Error fetching page views:', error);
-    throw new Error('Failed to fetch page views');
-  }
+  return onValue(viewsRef, (snapshot) => {
+    const views = snapshot.exists() ? snapshot.val() : 0;
+    callback(views);
+  });
 }
 
 /**
- * Fetch total page views for all routes
- * @returns Promise with the total page views for all routes
+ * Subscribe to all page views changes
+ * @param callback Function to call when data changes with all routes' view counts
+ * @returns Unsubscribe function
  */
-export async function getAllPageViews(): Promise<{ [key: string]: number }> {
-  try {
-    const viewsRef = ref(database, 'pageViews');
-    const snapshot = await get(viewsRef);
+export function getAllPageViews(
+  callback: (views: { [key: string]: number }) => void,
+): () => void {
+  const viewsRef = ref(database, 'pageViews');
 
-    if (snapshot.exists()) {
-      return snapshot.val();
-    } else {
-      return {};
-    }
-  } catch (error) {
-    console.error('Error fetching all page views:', error);
-    throw new Error('Failed to fetch all page views');
-  }
+  return onValue(viewsRef, (snapshot) => {
+    const views = snapshot.exists() ? snapshot.val() : {};
+    callback(views);
+  });
 }

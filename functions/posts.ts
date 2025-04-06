@@ -1,5 +1,26 @@
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Post } from '@/types/post';
+
+/**
+ * Subscribe to posts changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function postsData(callback: (data: Post[]) => void) {
+  const postsRef = ref(database, 'posts');
+
+  return onValue(postsRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, post]: [string, Omit<Post, 'id'>]) => ({
+            id,
+            ...post,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all posts from Firebase

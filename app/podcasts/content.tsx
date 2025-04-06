@@ -1,14 +1,14 @@
 'use client';
 
-import { PodcastCard } from '@/components/Card/Podcast';
-import { getPodcasts } from '@/functions/podcasts';
-import { useFetchData } from '@/lib/fetchData';
+import PodcastCard from '@/components/Card/Podcast';
+import { podcastsData } from '@/functions/podcasts';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { useRealtimeData } from '@/hooks';
 
 export default function PodcastContent() {
-  const { data: podcasts, loading, error } = useFetchData(getPodcasts);
+  const { data: podcasts, loading, error } = useRealtimeData(podcastsData);
 
   if (error) return <div>Failed to load podcast</div>;
 
@@ -35,7 +35,7 @@ export default function PodcastContent() {
               .map((_, index) => <CardLoading key={index} type='podcast' />)
           ) : podcasts && podcasts.length > 0 ? (
             podcasts.map((podcast) => (
-              <PodcastCard key={podcast.id} {...podcast} />
+              <PodcastCard key={podcast.id} podcast={podcast} />
             ))
           ) : (
             <CardEmpty message='No podcasts available' />

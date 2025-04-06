@@ -1,5 +1,26 @@
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Employment } from '@/types/employment';
+
+/**
+ * Subscribe to employments changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function employmentsData(callback: (data: Employment[]) => void) {
+  const employmentsRef = ref(database, 'employments');
+
+  return onValue(employmentsRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, employment]: [string, Omit<Employment, 'id'>]) => ({
+            id,
+            ...employment,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all employments from Firebase

@@ -1,14 +1,14 @@
 'use client';
 
 import PostCard from '@/components/Card/Post';
-import { getPosts } from '@/functions/posts';
-import { useFetchData } from '@/lib/fetchData';
+import { postsData } from '@/functions/posts';
 import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
+import { useRealtimeData } from '@/hooks';
 
 export default function PostsContent() {
-  const { data: posts, loading, error } = useFetchData(getPosts);
+  const { data: posts, loading, error } = useRealtimeData(postsData);
 
   if (error) return <div>Failed to load posts</div>;
 
@@ -34,7 +34,7 @@ export default function PostsContent() {
       ) : (
         <div className='grid grid-cols-1 gap-6'>
           {posts.map((post) => (
-            <PostCard key={post.id} posts={[post]} />
+            <PostCard key={post.id} post={post} />
           ))}
         </div>
       )}

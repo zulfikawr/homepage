@@ -34,10 +34,10 @@ export default function PagesContent() {
       href: '/feedback',
     },
     {
-      title: 'Playlist',
-      desc: 'My favorite tunes',
+      title: 'Music',
+      desc: 'My music stats',
       icon: 'musicNotes',
-      href: '/playlist',
+      href: '/music',
     },
     {
       title: 'Podcasts',
@@ -68,12 +68,6 @@ export default function PagesContent() {
       desc: 'View my CV',
       icon: 'file',
       href: '/documents/resume.pdf',
-    },
-    {
-      title: 'Schedule',
-      desc: 'Book a meeting',
-      icon: 'calendarPlus',
-      href: '/schedule',
     },
     {
       title: 'UI',

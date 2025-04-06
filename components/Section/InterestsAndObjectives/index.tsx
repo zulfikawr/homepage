@@ -1,5 +1,5 @@
-import { getInterestsAndObjectives } from '@/functions/interestsAndObjectives';
-import { useFetchData } from '@/lib/fetchData';
+import { interestsAndObjectivesData } from '@/functions/interestsAndObjectives';
+import { useRealtimeData } from '@/hooks';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';
 import Separator from '@/components/UI/Separator';
@@ -9,7 +9,7 @@ const InterestsAndObjectivesSection = () => {
     data: interestsAndObjectives,
     loading,
     error,
-  } = useFetchData(getInterestsAndObjectives);
+  } = useRealtimeData(interestsAndObjectivesData);
 
   if (error) return <div>Failed to load interests and objectives</div>;
 

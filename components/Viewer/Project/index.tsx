@@ -1,9 +1,9 @@
 import React from 'react';
-import Image from 'next/image';
-import { Button } from '@/components/UI';
+import { Button, Badge } from '@/components/UI';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import Separator from '@/components/UI/Separator';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 const ProjectViewer = ({ project }: { project: Project }) => {
   return (
@@ -15,11 +15,12 @@ const ProjectViewer = ({ project }: { project: Project }) => {
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
-                  <Image
+                  <ImageWithFallback
                     src={project.favicon}
+                    alt={project.name}
                     height={30}
                     width={30}
-                    alt={project.name}
+                    type='square'
                   />
                 </span>
               )}
@@ -47,7 +48,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           {/* Image Section */}
           <section>
             <div className='relative aspect-video w-full rounded-xl overflow-hidden'>
-              <Image
+              <ImageWithFallback
                 src={project.image}
                 alt={project.name}
                 className='object-cover'
@@ -72,12 +73,9 @@ const ProjectViewer = ({ project }: { project: Project }) => {
             </h2>
             <div className='flex flex-wrap gap-2'>
               {project.tools.map((tool, index) => (
-                <span
-                  key={index}
-                  className='px-3 py-1 rounded-full text-sm bg-neutral-100 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300'
-                >
+                <Badge key={index} icon>
                   {tool}
-                </span>
+                </Badge>
               ))}
             </div>
           </section>

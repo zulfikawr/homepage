@@ -1,8 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import Image from 'next/image';
 import { Employment } from '@/types/employment';
 import { drawer } from '@/components/Drawer';
-import { Button, Checkbox, FormLabel, Input } from '@/components/UI';
+import { Button, Checkbox, Dropdown, FormLabel, Input } from '@/components/UI';
 import { EmploymentCard } from '@/components/Card/Employment';
 import { toast } from '@/components/Toast';
 import {
@@ -11,12 +10,14 @@ import {
   deleteEmployment,
 } from '@/functions/employments';
 import { generateId } from '@/utilities/generateId';
+import { formatDateRange } from '@/utilities/formatDate';
 import { modal } from '@/components/Modal';
 import Separator from '@/components/UI/Separator';
+import DateSelect from '@/components/DateSelect';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface EmploymentFormProps {
   employmentToEdit?: Employment;
-  onUpdate?: () => Promise<void>;
 }
 
 const initialEmploymentState: Employment = {
@@ -24,7 +25,7 @@ const initialEmploymentState: Employment = {
   organization: '',
   organizationIndustry: '',
   jobTitle: '',
-  jobType: '',
+  jobType: 'fullTime',
   responsibilities: [],
   dateString: '',
   orgLogoSrc: '',
@@ -33,7 +34,6 @@ const initialEmploymentState: Employment = {
 
 const EmploymentForm: React.FC<EmploymentFormProps> = ({
   employmentToEdit,
-  onUpdate,
 }) => {
   const [employment, setEmployment] = useState<Employment>(
     employmentToEdit || initialEmploymentState,
@@ -64,24 +64,25 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
   const [startDate, setStartDate] = useState(initialDates.start);
   const [endDate, setEndDate] = useState(initialDates.end);
 
+  const currentPreviewEmployment: Employment = {
+    id: employment.id || 'preview',
+    organization: employment.organization || 'Organization Name',
+    organizationIndustry:
+      employment.organizationIndustry || 'Organization Industry',
+    jobTitle: employment.jobTitle || 'Job Title',
+    jobType: employment.jobType || 'fullTime',
+    responsibilities: employment.responsibilities || [
+      'Responsibility 1',
+      'Responsibility 2',
+    ],
+    dateString: employment.dateString || formatDateRange(startDate, endDate),
+    orgLogoSrc: employment.orgLogoSrc || '/images/placeholder-square.png',
+    organizationLocation:
+      employment.organizationLocation || 'Organization Location',
+  };
+
   const handleChange = (field: keyof Employment, value: string | string[]) => {
     setEmployment((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleStartDateChange = (day: number, month: number, year: number) => {
-    const newDate = new Date(startDate);
-    newDate.setDate(day);
-    newDate.setMonth(month);
-    newDate.setFullYear(year);
-    setStartDate(newDate);
-  };
-
-  const handleEndDateChange = (day: number, month: number, year: number) => {
-    const newDate = new Date(endDate);
-    newDate.setDate(day);
-    newDate.setMonth(month);
-    newDate.setFullYear(year);
-    setEndDate(newDate);
   };
 
   const validateForm = () => {
@@ -117,22 +118,10 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
     if (!validateForm()) return;
 
-    const startDateStr = startDate.toLocaleDateString('en-GB', {
-      month: 'short',
-      year: 'numeric',
-    });
-    const endDateStr = isPresent
-      ? 'Present'
-      : endDate.toLocaleDateString('en-GB', {
-          month: 'short',
-          year: 'numeric',
-        });
-    const formattedDate = `${startDateStr} - ${endDateStr}`;
-
     const employmentData = {
       ...employment,
       id: employmentToEdit?.id || generateId(employment.organization),
-      dateString: formattedDate,
+      dateString: formatDateRange(startDate, endDate, isPresent),
     };
 
     try {
@@ -141,7 +130,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
         : await addEmployment(employmentData);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show(
           employmentToEdit
@@ -167,7 +155,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       const result = await deleteEmployment(employmentToEdit.id);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show('Employment deleted successfully!');
       } else {
@@ -191,37 +178,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <EmploymentCard
-            id='preview'
-            organization={employment.organization || 'Organization Name'}
-            organizationIndustry={
-              employment.organizationIndustry || 'Organization Industry'
-            }
-            organizationLocation={
-              employment.organizationLocation || 'Organization Location'
-            }
-            orgLogoSrc={
-              employment.orgLogoSrc || '/images/placeholder-square.png'
-            }
-            jobTitle={employment.jobTitle || 'Job Title'}
-            jobType={employment.jobType || 'Job Type'}
-            responsibilities={employment.responsibilities}
-            dateString={
-              employment.dateString ||
-              `${startDate.toLocaleDateString('en-GB', {
-                month: 'short',
-                year: 'numeric',
-              })} - ${
-                isPresent
-                  ? 'Present'
-                  : endDate.toLocaleDateString('en-GB', {
-                      month: 'short',
-                      year: 'numeric',
-                    })
-              }`
-            }
-            isInDrawer
-          />
+          <EmploymentCard employment={currentPreviewEmployment} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -258,83 +215,17 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     handleChange('responsibilities', updatedResponsibilities);
   };
 
-  const renderDateSelect = (
-    date: Date,
-    onChange: (day: number, month: number, year: number) => void,
-  ) => {
-    const days = Array.from({ length: 31 }, (_, i) => i + 1);
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const years = Array.from(
-      { length: 50 },
-      (_, i) => new Date().getFullYear() - i,
-    );
+  const jobTypeOptions = [
+    { key: 'fullTime', label: 'Full-time' },
+    { key: 'partTime', label: 'Part-time' },
+    { key: 'contract', label: 'Contract' },
+    { key: 'freelance', label: 'Freelance' },
+    { key: 'internship', label: 'Internship' },
+  ];
 
-    return (
-      <div className='flex gap-2'>
-        {/* Day Select */}
-        <select
-          value={date.getDate()}
-          onChange={(e) =>
-            onChange(
-              Number(e.target.value),
-              date.getMonth(),
-              date.getFullYear(),
-            )
-          }
-          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {days.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-
-        {/* Month Select */}
-        <select
-          value={date.getMonth()}
-          onChange={(e) =>
-            onChange(date.getDate(), Number(e.target.value), date.getFullYear())
-          }
-          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {months.map((month, index) => (
-            <option key={month} value={index}>
-              {month}
-            </option>
-          ))}
-        </select>
-
-        {/* Year Select */}
-        <select
-          value={date.getFullYear()}
-          onChange={(e) =>
-            onChange(date.getDate(), date.getMonth(), Number(e.target.value))
-          }
-          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  };
+  const currentJobType = jobTypeOptions.find(
+    (opt) => opt.key === employment.jobType,
+  );
 
   return (
     <>
@@ -346,12 +237,13 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
               <div className='flex items-center'>
                 <span className='mr-3 inline-block'>
                   {employment.orgLogoSrc && (
-                    <Image
+                    <ImageWithFallback
                       src={employment.orgLogoSrc}
                       alt={employment.organization}
                       width={30}
                       height={30}
                       className='rounded-full border bg-white dark:border-neutral-700'
+                      type='square'
                     />
                   )}
                 </span>
@@ -384,37 +276,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Employment Preview */}
           <div className='flex justify-center'>
-            <EmploymentCard
-              id='preview'
-              organization={employment.organization || 'Organization Name'}
-              organizationIndustry={
-                employment.organizationIndustry || 'Organization Industry'
-              }
-              organizationLocation={
-                employment.organizationLocation || 'Organization Location'
-              }
-              orgLogoSrc={
-                employment.orgLogoSrc || '/images/placeholder-square.png'
-              }
-              jobTitle={employment.jobTitle || 'Job Title'}
-              jobType={employment.jobType || 'Job Type'}
-              responsibilities={employment.responsibilities}
-              dateString={
-                employment.dateString ||
-                `${startDate.toLocaleDateString('en-GB', {
-                  month: 'short',
-                  year: 'numeric',
-                })} - ${
-                  isPresent
-                    ? 'Present'
-                    : endDate.toLocaleDateString('en-GB', {
-                        month: 'short',
-                        year: 'numeric',
-                      })
-                }`
-              }
-              isInDrawer
-            />
+            <EmploymentCard employment={currentPreviewEmployment} isInForm />
           </div>
 
           {/* Form */}
@@ -456,22 +318,37 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 required
               />
             </div>
+
             <div>
               <FormLabel htmlFor='jobType' required>
                 Job Type
               </FormLabel>
-              <select
-                value={employment.jobType}
-                onChange={(e) => handleChange('jobType', e.target.value)}
-                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-                required
+              <Dropdown
+                trigger={
+                  <Button className='w-full px-1 text-sm md:text-md text-black dark:text-white'>
+                    {currentJobType?.label}
+                  </Button>
+                }
+                className='w-full'
+                matchTriggerWidth
               >
-                <option value='Full-time'>Full-time</option>
-                <option value='Part-time'>Part-time</option>
-                <option value='Contract'>Contract</option>
-                <option value='Freelance'>Freelance</option>
-                <option value='Internship'>Internship</option>
-              </select>
+                <div className='flex flex-col p-1 space-y-1 w-full'>
+                  {jobTypeOptions.map((option) => (
+                    <div
+                      key={option.key}
+                      onClick={() => handleChange('jobType', option.key)}
+                      className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
+                        ${
+                          option.key === employment.jobType
+                            ? 'bg-neutral-100 dark:bg-neutral-700'
+                            : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
+                        }`}
+                    >
+                      {option.label}
+                    </div>
+                  ))}
+                </div>
+              </Dropdown>
             </div>
             <div>
               <FormLabel htmlFor='responsibilities' required>
@@ -517,16 +394,30 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
               </div>
             </div>
             <div className='space-y-2'>
-              <div className='flex justify-between'>
-                <div>
-                  <FormLabel required>Start Date</FormLabel>
-                  {renderDateSelect(startDate, handleStartDateChange)}
-                </div>
-                <div>
-                  <FormLabel>End Date</FormLabel>
-                  {renderDateSelect(endDate, handleEndDateChange)}
-                </div>
+              <div>
+                <FormLabel required>Start Date</FormLabel>
+                <DateSelect
+                  value={startDate}
+                  onChange={(newDate) => {
+                    setStartDate(newDate);
+                    if (isPresent) {
+                      setEndDate(newDate);
+                    }
+                  }}
+                  mode='day-month-year'
+                />
               </div>
+              <div>
+                <FormLabel>End Date</FormLabel>
+                <DateSelect
+                  value={endDate}
+                  onChange={setEndDate}
+                  mode='day-month-year'
+                  className={isPresent ? 'opacity-50' : ''}
+                  disabled={isPresent}
+                />
+              </div>
+
               <Checkbox
                 id='isPresent'
                 checked={isPresent}
@@ -536,7 +427,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                     setEndDate(new Date());
                   }
                 }}
-                label='I currently work here'
+                label='I currently working on this organization'
               />
             </div>
             <div>

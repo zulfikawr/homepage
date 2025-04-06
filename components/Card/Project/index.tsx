@@ -1,34 +1,43 @@
-import Image from 'next/image';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import ProjectViewer from '@/components/Viewer/Project';
 import { Hover } from '@/components/Visual';
 import { Card } from '@/components/Card';
+import ProjectForm from '@/components/Form/Project';
+import { Badge } from '@/components/UI';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
-export interface ProjectCardProps extends Project {
+interface ProjectCardProps {
+  project: Project;
   isInDrawer?: boolean;
+  isInForm?: boolean;
 }
 
-const ProjectCard = (props: ProjectCardProps) => {
-  const { name, image, description, tools, favicon, isInDrawer } = props;
-
+export default function ProjectCard({
+  project,
+  isInDrawer,
+  isInForm,
+}: ProjectCardProps) {
   const handleCardClick = () => {
-    drawer.open(<ProjectViewer project={props} />);
+    if (isInForm) return;
+
+    const content = isInDrawer ? (
+      <ProjectForm projectToEdit={project} />
+    ) : (
+      <ProjectViewer project={project} />
+    );
+
+    drawer.open(content);
   };
 
   return (
-    <Card
-      onClick={() => {
-        if (!isInDrawer) handleCardClick();
-      }}
-      isInDrawer={isInDrawer}
-    >
+    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
         <Hover perspective={1000} max={25} scale={1.01}>
-          <Image
-            src={image}
+          <ImageWithFallback
+            src={project.image}
+            alt={project.name}
             className='object-cover dark:brightness-[95%]'
-            alt={`featured-image-${name}`}
             loading='lazy'
             height={480}
             width={640}
@@ -41,13 +50,13 @@ const ProjectCard = (props: ProjectCardProps) => {
         {/* Image container */}
         <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'>
           <Hover perspective={1000} max={25} scale={1.01}>
-            <Image
-              src={image}
-              className='rounded-md object-cover dark:brightness-[95%]'
-              alt={`featured-image-${name}`}
-              loading='lazy'
+            <ImageWithFallback
+              src={project.image}
+              alt={project.name}
               height={480}
               width={640}
+              className='rounded-md object-cover dark:brightness-[95%]'
+              loading='lazy'
             />
           </Hover>
         </div>
@@ -57,35 +66,38 @@ const ProjectCard = (props: ProjectCardProps) => {
           {/* Name at the top */}
           <div className='border-b border-neutral-200 pb-2 text-lg font-semibold text-neutral-700 dark:border-neutral-700 dark:text-white'>
             <div className='flex items-center'>
-              {favicon && (
+              {project.favicon && (
                 <span className='mr-3 inline-block'>
-                  <Image src={favicon} height={20} width={20} alt={name} />
+                  <ImageWithFallback
+                    src={project.favicon}
+                    alt={project.name}
+                    height={20}
+                    width={20}
+                    type='square'
+                  />
                 </span>
               )}
-              {name}
+              {project.name}
             </div>
           </div>
 
           {/* Description in the middle */}
           <p className='text-sm text-neutral-600 dark:text-neutral-300'>
-            {description}
+            {project.description}
           </p>
 
           {/* Tools at the bottom */}
           <div className='flex flex-wrap gap-2 border-t border-neutral-200 pt-2.5 dark:border-neutral-700'>
-            {tools.map((tool, index) => (
-              <span
-                key={index}
-                className='rounded-full border bg-neutral-100 px-2.5 py-0.5 text-xs text-neutral-500 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400'
-              >
+            {project.tools.map((tool, index) => (
+              <Badge key={index} icon>
                 {tool}
-              </span>
+              </Badge>
             ))}
           </div>
         </div>
       </div>
     </Card>
   );
-};
+}
 
 export { ProjectCard };

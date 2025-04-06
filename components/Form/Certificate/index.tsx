@@ -12,10 +12,10 @@ import {
   deleteCertificate,
 } from '@/functions/certificates';
 import { modal } from '@/components/Modal';
+import Separator from '@/components/UI/Separator';
 
 interface CertificateFormProps {
   certificateToEdit?: Certificate;
-  onUpdate: () => Promise<void>;
 }
 
 const initialCertificateState: Certificate = {
@@ -31,11 +31,21 @@ const initialCertificateState: Certificate = {
 
 const CertificateForm: React.FC<CertificateFormProps> = ({
   certificateToEdit,
-  onUpdate,
 }) => {
   const [certificate, setCertificate] = useState<Certificate>(
     certificateToEdit || initialCertificateState,
   );
+
+  const currentPreviewCertificate: Certificate = {
+    id: certificate.id || 'preview',
+    title: certificate.title || 'Certificate Title',
+    issuedBy: certificate.issuedBy || 'Issued By',
+    dateIssued: certificate.dateIssued || 'Date Issued',
+    credentialId: certificate.credentialId || 'Credential ID',
+    organizationLogoUrl: certificate.organizationLogoUrl,
+    imageUrl: certificate.imageUrl,
+    link: certificate.link || '#',
+  };
 
   const handleChange = (field: keyof Certificate, value: string) => {
     setCertificate((prev) => ({ ...prev, [field]: value }));
@@ -50,7 +60,6 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
         : await addCertificate(certificate);
 
       if (result.success) {
-        await onUpdate();
         drawer.close();
         toast.show(
           certificateToEdit
@@ -76,7 +85,6 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
       const result = await deleteCertificate(certificateToEdit.id);
 
       if (result.success) {
-        await onUpdate();
         drawer.close();
         toast.show('Certificate deleted successfully!');
       } else {
@@ -100,17 +108,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           action cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <CertificateCard
-            id='preview'
-            title={certificate.title || 'Certificate Title'}
-            issuedBy={certificate.issuedBy || 'Issued By'}
-            dateIssued={certificate.dateIssued || 'Date Issued'}
-            credentialId={certificate.credentialId || 'Credential ID'}
-            imageUrl={certificate.imageUrl || '/images/placeholder.png'}
-            organizationLogoUrl={certificate.organizationLogoUrl || ''}
-            link={certificate.link || '#'}
-            isInDrawer
-          />
+          <CertificateCard certificate={currentPreviewCertificate} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -132,7 +130,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
   return (
     <>
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
             {certificateToEdit
@@ -159,20 +157,12 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
         </div>
       </div>
 
+      <Separator margin='0' />
+
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           <div className='flex justify-center'>
-            <CertificateCard
-              id='preview'
-              title={certificate.title || 'Certificate Title'}
-              issuedBy={certificate.issuedBy || 'Issued By'}
-              dateIssued={certificate.dateIssued || 'Date Issued'}
-              credentialId={certificate.credentialId || 'Credential ID'}
-              imageUrl={certificate.imageUrl || '/images/placeholder.png'}
-              organizationLogoUrl={certificate.organizationLogoUrl || ''}
-              link={certificate.link || '#'}
-              isInDrawer
-            />
+            <CertificateCard certificate={currentPreviewCertificate} isInForm />
           </div>
 
           <form onSubmit={handleSubmit} className='space-y-4'>

@@ -5,19 +5,9 @@ import BookForm from '@/components/Form/Book';
 import { Button, Icon } from '@/components/UI';
 import Separator from '@/components/UI/Separator';
 
-const BookDrawer = ({
-  books,
-  onUpdate,
-}: {
-  books: Book[];
-  onUpdate?: () => Promise<void>;
-}) => {
-  const handleEditBook = (book: Book) => {
-    drawer.open(<BookForm bookToEdit={book} onUpdate={onUpdate} />);
-  };
-
+const BookDrawer = ({ books }: { books: Book[] }) => {
   const handleAddBook = () => {
-    drawer.open(<BookForm onUpdate={onUpdate} />);
+    drawer.open(<BookForm />);
   };
 
   return (
@@ -43,17 +33,7 @@ const BookDrawer = ({
       {/* Scrollable Content */}
       <div className='grid grid-cols-2 gap-4 overflow-y-auto w-fit p-4 md:p-8'>
         {books.map((book, index) => (
-          <div
-            key={index}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleEditBook(book);
-            }}
-            className='cursor-pointer'
-          >
-            <BookCard {...book} isInDrawer />
-          </div>
+          <BookCard key={index} book={book} isInDrawer />
         ))}
       </div>
     </>

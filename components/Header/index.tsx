@@ -2,16 +2,16 @@
 
 import { type MutableRefObject, useRef } from 'react';
 import { useTheme } from 'next-themes';
-import Image from 'next/image';
 import Link from 'next/link';
 import { drawer } from '@/components/Drawer';
 import { HeaderTransition, OffsetTransition } from '@/components/Motion';
 import ScrollWrapper from '@/components/Motion/scroll';
-import Tabs from '@/components/Tabs';
 import { useTitle } from '@/contexts/titleContext';
 import { Kbar } from '@/components/Kbar';
 import { KbarContent } from '@/components/Kbar/components';
 import { useRouteInfo } from '@/hooks/useRouteInfo';
+import { Button } from '@/components/UI/Button';
+import ImageWithFallback from '../ImageWithFallback';
 
 interface HeaderComponentProps {
   headerRef: MutableRefObject<HTMLDivElement>;
@@ -23,74 +23,6 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
   const { isPagesPage, nonHomePage } = useRouteInfo();
 
-  const leftTabItems = [
-    {
-      key: 'avatar',
-      label: 'Avatar',
-      hoverable: false,
-      component: (
-        <div className='group mx-auto flex h-full cursor-pointer items-center justify-center space-x-3 px-5'>
-          <div className='flex h-[18px] w-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
-            <Image
-              className='rounded-full'
-              src={resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'}
-              alt='Zulfikar'
-              height={18}
-              width={18}
-              loading='lazy'
-            />
-          </div>
-          <div className='text-3 font-medium text-black'>
-            <Link href='/' passHref>
-              <h3 className='text-neutral-700 dark:text-neutral-400 dark:group-hover:text-neutral-300'>
-                Zulfikar
-              </h3>
-            </Link>
-          </div>
-        </div>
-      ),
-    },
-  ];
-
-  const rightTabItems = [
-    {
-      key: 'home',
-      label: 'Home',
-      icon: 'houseLine',
-      link: {
-        internal: '/',
-      },
-      className: nonHomePage ? 'hidden sm:block' : 'hidden',
-    },
-    {
-      key: 'pages',
-      label: 'Pages',
-      icon: 'folder',
-      link: {
-        internal: '/pages',
-      },
-      className: isPagesPage ? 'hidden' : 'block',
-    },
-    {
-      key: 'searchdesktop',
-      label: 'Search',
-      icon: 'magnifyingGlass',
-      className: nonHomePage ? 'hidden lg:block' : 'hidden',
-      action: () => {
-        drawer.open(<KbarContent />);
-      },
-    },
-    {
-      key: 'searchmobile',
-      label: 'Search',
-      icon: 'magnifyingGlass',
-      className: 'block lg:hidden',
-      action: () => {
-        drawer.open(<KbarContent />);
-      },
-    },
-  ];
-
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
     headerRef.current.style.transform = `translateY(${15 - position || 0}%)`;
@@ -101,11 +33,31 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       <header
         ref={headerRef}
         id='header'
-        className='header fixed top-0 z-50 grid h-auto w-full grid-cols-8 px-1 py-2 leading-14 duration-300 lg:px-5 lg:py-4'
+        className='header fixed top-0 z-50 grid h-auto w-full grid-cols-8 px-1 py-2 duration-300 lg:px-5 lg:py-4'
       >
+        {/* Left side - Avatar and Name */}
         <div className='col-start-1 col-end-3 flex h-full items-center'>
-          <Tabs items={leftTabItems} />
+          <div className='group mx-auto flex h-full cursor-pointer items-center justify-center space-x-3 px-5'>
+            <div className='flex h-[18px] w-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
+              <ImageWithFallback
+                className='rounded-full'
+                src={resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'}
+                alt='Zulfikar'
+                height={18}
+                width={18}
+                loading='lazy'
+                type='square'
+              />
+            </div>
+            <div className='text-3 font-medium text-neutral-700 dark:text-neutral-300 dark:group-hover:text-neutral-200'>
+              <Link href='/' passHref>
+                Zulfikar
+              </Link>
+            </div>
+          </div>
         </div>
+
+        {/* Center - Title or Kbar */}
         <OffsetTransition disabled={!nonHomePage} componentRef={titleRef}>
           <div
             ref={titleRef}
@@ -114,8 +66,46 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             {nonHomePage ? <HeaderTitle /> : <Kbar />}
           </div>
         </OffsetTransition>
+
+        {/* Right side - Navigation buttons */}
         <div className='col-start-7 col-end-9 flex h-full items-center justify-end space-x-2 mr-2'>
-          <Tabs items={rightTabItems} />
+          {nonHomePage && (
+            <Button
+              type='ghost'
+              icon='houseLine'
+              className='hidden sm:flex sm:items-center sm:space-x-2'
+            >
+              <Link href='/'>Home</Link>
+            </Button>
+          )}
+
+          {!isPagesPage && (
+            <Button
+              type='ghost'
+              icon='folder'
+              className='hidden sm:flex items-center space-x-2'
+            >
+              <Link href='/pages'>Pages</Link>
+            </Button>
+          )}
+
+          {nonHomePage && (
+            <Button
+              type='ghost'
+              icon='magnifyingGlass'
+              className='hidden lg:flex items-center space-x-2'
+              onClick={() => drawer.open(<KbarContent />)}
+            >
+              Search
+            </Button>
+          )}
+
+          <Button
+            type='ghost'
+            icon='menu'
+            className='flex lg:hidden'
+            onClick={() => drawer.open(<KbarContent />)}
+          />
         </div>
       </header>
     </ScrollWrapper>
@@ -128,8 +118,8 @@ const HeaderTitle = () => {
   if (!headerTitle) return null;
 
   return (
-    <div className='mx-auto hidden items-center justify-center space-x-3 overflow-hidden lg:flex'>
-      <h3 className='overflow-hidden text-ellipsis whitespace-nowrap font-medium'>
+    <div className='mx-auto flex items-center justify-center space-x-3 overflow-hidden'>
+      <h3 className='overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-3'>
         {headerTitle}
       </h3>
     </div>
