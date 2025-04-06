@@ -1,37 +1,23 @@
 'use client';
 
 import MetricCard from './Card';
-import { useEffect, useState } from 'react';
-import { getAllPageViews } from '@/functions/analytics';
 import { commaNumber } from '@/utilities/commaNumber';
+import { useRealtimeData } from '@/hooks';
+import { getAllPageViews } from '@/functions/analytics';
 
 export default function PageViewsMetric() {
-  const [totalViews, setTotalViews] = useState<number | null>(null);
+  const { data: views, loading } = useRealtimeData(getAllPageViews);
 
-  useEffect(() => {
-    const fetchAllPageViews = async () => {
-      try {
-        const views = await getAllPageViews();
-        const total = Object.values(views).reduce(
-          (acc, count) => acc + count,
-          0,
-        );
-        setTotalViews(total);
-      } catch (error) {
-        console.error('Error fetching all page views:', error);
-        setTotalViews(null);
-      }
-    };
-
-    fetchAllPageViews();
-  }, []);
+  const totalViews = views
+    ? Object.values(views).reduce((acc, count) => acc + count, 0)
+    : 0;
 
   const link = '/analytics';
 
   return (
     <MetricCard
       icon='chartBar'
-      value={commaNumber(totalViews)}
+      value={loading ? '...' : commaNumber(totalViews)}
       description='Total Page Views'
       link={link}
       colorHex='#9CA3AF'

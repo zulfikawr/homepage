@@ -1,11 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { Label, Icon } from '@/components/UI';
 import PostCard from '@/components/Card/Post';
-import { useTitle } from '@/contexts/titleContext';
 import { Post } from '@/types/post';
+import PageTitle from '@/components/PageTitle';
 
 interface CategoryContentProps {
   posts: Post[];
@@ -16,45 +14,14 @@ export default function CategoryContent({
   posts,
   category,
 }: CategoryContentProps) {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    if (category) {
-      setHeaderTitle(`Category: ${category}`);
-    }
-    return () => {
-      setHeaderTitle('Zulfikar');
-    };
-  }, [setHeaderTitle, category]);
-
   return (
     <div>
-      <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
-        <div className='mb-12 flex items-center'>
-          <div className='flex-1 items-center'>
-            <h1 className='text-1 w-fit font-medium tracking-wide text-black dark:text-white'>
-              {category && (
-                <Label type='primary' icon='folder' className='mr-2'>
-                  {category}
-                </Label>
-              )}
-            </h1>
-          </div>
-          <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
-            <div className='flex-1 px-5'>
-              <Link
-                href='/post/cate'
-                className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
-              >
-                <span className='mr-2 h-6 w-6'>
-                  <Icon name='arrowLeft' />
-                </span>
-                Categories
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageTitle
+        emoji='📁'
+        title={`${category}`}
+        subtitle='Posts organized by category'
+        route='/post/cate/[category]'
+      />
 
       <div className='bg-white dark:bg-neutral-800 lg:rounded-xl lg:border lg:border-neutral-200 lg:p-6 lg:shadow-sm dark:lg:border-neutral-700'>
         {posts.length === 0 ? (
@@ -78,8 +45,10 @@ export default function CategoryContent({
             </div>
           </div>
         ) : (
-          <div className='mt-6'>
-            <PostCard posts={posts} />
+          <div className='mt-6 space-y-6'>
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
           </div>
         )}
       </div>

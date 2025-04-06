@@ -162,6 +162,27 @@ const CertificateCardLoading = () => (
   </BaseCardLoading>
 );
 
+const TrackCardLoading = () => (
+  <BaseCardLoading>
+    <div className='flex items-center space-x-4 p-3'>
+      {/* Track number placeholder */}
+      <div className='h-4 w-6 rounded bg-neutral-200 dark:bg-neutral-700' />
+
+      {/* Album art placeholder */}
+      <div className='h-12 w-12 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+
+      {/* Track info placeholder */}
+      <div className='flex-1 space-y-2'>
+        <div className='h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
+        <div className='h-3 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+      </div>
+
+      {/* Duration placeholder */}
+      <div className='h-3 w-10 rounded bg-neutral-200 dark:bg-neutral-700' />
+    </div>
+  </BaseCardLoading>
+);
+
 type CardLoadingProps = {
   type:
     | 'podcast'
@@ -170,7 +191,8 @@ type CardLoadingProps = {
     | 'project'
     | 'post'
     | 'playlist'
-    | 'certificate';
+    | 'certificate'
+    | 'track';
 };
 
 const CardLoading = ({ type }: CardLoadingProps) => {
@@ -189,6 +211,8 @@ const CardLoading = ({ type }: CardLoadingProps) => {
       return <PlaylistCardLoading />;
     case 'certificate':
       return <CertificateCardLoading />;
+    case 'track':
+      return <TrackCardLoading />;
     default:
       return <PodcastCardLoading />;
   }

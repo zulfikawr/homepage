@@ -1,28 +1,19 @@
-import { PodcastCard } from '@/components/Card/Podcast';
+import PodcastCard from '@/components/Card/Podcast';
 import { Podcast } from '@/types/podcast';
 import { drawer } from '@/components/Drawer';
 import PodcastForm from '@/components/Form/Podcast';
 import { Button, Icon } from '@/components/UI';
+import Separator from '@/components/UI/Separator';
 
-const PodcastDrawer = ({
-  podcasts,
-  onUpdate,
-}: {
-  podcasts: Podcast[];
-  onUpdate?: () => Promise<void>;
-}) => {
-  const handleEditPodcast = (podcast: Podcast) => {
-    drawer.open(<PodcastForm podcastToEdit={podcast} onUpdate={onUpdate} />);
-  };
-
+const PodcastDrawer = ({ podcasts }: { podcasts: Podcast[] }) => {
   const handleAddPodcast = () => {
-    drawer.open(<PodcastForm onUpdate={onUpdate} />);
+    drawer.open(<PodcastForm />);
   };
 
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-4'>
             <Icon name='microphone' className='size-[28px] md:size-[32px]' />
@@ -37,20 +28,12 @@ const PodcastDrawer = ({
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-3 overflow-y-auto w-fit p-4'>
-        {podcasts.map((podcast, index) => (
-          <div
-            key={index}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleEditPodcast(podcast);
-            }}
-            className='cursor-pointer'
-          >
-            <PodcastCard {...podcast} isInDrawer />
-          </div>
+        {podcasts.map((podcast) => (
+          <PodcastCard key={podcast.id} podcast={podcast} isInDrawer />
         ))}
       </div>
     </>

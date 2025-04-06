@@ -1,5 +1,26 @@
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Project } from '@/types/project';
+
+/**
+ * Subscribe to projects changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function projectsData(callback: (data: Project[]) => void) {
+  const projectsRef = ref(database, 'projects');
+
+  return onValue(projectsRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, project]: [string, Omit<Project, 'id'>]) => ({
+            id,
+            ...project,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all projects from Firebase

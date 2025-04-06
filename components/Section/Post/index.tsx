@@ -1,13 +1,13 @@
-import { getPosts } from '@/functions/posts';
+import { postsData } from '@/functions/posts';
 import PostCard from '@/components/Card/Post';
 import CardEmpty from '@/components/Card/Empty';
-import { useFetchData } from '@/lib/fetchData';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
+import { useRealtimeData } from '@/hooks';
 
 const PostSection = () => {
-  const { data: posts, loading, error } = useFetchData(getPosts);
+  const { data: posts, loading, error } = useRealtimeData(postsData);
 
   const sortedPosts = posts ? sortByDate(posts) : [];
 
@@ -37,7 +37,7 @@ const PostSection = () => {
         <div className='grid grid-cols-1 gap-6'>
           {sortedPosts.map((post) => (
             <div key={post.id} className='cursor-pointer'>
-              <PostCard key={post.id} posts={[post]} />
+              <PostCard key={post.id} post={post} />
             </div>
           ))}
         </div>

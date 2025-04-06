@@ -1,14 +1,14 @@
 import { ProjectCard } from '@/components/Card/Project';
-import { getProjects } from '@/functions/projects';
+import { projectsData } from '@/functions/projects';
 import { parseDate } from '@/utilities/sortByDate';
-import { useFetchData } from '@/lib/fetchData';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { Project } from '@/types/project';
+import { useRealtimeData } from '@/hooks';
 
 const ProjectSection = () => {
-  const { data: projects, loading, error } = useFetchData(getProjects);
+  const { data: projects, loading, error } = useRealtimeData(projectsData);
 
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);
@@ -43,7 +43,7 @@ const ProjectSection = () => {
             .map((_, index) => <CardLoading key={index} type='project' />)
         ) : sortedProjects.length > 0 ? (
           sortedProjects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
+            <ProjectCard key={project.id} project={project} />
           ))
         ) : (
           <CardEmpty message='No projects found.' />

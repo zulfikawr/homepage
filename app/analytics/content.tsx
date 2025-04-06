@@ -1,9 +1,9 @@
 'use client';
 
-import { useFetchData } from '@/lib/fetchData';
 import { getAllPageViews } from '@/functions/analytics';
 import PageTitle from '@/components/PageTitle';
 import Link from 'next/link';
+import { useRealtimeData } from '@/hooks';
 
 const SkeletonLoader = () => {
   return (
@@ -44,7 +44,7 @@ const SkeletonLoader = () => {
 };
 
 export default function AnalyticsContent() {
-  const { data: pageViews, loading, error } = useFetchData(getAllPageViews);
+  const { data: pageViews, loading, error } = useRealtimeData(getAllPageViews);
 
   const sortedPageViews = pageViews
     ? Object.entries(pageViews).sort(
@@ -99,7 +99,11 @@ export default function AnalyticsContent() {
                       {formatRoute(route)}
                     </Link>
                   </td>
-                  <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
+                  <td
+                    className={`py-4 px-6 border-b border-neutral-200 dark:border-neutral-700 ${
+                      index === array.length - 1 ? 'last:border-b-0' : ''
+                    }`}
+                  >
                     {views}
                   </td>
                 </tr>

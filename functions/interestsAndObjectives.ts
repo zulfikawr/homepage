@@ -1,4 +1,4 @@
-import { database, ref, get, set } from '@/lib/firebase';
+import { database, ref, get, set, onValue } from '@/lib/firebase';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 // Default interests and objectives data
@@ -13,6 +13,24 @@ const defaultInterestsAndObjectives: InterestsAndObjectives = {
   conclusion:
     'In conclusion, my interests and objectives drive me to pursue excellence and make a positive impact.',
 };
+
+/**
+ * Subscribe interests and objectives changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function interestsAndObjectivesData(
+  callback: (data: InterestsAndObjectives) => void,
+) {
+  const interestsAndObjectivesRef = ref(database, 'interestsAndObjectives');
+
+  return onValue(interestsAndObjectivesRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? snapshot.val()
+      : defaultInterestsAndObjectives;
+    callback(data);
+  });
+}
 
 /**
  * Fetch interests and objectives from Firebase

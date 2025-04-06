@@ -1,13 +1,12 @@
 'use client';
 
-import { Button, Dropdown, Icon, Label } from '@/components/UI';
+import { useState } from 'react';
+import { Badge, Button, Dropdown, Icon } from '@/components/UI';
 import { drawer } from '@/components/Drawer';
 import { toast } from '@/components/Toast';
-import Tabs from '@/components/Tabs';
 import { modal } from '@/components/Modal';
 import Tooltip from '@/components/UI/Tooltip';
 import Toggle from '@/components/UI/Toggle';
-import { useState } from 'react';
 import PageTitle from '@/components/PageTitle';
 
 export default function UIComponentsContent() {
@@ -44,24 +43,6 @@ export default function UIComponentsContent() {
       </div>,
     );
   };
-
-  const tabItems = [
-    {
-      key: '1',
-      label: 'Home',
-      icon: 'houseLine',
-    },
-    {
-      key: '2',
-      label: 'About',
-      icon: 'info',
-    },
-    {
-      key: '3',
-      label: 'Pages',
-      icon: 'folder',
-    },
-  ];
 
   const HEADING_OPTIONS: { label: string }[] = [
     { label: 'H1' },
@@ -137,18 +118,6 @@ export default function UIComponentsContent() {
             <Tooltip text='magnifyingGlass' position='top'>
               <Icon name='magnifyingGlass' className='size-5' />
             </Tooltip>
-          </div>
-        </div>
-
-        {/* Tabs Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
-              <span>Tabs</span>
-            </div>
-          </div>
-          <div className='my-6 flex justify-center'>
-            <Tabs items={tabItems} />
           </div>
         </div>
 
@@ -231,20 +200,20 @@ export default function UIComponentsContent() {
         <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
           <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
             <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
-              <span>Label</span>
+              <span>Badge</span>
             </div>
           </div>
           <div className='my-6 px-4.5'>
             <div className='flex items-center justify-center space-x-3'>
               <div className='flex w-auto'>
-                <Label type='primary' icon='folder'>
-                  Primary
-                </Label>
+                <Badge type='default' icon='nextjs'>
+                  Next.js
+                </Badge>
               </div>
               <div className='flex w-auto'>
-                <Label type='secondary' icon='magifyingGlassPlus'>
-                  Secondary
-                </Label>
+                <Badge type='outline' icon='firebase'>
+                  Firebase
+                </Badge>
               </div>
             </div>
           </div>

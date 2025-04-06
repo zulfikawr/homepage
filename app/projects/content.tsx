@@ -1,17 +1,17 @@
 'use client';
 
 import { ProjectCard } from '@/components/Card/Project';
-import { getProjects } from '@/functions/projects';
+import { projectsData } from '@/functions/projects';
 import { sortByDate } from '@/utilities/sortByDate';
-import { useFetchData } from '@/lib/fetchData';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
+import { useRealtimeData } from '@/hooks';
 
 export default function ProjectsContent() {
-  const { data: projects, loading, error } = useFetchData(getProjects);
+  const { data: projects, loading, error } = useRealtimeData(projectsData);
   const sortedProjects = projects ? sortByDate(projects) : [];
 
   const wipProjects = sortedProjects.filter(
@@ -53,7 +53,7 @@ export default function ProjectsContent() {
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : wipProjects.length > 0 ? (
             wipProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
+              <ProjectCard key={project.id} project={project} />
             ))
           ) : (
             <CardEmpty message='No projects in progress.' />
@@ -77,7 +77,7 @@ export default function ProjectsContent() {
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : doneProjects.length > 0 ? (
             doneProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
+              <ProjectCard key={project.id} project={project} />
             ))
           ) : (
             <CardEmpty message='No projects completed.' />
@@ -101,7 +101,7 @@ export default function ProjectsContent() {
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : upcomingProjects.length > 0 ? (
             upcomingProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
+              <ProjectCard key={project.id} project={project} />
             ))
           ) : (
             <CardEmpty message='No upcoming projects.' />

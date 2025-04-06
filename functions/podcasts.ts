@@ -1,5 +1,26 @@
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Podcast } from '@/types/podcast';
+
+/**
+ * Subscribe to podcasts changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function podcastsData(callback: (data: Podcast[]) => void) {
+  const podcastRef = ref(database, 'podcasts');
+
+  return onValue(podcastRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, podcast]: [string, Omit<Podcast, 'id'>]) => ({
+            id,
+            ...podcast,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all podcasts from Firebase

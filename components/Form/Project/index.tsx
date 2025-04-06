@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Image from 'next/image';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import { modal } from '@/components/Modal';
@@ -10,6 +9,7 @@ import {
   Checkbox,
   Dropdown,
   FormLabel,
+  Icon,
   Input,
   Textarea,
 } from '@/components/UI';
@@ -17,12 +17,13 @@ import { ProjectCard } from '@/components/Card/Project';
 import { toast } from '@/components/Toast';
 import { addProject, updateProject, deleteProject } from '@/functions/projects';
 import { generateId } from '@/utilities/generateId';
-import Tabs from '@/components/Tabs';
+import { formatDateRange } from '@/utilities/formatDate';
 import Separator from '@/components/UI/Separator';
+import DateSelect from '@/components/DateSelect';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface ProjectFormProps {
   projectToEdit?: Project;
-  onUpdate?: () => Promise<void>;
 }
 
 const initialProjectState: Project = {
@@ -38,10 +39,7 @@ const initialProjectState: Project = {
   pinned: false,
 };
 
-const ProjectForm: React.FC<ProjectFormProps> = ({
-  projectToEdit,
-  onUpdate,
-}) => {
+const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [project, setProject] = useState<Project>(
     projectToEdit || initialProjectState,
   );
@@ -70,27 +68,24 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
   const [startDate, setStartDate] = useState(initialDates.start);
   const [endDate, setEndDate] = useState(initialDates.end);
 
+  const currentPreviewProject: Project = {
+    id: project.id || 'preview',
+    name: project.name || 'Project Name',
+    image: project.image || '/images/placeholder.png',
+    description: project.description || 'Project Description',
+    tools: project.tools.length ? project.tools : ['Project Tools'],
+    link: project.link || '#',
+    favicon: project.favicon || '',
+    dateString: project.dateString || formatDateRange(startDate, endDate),
+    status: project.status || 'inProgress',
+    pinned: project.pinned || false,
+  };
+
   const handleChange = (
     field: keyof Project,
     value: string | string[] | Date,
   ) => {
     setProject((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleStartDateChange = (day: number, month: number, year: number) => {
-    const newDate = new Date(startDate);
-    newDate.setDate(day);
-    newDate.setMonth(month);
-    newDate.setFullYear(year);
-    setStartDate(newDate);
-  };
-
-  const handleEndDateChange = (day: number, month: number, year: number) => {
-    const newDate = new Date(endDate);
-    newDate.setDate(day);
-    newDate.setMonth(month);
-    newDate.setFullYear(year);
-    setEndDate(newDate);
   };
 
   const togglePin = async () => {
@@ -107,7 +102,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           ...prevProject,
           pinned: newPinnedStatus,
         }));
-        await onUpdate?.();
         toast.show(
           `Project ${newPinnedStatus ? 'pinned' : 'unpinned'} successfully!`,
         );
@@ -154,22 +148,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
 
     if (!validateForm()) return;
 
-    const startDateStr = startDate.toLocaleDateString('en-GB', {
-      month: 'short',
-      year: 'numeric',
-    });
-    const endDateStr = isPresent
-      ? 'Present'
-      : endDate.toLocaleDateString('en-GB', {
-          month: 'short',
-          year: 'numeric',
-        });
-    const formattedDate = `${startDateStr} - ${endDateStr}`;
-
     const projectData = {
       ...project,
       id: projectToEdit?.id || generateId(project.name),
-      dateString: formattedDate,
+      dateString: formatDateRange(startDate, endDate, isPresent),
     };
 
     try {
@@ -178,7 +160,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         : await addProject(projectData);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show(
           projectToEdit
@@ -204,7 +185,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
       const result = await deleteProject(projectToEdit.id);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show('Project deleted successfully!');
       } else {
@@ -228,30 +208,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <ProjectCard
-            id='preview'
-            name={project.name || 'Project Name'}
-            image={project.image || '/images/placeholder.png'}
-            description={project.description || 'Project Description'}
-            tools={project.tools.length ? project.tools : ['Project Tools']}
-            link={project.link || '#'}
-            dateString={
-              project.dateString ||
-              `${startDate.toLocaleDateString('en-GB', {
-                month: 'short',
-                year: 'numeric',
-              })} - ${
-                isPresent
-                  ? 'Present'
-                  : endDate.toLocaleDateString('en-GB', {
-                      month: 'short',
-                      year: 'numeric',
-                    })
-              }`
-            }
-            status={project.status}
-            isInDrawer
-          />
+          <ProjectCard project={currentPreviewProject} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -271,124 +228,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
     );
   };
 
-  const openStatusModal = () => {
-    modal.open(
-      <div className='p-6'>
-        <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Select Project Status</h2>
-          <Button icon='close' onClick={() => modal.close()} />
-        </div>
-        <Separator margin='4' />
-        <Tabs
-          items={[
-            {
-              key: 'inProgress',
-              label: 'Work in Progress',
-              action: () => {
-                handleChange('status', 'inProgress');
-                modal.close();
-              },
-            },
-            {
-              key: 'completed',
-              label: 'Completed',
-              action: () => {
-                handleChange('status', 'completed');
-                modal.close();
-              },
-            },
-            {
-              key: 'upcoming',
-              label: 'Upcoming',
-              action: () => {
-                handleChange('status', 'upcoming');
-                modal.close();
-              },
-            },
-          ]}
-          direction='vertical'
-        />
-      </div>,
-    );
-  };
+  const statusOptions = [
+    { key: 'inProgress', label: 'Work in Progress', icon: 'gear' },
+    { key: 'completed', label: 'Completed', icon: 'checkCircle' },
+    { key: 'upcoming', label: 'Upcoming', icon: 'clock' },
+  ];
 
-  const renderDateSelect = (
-    date: Date,
-    onChange: (day: number, month: number, year: number) => void,
-  ) => {
-    const days = Array.from({ length: 31 }, (_, i) => i + 1);
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const years = Array.from(
-      { length: 50 },
-      (_, i) => new Date().getFullYear() - i,
-    );
-
-    return (
-      <div className='flex gap-2'>
-        {/* Day Select */}
-        <select
-          value={date.getDate()}
-          onChange={(e) =>
-            onChange(
-              Number(e.target.value),
-              date.getMonth(),
-              date.getFullYear(),
-            )
-          }
-          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {days.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-
-        {/* Month Select */}
-        <select
-          value={date.getMonth()}
-          onChange={(e) =>
-            onChange(date.getDate(), Number(e.target.value), date.getFullYear())
-          }
-          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {months.map((month, index) => (
-            <option key={month} value={index}>
-              {month}
-            </option>
-          ))}
-        </select>
-
-        {/* Year Select */}
-        <select
-          value={date.getFullYear()}
-          onChange={(e) =>
-            onChange(date.getDate(), date.getMonth(), Number(e.target.value))
-          }
-          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  };
+  const currentStatus = statusOptions.find((opt) => opt.key === project.status);
 
   return (
     <>
@@ -400,11 +246,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <div className='flex items-center'>
                 {project.favicon && (
                   <span className='mr-3 inline-block'>
-                    <Image
+                    <ImageWithFallback
                       src={project.favicon}
                       height={30}
                       width={30}
                       alt={project.name}
+                      type='square'
                     />
                   </span>
                 )}
@@ -416,7 +263,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
           </h1>
 
           <div className='flex justify-end space-x-4'>
-            <Dropdown trigger={<Button icon='dotsThree' />} position='bottom'>
+            <Dropdown trigger={<Button icon='dotsThree' />}>
               <div className='flex flex-col p-2 space-y-2'>
                 {projectToEdit && (
                   <Button
@@ -482,30 +329,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {/* Project Preview */}
           <div className='flex justify-center'>
-            <ProjectCard
-              id='preview'
-              name={project.name || 'Project Name'}
-              image={project.image || '/images/placeholder.png'}
-              description={project.description || 'Project Description'}
-              tools={project.tools.length ? project.tools : ['Project Tools']}
-              link={project.link || '#'}
-              dateString={
-                project.dateString ||
-                `${startDate.toLocaleDateString('en-GB', {
-                  month: 'short',
-                  year: 'numeric',
-                })} - ${
-                  isPresent
-                    ? 'Present'
-                    : endDate.toLocaleDateString('en-GB', {
-                        month: 'short',
-                        year: 'numeric',
-                      })
-                }`
-              }
-              status={project.status}
-              isInDrawer
-            />
+            <ProjectCard project={currentPreviewProject} isInForm />
           </div>
 
           {/* Form */}
@@ -564,16 +388,29 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               />
             </div>
             <div className='space-y-2'>
-              <div className='flex justify-between'>
-                <div>
-                  <FormLabel required>Start Date</FormLabel>
-                  {renderDateSelect(startDate, handleStartDateChange)}
-                </div>
-                <div>
-                  <FormLabel>End Date</FormLabel>
-                  {renderDateSelect(endDate, handleEndDateChange)}
-                </div>
+              <div>
+                <FormLabel required>Start Date</FormLabel>
+                <DateSelect
+                  value={startDate}
+                  onChange={(newDate) => {
+                    setStartDate(newDate);
+                    if (isPresent) {
+                      setEndDate(newDate);
+                    }
+                  }}
+                  mode='month-year'
+                />
               </div>
+              <div>
+                <FormLabel>End Date</FormLabel>
+                <DateSelect
+                  value={endDate}
+                  onChange={setEndDate}
+                  mode='month-year'
+                  disabled={isPresent}
+                />
+              </div>
+
               <Checkbox
                 id='isPresent'
                 checked={isPresent}
@@ -590,18 +427,36 @@ const ProjectForm: React.FC<ProjectFormProps> = ({
               <FormLabel htmlFor='status' required>
                 Status
               </FormLabel>
-              <Input
-                type='button'
-                onClick={openStatusModal}
-                value={
-                  project.status === 'inProgress'
-                    ? 'Work in Progress'
-                    : project.status === 'completed'
-                      ? 'Completed'
-                      : 'Upcoming'
+              <Dropdown
+                trigger={
+                  <Button
+                    icon={currentStatus?.icon}
+                    className='w-full flex items-center justify-start gap-2 px-1 text-sm md:text-md text-black dark:text-white'
+                  >
+                    {currentStatus?.label}
+                  </Button>
                 }
-                className='text-left cursor-pointer'
-              />
+                className='w-full'
+                matchTriggerWidth
+              >
+                <div className='flex flex-col p-1 space-y-1 w-full'>
+                  {statusOptions.map((option) => (
+                    <div
+                      key={option.key}
+                      onClick={() => handleChange('status', option.key)}
+                      className={`flex items-center gap-3 px-4 py-2 text-sm rounded-md cursor-pointer transition-colors
+                        ${
+                          option.key === project.status
+                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
+                            : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
+                        }`}
+                    >
+                      <Icon name={option.icon} className='w-4 h-4' />
+                      <span>{option.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </Dropdown>
             </div>
             <div>
               <FormLabel htmlFor='link'>Link</FormLabel>

@@ -5,21 +5,13 @@ import EmploymentForm from '@/components/Form/Employment';
 import { Button, Icon } from '@/components/UI';
 import Separator from '@/components/UI/Separator';
 
-const EmploymentsDrawer = ({
-  employments,
-  onUpdate,
-}: {
-  employments: Employment[];
-  onUpdate?: () => Promise<void>;
-}) => {
+const EmploymentsDrawer = ({ employments }: { employments: Employment[] }) => {
   const handleEditEmployment = (employment: Employment) => {
-    drawer.open(
-      <EmploymentForm employmentToEdit={employment} onUpdate={onUpdate} />,
-    );
+    drawer.open(<EmploymentForm employmentToEdit={employment} />);
   };
 
   const handleAddEmployment = () => {
-    drawer.open(<EmploymentForm onUpdate={onUpdate} />);
+    drawer.open(<EmploymentForm />);
   };
 
   return (
@@ -55,7 +47,7 @@ const EmploymentsDrawer = ({
               }}
               className='cursor-pointer'
             >
-              <EmploymentCard {...employment} isInDrawer />
+              <EmploymentCard employment={employment} isInDrawer />
             </div>
           ))}
         </div>

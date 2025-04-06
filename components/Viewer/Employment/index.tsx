@@ -1,9 +1,9 @@
 import React from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/UI';
 import { Employment } from '@/types/employment';
 import { drawer } from '@/components/Drawer';
 import Separator from '@/components/UI/Separator';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
   return (
@@ -15,12 +15,13 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
               <span className='mr-3 inline-block'>
                 {employment.orgLogoSrc && (
-                  <Image
+                  <ImageWithFallback
                     src={employment.orgLogoSrc}
                     alt={employment.organization}
                     width={30}
                     height={30}
                     className='rounded-full border bg-white dark:border-neutral-700'
+                    type='square'
                   />
                 )}
               </span>
@@ -49,12 +50,13 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                     <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
                       <div className='flex items-center gap-3'>
                         {employment.orgLogoSrc && (
-                          <Image
+                          <ImageWithFallback
                             src={employment.orgLogoSrc}
                             alt={employment.organization}
                             width={24}
                             height={24}
                             className='rounded-full border bg-white dark:border-neutral-700'
+                            type='square'
                           />
                         )}
                         {employment.organization}

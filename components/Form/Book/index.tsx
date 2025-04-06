@@ -9,10 +9,12 @@ import { addBook, updateBook, deleteBook } from '@/functions/books';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import { modal } from '@/components/Modal';
+import Separator from '@/components/UI/Separator';
+import { formatDate } from '@/utilities/formatDate';
+import DateSelect from '@/components/DateSelect';
 
 interface BookFormProps {
   bookToEdit?: Book;
-  onUpdate?: () => Promise<void>;
 }
 
 const initialBookState: Book = {
@@ -25,26 +27,35 @@ const initialBookState: Book = {
   dateAdded: '',
 };
 
-const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
+const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
   const [book, setBook] = useState<Book>(bookToEdit || initialBookState);
 
   const initialDate = useMemo(() => {
     const date = bookToEdit?.dateAdded
       ? new Date(bookToEdit.dateAdded)
       : new Date();
-    return {
-      day: date.getDate(),
-      month: date.getMonth(),
-      year: date.getFullYear(),
-    };
+    return date;
   }, [bookToEdit]);
 
-  const [selectedDay, setSelectedDay] = useState(initialDate.day);
-  const [selectedMonth, setSelectedMonth] = useState(initialDate.month);
-  const [selectedYear, setSelectedYear] = useState(initialDate.year);
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+
+  const currentPreviewBook: Book = {
+    id: book.id || 'preview',
+    type: book.type || 'currentlyReading',
+    title: book.title || 'Book Title',
+    author: book.author || 'Book Author',
+    imageURL: book.imageURL || '/images/placeholder-portrait.png',
+    link: book.link || '#',
+    dateAdded: book.dateAdded || formatDate(selectedDate),
+  };
 
   const handleChange = (field: keyof Book, value: string | Book['type']) => {
     setBook((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleDateChange = (newDate: Date) => {
+    setSelectedDate(newDate);
+    handleChange('dateAdded', formatDate(newDate));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,16 +64,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
     const bookData = {
       ...book,
       id: bookToEdit?.id || generateId(book.title),
-      dateAdded:
-        bookToEdit?.dateAdded ||
-        new Date(selectedYear, selectedMonth, selectedDay).toLocaleDateString(
-          'en-GB',
-          {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          },
-        ),
+      dateAdded: formatDate(selectedDate),
     };
 
     try {
@@ -71,7 +73,6 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
         : await addBook(bookData);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show(
           bookToEdit
@@ -97,7 +98,6 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
       const result = await deleteBook(bookToEdit.id);
 
       if (result.success) {
-        await onUpdate?.();
         drawer.close();
         toast.show('Book deleted successfully!');
       } else {
@@ -121,27 +121,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
           be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <BookCard
-            id='preview'
-            type={book.type}
-            title={book.title || 'Book Title'}
-            author={book.author || 'Book Author'}
-            imageURL={book.imageURL || '/images/placeholder-portrait.png'}
-            link={book.link || '#'}
-            dateAdded={
-              book.dateAdded ||
-              new Date(
-                selectedYear,
-                selectedMonth,
-                selectedDay,
-              ).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })
-            }
-            isInDrawer
-          />
+          <BookCard book={currentPreviewBook} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button type='default' onClick={() => modal.close()}>
@@ -161,75 +141,10 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
     );
   };
 
-  const renderDateSelect = () => {
-    const days = Array.from({ length: 31 }, (_, i) => i + 1);
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    const years = Array.from(
-      { length: 50 },
-      (_, i) => new Date().getFullYear() - i,
-    );
-
-    return (
-      <div className='flex gap-2'>
-        {/* Day Select */}
-        <select
-          value={selectedDay}
-          onChange={(e) => setSelectedDay(Number(e.target.value))}
-          className='w-20 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {days.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
-
-        {/* Month Select */}
-        <select
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(Number(e.target.value))}
-          className='w-32 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {months.map((month, index) => (
-            <option key={month} value={index}>
-              {month}
-            </option>
-          ))}
-        </select>
-
-        {/* Year Select */}
-        <select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-          className='w-24 rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  };
-
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
             {bookToEdit ? `${bookToEdit.title}` : 'Add New Book'}
@@ -254,32 +169,14 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           {/* Book Preview */}
           <div className='flex justify-center'>
-            <BookCard
-              id='preview'
-              type={book.type}
-              title={book.title || 'Book Title'}
-              author={book.author || 'Book Author'}
-              imageURL={book.imageURL || '/images/placeholder-portrait.png'}
-              link={book.link || '#'}
-              dateAdded={
-                book.dateAdded ||
-                new Date(
-                  selectedYear,
-                  selectedMonth,
-                  selectedDay,
-                ).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                })
-              }
-              isInDrawer
-            />
+            <BookCard book={currentPreviewBook} isInForm />
           </div>
 
           {/* Form */}
@@ -348,7 +245,11 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit, onUpdate }) => {
               <FormLabel htmlFor='dateAdded' required>
                 Date Added
               </FormLabel>
-              {renderDateSelect()}
+              <DateSelect
+                value={selectedDate}
+                onChange={handleDateChange}
+                mode='day-month-year'
+              />
             </div>
           </form>
         </div>

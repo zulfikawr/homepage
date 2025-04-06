@@ -5,13 +5,12 @@ import { drawer } from '@/components/Drawer';
 import { Button, FormLabel, Icon, Input, Textarea } from '@/components/UI';
 import { updateInterestsAndObjectives } from '@/functions/interestsAndObjectives';
 import { toast } from '@/components/Toast';
+import Separator from '@/components/UI/Separator';
 
 const InterestsAndObjectivesForm = ({
   data,
-  onUpdate,
 }: {
   data?: InterestsAndObjectives;
-  onUpdate?: (data: InterestsAndObjectives) => void;
 }) => {
   const { user } = useAuth();
 
@@ -47,9 +46,6 @@ const InterestsAndObjectivesForm = ({
       );
 
       if (result.success && result.data) {
-        if (onUpdate) {
-          onUpdate(result.data);
-        }
         drawer.close();
         toast.show('Interests and objectives succesfully updated!');
       }
@@ -74,7 +70,7 @@ const InterestsAndObjectivesForm = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-4'>
             <Icon name='microscope' className='size-[28px] md:size-[32px]' />
@@ -90,6 +86,8 @@ const InterestsAndObjectivesForm = ({
           </div>
         </div>
       </div>
+
+      <Separator margin='0' />
 
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>

@@ -1,6 +1,27 @@
 import { generateId } from '@/utilities/generateId';
-import { database, ref, get, set, remove } from '@/lib/firebase';
+import { database, ref, get, set, remove, onValue } from '@/lib/firebase';
 import { Book } from '@/types/book';
+
+/**
+ * Subscribe to books changes in Firebase
+ * @param callback Function to call when data changes
+ * @returns Unsubscribe function
+ */
+export function booksData(callback: (data: Book[]) => void) {
+  const readingListRef = ref(database, 'reading-list');
+
+  return onValue(readingListRef, (snapshot) => {
+    const data = snapshot.exists()
+      ? Object.entries(snapshot.val()).map(
+          ([id, book]: [string, Omit<Book, 'id'>]) => ({
+            id,
+            ...book,
+          }),
+        )
+      : [];
+    callback(data);
+  });
+}
 
 /**
  * Fetch all books from Firebase

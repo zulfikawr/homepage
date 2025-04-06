@@ -5,43 +5,37 @@ import { useAuth } from '@/contexts/authContext';
 import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
 import { drawer } from '@/components/Drawer';
-import { useFetchData } from '@/lib/fetchData';
-import { getPersonalInfo } from '@/functions/personalInfo';
-import { getProjects } from '@/functions/projects';
+import { personalInfoData } from '@/functions/personalInfo';
+import { interestsAndObjectivesData } from '@/functions/interestsAndObjectives';
+import { projectsData } from '@/functions/projects';
 import PersonalInfoForm from '@/components/Form/PersonalInfo';
 import ProjectsDrawer from '@/components/Drawer/Project';
 import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
-import { getInterestsAndObjectives } from '@/functions/interestsAndObjectives';
 import EmploymentsDrawer from '@/components/Drawer/Employment';
-import { getEmployments } from '@/functions/employments';
+import { employmentsData } from '@/functions/employments';
 import PostsDrawer from '@/components/Drawer/Post';
-import { getPosts } from '@/functions/posts';
+import { postsData } from '@/functions/posts';
 import BookDrawer from '@/components/Drawer/Book';
-import { getBooks } from '@/functions/books';
+import { booksData } from '@/functions/books';
 import PodcastDrawer from '@/components/Drawer/Podcast';
-import { getPodcasts } from '@/functions/podcasts';
+import { podcastsData } from '@/functions/podcasts';
 import CertificateDrawer from '@/components/Drawer/Certificate';
-import { getCertificates } from '@/functions/certificates';
+import { certificatesData } from '@/functions/certificates';
+import { useRealtimeData } from '@/hooks';
 
 export default function DatabaseContent() {
   const { user } = useAuth();
 
-  const { data: personalInfo, refetch: refetchPersonalInfo } =
-    useFetchData(getPersonalInfo);
-  const {
-    data: interestsAndObjectives,
-    refetch: refetchInterestsAndObjectives,
-  } = useFetchData(getInterestsAndObjectives);
-  const { data: projects, refetch: refetchProjects } =
-    useFetchData(getProjects);
-  const { data: employments, refetch: refetchEmployments } =
-    useFetchData(getEmployments);
-  const { data: posts, refetch: refetchPosts } = useFetchData(getPosts);
-  const { data: books, refetch: refetchBooks } = useFetchData(getBooks);
-  const { data: podcasts, refetch: refetchPodcasts } =
-    useFetchData(getPodcasts);
-  const { data: certificates, refetch: refetchCertificates } =
-    useFetchData(getCertificates);
+  const { data: personalInfo } = useRealtimeData(personalInfoData);
+  const { data: interestsAndObjectives } = useRealtimeData(
+    interestsAndObjectivesData,
+  );
+  const { data: projects } = useRealtimeData(projectsData);
+  const { data: employments } = useRealtimeData(employmentsData);
+  const { data: posts } = useRealtimeData(postsData);
+  const { data: books } = useRealtimeData(booksData);
+  const { data: podcasts } = useRealtimeData(podcastsData);
+  const { data: certificates } = useRealtimeData(certificatesData);
 
   const databaseCategories = [
     {
@@ -49,24 +43,14 @@ export default function DatabaseContent() {
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
       action: () =>
-        drawer.open(
-          <CertificateDrawer
-            certificates={certificates}
-            onUpdate={refetchCertificates}
-          />,
-        ),
+        drawer.open(<CertificateDrawer certificates={certificates} />),
     },
     {
       title: 'Employments',
       desc: 'Manage your employments',
       icon: 'briefcase',
       action: () =>
-        drawer.open(
-          <EmploymentsDrawer
-            employments={employments}
-            onUpdate={refetchEmployments}
-          />,
-        ),
+        drawer.open(<EmploymentsDrawer employments={employments} />),
     },
     {
       title: 'Interests & Objectives',
@@ -74,55 +58,38 @@ export default function DatabaseContent() {
       icon: 'microscope',
       action: () =>
         drawer.open(
-          <InterestsAndObjectivesForm
-            data={interestsAndObjectives}
-            onUpdate={refetchInterestsAndObjectives}
-          />,
+          <InterestsAndObjectivesForm data={interestsAndObjectives} />,
         ),
     },
     {
       title: 'Personal Info',
       desc: 'Manage your personal information',
       icon: 'userCircle',
-      action: () =>
-        drawer.open(
-          <PersonalInfoForm
-            data={personalInfo}
-            onUpdate={refetchPersonalInfo}
-          />,
-        ),
+      action: () => drawer.open(<PersonalInfoForm data={personalInfo} />),
     },
     {
       title: 'Podcasts',
       desc: 'Manage your podcasts',
       icon: 'microphone',
-      action: () =>
-        drawer.open(
-          <PodcastDrawer podcasts={podcasts} onUpdate={refetchPodcasts} />,
-        ),
+      action: () => drawer.open(<PodcastDrawer podcasts={podcasts} />),
     },
     {
       title: 'Posts',
       desc: 'Manage your posts',
       icon: 'note',
-      action: () =>
-        drawer.open(<PostsDrawer posts={posts} onUpdate={refetchPosts} />),
+      action: () => drawer.open(<PostsDrawer posts={posts} />),
     },
     {
       title: 'Projects',
       desc: 'Manage your projects',
       icon: 'package',
-      action: () =>
-        drawer.open(
-          <ProjectsDrawer projects={projects} onUpdate={refetchProjects} />,
-        ),
+      action: () => drawer.open(<ProjectsDrawer projects={projects} />),
     },
     {
       title: 'Reading Lists',
       desc: 'Manage your reading lists',
       icon: 'bookOpen',
-      action: () =>
-        drawer.open(<BookDrawer books={books} onUpdate={refetchBooks} />),
+      action: () => drawer.open(<BookDrawer books={books} />),
     },
   ];
 

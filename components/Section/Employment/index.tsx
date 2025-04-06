@@ -2,14 +2,18 @@
 
 import { useState, useRef } from 'react';
 import { EmploymentCard } from '@/components/Card/Employment';
-import { getEmployments } from '@/functions/employments';
+import { employmentsData } from '@/functions/employments';
 import { sortByDate } from '@/utilities/sortByDate';
-import { useFetchData } from '@/lib/fetchData';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
+import { useRealtimeData } from '@/hooks';
 
 const EmploymentSection = () => {
-  const { data: employments, loading, error } = useFetchData(getEmployments);
+  const {
+    data: employments,
+    loading,
+    error,
+  } = useRealtimeData(employmentsData);
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +72,7 @@ const EmploymentSection = () => {
                     <CardLoading key={index} type='employment' />
                   ))
               : sortedEmployments.map((employment) => (
-                  <EmploymentCard key={employment.id} {...employment} />
+                  <EmploymentCard key={employment.id} employment={employment} />
                 ))}
           </div>
         </div>

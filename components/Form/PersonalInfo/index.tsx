@@ -6,11 +6,12 @@ import { drawer } from '@/components/Drawer';
 import { Button, FormLabel, Icon, Input } from '@/components/UI';
 import { updatePersonalInfo } from '@/functions/personalInfo';
 import { toast } from '@/components/Toast';
-import PersonalInfoSection from '@/components/Section/PersonalInfo';
+import Separator from '@/components/UI/Separator';
+import { Hover } from '@/components/Visual';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface PersonalInfoFormProps {
   data?: PersonalInfo;
-  onUpdate?: (data: PersonalInfo) => void;
 }
 
 const initialPersonalInfoState: PersonalInfo = {
@@ -19,10 +20,7 @@ const initialPersonalInfoState: PersonalInfo = {
   avatarUrl: '',
 };
 
-const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
-  data,
-  onUpdate,
-}) => {
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(
     data || initialPersonalInfoState,
   );
@@ -44,9 +42,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
       const result = await updatePersonalInfo(personalInfo);
 
       if (result.success && result.data) {
-        if (onUpdate) {
-          onUpdate(result.data);
-        }
         drawer.close();
         toast.show('Personal info successfully updated!');
       } else {
@@ -61,7 +56,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
   return (
     <>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6 border-b dark:border-neutral-700'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-4'>
             <Icon name='userCircle' className='size-[28px] md:size-[32px]' />
@@ -76,10 +71,38 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
         </div>
       </div>
 
+      <Separator margin='0' />
+
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
-          <PersonalInfoSection />
+          <section className='flex items-center justify-between gap-x-10 gap-y-8'>
+            <div className='flex flex-col gap-y-1'>
+              <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
+                <span className='mr-3 inline-block'>👋</span>
+                {personalInfo.name}
+              </h1>
+              <div className='flex flex-col gap-y-1.5 break-words px-1 text-4 font-light leading-relaxed text-neutral-500 dark:text-neutral-300 lg:text-2'>
+                <p>{personalInfo.title}</p>
+              </div>
+            </div>
+            <Hover
+              perspective={1000}
+              max={25}
+              scale={1.01}
+              className='block flex-shrink-0 pt-1'
+            >
+              <ImageWithFallback
+                src={personalInfo.avatarUrl}
+                height={105}
+                width={105}
+                alt={personalInfo.name}
+                priority
+                className='aspect-square object-cover rounded-xl bg-neutral-200 shadow-sm dark:border dark:border-neutral-600'
+                type='square'
+              />
+            </Hover>
+          </section>
           {/* Form */}
           <form onSubmit={handleSubmit} className='space-y-4'>
             <div>

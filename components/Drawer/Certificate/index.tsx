@@ -7,19 +7,11 @@ import Separator from '@/components/UI/Separator';
 
 const CertificateDrawer = ({
   certificates,
-  onUpdate,
 }: {
   certificates: Certificate[];
-  onUpdate?: () => Promise<void>;
 }) => {
-  const handleEditCertificate = (cert: Certificate) => {
-    drawer.open(
-      <CertificateForm certificateToEdit={cert} onUpdate={onUpdate} />,
-    );
-  };
-
   const handleAddCertificate = () => {
-    drawer.open(<CertificateForm onUpdate={onUpdate} />);
+    drawer.open(<CertificateForm />);
   };
 
   return (
@@ -44,18 +36,12 @@ const CertificateDrawer = ({
       <Separator margin='0' />
 
       <div className='grid grid-cols-1 space-y-4 overflow-y-auto w-fit p-4 md:p-8'>
-        {certificates.map((cert, index) => (
-          <div
-            key={index}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleEditCertificate(cert);
-            }}
-            className='cursor-pointer'
-          >
-            <CertificateCard {...cert} isInDrawer />
-          </div>
+        {certificates.map((certificate) => (
+          <CertificateCard
+            key={certificate.id}
+            certificate={certificate}
+            isInDrawer
+          />
         ))}
       </div>
     </>

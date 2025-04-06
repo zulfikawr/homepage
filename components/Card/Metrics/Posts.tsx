@@ -1,6 +1,6 @@
 import MetricCard from './Card';
 import { commaNumber } from '@/utilities/commaNumber';
-import { useFetchData } from '@/lib/fetchData';
+import { useFetchData } from '@/hooks/useFetchData';
 import { getPosts } from '@/functions/posts';
 
 export default function PostsMetric() {

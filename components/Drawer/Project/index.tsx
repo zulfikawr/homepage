@@ -5,19 +5,9 @@ import ProjectForm from '@/components/Form/Project';
 import { Button, Icon } from '@/components/UI';
 import Separator from '@/components/UI/Separator';
 
-const ProjectsDrawer = ({
-  projects,
-  onUpdate,
-}: {
-  projects: Project[];
-  onUpdate?: () => Promise<void>;
-}) => {
-  const handleEditProject = (project: Project) => {
-    drawer.open(<ProjectForm projectToEdit={project} onUpdate={onUpdate} />);
-  };
-
+const ProjectsDrawer = ({ projects }: { projects: Project[] }) => {
   const handleAddProject = () => {
-    drawer.open(<ProjectForm onUpdate={onUpdate} />);
+    drawer.open(<ProjectForm />);
   };
 
   return (
@@ -43,18 +33,8 @@ const ProjectsDrawer = ({
       {/* Scrollable Content */}
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleEditProject(project);
-              }}
-              className='cursor-pointer'
-            >
-              <ProjectCard {...project} isInDrawer />
-            </div>
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} isInDrawer />
           ))}
         </div>
       </div>
