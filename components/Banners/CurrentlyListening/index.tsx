@@ -79,116 +79,114 @@ const CurrentlyListening = () => {
     };
   }, [isPlaying, currentTrack]);
 
+  // Replace the entire fetchTracks function with this:
   const fetchTracks = useCallback(async () => {
     if (!isMounted.current) return;
 
     try {
-      // First try to get current track
+      // First attempt to get the currently playing track
       const currentResponse = await getCurrentTrack();
 
       if (!currentResponse) {
         setIsAuthorized(false);
         setIsLoading(false);
+        setShowSkeleton(false); // Important: Clear skeleton state
         return;
       }
 
-      // Handle rate limiting - if we get 429, exponentially back off
       if (currentResponse.status === 429) {
         const retryAfter = currentResponse.headers.get('Retry-After') || '1';
         retryDelay.current = parseInt(retryAfter) * 1000;
         setTimeout(fetchTracks, retryDelay.current);
-        retryDelay.current = Math.min(retryDelay.current * 2, 60000); // Max 1 minute
+        retryDelay.current = Math.min(retryDelay.current * 2, 60000);
+        // Important: Clear loading states
+        setIsLoading(false);
+        setShowSkeleton(false);
         return;
       }
+
+      let foundCurrentTrack = false;
 
       if (currentResponse.status === 200) {
         const data = await currentResponse.json();
         apiCache.currentTrack = data;
         apiCache.lastUpdated = Date.now();
 
-        // Handle ads
         if (data.is_playing && !data.item) {
-          setShowSkeleton(true);
-          return;
-        }
+          // Ad playing - we'll try recently played instead
+          // DON'T set showSkeleton = true here
+        } else if (data.item) {
+          // We have a currently playing track
+          foundCurrentTrack = true;
 
-        // Check if track changed
-        if (data.item?.id !== prevTrackId.current) {
-          setCurrentTrack(data.item);
-          prevTrackId.current = data.item?.id || null;
-          updateProgress(data.progress_ms);
+          if (data.item.id !== prevTrackId.current) {
+            setCurrentTrack(data.item);
+            prevTrackId.current = data.item.id || null;
+            updateProgress(data.progress_ms);
+          } else {
+            updateProgress(data.progress_ms);
+          }
+
+          setIsPlaying(data.is_playing);
+          setLastPlayedAt(null);
+          setIsLoading(false);
           setShowSkeleton(false);
-        } else {
-          // Only update progress if track is the same
-          updateProgress(data.progress_ms);
+          retryDelay.current = 1000;
         }
-
-        setIsPlaying(data.is_playing);
-        setLastPlayedAt(null);
-        setIsLoading(false);
-        retryDelay.current = 1000; // Reset delay on success
-        return;
       }
 
-      // Only fetch recently played if we don't have current track data
-      // AND if cache is stale (older than 30 seconds)
-      if (
-        (!currentTrack || !isPlaying) &&
-        Date.now() - apiCache.lastUpdated > 30000
-      ) {
-        const recentResponse = await getRecentlyPlayed();
-        if (!recentResponse) return;
+      // CRITICAL: If we don't have a current track playing, ALWAYS check recently played
+      // This must execute regardless of any cache age
+      if (!foundCurrentTrack) {
+        console.log('No current track playing, fetching recently played');
 
-        // Handle rate limiting
-        if (recentResponse.status === 429) {
-          const retryAfter = recentResponse.headers.get('Retry-After') || '1';
-          retryDelay.current = parseInt(retryAfter) * 1000;
-          setTimeout(fetchTracks, retryDelay.current);
-          retryDelay.current = Math.min(retryDelay.current * 2, 60000); // Max 1 minute
-          return;
-        }
+        try {
+          const recentlyPlayed = await getRecentlyPlayed();
 
-        if (recentResponse.ok) {
-          const data = await recentResponse.json();
-          apiCache.recentlyPlayed = data;
-          apiCache.lastUpdated = Date.now();
+          // Check if we have recent tracks
+          if (
+            recentlyPlayed &&
+            recentlyPlayed.items &&
+            recentlyPlayed.items.length > 0
+          ) {
+            console.log(
+              'Found recently played track:',
+              recentlyPlayed.items[0].track.name,
+            );
+            const newTrack = recentlyPlayed.items[0].track;
 
-          if (data.items.length > 0) {
-            const newTrack = data.items[0].track;
             setCurrentTrack(newTrack);
             prevTrackId.current = newTrack.id;
             setIsPlaying(false);
             updateProgress(0);
-            const lastPlayedAt = formatDate(data.items[0].played_at, {
+
+            const lastPlayedAt = formatDate(recentlyPlayed.items[0].played_at, {
               includeDay: true,
             });
             setLastPlayedAt(lastPlayedAt);
-            setIsLoading(false);
-            retryDelay.current = 1000; // Reset delay on success
+          } else {
+            console.log('No recently played tracks found or response invalid');
           }
+        } catch (recentError) {
+          console.error('Error fetching recently played tracks:', recentError);
         }
-      } else if (apiCache.recentlyPlayed) {
-        // Use cached data if available
-        const data = apiCache.recentlyPlayed;
-        if (data.items.length > 0) {
-          const newTrack = data.items[0].track;
-          setCurrentTrack(newTrack);
-          prevTrackId.current = newTrack.id;
-          setIsPlaying(false);
-          updateProgress(0);
-          const lastPlayedAt = formatDate(data.items[0].played_at, {
-            includeDay: true,
-          });
-          setLastPlayedAt(lastPlayedAt);
-          setIsLoading(false);
-        }
+
+        // IMPORTANT: Always clear loading states regardless of what happened
+        setIsLoading(false);
+        setShowSkeleton(false);
       }
     } catch (err) {
       console.error('Error fetching tracks:', err);
+
+      // Set a retry with backoff
       setTimeout(fetchTracks, retryDelay.current);
-      retryDelay.current = Math.min(retryDelay.current * 2, 60000); // Max 1 minute
+      retryDelay.current = Math.min(retryDelay.current * 2, 60000);
+
+      // IMPORTANT: Always clear loading states on error
+      setIsLoading(false);
+      setShowSkeleton(false);
     }
-  }, [currentTrack, isPlaying]);
+  }, []);
 
   useEffect(() => {
     fetchTracks();
@@ -286,14 +284,6 @@ const CurrentlyListening = () => {
             className='rounded-md object-cover'
             type='square'
           />
-
-          {isPlaying && (
-            <div className='absolute inset-0 flex items-center justify-center bg-black/40 rounded-md'>
-              <div className='size-8 animate-pulse'>
-                <Icon name='playCircle' className='text-white' />
-              </div>
-            </div>
-          )}
         </Hover>
 
         <div className='flex-1 min-w-0 space-y-1'>

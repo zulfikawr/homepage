@@ -79,30 +79,90 @@ export const getCurrentTrack = async () => {
   });
 };
 
-export const getRecentlyPlayed = async () => {
+export const getRecentlyPlayed = async (limit = 10) => {
   const access_token = await getAccessToken();
   if (!access_token) return null;
 
-  return fetch(
-    'https://api.spotify.com/v1/me/player/recently-played?limit=10',
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
     {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     },
   );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch recent tracks');
+  }
+
+  return response.json();
 };
 
-export const getTopTracks = async () => {
+export const getTopTracks = async (
+  timeRange: string = 'short_term',
+  limit = 10,
+) => {
   const access_token = await getAccessToken();
   if (!access_token) return null;
 
-  return fetch(
-    'https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=short_term',
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
     {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
     },
   );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch top tracks');
+  }
+
+  return response.json();
+};
+
+export const getTopArtists = async (
+  timeRange: string = 'short_term',
+  limit = 10,
+) => {
+  const access_token = await getAccessToken();
+  if (!access_token) return null;
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${timeRange}`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch top artists');
+  }
+
+  return response.json();
+};
+
+export const getPlaylists = async (limit = 10) => {
+  const access_token = await getAccessToken();
+  if (!access_token) return null;
+
+  const response = await fetch(
+    `https://api.spotify.com/v1/me/playlists?limit=${limit}`,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch playlists');
+  }
+
+  return response.json();
 };

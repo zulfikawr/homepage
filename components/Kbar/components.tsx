@@ -246,18 +246,19 @@ export function KbarContent() {
 
   return (
     <div className='flex h-full flex-col'>
-      <div className='flex flex-row justify-between items-center p-4 sm:px-8 sm:py-6'>
-        <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
-          Navigation
-        </h1>
-        <div className='flex justify-end space-x-4'>
+      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
+        <div className='flex flex-row justify-between items-center'>
+          <div className='flex items-center space-x-4'>
+            <Icon name='menu' className='size-[28px] md:size-[32px]' />
+            <h1 className='text-xl md:text-2xl font-semibold'>Navigation</h1>
+          </div>
           <Button icon='close' onClick={() => drawer.close()} />
         </div>
       </div>
 
       <Separator margin='0' />
 
-      <div className='px-6 pt-6'>
+      <div className='hidden md:block px-8 pt-8 pb-0'>
         <div className='relative'>
           <Icon
             name='magnifyingGlass'
@@ -274,7 +275,7 @@ export function KbarContent() {
         </div>
       </div>
 
-      <div className='flex-1 overflow-y-auto px-6 pt-8 pb-6'>
+      <div className='flex-1 overflow-y-auto flex-shrink-0 p-4 sm:px-8 sm:py-6 pt-6'>
         {filteredSections.map((section) => (
           <div key={section.label} className='mb-8'>
             <SectionTitle icon={section.icon} title={section.label} />
@@ -292,11 +293,11 @@ export function KbarContent() {
                       </div>
                     )}
                     <div className='w-full'>
-                      <h1 className='text-md font-medium tracking-wide line-clamp-1 text-ellipsis'>
+                      <h1 className='text-md md:text-2 font-medium tracking-wide line-clamp-1 text-ellipsis'>
                         {item.label}
                       </h1>
                       {item.desc && (
-                        <p className='text-xs tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
+                        <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
                           {item.desc}
                         </p>
                       )}
