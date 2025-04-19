@@ -20,3 +20,13 @@ export interface SpotifyPlaylist {
   tracks: { total: number };
   external_urls: { spotify: string };
 }
+
+export interface SpotifyArtist {
+  id: string;
+  name: string;
+  images: Array<{ url: string }>;
+  external_urls: {
+    spotify: string;
+  };
+  genres: string[];
+}

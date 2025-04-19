@@ -1,11 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-
 import Link from 'next/link';
 import { Button, Dropdown, Icon } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
-import { getAccessToken } from '@/lib/spotify';
+import {
+  getAccessToken,
+  getRecentlyPlayed,
+  getTopTracks,
+  getTopArtists,
+  getPlaylists,
+} from '@/lib/spotify';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { getTimeAgo } from '@/utilities/timeAgo';
@@ -14,27 +19,11 @@ import PlaylistCard from '@/components/Card/Playlist/Spotify';
 import Tooltip from '@/components/UI/Tooltip';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { formatDate } from '@/utilities/formatDate';
-import { SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
+import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
   played_at: string;
-}
-
-interface SpotifyArtist {
-  id: string;
-  name: string;
-  images: Array<{ url: string }>;
-  external_urls: {
-    spotify: string;
-  };
-  genres: string[];
-}
-
-interface CurrentlyPlaying {
-  is_playing: boolean;
-  item: SpotifyTrack;
-  progress_ms: number;
 }
 
 type TimeRange = 'short_term' | 'medium_term' | 'long_term';
@@ -52,14 +41,12 @@ const formatDuration = (ms: number) => {
 };
 
 export default function SpotifyMusicContent() {
-  const [, setCurrentlyPlaying] = useState<CurrentlyPlaying | null>(null);
   const [recentTracks, setRecentTracks] = useState<RecentlyPlayedItem[]>([]);
   const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
   const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
   const [loading, setLoading] = useState({
-    currentlyPlaying: true,
     recentTracks: true,
     topTracks: true,
     topArtists: true,
@@ -74,142 +61,6 @@ export default function SpotifyMusicContent() {
   const [artistsTimeRange, setArtistsTimeRange] =
     useState<TimeRange>('short_term');
 
-  const fetchCurrentlyPlaying = useCallback(async (accessToken: string) => {
-    try {
-      const response = await fetch(
-        'https://api.spotify.com/v1/me/player/currently-playing',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (response.status === 204) {
-        return null;
-      }
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch currently playing');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching currently playing:', error);
-      return null;
-    }
-  }, []);
-
-  const fetchRecentTracks = useCallback(async (accessToken: string) => {
-    try {
-      const response = await fetch(
-        'https://api.spotify.com/v1/me/player/recently-played?limit=10',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch recent tracks');
-      }
-
-      const data = await response.json();
-      const lastPlayedAt = formatDate(data.items[0].played_at, {
-        includeDay: true,
-      });
-      setLastPlayedAt(lastPlayedAt);
-      return data.items;
-    } catch (error) {
-      console.error('Error fetching recent tracks:', error);
-      return [];
-    }
-  }, []);
-
-  const fetchTopTracks = useCallback(
-    async (accessToken: string, timeRange: TimeRange = 'short_term') => {
-      try {
-        const response = await fetch(
-          `https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=${timeRange}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Spotify API Error:', errorData);
-          throw new Error(
-            errorData.error?.message || 'Failed to fetch top tracks',
-          );
-        }
-
-        const data = await response.json();
-        return data.items;
-      } catch (error) {
-        console.error('Error fetching top tracks:', error);
-        return [];
-      }
-    },
-    [],
-  );
-
-  const fetchTopArtists = useCallback(
-    async (accessToken: string, timeRange: TimeRange = 'short_term') => {
-      try {
-        const response = await fetch(
-          `https://api.spotify.com/v1/me/top/artists?limit=10&time_range=${timeRange}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Spotify API Error:', errorData);
-          throw new Error(
-            errorData.error?.message || 'Failed to fetch top artists',
-          );
-        }
-
-        const data = await response.json();
-        return data.items;
-      } catch (error) {
-        console.error('Error fetching top artists:', error);
-        return [];
-      }
-    },
-    [],
-  );
-
-  const fetchPlaylists = useCallback(async (accessToken: string) => {
-    try {
-      const response = await fetch(
-        'https://api.spotify.com/v1/me/playlists?limit=10',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch playlists');
-      }
-
-      const data = await response.json();
-      return data.items;
-    } catch (error) {
-      console.error('Error fetching playlists:', error);
-      return [];
-    }
-  }, []);
-
   const loadData = useCallback(async () => {
     try {
       setError(null);
@@ -219,22 +70,28 @@ export default function SpotifyMusicContent() {
         throw new Error('No access token available');
       }
 
-      const [playing, recent, top, artists, playlistsData] = await Promise.all([
-        fetchCurrentlyPlaying(accessToken),
-        fetchRecentTracks(accessToken),
-        fetchTopTracks(accessToken, tracksTimeRange),
-        fetchTopArtists(accessToken, artistsTimeRange),
-        fetchPlaylists(accessToken),
-      ]);
+      const [recentData, topData, artistsData, playlistsData] =
+        await Promise.all([
+          getRecentlyPlayed(),
+          getTopTracks(tracksTimeRange),
+          getTopArtists(artistsTimeRange),
+          getPlaylists(),
+        ]);
 
-      setCurrentlyPlaying(playing);
-      setRecentTracks(recent);
-      setTopTracks(top);
-      setTopArtists(artists);
-      setPlaylists(playlistsData);
+      setRecentTracks(recentData?.items || []);
+      setTopTracks(topData?.items || []);
+      setTopArtists(artistsData?.items || []);
+      setPlaylists(playlistsData?.items || []);
+
+      if (recentData?.items?.[0]?.played_at) {
+        setLastPlayedAt(
+          formatDate(recentData.items[0].played_at, {
+            includeDay: true,
+          }),
+        );
+      }
 
       setLoading({
-        currentlyPlaying: false,
         recentTracks: false,
         topTracks: false,
         topArtists: false,
@@ -243,22 +100,13 @@ export default function SpotifyMusicContent() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setLoading({
-        currentlyPlaying: false,
         recentTracks: false,
         topTracks: false,
         playlists: false,
         topArtists: false,
       });
     }
-  }, [
-    fetchCurrentlyPlaying,
-    fetchRecentTracks,
-    fetchTopTracks,
-    fetchTopArtists,
-    fetchPlaylists,
-    tracksTimeRange,
-    artistsTimeRange,
-  ]);
+  }, [tracksTimeRange, artistsTimeRange]);
 
   useEffect(() => {
     loadData();
