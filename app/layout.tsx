@@ -20,15 +20,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const stars = Array.from({ length: 50 }).map((_, index) => {
-    const style = {
-      '--animation-duration': `${Math.random() * 3 + 5}s`,
-      '--animation-delay': `${Math.random() * 5}s`,
-      left: `${Math.random() * 100}%`,
-    } as React.CSSProperties;
-    return <div key={index} className='star' style={style} />;
-  });
-
   return (
     <html lang='en-us' suppressHydrationWarning>
       <head>
@@ -42,9 +33,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <div className='min-h-screen bg-neutral-100 dark:bg-neutral-900 transition-all duration-300'>
-            <div className='fixed inset-0 overflow-hidden pointer-events-none'>
-              {stars}
-            </div>
+            <div className='fixed inset-0 overflow-hidden pointer-events-none background' />
             <Header />
             <main className='w-full md:w-content mx-auto min-h-main px-5 pt-0 lg:pt-20'>
               {children}
