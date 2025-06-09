@@ -142,3 +142,25 @@ export async function deleteBook(
     return { success: false, error: 'Failed to delete book' };
   }
 }
+
+/**
+ * Get a single book by ID from Firebase
+ * @param id ID of the book to fetch
+ * @returns Promise with the book or null if not found
+ */
+export async function getBookById(id: string): Promise<Book | null> {
+  try {
+    if (!id) throw new Error('Book ID is required');
+
+    const bookRef = ref(database, `reading-list/${id}`);
+    const snapshot = await get(bookRef);
+
+    if (!snapshot.exists()) return null;
+
+    const data = snapshot.val();
+    return { id, ...data };
+  } catch (error) {
+    console.error('Error fetching book by ID:', error);
+    return null;
+  }
+}

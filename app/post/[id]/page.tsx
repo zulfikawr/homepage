@@ -5,13 +5,15 @@ import BlogPostContent from './content';
 import { Suspense } from 'react';
 import LoadingSkeleton from './loading';
 
-type Params = {
-  id: string;
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
 };
 
-async function PostLoader({ params }: { params: Promise<Params> }) {
-  const resolvedParams = await params;
-  const post = await getPostById(resolvedParams.id);
+async function PostLoader({ params }: Props) {
+  const { id } = await params;
+  const post = await getPostById(id);
 
   if (!post) {
     return notFound();
@@ -32,13 +34,9 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
-  const resolvedParams = await params;
-  const post = await getPostById(resolvedParams.id);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const post = await getPostById(id);
 
   if (!post) {
     return {
@@ -52,7 +50,7 @@ export async function generateMetadata({
   };
 }
 
-export default function Page({ params }: { params: Promise<Params> }) {
+export default function PostPage({ params }: Props) {
   return (
     <Suspense fallback={<LoadingSkeleton />}>
       <PostLoader params={params} />

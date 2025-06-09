@@ -1,11 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type SubscribeFunction<T> = (callback: (data: T) => void) => () => void;
 
-export const useRealtimeData = <T>(subscribeFunction: SubscribeFunction<T>) => {
-  const [data, setData] = useState<T | null>(null);
+/**
+ * Hook for subscribing to Firebase realtime data
+ * @param subscribeFunction Function that sets up the Firebase listener and returns unsubscribe function
+ * @param initialData Optional initial data to use before the listener is set up
+ * @param dependencies Array of dependencies that should trigger listener reset
+ */
+export function useRealtimeData<T>(
+  subscribeFunction: SubscribeFunction<T>,
+  initialData?: T,
+  dependencies: any[] = [],
+) {
+  const [data, setData] = useState<T | null>(initialData || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -13,22 +23,31 @@ export const useRealtimeData = <T>(subscribeFunction: SubscribeFunction<T>) => {
     setLoading(true);
     setError(null);
 
-    const unsubscribe = subscribeFunction((newData) => {
-      try {
-        setData(newData);
-        setError(null);
-      } catch (err) {
-        setError('Failed to process data');
-        console.error('Error processing realtime data:', err);
-      } finally {
+    let isMounted = true;
+    let unsubscribe: (() => void) | null = null;
+
+    try {
+      unsubscribe = subscribeFunction((newData) => {
+        if (isMounted) {
+          setData(newData);
+          setLoading(false);
+        }
+      });
+    } catch (err) {
+      console.error('Error setting up realtime listener:', err);
+      if (isMounted) {
+        setError('Failed to connect to database');
         setLoading(false);
       }
-    });
+    }
 
     return () => {
-      unsubscribe();
+      isMounted = false;
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
-  }, [subscribeFunction]);
+  }, dependencies);
 
   return { data, loading, error };
-};
+}

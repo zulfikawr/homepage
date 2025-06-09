@@ -9,7 +9,7 @@ const HighlightComponent =
 
 export default function PostContent({ content }: { content: string }) {
   return (
-    <div className='prose tracking-wide dark:prose-dark lg:prose-xl prose-ul:m-2 prose-ul:ps-5 prose-hr:border-neutral-200 prose-hr:dark:border-neutral-700'>
+    <div className='prose dark:prose-invert lg:prose-xl'>
       <HighlightComponent innerHTML={true}>{content}</HighlightComponent>
     </div>
   );

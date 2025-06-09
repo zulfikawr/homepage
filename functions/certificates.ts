@@ -161,3 +161,27 @@ export async function deleteCertificate(
     return { success: false, error: 'Failed to delete certificate' };
   }
 }
+
+/**
+ * Get a single certificate by ID from Firebase
+ * @param id ID of the certificate to fetch
+ * @returns Promise with the certificate or null if not found
+ */
+export async function getCertificateById(
+  id: string,
+): Promise<Certificate | null> {
+  try {
+    if (!id) throw new Error('Certificate ID is required');
+
+    const certRef = ref(database, `certificates/${id}`);
+    const snapshot = await get(certRef);
+
+    if (!snapshot.exists()) return null;
+
+    const data = snapshot.val();
+    return { id, ...data };
+  } catch (error) {
+    console.error('Error fetching certificate by ID:', error);
+    return null;
+  }
+}

@@ -4,34 +4,32 @@ import { Hover } from '@/components/Visual';
 import AudioPlayer from 'react-h5-audio-player';
 import { trimStr } from 'utilities/string';
 import { Post } from 'types/post';
-import { drawer } from '@/components/Drawer';
-import PostForm from '@/components/Form/Post';
 import { Card } from 'components/Card';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { useRouter } from 'next/navigation';
 
 interface PostCardProps {
   post: Post;
-  isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
 }
 
-export default function PostCard({
-  post,
-  isInDrawer,
-  isInForm,
-}: PostCardProps) {
+export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
+  const router = useRouter();
+
   const handleCardClick = () => {
-    if (isInDrawer) {
-      drawer.open(<PostForm postToEdit={post} isInDrawer />);
-    } else if (isInForm) {
-      return;
+    if (isInForm) return;
+
+    if (openForm) {
+      router.push(`/database/posts/${post.id}/edit`);
     } else {
-      window.location.href = `/post/${post.id}`;
+      router.push(`/post/${post.id}`);
     }
   };
 
   const handleShare = async (e: React.MouseEvent) => {
+    if (isInForm) return;
     e.stopPropagation();
     try {
       await navigator.share({
@@ -83,19 +81,24 @@ export default function PostCard({
   };
 
   return (
-    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
+    <Card onClick={handleCardClick} openForm={openForm} isInForm={isInForm}>
       <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
         {renderMedia()}
 
         <div className='flex flex-col space-y-4 flex-1'>
           <div className='flex items-center'>
-            {post.categories && (
-              <Link href={`/post/cate/${post.categories[0]}`}>
+            {post.categories &&
+              (isInForm ? (
                 <Label type='primary' icon='folder'>
                   {post.categories[0]}
                 </Label>
-              </Link>
-            )}
+              ) : (
+                <Link href={`/post/cate/${post.categories[0]}`}>
+                  <Label type='primary' icon='folder'>
+                    {post.categories[0]}
+                  </Label>
+                </Link>
+              ))}
           </div>
 
           <h1 className='text-xl lg:text-2xl font-bold tracking-wider text-neutral-700 dark:text-white'>

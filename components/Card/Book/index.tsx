@@ -1,35 +1,34 @@
 import { Book } from '@/types/book';
 import openLink from '@/utilities/externalLink';
 import { Card } from '@/components/Card';
-import BookForm from '@/components/Form/Book';
-import { drawer } from '@/components/Drawer';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { useRouter } from 'next/navigation';
 
 interface BookCardProps {
   book: Book;
-  isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
 }
 
-export default function BookCard({
-  book,
-  isInDrawer,
-  isInForm,
-}: BookCardProps) {
+export default function BookCard({ book, openForm, isInForm }: BookCardProps) {
+  const router = useRouter();
+
   const handleCardClick = () => {
     if (isInForm) return;
 
-    if (isInDrawer) {
-      drawer.open(<BookForm bookToEdit={book} />);
-    } else openLink(book.link);
+    if (openForm) {
+      router.push(`/database/reading-list/${book.id}/edit`);
+    } else {
+      openLink(book.link);
+    }
   };
 
   return (
     <Card
       onClick={handleCardClick}
-      isInDrawer={isInDrawer}
+      openForm={openForm}
       isInForm={isInForm}
-      className={`${isInDrawer ? 'w-full' : ''}`}
+      className={`${openForm ? 'w-full' : ''}`}
     >
       <div className='flex flex-1 items-center'>
         <div className='flex-shrink-0 px-4.5 py-4'>

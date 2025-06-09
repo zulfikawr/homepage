@@ -1,7 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Employment } from '@/types/employment';
-import { drawer } from '@/components/Drawer';
-import { Button, Checkbox, Dropdown, FormLabel, Input } from '@/components/UI';
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  FormLabel,
+  Icon,
+  Input,
+} from '@/components/UI';
 import { EmploymentCard } from '@/components/Card/Employment';
 import { toast } from '@/components/Toast';
 import {
@@ -14,7 +20,7 @@ import { formatDateRange } from '@/utilities/formatDate';
 import { modal } from '@/components/Modal';
 import Separator from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
-import ImageWithFallback from '@/components/ImageWithFallback';
+import { useRouter } from 'next/navigation';
 
 interface EmploymentFormProps {
   employmentToEdit?: Employment;
@@ -85,33 +91,48 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     setEmployment((prev) => ({ ...prev, [field]: value }));
   };
 
+  const requiredEmploymentFields: {
+    key: keyof typeof employment | 'dateRange';
+    label: string;
+    check?: (value: (typeof employment)[keyof typeof employment]) => boolean;
+  }[] = [
+    { key: 'organization', label: 'Organization name' },
+    { key: 'orgLogoSrc', label: 'Organization logo' },
+    { key: 'jobTitle', label: 'Job title' },
+    { key: 'jobType', label: 'Job type' },
+    {
+      key: 'responsibilities',
+      label: 'At least one responsibility',
+      check: (val) => Array.isArray(val) && val.length > 0,
+    },
+    {
+      key: 'dateRange',
+      label: 'Date range',
+      check: () => !!startDate && !!endDate,
+    },
+  ];
+
   const validateForm = () => {
-    if (!employment.organization.trim()) {
-      toast.show('Organization name is required.');
-      return false;
-    }
-    if (!employment.orgLogoSrc.trim()) {
-      toast.show('Organization logo is required.');
-      return false;
-    }
-    if (!employment.jobTitle.trim()) {
-      toast.show('Job title is required.');
-      return false;
-    }
-    if (!employment.jobType.trim()) {
-      toast.show('Job type is required.');
-      return false;
-    }
-    if (!startDate || !endDate) {
-      toast.show('Date range is required.');
-      return false;
-    }
-    if (employment.responsibilities.length === 0) {
-      toast.show('At least one responsibility is required.');
-      return false;
+    for (const field of requiredEmploymentFields) {
+      const value =
+        field.key === 'dateRange'
+          ? null
+          : employment[field.key as keyof typeof employment];
+      const isEmpty = field.check
+        ? !field.check(value)
+        : typeof value === 'string'
+          ? !value.trim()
+          : !value;
+
+      if (isEmpty) {
+        toast.error(`${field.label} is required.`);
+        return false;
+      }
     }
     return true;
   };
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,21 +151,19 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
         : await addEmployment(employmentData);
 
       if (result.success) {
-        drawer.close();
-        toast.show(
+        toast.success(
           employmentToEdit
             ? 'Employment updated successfully!'
             : 'Employment added successfully!',
         );
-      } else {
-        throw new Error(result.error || 'Failed to save employment');
+        router.push('/database/employments');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error saving employment: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while saving the employment.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error saving the employment: ${error.message}`
+          : 'An unknown error occurred while saving the employment.',
+      );
     }
   };
 
@@ -155,17 +174,15 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       const result = await deleteEmployment(employmentToEdit.id);
 
       if (result.success) {
-        drawer.close();
-        toast.show('Employment deleted successfully!');
-      } else {
-        throw new Error(result.error || 'Failed to delete employment');
+        toast.success('Employment deleted successfully!');
+        router.push('/database/employments');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error deleting employment: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while deleting the employment.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error deleting the employment: ${error.message}`
+          : 'An unknown error occurred while deleting the employment.',
+      );
     }
   };
 
@@ -229,235 +246,222 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
   return (
     <>
-      {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
-        <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl sm:text-2xl font-medium tracking-wide'>
-            {employmentToEdit ? (
-              <div className='flex items-center'>
-                <span className='mr-3 inline-block'>
-                  {employment.orgLogoSrc && (
-                    <ImageWithFallback
-                      src={employment.orgLogoSrc}
-                      alt={employment.organization}
-                      width={30}
-                      height={30}
-                      className='rounded-full border bg-white dark:border-neutral-700'
-                      type='square'
-                    />
-                  )}
-                </span>
-                {employment.organization}
-              </div>
-            ) : (
-              'Add New Employment'
-            )}
-          </h1>
-          <div className='flex space-x-4'>
-            {employmentToEdit && (
-              <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                <span className='hidden md:inline-flex'>Delete</span>
-              </Button>
-            )}
-            <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-              <span className='hidden md:inline-flex'>
-                {employmentToEdit ? 'Save' : 'Add'}
-              </span>
-            </Button>
-            <Button icon='close' onClick={() => drawer.close()} />
-          </div>
+      <div className='space-y-6'>
+        {/* Employment Preview */}
+        <div className='flex justify-center'>
+          <EmploymentCard employment={currentPreviewEmployment} isInForm />
         </div>
-      </div>
 
-      <Separator margin='0' />
+        <Separator margin='5' />
 
-      {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
-          {/* Employment Preview */}
-          <div className='flex justify-center'>
-            <EmploymentCard employment={currentPreviewEmployment} isInForm />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <FormLabel htmlFor='jobTitle' required>
+              Job Title
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.jobTitle}
+              onChange={(e) => handleChange('jobTitle', e.target.value)}
+              placeholder='Web Developer'
+              required
+            />
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <FormLabel htmlFor='organization' required>
-                Organization
-              </FormLabel>
-              <Input
-                type='text'
-                value={employment.organization}
-                onChange={(e) => handleChange('organization', e.target.value)}
-                placeholder='Organization name'
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='organizationIndustry'>
-                Organization Industry
-              </FormLabel>
-              <Input
-                type='text'
-                value={employment.organizationIndustry}
-                onChange={(e) =>
-                  handleChange('organizationIndustry', e.target.value)
-                }
-                placeholder='Artificial Intelligence'
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='jobTitle' required>
-                Job Title
-              </FormLabel>
-              <Input
-                type='text'
-                value={employment.jobTitle}
-                onChange={(e) => handleChange('jobTitle', e.target.value)}
-                placeholder='Web Developer'
-                required
-              />
-            </div>
-
-            <div>
-              <FormLabel htmlFor='jobType' required>
-                Job Type
-              </FormLabel>
-              <Dropdown
-                trigger={
-                  <Button className='w-full px-1 text-sm md:text-md text-black dark:text-white'>
-                    {currentJobType?.label}
-                  </Button>
-                }
-                className='w-full'
-                matchTriggerWidth
-              >
-                <div className='flex flex-col p-1 space-y-1 w-full'>
-                  {jobTypeOptions.map((option) => (
-                    <div
-                      key={option.key}
-                      onClick={() => handleChange('jobType', option.key)}
-                      className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
-                        ${
-                          option.key === employment.jobType
-                            ? 'bg-neutral-100 dark:bg-neutral-700'
-                            : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
-                        }`}
-                    >
-                      {option.label}
-                    </div>
-                  ))}
-                </div>
-              </Dropdown>
-            </div>
-            <div>
-              <FormLabel htmlFor='responsibilities' required>
-                Responsibilities
-              </FormLabel>
-              <div className='space-y-2'>
-                {employment.responsibilities.map((responsibility, index) => (
-                  <div key={index} className='flex items-center gap-2'>
-                    <Input
-                      type='text'
-                      value={responsibility}
-                      onChange={(e) => {
-                        const updatedResponsibilities = [
-                          ...employment.responsibilities,
-                        ];
-                        updatedResponsibilities[index] = e.target.value;
-                        handleChange(
-                          'responsibilities',
-                          updatedResponsibilities,
-                        );
-                      }}
-                    />
-                    <Button
-                      type='destructive'
-                      icon='trashSimple'
-                      onClick={() => handleRemoveResponsibility(index)}
-                    />
+          <div>
+            <FormLabel htmlFor='jobType' required>
+              Job Type
+            </FormLabel>
+            <Dropdown
+              trigger={
+                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-black dark:text-white'>
+                  {currentJobType?.label}
+                  <Icon name='caretDown' className='size-3' />
+                </Button>
+              }
+              className='w-full'
+              matchTriggerWidth
+            >
+              <div className='flex flex-col p-1 space-y-1 w-full'>
+                {jobTypeOptions.map((option) => (
+                  <div
+                    key={option.key}
+                    onClick={() => handleChange('jobType', option.key)}
+                    className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
+                      ${
+                        option.key === employment.jobType
+                          ? 'bg-neutral-100 dark:bg-neutral-700'
+                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
+                      }`}
+                  >
+                    {option.label}
                   </div>
                 ))}
-                <div className='flex items-center gap-2'>
+              </div>
+            </Dropdown>
+          </div>
+          <div>
+            <FormLabel htmlFor='responsibilities' required>
+              Responsibilities
+            </FormLabel>
+            <div className='space-y-2'>
+              {employment.responsibilities.map((responsibility, index) => (
+                <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={newResponsibility}
-                    onChange={(e) => setNewResponsibility(e.target.value)}
-                    placeholder='Add a responsibility'
+                    value={responsibility}
+                    onChange={(e) => {
+                      const updatedResponsibilities = [
+                        ...employment.responsibilities,
+                      ];
+                      updatedResponsibilities[index] = e.target.value;
+                      handleChange('responsibilities', updatedResponsibilities);
+                    }}
                   />
                   <Button
-                    type='primary'
-                    icon='plus'
-                    onClick={handleAddResponsibility}
+                    type='destructive'
+                    icon='trashSimple'
+                    onClick={() => handleRemoveResponsibility(index)}
                   />
                 </div>
+              ))}
+              <div className='flex items-center gap-2'>
+                <Input
+                  type='text'
+                  value={newResponsibility}
+                  onChange={(e) => setNewResponsibility(e.target.value)}
+                  placeholder='Add a responsibility'
+                />
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddResponsibility}
+                />
               </div>
             </div>
-            <div className='space-y-2'>
-              <div>
-                <FormLabel required>Start Date</FormLabel>
-                <DateSelect
-                  value={startDate}
-                  onChange={(newDate) => {
-                    setStartDate(newDate);
-                    if (isPresent) {
-                      setEndDate(newDate);
-                    }
-                  }}
-                  mode='day-month-year'
-                />
-              </div>
-              <div>
-                <FormLabel>End Date</FormLabel>
-                <DateSelect
-                  value={endDate}
-                  onChange={setEndDate}
-                  mode='day-month-year'
-                  className={isPresent ? 'opacity-50' : ''}
-                  disabled={isPresent}
-                />
-              </div>
-
-              <Checkbox
-                id='isPresent'
-                checked={isPresent}
-                onChange={(checked) => {
-                  setIsPresent(checked);
-                  if (checked) {
-                    setEndDate(new Date());
+          </div>
+          <div className='space-y-2'>
+            <div>
+              <FormLabel required>Start Date</FormLabel>
+              <DateSelect
+                value={startDate}
+                onChange={(newDate) => {
+                  setStartDate(newDate);
+                  if (isPresent) {
+                    setEndDate(newDate);
                   }
                 }}
-                label='I currently working on this organization'
+                mode='day-month-year'
               />
             </div>
             <div>
-              <FormLabel htmlFor='organizationLogoUrl' required>
-                Organization Logo URL
-              </FormLabel>
-              <Input
-                type='text'
-                value={employment.orgLogoSrc}
-                onChange={(e) => handleChange('orgLogoSrc', e.target.value)}
-                placeholder='https://organization-logo.com'
-                required
+              <FormLabel>End Date</FormLabel>
+              <DateSelect
+                value={endDate}
+                onChange={setEndDate}
+                mode='day-month-year'
+                className={isPresent ? 'opacity-50' : ''}
+                disabled={isPresent}
               />
             </div>
-            <div>
-              <FormLabel htmlFor='organizationLocation'>
-                Organization Location
-              </FormLabel>
-              <Input
-                type='text'
-                value={employment.organizationLocation}
-                onChange={(e) =>
-                  handleChange('organizationLocation', e.target.value)
+
+            <Checkbox
+              id='isPresent'
+              checked={isPresent}
+              onChange={(checked) => {
+                setIsPresent(checked);
+                if (checked) {
+                  setEndDate(new Date());
                 }
-                placeholder='Organization location'
-              />
-            </div>
-          </form>
-        </div>
+              }}
+              label='I currently working on this organization'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='organization' required>
+              Organization
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.organization}
+              onChange={(e) => handleChange('organization', e.target.value)}
+              placeholder='Organization name'
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='organizationIndustry'>
+              Organization Industry
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.organizationIndustry}
+              onChange={(e) =>
+                handleChange('organizationIndustry', e.target.value)
+              }
+              placeholder='Artificial Intelligence'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='organizationLocation'>
+              Organization Location
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.organizationLocation}
+              onChange={(e) =>
+                handleChange('organizationLocation', e.target.value)
+              }
+              placeholder='Organization location'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='organizationLogoUrl' required>
+              Organization Logo URL
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.orgLogoSrc}
+              onChange={(e) => handleChange('orgLogoSrc', e.target.value)}
+              placeholder='https://organization-logo.com'
+              required
+            />
+          </div>
+        </form>
       </div>
+
+      <Separator margin='5' />
+
+      {employmentToEdit ? (
+        <div className='flex space-x-4'>
+          <Button
+            type='destructive'
+            icon='trash'
+            onClick={confirmDelete}
+            className='w-full'
+          >
+            Delete
+          </Button>
+          <Button
+            type='primary'
+            icon='floppyDisk'
+            onClick={handleSubmit}
+            className='w-full'
+          >
+            Save
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type='primary'
+          icon='plus'
+          onClick={handleSubmit}
+          className='w-full'
+        >
+          Add
+        </Button>
+      )}
     </>
   );
 };

@@ -33,7 +33,7 @@ const BookDrawer = ({ books }: { books: Book[] }) => {
       {/* Scrollable Content */}
       <div className='grid grid-cols-2 gap-4 overflow-y-auto w-fit p-4 md:p-8'>
         {books.map((book, index) => (
-          <BookCard key={index} book={book} isInDrawer />
+          <BookCard key={index} book={book} openForm />
         ))}
       </div>
     </>

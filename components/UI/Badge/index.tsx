@@ -1,6 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Icon } from '../Icon';
+import icons from '../Icon/icons';
 
 type BadgeTypes = 'default' | 'primary' | 'outline';
 
@@ -9,7 +10,6 @@ interface Props {
   icon?: string | boolean;
   className?: string;
   children?: React.ReactNode;
-  [prop: string]: unknown;
 }
 
 type NativeAttrs = Omit<React.HTMLAttributes<HTMLSpanElement>, keyof Props>;
@@ -52,13 +52,14 @@ const Badge = ({
   return (
     <span
       className={twMerge(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium gap-1.5 shadow-sm',
+        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium shadow-sm',
+        iconName && icons[iconName as keyof typeof icons] && 'gap-1.5',
         getBadgeClasses(),
         className,
       )}
       {...rest}
     >
-      {iconName && (
+      {iconName && icons[iconName as keyof typeof icons] && (
         <span className='size-[12px] flex-shrink-0'>
           <Icon name={iconName} />
         </span>

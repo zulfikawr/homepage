@@ -157,3 +157,25 @@ export async function deleteProject(
     };
   }
 }
+
+/**
+ * Get a single project by ID from Firebase
+ * @param id ID of the project to fetch
+ * @returns Promise with the project or null if not found
+ */
+export async function getProjectById(id: string): Promise<Project | null> {
+  try {
+    if (!id) throw new Error('Project ID is required');
+
+    const projectRef = ref(database, `projects/${id}`);
+    const snapshot = await get(projectRef);
+
+    if (!snapshot.exists()) return null;
+
+    const data = snapshot.val();
+    return { id, ...data };
+  } catch (error) {
+    console.error('Error fetching project by ID:', error);
+    return null;
+  }
+}

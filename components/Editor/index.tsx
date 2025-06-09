@@ -12,7 +12,9 @@ import Image from '@tiptap/extension-image';
 import Strike from '@tiptap/extension-strike';
 import Heading, { Level } from '@tiptap/extension-heading';
 import Paragraph from '@tiptap/extension-paragraph';
-import { Button, Dropdown } from '@/components/UI';
+import Code from '@tiptap/extension-code';
+import CodeBlock from '@tiptap/extension-code-block';
+import { Button, Dropdown, Input, Textarea } from '@/components/UI';
 import Tooltip from '@/components/UI/Tooltip';
 import Toggle from '@/components/UI/Toggle';
 
@@ -29,10 +31,13 @@ interface HeadingOption {
 export const Editor = ({ content = '', onUpdate }: EditorProps) => {
   const [linkUrl, setLinkUrl] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [codeSnippet, setCodeSnippet] = useState('');
   const [isLinkDropdownOpen, setIsLinkDropdownOpen] = useState(false);
   const [isImageDropdownOpen, setIsImageDropdownOpen] = useState(false);
+  const [isCodeDropdownOpen, setIsCodeDropdownOpen] = useState(false);
   const linkInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const codeInputRef = useRef<HTMLTextAreaElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -48,6 +53,10 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
       Paragraph,
       Image,
       Strike,
+      Code,
+      CodeBlock.configure({
+        languageClassPrefix: 'language-',
+      }),
     ],
     content: content || '<p></p>',
     autofocus: false,
@@ -82,6 +91,12 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
     }
   }, [isImageDropdownOpen]);
 
+  useEffect(() => {
+    if (isCodeDropdownOpen && codeInputRef.current) {
+      codeInputRef.current.focus();
+    }
+  }, [isCodeDropdownOpen]);
+
   if (!editor) {
     return null;
   }
@@ -103,7 +118,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
 
   return (
     <div>
-      <div className='mt-4 flex space-x-2 border p-2 dark:border-neutral-700 rounded-t-md'>
+      <div className='flex space-x-2 p-2 rounded-t-md border border-neutral-300 bg-neutral-50 shadow-sm dark:border-neutral-600 dark:bg-neutral-800'>
         <Dropdown
           trigger={
             <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
@@ -173,7 +188,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
           </Toggle>
         </Tooltip>
 
-        <Tooltip text='Srikethrough' position='top'>
+        <Tooltip text='Strikethrough' position='top'>
           <Toggle
             isActive={editor.isActive('strike')}
             onChange={() => editor.chain().focus().toggleStrike().run()}
@@ -181,6 +196,49 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
             <s>S</s>
           </Toggle>
         </Tooltip>
+
+        <Tooltip text='Inline Code' position='top'>
+          <Toggle
+            isActive={editor.isActive('code')}
+            onChange={() => editor.chain().focus().toggleCode().run()}
+          >
+            <code>{'</>'}</code>
+          </Toggle>
+        </Tooltip>
+
+        <Dropdown
+          trigger={
+            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
+              Code Block
+            </span>
+          }
+          onOpenChange={setIsCodeDropdownOpen}
+        >
+          <div className='p-2'>
+            <Textarea
+              ref={codeInputRef}
+              placeholder='Enter your code here...'
+              value={codeSnippet}
+              onChange={(e) => setCodeSnippet(e.target.value)}
+              className='w-fit p-3 text-sm'
+              rows={8}
+            />
+            <Button
+              type='primary'
+              onClick={() => {
+                if (codeSnippet) {
+                  editor.chain().focus().toggleCodeBlock().run();
+                  editor.commands.insertContent(codeSnippet);
+                  setCodeSnippet('');
+                  setIsCodeDropdownOpen(false);
+                }
+              }}
+              className='w-full'
+            >
+              Insert Code
+            </Button>
+          </div>
+        </Dropdown>
 
         <Dropdown
           trigger={
@@ -191,13 +249,13 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
           onOpenChange={setIsLinkDropdownOpen}
         >
           <div className='p-2'>
-            <input
+            <Input
               ref={linkInputRef}
               type='text'
               placeholder='Enter URL'
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
-              className='w-fit p-3 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm mb-2'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && linkUrl) {
                   editor.chain().setLink({ href: linkUrl }).focus().run();
@@ -231,13 +289,13 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
           onOpenChange={setIsImageDropdownOpen}
         >
           <div className='p-2'>
-            <input
+            <Input
               ref={imageInputRef}
               type='text'
               placeholder='Enter Image URL'
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              className='w-fit p-3 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md mb-2 focus:outline-none'
+              className='w-fit p-3 text-sm mb-2'
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && imageUrl) {
                   editor.chain().setImage({ src: imageUrl }).focus().run();
@@ -263,7 +321,7 @@ export const Editor = ({ content = '', onUpdate }: EditorProps) => {
         </Dropdown>
       </div>
 
-      <div className='cursor-text border-b border-r border-l dark:border-neutral-700 rounded-b-md'>
+      <div className='cursor-text border-b border-r border-l border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-700 h-[calc(80vh)] overflow-y-scroll'>
         <EditorContent editor={editor} />
       </div>
     </div>

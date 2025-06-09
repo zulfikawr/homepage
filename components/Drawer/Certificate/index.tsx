@@ -40,7 +40,7 @@ const CertificateDrawer = ({
           <CertificateCard
             key={certificate.id}
             certificate={certificate}
-            isInDrawer
+            openForm
           />
         ))}
       </div>

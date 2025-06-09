@@ -133,13 +133,14 @@ export default function SpotifyMusicContent() {
     return (
       <Dropdown
         trigger={
-          <button className='flex items-center gap-2 text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'>
+          <button className='w-32 flex items-center justify-end gap-2 text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'>
             {timeRangeOptions.find((opt) => opt.value === value)?.label}
             <Icon name='caretDown' className='size-4' />
           </button>
         }
+        matchTriggerWidth
       >
-        <div className='p-1 space-y-1 w-32'>
+        <div className='p-1 space-y-1'>
           {timeRangeOptions.map((option) => (
             <button
               key={option.value}

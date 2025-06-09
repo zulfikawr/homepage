@@ -69,6 +69,17 @@ const PagesAndLinks = () => {
             </span>
           </Link>
           <Link
+            href='/publications'
+            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
+          >
+            <span className='flex items-center gap-x-2'>
+              <div className='size-[18px]'>
+                <Icon name='newspaper' />
+              </div>
+              <span>Publications</span>
+            </span>
+          </Link>
+          <Link
             href='/music'
             className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
           >

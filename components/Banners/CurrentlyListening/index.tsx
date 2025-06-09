@@ -79,7 +79,6 @@ const CurrentlyListening = () => {
     };
   }, [isPlaying, currentTrack]);
 
-  // Replace the entire fetchTracks function with this:
   const fetchTracks = useCallback(async () => {
     if (!isMounted.current) return;
 
@@ -90,7 +89,7 @@ const CurrentlyListening = () => {
       if (!currentResponse) {
         setIsAuthorized(false);
         setIsLoading(false);
-        setShowSkeleton(false); // Important: Clear skeleton state
+        setShowSkeleton(false);
         return;
       }
 
@@ -99,7 +98,7 @@ const CurrentlyListening = () => {
         retryDelay.current = parseInt(retryAfter) * 1000;
         setTimeout(fetchTracks, retryDelay.current);
         retryDelay.current = Math.min(retryDelay.current * 2, 60000);
-        // Important: Clear loading states
+
         setIsLoading(false);
         setShowSkeleton(false);
         return;
@@ -114,7 +113,6 @@ const CurrentlyListening = () => {
 
         if (data.is_playing && !data.item) {
           // Ad playing - we'll try recently played instead
-          // DON'T set showSkeleton = true here
         } else if (data.item) {
           // We have a currently playing track
           foundCurrentTrack = true;
@@ -135,8 +133,7 @@ const CurrentlyListening = () => {
         }
       }
 
-      // CRITICAL: If we don't have a current track playing, ALWAYS check recently played
-      // This must execute regardless of any cache age
+      // If we don't have a current track playing, ALWAYS check recently played
       if (!foundCurrentTrack) {
         console.log('No current track playing, fetching recently played');
 
@@ -171,7 +168,6 @@ const CurrentlyListening = () => {
           console.error('Error fetching recently played tracks:', recentError);
         }
 
-        // IMPORTANT: Always clear loading states regardless of what happened
         setIsLoading(false);
         setShowSkeleton(false);
       }
@@ -182,7 +178,6 @@ const CurrentlyListening = () => {
       setTimeout(fetchTracks, retryDelay.current);
       retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
-      // IMPORTANT: Always clear loading states on error
       setIsLoading(false);
       setShowSkeleton(false);
     }

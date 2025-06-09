@@ -7,3 +7,4 @@ export { Icon } from './Icon';
 export { Input } from './Input';
 export { Label } from './Label';
 export { Textarea } from './Textarea';
+export { Table, TableHeader, TableBody, TableRow, TableCell } from './Table';
