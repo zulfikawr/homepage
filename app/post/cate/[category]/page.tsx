@@ -7,7 +7,6 @@ type Props = {
   params: Promise<{
     category: string;
   }>;
-  searchParams: Promise<Record<string, never>>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

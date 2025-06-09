@@ -3,35 +3,35 @@ import { drawer } from '@/components/Drawer';
 import ProjectViewer from '@/components/Viewer/Project';
 import { Hover } from '@/components/Visual';
 import { Card } from '@/components/Card';
-import ProjectForm from '@/components/Form/Project';
 import { Badge } from '@/components/UI';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { useRouter } from 'next/navigation';
 
 interface ProjectCardProps {
   project: Project;
-  isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
 }
 
 export default function ProjectCard({
   project,
-  isInDrawer,
+  openForm,
   isInForm,
 }: ProjectCardProps) {
+  const router = useRouter();
+
   const handleCardClick = () => {
     if (isInForm) return;
 
-    const content = isInDrawer ? (
-      <ProjectForm projectToEdit={project} />
-    ) : (
-      <ProjectViewer project={project} />
-    );
-
-    drawer.open(content);
+    if (openForm) {
+      router.push(`/database/projects/${project.id}/edit`);
+    } else {
+      drawer.open(<ProjectViewer project={project} />);
+    }
   };
 
   return (
-    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
+    <Card onClick={handleCardClick} isInDrawer={openForm} isInForm={isInForm}>
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
         <Hover perspective={1000} max={25} scale={1.01}>
           <ImageWithFallback

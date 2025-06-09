@@ -4,6 +4,7 @@ import { Employment } from '@/types/employment';
 import { drawer } from '@/components/Drawer';
 import Separator from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { Table, TableBody, TableRow, TableCell } from '@/components/UI';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
   return (
@@ -40,72 +41,60 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
           {/* Employment Details */}
           <section>
             <h2 className='text-2xl font-medium mb-6'>Employment Details</h2>
-            <div className='overflow-x-auto rounded-lg border border-neutral-200 dark:border-neutral-700'>
-              <table className='w-full border-collapse bg-white dark:bg-neutral-800'>
-                <tbody>
-                  <tr className='border-b border-neutral-200 dark:border-neutral-800'>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700 w-1/3'>
-                      Organization
-                    </td>
-                    <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
-                      <div className='flex items-center gap-3'>
-                        {employment.orgLogoSrc && (
-                          <ImageWithFallback
-                            src={employment.orgLogoSrc}
-                            alt={employment.organization}
-                            width={24}
-                            height={24}
-                            className='rounded-full border bg-white dark:border-neutral-700'
-                            type='square'
-                          />
-                        )}
-                        {employment.organization}
-                      </div>
-                    </td>
-                  </tr>
-                  <tr className='border-b border-neutral-200 dark:border-neutral-800'>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700'>
-                      Position
-                    </td>
-                    <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
-                      {employment.jobTitle}
-                    </td>
-                  </tr>
-                  <tr className='border-b border-neutral-200 dark:border-neutral-800'>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700'>
-                      Type
-                    </td>
-                    <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
-                      {employment.jobType}
-                    </td>
-                  </tr>
-                  <tr className='border-b border-neutral-200 dark:border-neutral-800'>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700'>
-                      Location
-                    </td>
-                    <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
-                      {employment.organizationLocation}
-                    </td>
-                  </tr>
-                  <tr className='border-b border-neutral-200 dark:border-neutral-800'>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700'>
-                      Duration
-                    </td>
-                    <td className='py-4 px-6 border-b border-neutral-200 dark:border-neutral-700'>
-                      {employment.dateString}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className='py-4 px-6 bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-200 dark:border-neutral-700'>
-                      Industry
-                    </td>
-                    <td className='py-4 px-6'>
-                      {employment.organizationIndustry}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600 w-1/3'>
+                    Organization
+                  </TableCell>
+                  <TableCell>
+                    <div className='flex items-center gap-3'>
+                      {employment.orgLogoSrc && (
+                        <ImageWithFallback
+                          src={employment.orgLogoSrc}
+                          alt={employment.organization}
+                          width={24}
+                          height={24}
+                          className='rounded-full border bg-white dark:border-neutral-700'
+                          type='square'
+                        />
+                      )}
+                      {employment.organization}
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600'>
+                    Position
+                  </TableCell>
+                  <TableCell>{employment.jobTitle}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600'>
+                    Type
+                  </TableCell>
+                  <TableCell>{employment.jobType}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600'>
+                    Location
+                  </TableCell>
+                  <TableCell>{employment.organizationLocation}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600'>
+                    Duration
+                  </TableCell>
+                  <TableCell>{employment.dateString}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600'>
+                    Industry
+                  </TableCell>
+                  <TableCell>{employment.organizationIndustry}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </section>
 
           {/* Responsibilities */}

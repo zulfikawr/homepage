@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react';
 import { Project } from '@/types/project';
-import { drawer } from '@/components/Drawer';
 import { modal } from '@/components/Modal';
 import {
   Button,
@@ -18,9 +17,9 @@ import { toast } from '@/components/Toast';
 import { addProject, updateProject, deleteProject } from '@/functions/projects';
 import { generateId } from '@/utilities/generateId';
 import { formatDateRange } from '@/utilities/formatDate';
-import Separator from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
-import ImageWithFallback from '@/components/ImageWithFallback';
+import Separator from '@/components/UI/Separator';
+import { useRouter } from 'next/navigation';
 
 interface ProjectFormProps {
   projectToEdit?: Project;
@@ -46,6 +45,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [isPresent, setIsPresent] = useState(
     projectToEdit?.dateString?.includes('Present') || false,
   );
+
+  const [newTool, setNewTool] = useState('');
 
   const initialDates = useMemo(() => {
     if (!projectToEdit?.dateString) {
@@ -88,6 +89,25 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     setProject((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleAddTool = () => {
+    const trimmed = newTool.trim();
+    if (trimmed && !project.tools.includes(trimmed)) {
+      handleChange('tools', [...project.tools, trimmed]);
+      setNewTool('');
+    }
+  };
+
+  const handleRemoveTool = (index: number) => {
+    const updated = project.tools.filter((_, i) => i !== index);
+    handleChange('tools', updated);
+  };
+
+  const handleToolChange = (index: number, value: string) => {
+    const updated = [...project.tools];
+    updated[index] = value;
+    handleChange('tools', updated);
+  };
+
   const togglePin = async () => {
     const newPinnedStatus = !project.pinned;
 
@@ -119,29 +139,45 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     }
   };
 
+  const requiredProjectFields: {
+    key: keyof Project | 'dateRange';
+    label: string;
+    check?: (value: (typeof project)[keyof typeof project]) => boolean;
+  }[] = [
+    { key: 'name', label: 'Project name' },
+    { key: 'image', label: 'Image URL' },
+    { key: 'description', label: 'Description' },
+    {
+      key: 'tools',
+      label: 'Tools',
+      check: (val) => Array.isArray(val) && val.length > 0,
+    },
+    {
+      key: 'dateRange',
+      label: 'Date range',
+      check: () => !!startDate && !!endDate,
+    },
+  ];
+
   const validateForm = () => {
-    if (!project.name.trim()) {
-      toast.show('Project name is required.');
-      return false;
-    }
-    if (!project.image.trim()) {
-      toast.show('Image URL is required.');
-      return false;
-    }
-    if (!project.description.trim()) {
-      toast.show('Description is required.');
-      return false;
-    }
-    if (!project.tools.length) {
-      toast.show('Tools are required.');
-      return false;
-    }
-    if (!startDate || !endDate) {
-      toast.show('Date range is required.');
-      return false;
+    for (const field of requiredProjectFields) {
+      const value =
+        field.key === 'dateRange' ? null : project[field.key as keyof Project];
+      const isEmpty = field.check
+        ? !field.check(value)
+        : typeof value === 'string'
+          ? !value.trim()
+          : !value;
+
+      if (isEmpty) {
+        toast.error(`${field.label} is required.`);
+        return false;
+      }
     }
     return true;
   };
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,21 +196,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
         : await addProject(projectData);
 
       if (result.success) {
-        drawer.close();
-        toast.show(
+        toast.success(
           projectToEdit
             ? 'Project updated successfully!'
             : 'Project added successfully!',
         );
-      } else {
-        throw new Error(result.error || 'Failed to save project');
+        router.push('/database/projects');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error saving project: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while saving the project.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error saving the project: ${error.message}`
+          : 'An unknown error occurred while saving the project.',
+      );
     }
   };
 
@@ -185,17 +219,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       const result = await deleteProject(projectToEdit.id);
 
       if (result.success) {
-        drawer.close();
-        toast.show('Project deleted successfully!');
-      } else {
-        throw new Error(result.error || 'Failed to delete project');
+        toast.success('Project deleted successfully!');
+        router.push('/database/projects');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error deleting project: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while deleting the project.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error deleting the project: ${error.message}`
+          : 'An unknown error occurred while deleting the project.',
+      );
     }
   };
 
@@ -238,247 +270,221 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   return (
     <>
-      {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
-        <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
-            {projectToEdit ? (
-              <div className='flex items-center'>
-                {project.favicon && (
-                  <span className='mr-3 inline-block'>
-                    <ImageWithFallback
-                      src={project.favicon}
-                      height={30}
-                      width={30}
-                      alt={project.name}
-                      type='square'
-                    />
-                  </span>
-                )}
-                {project.name}
-              </div>
-            ) : (
-              'New Project'
-            )}
-          </h1>
+      <div className='space-y-6'>
+        {/* Project Preview */}
+        <div className='flex justify-center'>
+          <ProjectCard project={currentPreviewProject} isInForm />
+        </div>
 
-          <div className='flex justify-end space-x-4'>
-            <Dropdown trigger={<Button icon='dotsThree' />}>
-              <div className='flex flex-col p-2 space-y-2'>
-                {projectToEdit && (
+        <Separator margin='5' />
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <FormLabel htmlFor='name' required>
+              Name
+            </FormLabel>
+            <Input
+              type='text'
+              value={project.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder='Project name'
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='imageUrl' required>
+              Image URL
+            </FormLabel>
+            <Input
+              type='text'
+              value={project.image}
+              onChange={(e) => handleChange('image', e.target.value)}
+              placeholder='https://project-image-url.com'
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='description' required>
+              Description
+            </FormLabel>
+            <Textarea
+              value={project.description}
+              onChange={(e) => handleChange('description', e.target.value)}
+              placeholder='Project description'
+              rows={4}
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='tools' required>
+              Tools
+            </FormLabel>
+            <div className='space-y-2'>
+              {project.tools.map((tool, index) => (
+                <div key={index} className='flex items-center gap-2'>
+                  <Input
+                    type='text'
+                    value={tool}
+                    onChange={(e) => handleToolChange(index, e.target.value)}
+                  />
                   <Button
                     type='destructive'
-                    icon='trash'
-                    onClick={confirmDelete}
-                    className='w-full'
-                  >
-                    <span>Delete</span>
-                  </Button>
-                )}
-
-                {projectToEdit &&
-                  (project.pinned ? (
-                    <Button
-                      icon='pushPinSlash'
-                      onClick={togglePin}
-                      className='w-full'
-                    >
-                      <span>Unpin</span>
-                    </Button>
-                  ) : (
-                    <Button
-                      icon='pushPin'
-                      onClick={togglePin}
-                      className='w-full'
-                    >
-                      <span>Pin</span>
-                    </Button>
-                  ))}
-
-                {projectToEdit ? (
-                  <Button
-                    type='primary'
-                    icon='floppyDisk'
-                    onClick={handleSubmit}
-                    className='w-full'
-                  >
-                    <span>Save</span>
-                  </Button>
-                ) : (
-                  <Button
-                    type='primary'
-                    icon='plus'
-                    onClick={handleSubmit}
-                    className='w-full'
-                  >
-                    <span>Add</span>
-                  </Button>
-                )}
-              </div>
-            </Dropdown>
-
-            <Button icon='close' onClick={() => drawer.close()} />
-          </div>
-        </div>
-      </div>
-
-      <Separator margin='0' />
-
-      {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
-          {/* Project Preview */}
-          <div className='flex justify-center'>
-            <ProjectCard project={currentPreviewProject} isInForm />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <FormLabel htmlFor='name' required>
-                Name
-              </FormLabel>
-              <Input
-                type='text'
-                value={project.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder='Project name'
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='imageUrl' required>
-                Image URL
-              </FormLabel>
-              <Input
-                type='text'
-                value={project.image}
-                onChange={(e) => handleChange('image', e.target.value)}
-                placeholder='https://project-image-url.com'
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='description' required>
-                Description
-              </FormLabel>
-              <Textarea
-                value={project.description}
-                onChange={(e) => handleChange('description', e.target.value)}
-                placeholder='Project description'
-                rows={4}
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='tools' required>
-                Tools (Comma-Separated)
-              </FormLabel>
-              <Input
-                type='text'
-                value={project.tools.join(', ')}
-                onChange={(e) =>
-                  handleChange(
-                    'tools',
-                    e.target.value.split(',').map((tool) => tool.trim()),
-                  )
-                }
-                placeholder='Tools 1, Tools 2'
-                required
-              />
-            </div>
-            <div className='space-y-2'>
-              <div>
-                <FormLabel required>Start Date</FormLabel>
-                <DateSelect
-                  value={startDate}
-                  onChange={(newDate) => {
-                    setStartDate(newDate);
-                    if (isPresent) {
-                      setEndDate(newDate);
-                    }
-                  }}
-                  mode='month-year'
+                    icon='trashSimple'
+                    onClick={() => handleRemoveTool(index)}
+                  />
+                </div>
+              ))}
+              <div className='flex items-center gap-2'>
+                <Input
+                  type='text'
+                  value={newTool}
+                  onChange={(e) => setNewTool(e.target.value)}
+                  placeholder='Add a keyword'
                 />
+                <Button type='primary' icon='plus' onClick={handleAddTool} />
               </div>
-              <div>
-                <FormLabel>End Date</FormLabel>
-                <DateSelect
-                  value={endDate}
-                  onChange={setEndDate}
-                  mode='month-year'
-                  disabled={isPresent}
-                />
-              </div>
-
-              <Checkbox
-                id='isPresent'
-                checked={isPresent}
-                onChange={(checked) => {
-                  setIsPresent(checked);
-                  if (checked) {
-                    setEndDate(new Date());
+            </div>
+          </div>
+          <div className='space-y-2'>
+            <div>
+              <FormLabel required>Start Date</FormLabel>
+              <DateSelect
+                value={startDate}
+                onChange={(newDate) => {
+                  setStartDate(newDate);
+                  if (isPresent) {
+                    setEndDate(newDate);
                   }
                 }}
-                label='I currently working on this project'
+                mode='month-year'
               />
             </div>
             <div>
-              <FormLabel htmlFor='status' required>
-                Status
-              </FormLabel>
-              <Dropdown
-                trigger={
-                  <Button
-                    icon={currentStatus?.icon}
-                    className='w-full flex items-center justify-start gap-2 px-1 text-sm md:text-md text-black dark:text-white'
-                  >
-                    {currentStatus?.label}
-                  </Button>
+              <FormLabel>End Date</FormLabel>
+              <DateSelect
+                value={endDate}
+                onChange={setEndDate}
+                mode='month-year'
+                disabled={isPresent}
+              />
+            </div>
+
+            <Checkbox
+              id='isPresent'
+              checked={isPresent}
+              onChange={(checked) => {
+                setIsPresent(checked);
+                if (checked) {
+                  setEndDate(new Date());
                 }
-                className='w-full'
-                matchTriggerWidth
-              >
-                <div className='flex flex-col p-1 space-y-1 w-full'>
-                  {statusOptions.map((option) => (
-                    <div
-                      key={option.key}
-                      onClick={() => handleChange('status', option.key)}
-                      className={`flex items-center gap-3 px-4 py-2 text-sm rounded-md cursor-pointer transition-colors
-                        ${
-                          option.key === project.status
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
-                            : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
-                        }`}
-                    >
-                      <Icon name={option.icon} className='w-4 h-4' />
-                      <span>{option.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </Dropdown>
-            </div>
-            <div>
-              <FormLabel htmlFor='link'>Link</FormLabel>
-              <Input
-                type='text'
-                value={project.link}
-                onChange={(e) => handleChange('link', e.target.value)}
-                placeholder='https://project-link.com'
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='faviconUrl'>Favicon URL</FormLabel>
-              <Input
-                type='text'
-                value={project.favicon}
-                onChange={(e) => handleChange('favicon', e.target.value)}
-                placeholder='https://project-favicon.com'
-              />
-            </div>
-          </form>
-        </div>
+              }}
+              label='I currently working on this project'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='status' required>
+              Status
+            </FormLabel>
+            <Dropdown
+              trigger={
+                <Button
+                  icon={currentStatus?.icon}
+                  className='w-full flex items-center justify-start gap-2 px-1 text-sm md:text-md text-black dark:text-white'
+                >
+                  {currentStatus?.label}
+                </Button>
+              }
+              className='w-full'
+              matchTriggerWidth
+            >
+              <div className='flex flex-col p-1 space-y-1 w-full'>
+                {statusOptions.map((option) => (
+                  <div
+                    key={option.key}
+                    onClick={() => handleChange('status', option.key)}
+                    className={`flex items-center gap-3 px-4 py-2 text-sm rounded-md cursor-pointer transition-colors
+                      ${
+                        option.key === project.status
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
+                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
+                      }`}
+                  >
+                    <Icon name={option.icon} className='w-4 h-4' />
+                    <span>{option.label}</span>
+                  </div>
+                ))}
+              </div>
+            </Dropdown>
+          </div>
+          <div>
+            <FormLabel htmlFor='link'>Link</FormLabel>
+            <Input
+              type='text'
+              value={project.link}
+              onChange={(e) => handleChange('link', e.target.value)}
+              placeholder='https://project-link.com'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='faviconUrl'>Favicon URL</FormLabel>
+            <Input
+              type='text'
+              value={project.favicon}
+              onChange={(e) => handleChange('favicon', e.target.value)}
+              placeholder='https://project-favicon.com'
+            />
+          </div>
+        </form>
       </div>
+
+      <Separator margin='5' />
+
+      {projectToEdit ? (
+        <div className='flex space-x-4'>
+          <Button
+            type='destructive'
+            icon='trash'
+            onClick={confirmDelete}
+            className='w-full'
+          >
+            Delete
+          </Button>
+
+          {projectToEdit &&
+            (project.pinned ? (
+              <Button
+                icon='pushPinSlash'
+                onClick={togglePin}
+                className='w-full'
+              >
+                <span>Unpin</span>
+              </Button>
+            ) : (
+              <Button icon='pushPin' onClick={togglePin} className='w-full'>
+                <span>Pin</span>
+              </Button>
+            ))}
+
+          <Button
+            type='primary'
+            icon='floppyDisk'
+            onClick={handleSubmit}
+            className='w-full'
+          >
+            Save
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type='primary'
+          icon='plus'
+          onClick={handleSubmit}
+          className='w-full'
+        >
+          Add
+        </Button>
+      )}
     </>
   );
 };

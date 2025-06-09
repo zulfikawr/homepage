@@ -17,7 +17,7 @@ export default function PostsContent() {
       <PageTitle
         emoji='📰'
         title='Posts'
-        subtitle='A collection of all my posts.'
+        subtitle='Browse all posts written by me'
         route='/post'
       />
 

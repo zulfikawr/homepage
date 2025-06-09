@@ -2,8 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Book } from '@/types/book';
-import { drawer } from '@/components/Drawer';
-import { Button, FormLabel, Input } from '@/components/UI';
+import { Button, Dropdown, FormLabel, Icon, Input } from '@/components/UI';
 import { BookCard } from '@/components/Card/Book';
 import { addBook, updateBook, deleteBook } from '@/functions/books';
 import { toast } from '@/components/Toast';
@@ -12,6 +11,7 @@ import { modal } from '@/components/Modal';
 import Separator from '@/components/UI/Separator';
 import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
+import { useRouter } from 'next/navigation';
 
 interface BookFormProps {
   bookToEdit?: Book;
@@ -58,8 +58,34 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
     handleChange('dateAdded', formatDate(newDate));
   };
 
+  const requiredBookFields: { key: keyof Book; label: string }[] = [
+    { key: 'title', label: 'Title' },
+    { key: 'author', label: 'Author' },
+    { key: 'dateAdded', label: 'Publication date' },
+    { key: 'type', label: 'Type' },
+    { key: 'imageURL', label: 'Image URL' },
+    { key: 'link', label: 'Book link' },
+  ];
+
+  const validateForm = () => {
+    for (const field of requiredBookFields) {
+      const value = book[field.key];
+      const isEmpty = typeof value === 'string' ? !value.trim() : !value;
+
+      if (isEmpty) {
+        toast.error(`${field.label} is required.`);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const router = useRouter();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     const bookData = {
       ...book,
@@ -73,19 +99,17 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
         : await addBook(bookData);
 
       if (result.success) {
-        drawer.close();
-        toast.show(
+        toast.success(
           bookToEdit
             ? 'Book updated successfully!'
             : 'Book added successfully!',
         );
-      } else {
-        throw new Error(result.error || 'Failed to save book');
+        router.push('/database/books');
       }
     } catch (error) {
-      toast.show(
+      toast.error(
         error instanceof Error
-          ? `Error saving book: ${error.message}`
+          ? `Error saving the book: ${error.message}`
           : 'An unknown error occurred while saving the book.',
       );
     }
@@ -98,15 +122,13 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
       const result = await deleteBook(bookToEdit.id);
 
       if (result.success) {
-        drawer.close();
-        toast.show('Book deleted successfully!');
-      } else {
-        throw new Error(result.error || 'Failed to delete book');
+        toast.success('Book deleted successfully!');
+        router.push('/database/books');
       }
     } catch (error) {
-      toast.show(
+      toast.error(
         error instanceof Error
-          ? `Error deleting book: ${error.message}`
+          ? `Error deleting the book: ${error.message}`
           : 'An unknown error occurred while deleting the book.',
       );
     }
@@ -141,119 +163,145 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
     );
   };
 
+  const typeOptions = [
+    { key: 'currentlyReading', label: 'Currently Reading' },
+    { key: 'read', label: 'Read' },
+    { key: 'toRead', label: 'To Read' },
+  ];
+
+  const currentType = typeOptions.find((opt) => opt.key === book.type);
+
   return (
     <>
-      {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
-        <div className='flex flex-row justify-between items-center'>
-          <h1 className='text-xl md:text-2xl font-medium whitespace-nowrap overflow-hidden text-ellipsis'>
-            {bookToEdit ? `${bookToEdit.title}` : 'Add New Book'}
-          </h1>
-          <div className='flex space-x-4'>
-            {bookToEdit ? (
-              <div className='flex space-x-4'>
-                <Button type='destructive' icon='trash' onClick={confirmDelete}>
-                  Delete
+      <div className='space-y-6'>
+        {/* Book Preview */}
+        <div className='flex justify-center'>
+          <BookCard book={currentPreviewBook} isInForm />
+        </div>
+
+        <Separator margin='5' />
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <FormLabel htmlFor='title' required>
+              Title
+            </FormLabel>
+            <Input
+              type='text'
+              value={book.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='author' required>
+              Author
+            </FormLabel>
+            <Input
+              type='text'
+              value={book.author}
+              onChange={(e) => handleChange('author', e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='type' required>
+              Type
+            </FormLabel>
+            <Dropdown
+              trigger={
+                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-black dark:text-white'>
+                  {currentType?.label}
+                  <Icon name='caretDown' className='size-3' />
                 </Button>
-                <Button type='primary' icon='floppyDisk' onClick={handleSubmit}>
-                  Save
-                </Button>
+              }
+              className='w-full'
+              matchTriggerWidth
+            >
+              <div className='flex flex-col p-1 space-y-1 w-full'>
+                {typeOptions.map((option) => (
+                  <div
+                    key={option.key}
+                    onClick={() => handleChange('type', option.key)}
+                    className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
+                      ${
+                        option.key === book.type
+                          ? 'bg-neutral-100 dark:bg-neutral-700'
+                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
+                      }`}
+                  >
+                    {option.label}
+                  </div>
+                ))}
               </div>
-            ) : (
-              <Button type='primary' icon='plus' onClick={handleSubmit}>
-                Add
-              </Button>
-            )}
-            <Button icon='close' onClick={() => drawer.close()} />
+            </Dropdown>
           </div>
-        </div>
+          <div>
+            <FormLabel htmlFor='dateAdded' required>
+              Date Added
+            </FormLabel>
+            <DateSelect
+              value={selectedDate}
+              onChange={handleDateChange}
+              mode='day-month-year'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='imageUrl' required>
+              Image URL
+            </FormLabel>
+            <Input
+              type='text'
+              value={book.imageURL}
+              onChange={(e) => handleChange('imageURL', e.target.value)}
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='link' required>
+              Book Link
+            </FormLabel>
+            <Input
+              type='text'
+              value={book.link}
+              onChange={(e) => handleChange('link', e.target.value)}
+              required
+            />
+          </div>
+        </form>
       </div>
 
-      <Separator margin='0' />
+      <Separator margin='5' />
 
-      {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
-          {/* Book Preview */}
-          <div className='flex justify-center'>
-            <BookCard book={currentPreviewBook} isInForm />
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <FormLabel htmlFor='title' required>
-                Title
-              </FormLabel>
-              <Input
-                type='text'
-                value={book.title}
-                onChange={(e) => handleChange('title', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='author' required>
-                Author
-              </FormLabel>
-              <Input
-                type='text'
-                value={book.author}
-                onChange={(e) => handleChange('author', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='imageUrl' required>
-                Image URL
-              </FormLabel>
-              <Input
-                type='text'
-                value={book.imageURL}
-                onChange={(e) => handleChange('imageURL', e.target.value)}
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='link' required>
-                Book Link
-              </FormLabel>
-              <Input
-                type='text'
-                value={book.link}
-                onChange={(e) => handleChange('link', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='type' required>
-                Type
-              </FormLabel>
-              <select
-                value={book.type}
-                onChange={(e) =>
-                  handleChange('type', e.target.value as Book['type'])
-                }
-                className='w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white'
-                required
-              >
-                <option value='currentlyReading'>Currently Reading</option>
-                <option value='read'>Read</option>
-                <option value='toRead'>To Read</option>
-              </select>
-            </div>
-            <div>
-              <FormLabel htmlFor='dateAdded' required>
-                Date Added
-              </FormLabel>
-              <DateSelect
-                value={selectedDate}
-                onChange={handleDateChange}
-                mode='day-month-year'
-              />
-            </div>
-          </form>
+      {bookToEdit ? (
+        <div className='flex space-x-4'>
+          <Button
+            type='destructive'
+            icon='trash'
+            onClick={confirmDelete}
+            className='w-full'
+          >
+            Delete
+          </Button>
+          <Button
+            type='primary'
+            icon='floppyDisk'
+            onClick={handleSubmit}
+            className='w-full'
+          >
+            Save
+          </Button>
         </div>
-      </div>
+      ) : (
+        <Button
+          type='primary'
+          icon='plus'
+          onClick={handleSubmit}
+          className='w-full'
+        >
+          Add
+        </Button>
+      )}
     </>
   );
 };

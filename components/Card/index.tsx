@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react';
 export interface CardProps {
   onClick?: () => void;
   isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
   className?: string;
   children?: ReactNode;
@@ -11,12 +12,13 @@ export interface CardProps {
 const Card: React.FC<CardProps> = ({
   onClick,
   isInDrawer,
+  openForm,
   isInForm,
   className = '',
   children,
 }) => {
   const baseStyles = `group relative flex flex-col ${
-    isInDrawer || isInForm ? 'w-full' : ''
+    isInDrawer || openForm || isInForm ? 'w-full' : ''
   } rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 ${className}`;
 
   const interactiveStyles = isInForm

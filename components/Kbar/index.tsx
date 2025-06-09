@@ -10,15 +10,15 @@ export function Kbar() {
   });
 
   return (
-    <div className='effect-pressing hidden lg:flex lg:w-content mx-auto'>
+    <div className='effect-pressing hidden lg:flex lg:w-content mx-auto px-6'>
       <div
         aria-label='Command + K to open the command palette'
-        className='absolute left-3 top-[7px] z-10 rounded-md border bg-neutral-50 px-1.5 py-0.5 text-xs text-neutral-400 dark:border-neutral-600 dark:bg-transparent'
+        className='absolute left-[26px] top-[7px] z-10 rounded-md border bg-neutral-50 px-1.5 py-0.5 text-xs text-neutral-400 dark:border-neutral-600 dark:bg-transparent'
       >
         ⌘+K
       </div>
       <Input
-        className='w-full rounded-md bg-white bg-opacity-90 cursor-pointer px-3 py-2 pl-14 text-sm text-neutral-500 outline-none transition-shadow hover:bg-neutral-50 dark:bg-neutral-800 dark:bg-opacity-50 dark:shadow-sm dark:hover:bg-neutral-800'
+        className='w-full bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md cursor-pointer px-3 py-2 pl-14 text-sm text-neutral-500 outline-none transition-all duration-200'
         placeholder='Type your command or search...'
         onFocus={() => drawer.open(<KbarContent />)}
       />

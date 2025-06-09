@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image, { ImageProps } from 'next/image';
+import { twMerge } from 'tailwind-merge';
 
 type FallbackType = 'landscape' | 'square' | 'portrait';
 
@@ -13,6 +14,7 @@ export default function ImageWithFallback({
   src,
   alt,
   type = 'landscape',
+  className,
   ...props
 }: ImageWithFallbackProps) {
   const fallbackMap: Record<FallbackType, string> = {
@@ -23,6 +25,7 @@ export default function ImageWithFallback({
 
   const fallback = fallbackMap[type];
   const [imgSrc, setImgSrc] = useState(src || fallback);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setImgSrc(src || fallback);
@@ -34,6 +37,12 @@ export default function ImageWithFallback({
       alt={alt}
       src={imgSrc}
       onError={() => setImgSrc(fallback)}
+      onLoad={() => setIsLoading(false)}
+      className={twMerge(
+        'transition duration-300',
+        isLoading ? 'blur-sm' : '',
+        className,
+      )}
     />
   );
 }

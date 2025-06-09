@@ -3,32 +3,33 @@ import openLink from '@/utilities/externalLink';
 import { Certificate } from '@/types/certificate';
 import Separator from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { drawer } from '@/components/Drawer';
-import CertificateForm from '@/components/Form/Certificate';
+import { useRouter } from 'next/navigation';
 
 interface CertificateCardProps {
   certificate: Certificate;
-  isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
 }
 
 export default function CertificateCard({
   certificate,
-  isInDrawer,
+  openForm,
   isInForm,
 }: CertificateCardProps) {
+  const router = useRouter();
+
   const handleCardClick = () => {
     if (isInForm) return;
 
-    if (isInDrawer) {
-      drawer.open(<CertificateForm certificateToEdit={certificate} />);
+    if (openForm) {
+      router.push(`/database/certs/${certificate.id}/edit`);
     } else {
       openLink(certificate.link);
     }
   };
 
   return (
-    <Card onClick={handleCardClick} isInDrawer={isInDrawer} isInForm={isInForm}>
+    <Card onClick={handleCardClick} openForm={openForm} isInForm={isInForm}>
       <div className='block md:hidden'>
         {/* Mobile layout */}
         <div className='w-full'>

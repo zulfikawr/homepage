@@ -1,27 +1,31 @@
 'use client';
 
 import { useState } from 'react';
-import { Badge, Button, Dropdown, Icon } from '@/components/UI';
+import { Badge, Button, Checkbox, Dropdown, Icon } from '@/components/UI';
 import { drawer } from '@/components/Drawer';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
 import Tooltip from '@/components/UI/Tooltip';
 import Toggle from '@/components/UI/Toggle';
 import PageTitle from '@/components/PageTitle';
+import Separator from '@/components/UI/Separator';
 
 export default function UIComponentsContent() {
   const openDrawer = () => {
     drawer.open(
       <>
-        <div className='p-6'>
-          <h2 className='text-xl font-semibold dark:text-white mb-4'>
-            Drawer Content
-          </h2>
-          <p className='text-neutral-700 dark:text-neutral-400 mb-4'>
-            This is an example of a drawer component. You can add any content
-            here.
-          </p>
-          <Button onClick={() => drawer.close()}>Close Drawer</Button>
+        <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
+          <div className='flex flex-row justify-between items-center'>
+            <h1 className='text-xl md:text-2xl font-semibold'>Drawer</h1>
+            <Button icon='close' onClick={() => drawer.close()} />
+          </div>
+        </div>
+
+        <Separator margin='0' />
+
+        {/* Scrollable Content */}
+        <div className='grid grid-cols-2 gap-4 overflow-y-auto w-fit p-4 md:p-8'>
+          This is an example of a drawer component.
         </div>
       </>,
     );
@@ -54,6 +58,21 @@ export default function UIComponentsContent() {
 
   const handleHeadingSelect = (heading: string) => {
     setCurrentHeading(heading);
+  };
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const [formats, setFormats] = useState({
+    bold: false,
+    italic: false,
+    underline: false,
+  });
+
+  const toggleFormat = (format: keyof typeof formats) => {
+    setFormats((prev) => ({
+      ...prev,
+      [format]: !prev[format],
+    }));
   };
 
   return (
@@ -196,25 +215,44 @@ export default function UIComponentsContent() {
           </div>
         </div>
 
-        {/* Label Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
-              <span>Badge</span>
+        <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
+          {/* Badge Component */}
+          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
+            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+                <span>Badge</span>
+              </div>
+            </div>
+            <div className='my-6 px-4.5'>
+              <div className='flex items-center justify-center space-x-3'>
+                <div className='flex w-auto'>
+                  <Badge type='default' icon='nextjs'>
+                    Next.js
+                  </Badge>
+                </div>
+                <div className='flex w-auto'>
+                  <Badge type='outline' icon='firebase'>
+                    Firebase
+                  </Badge>
+                </div>
+              </div>
             </div>
           </div>
-          <div className='my-6 px-4.5'>
-            <div className='flex items-center justify-center space-x-3'>
-              <div className='flex w-auto'>
-                <Badge type='default' icon='nextjs'>
-                  Next.js
-                </Badge>
+
+          {/* Checkbox Component */}
+          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
+            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+                <span>Checkbox</span>
               </div>
-              <div className='flex w-auto'>
-                <Badge type='outline' icon='firebase'>
-                  Firebase
-                </Badge>
-              </div>
+            </div>
+            <div className='flex justify-center my-6 px-4.5'>
+              <Checkbox
+                id='sample-checkbox'
+                checked={isChecked}
+                onChange={setIsChecked}
+                label='I agree to the terms and conditions'
+              />
             </div>
           </div>
         </div>
@@ -248,17 +286,28 @@ export default function UIComponentsContent() {
             </div>
             <div className='flex justify-center gap-2 my-6'>
               <Tooltip text='Bold' position='top'>
-                <Toggle>
-                  <span className='bold'>B</span>
+                <Toggle
+                  isActive={formats.bold}
+                  onChange={() => toggleFormat('bold')}
+                >
+                  <span className='font-bold'>B</span>
                 </Toggle>
               </Tooltip>
+
               <Tooltip text='Italic' position='top'>
-                <Toggle>
+                <Toggle
+                  isActive={formats.italic}
+                  onChange={() => toggleFormat('italic')}
+                >
                   <span className='italic'>I</span>
                 </Toggle>
               </Tooltip>
+
               <Tooltip text='Underline' position='top'>
-                <Toggle>
+                <Toggle
+                  isActive={formats.underline}
+                  onChange={() => toggleFormat('underline')}
+                >
                   <span className='underline'>U</span>
                 </Toggle>
               </Tooltip>

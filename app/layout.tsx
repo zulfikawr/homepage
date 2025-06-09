@@ -33,6 +33,11 @@ export default function RootLayout({
     <html lang='en-us' suppressHydrationWarning>
       <head>
         <link rel='icon' type='image/x-icon' href='/favicon.ico' />
+        <script
+          defer
+          src='https://cloud.umami.is/script.js'
+          data-website-id='438f9662-37d9-47e8-ba04-c58c1c2d30f2'
+        />
       </head>
       <body>
         <Providers>

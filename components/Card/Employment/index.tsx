@@ -4,36 +4,36 @@ import EmploymentViewer from '@/components/Viewer/Employment';
 import { trimStr } from '@/utilities/string';
 import { Card } from '@/components/Card';
 import { Badge } from '@/components/UI';
-import EmploymentForm from '@/components/Form/Employment';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { useRouter } from 'next/navigation';
 
 interface EmploymentCardProps {
   employment: Employment;
-  isInDrawer?: boolean;
+  openForm?: boolean;
   isInForm?: boolean;
 }
 
 export default function EmploymentCard({
   employment,
-  isInDrawer,
+  openForm,
   isInForm,
 }: EmploymentCardProps) {
+  const router = useRouter();
+
   const handleCardClick = () => {
     if (isInForm) return;
 
-    const content = isInDrawer ? (
-      <EmploymentForm employmentToEdit={employment} />
-    ) : (
-      <EmploymentViewer employment={employment} />
-    );
-
-    drawer.open(content);
+    if (openForm) {
+      router.push(`/database/employments/${employment.id}/edit`);
+    } else {
+      drawer.open(<EmploymentViewer employment={employment} />);
+    }
   };
 
   return (
     <Card
       onClick={handleCardClick}
-      isInDrawer={isInDrawer}
+      openForm={openForm}
       isInForm={isInForm}
       className='min-w-[18rem] lg:min-w-[25rem]'
     >

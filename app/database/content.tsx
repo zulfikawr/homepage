@@ -4,92 +4,73 @@ import React from 'react';
 import { useAuth } from '@/contexts/authContext';
 import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
-import { drawer } from '@/components/Drawer';
-import { personalInfoData } from '@/functions/personalInfo';
-import { interestsAndObjectivesData } from '@/functions/interestsAndObjectives';
-import { projectsData } from '@/functions/projects';
-import PersonalInfoForm from '@/components/Form/PersonalInfo';
-import ProjectsDrawer from '@/components/Drawer/Project';
-import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
-import EmploymentsDrawer from '@/components/Drawer/Employment';
-import { employmentsData } from '@/functions/employments';
-import PostsDrawer from '@/components/Drawer/Post';
-import { postsData } from '@/functions/posts';
-import BookDrawer from '@/components/Drawer/Book';
-import { booksData } from '@/functions/books';
-import PodcastDrawer from '@/components/Drawer/Podcast';
-import { podcastsData } from '@/functions/podcasts';
-import CertificateDrawer from '@/components/Drawer/Certificate';
-import { certificatesData } from '@/functions/certificates';
-import { useRealtimeData } from '@/hooks';
+import { Button } from '@/components/UI';
+import { useRouter } from 'next/navigation';
 
 export default function DatabaseContent() {
   const { user } = useAuth();
-
-  const { data: personalInfo } = useRealtimeData(personalInfoData);
-  const { data: interestsAndObjectives } = useRealtimeData(
-    interestsAndObjectivesData,
-  );
-  const { data: projects } = useRealtimeData(projectsData);
-  const { data: employments } = useRealtimeData(employmentsData);
-  const { data: posts } = useRealtimeData(postsData);
-  const { data: books } = useRealtimeData(booksData);
-  const { data: podcasts } = useRealtimeData(podcastsData);
-  const { data: certificates } = useRealtimeData(certificatesData);
+  const router = useRouter();
 
   const databaseCategories = [
+    {
+      title: 'Analytics',
+      desc: 'Page views and analytics',
+      icon: 'chartLine',
+      href: '/analytics',
+    },
     {
       title: 'Certifications',
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
-      action: () =>
-        drawer.open(<CertificateDrawer certificates={certificates} />),
+      href: '/database/certs',
     },
     {
       title: 'Employments',
       desc: 'Manage your employments',
       icon: 'briefcase',
-      action: () =>
-        drawer.open(<EmploymentsDrawer employments={employments} />),
+      href: '/database/employments',
+    },
+    {
+      title: 'Feedback',
+      desc: 'See feedback responses',
+      icon: 'chatCenteredText',
+      href: '/database/feedback',
     },
     {
       title: 'Interests & Objectives',
       desc: 'Manage your interests and objectives',
       icon: 'microscope',
-      action: () =>
-        drawer.open(
-          <InterestsAndObjectivesForm data={interestsAndObjectives} />,
-        ),
+      href: '/database/interests-and-objectives',
     },
     {
       title: 'Personal Info',
       desc: 'Manage your personal information',
       icon: 'userCircle',
-      action: () => drawer.open(<PersonalInfoForm data={personalInfo} />),
-    },
-    {
-      title: 'Podcasts',
-      desc: 'Manage your podcasts',
-      icon: 'microphone',
-      action: () => drawer.open(<PodcastDrawer podcasts={podcasts} />),
+      href: '/database/personal-info',
     },
     {
       title: 'Posts',
       desc: 'Manage your posts',
       icon: 'note',
-      action: () => drawer.open(<PostsDrawer posts={posts} />),
+      href: '/database/posts',
     },
     {
       title: 'Projects',
       desc: 'Manage your projects',
       icon: 'package',
-      action: () => drawer.open(<ProjectsDrawer projects={projects} />),
+      href: '/database/projects',
     },
     {
-      title: 'Reading Lists',
-      desc: 'Manage your reading lists',
+      title: 'Publications',
+      desc: 'Manage your academic and professional publications',
+      icon: 'newspaper',
+      href: '/database/publications',
+    },
+    {
+      title: 'Reading List',
+      desc: 'Manage your reading list',
       icon: 'bookOpen',
-      action: () => drawer.open(<BookDrawer books={books} />),
+      href: '/database/reading-list',
     },
   ];
 
@@ -119,10 +100,18 @@ export default function DatabaseContent() {
       />
 
       {!user ? (
-        <div className='text-center py-8'>
-          <p className='text-neutral-500 dark:text-neutral-400'>
-            You must be logged in to manage the database.
-          </p>
+        <div className='w-full mx-auto rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+          <div className='px-6 py-10'>
+            <p className='text-center text-lg dark:text-white'>
+              You must be logged in to manage the database.
+            </p>
+            <div className='mt-4 flex justify-center space-x-4'>
+              <Button type='primary' onClick={() => router.push('/login')}>
+                Login
+              </Button>
+              <Button onClick={() => router.push('/')}>Go to Home</Button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className='grid grid-cols-2 gap-4'>
@@ -133,7 +122,7 @@ export default function DatabaseContent() {
               desc={category.desc}
               icon={category.icon}
               className={shuffledColors[index % shuffledColors.length]}
-              action={category.action}
+              href={category.href}
             />
           ))}
         </div>

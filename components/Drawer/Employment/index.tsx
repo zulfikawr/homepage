@@ -47,7 +47,7 @@ const EmploymentsDrawer = ({ employments }: { employments: Employment[] }) => {
               }}
               className='cursor-pointer'
             >
-              <EmploymentCard employment={employment} isInDrawer />
+              <EmploymentCard employment={employment} openForm />
             </div>
           ))}
         </div>

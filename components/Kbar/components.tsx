@@ -44,18 +44,25 @@ export function KbarContent() {
                 icon: 'houseLine',
               },
           {
+            key: 'analytics',
+            label: 'Analytics',
+            desc: 'Page views and analytics',
+            action: () => router.push('/analytics'),
+            icon: 'chartLine',
+          },
+          {
+            key: 'certifications',
+            label: 'Certifications',
+            desc: 'View my certs and license',
+            action: () => router.push('/certs'),
+            icon: 'certificate',
+          },
+          {
             key: 'contacts',
             label: 'Contacts',
             desc: 'View my contact information',
             action: () => router.push('/contacts'),
             icon: 'addressBook',
-          },
-          {
-            key: 'dashboard',
-            label: 'Dashboard',
-            desc: 'View personal dashboard',
-            action: () => router.push('/dashboard'),
-            icon: 'presentationChart',
           },
           {
             key: 'feedback',
@@ -71,13 +78,13 @@ export function KbarContent() {
             action: () => router.push('/music'),
             icon: 'musicNotes',
           },
-          {
-            key: 'podcast',
-            label: 'Podcast',
-            desc: 'My recommended podcasts',
-            action: () => router.push('/podcast'),
-            icon: 'microphone',
-          },
+          // {
+          //   key: 'podcast',
+          //   label: 'Podcast',
+          //   desc: 'My recommended podcasts',
+          //   action: () => router.push('/podcast'),
+          //   icon: 'microphone',
+          // },
           {
             key: 'post',
             label: 'Post',
@@ -91,6 +98,13 @@ export function KbarContent() {
             desc: 'Explore my projects',
             action: () => router.push('/projects'),
             icon: 'package',
+          },
+          {
+            key: 'publications',
+            label: 'Publications',
+            desc: 'Read my publications',
+            action: () => router.push('/publications'),
+            icon: 'newspaper',
           },
           {
             key: 'reading-list',

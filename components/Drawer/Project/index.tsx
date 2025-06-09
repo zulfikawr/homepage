@@ -34,7 +34,7 @@ const ProjectsDrawer = ({ projects }: { projects: Project[] }) => {
       <div className='flex-1 overflow-y-auto'>
         <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} isInDrawer />
+            <ProjectCard key={project.id} project={project} openForm />
           ))}
         </div>
       </div>

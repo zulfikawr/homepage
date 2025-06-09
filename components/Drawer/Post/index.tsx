@@ -33,7 +33,7 @@ const PostsDrawer = ({ posts }: { posts: Post[] }) => {
         <div className='p-4 sm:px-8 sm:py-6 space-y-6'>
           {posts.map((post) => (
             <div key={post.id} className='cursor-pointer'>
-              <PostCard key={post.id} post={post} isInDrawer />
+              <PostCard key={post.id} post={post} openForm />
             </div>
           ))}
         </div>

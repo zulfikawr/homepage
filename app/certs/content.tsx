@@ -6,6 +6,7 @@ import { certificatesData } from '@/functions/certificates';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';
+import CardEmpty from '@/components/Card/Empty';
 
 export default function CertsContent() {
   const {
@@ -26,13 +27,17 @@ export default function CertsContent() {
       />
 
       <div className='grid grid-cols-1 gap-4'>
-        {loading
-          ? Array(4)
-              .fill(0)
-              .map((_, index) => <CardLoading key={index} type='certificate' />)
-          : certificates.map((certificate) => (
-              <CertificateCard key={certificate.id} certificate={certificate} />
-            ))}
+        {loading ? (
+          Array(4)
+            .fill(0)
+            .map((_, index) => <CardLoading key={index} type='certificate' />)
+        ) : certificates.length > 0 ? (
+          certificates.map((certificate) => (
+            <CertificateCard key={certificate.id} certificate={certificate} />
+          ))
+        ) : (
+          <CardEmpty message='No certificates available' />
+        )}
       </div>
     </div>
   );

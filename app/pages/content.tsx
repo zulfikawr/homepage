@@ -4,6 +4,12 @@ import PageTitle from '@/components/PageTitle';
 export default function PagesContent() {
   const pages = [
     {
+      title: 'Analytics',
+      desc: 'Page views and analytics',
+      icon: 'chartLine',
+      href: '/analytics',
+    },
+    {
       title: 'Certifications',
       desc: 'Certs and licences',
       icon: 'certificate',
@@ -14,18 +20,6 @@ export default function PagesContent() {
       desc: 'Get in touch',
       icon: 'addressBook',
       href: '/contacts',
-    },
-    {
-      title: 'Dashboard',
-      desc: 'View my stats',
-      icon: 'presentationChart',
-      href: '/dashboard',
-    },
-    {
-      title: 'Database',
-      desc: 'Manage my database',
-      icon: 'database',
-      href: '/database',
     },
     {
       title: 'Feedback',
@@ -39,12 +33,12 @@ export default function PagesContent() {
       icon: 'musicNotes',
       href: '/music',
     },
-    {
-      title: 'Podcasts',
-      desc: 'Recommended listens',
-      icon: 'microphone',
-      href: '/podcasts',
-    },
+    // {
+    //   title: 'Podcasts',
+    //   desc: 'Recommended listens',
+    //   icon: 'microphone',
+    //   href: '/podcasts',
+    // },
     {
       title: 'Posts',
       desc: 'Browse my posts',
@@ -56,6 +50,12 @@ export default function PagesContent() {
       desc: 'See my work',
       icon: 'package',
       href: '/projects',
+    },
+    {
+      title: 'Publications',
+      desc: 'Read my publications',
+      icon: 'newspaper',
+      href: '/publications',
     },
     {
       title: 'Reading List',

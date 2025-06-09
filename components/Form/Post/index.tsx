@@ -4,15 +4,15 @@ import React, { useMemo, useState } from 'react';
 import { Post } from '@/types/post';
 import { addPost, updatePost, deletePost } from '@/functions/posts';
 import { toast } from '@/components/Toast';
-import { drawer } from '@/components/Drawer';
 import { generateId } from '@/utilities/generateId';
-import { Button, Dropdown, FormLabel, Input, Textarea } from '@/components/UI';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { modal } from '@/components/Modal';
 import PostCard from '@/components/Card/Post';
 import { Editor } from '@/components/Editor';
-import Separator from '@/components/UI/Separator';
 import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
+import Separator from '@/components/UI/Separator';
+import { useRouter } from 'next/navigation';
 
 interface PostFormProps {
   postToEdit?: Post;
@@ -30,7 +30,7 @@ const initialPostState: Post = {
   audioUrl: '',
 };
 
-const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
+const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
   const [post, setPost] = useState<Post>(postToEdit || initialPostState);
 
   const initialDate = useMemo(() => {
@@ -61,28 +61,47 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
     handleChange('dateString', formatDate(newDate));
   };
 
+  const requiredPostFields: {
+    key: keyof Post;
+    label: string;
+    check?: (value: (typeof post)[keyof typeof post]) => boolean;
+  }[] = [
+    { key: 'title', label: 'Title' },
+    { key: 'excerpt', label: 'Excerpt' },
+    { key: 'content', label: 'Content' },
+    {
+      key: 'categories',
+      label: 'Categories',
+      check: (val) => Array.isArray(val) && val.length > 0,
+    },
+    { key: 'dateString', label: 'Publication date' },
+  ];
+
   const validateForm = () => {
-    if (!post.title.trim()) {
-      toast.show('Title is required.');
-      return false;
-    }
-    if (!post.content.trim()) {
-      toast.show('Content is required.');
-      return false;
-    }
-    if (!post.dateString) {
-      toast.show('Publication date is required.');
-      return false;
+    for (const field of requiredPostFields) {
+      const value = post[field.key];
+      const isEmpty = field.check
+        ? !field.check(value)
+        : typeof value === 'string'
+          ? !value.trim()
+          : !value;
+
+      if (isEmpty) {
+        toast.error(`${field.label} is required.`);
+        return false;
+      }
     }
     return true;
   };
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    const newPost = {
+    const postData = {
       ...post,
       id: postToEdit?.id || generateId(post.title),
       dateString: formatDate(selectedDate),
@@ -90,25 +109,23 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
 
     try {
       const result = postToEdit
-        ? await updatePost(newPost)
-        : await addPost(newPost);
+        ? await updatePost(postData)
+        : await addPost(postData);
 
       if (result.success) {
-        drawer.close();
-        toast.show(
+        toast.success(
           postToEdit
             ? 'Post updated successfully!'
             : 'Post added successfully!',
         );
-      } else {
-        throw new Error(result.error || 'Failed to save post');
+        router.push('/database/posts');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error saving post: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while saving the post.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error saving the post: ${error.message}`
+          : 'An unknown error occurred while saving the post.',
+      );
     }
   };
 
@@ -119,17 +136,14 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
       const result = await deletePost(postToEdit.id);
 
       if (result.success) {
-        drawer.close();
-        toast.show('Post deleted successfully!');
-      } else {
-        throw new Error(result.error || 'Failed to delete post');
+        toast.success('Post deleted successfully!');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error deleting post: ${error.message}`);
-      } else {
-        toast.show('An unknown error occurred while deleting the post.');
-      }
+      toast.error(
+        error instanceof Error
+          ? `Error deleting the post: ${error.message}`
+          : 'An unknown error occurred while deleting the post.',
+      );
     }
   };
 
@@ -161,160 +175,128 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit, isInDrawer }) => {
 
   return (
     <>
-      {/* Header */}
-      {isInDrawer && (
-        <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
-          <div className='flex flex-row justify-between items-center'>
-            <h1 className='text-xl md:text-2xl font-semibold'>
-              {postToEdit ? `${post.title}` : 'New Post'}
-            </h1>
-
-            <div className='flex justify-end space-x-4'>
-              <Dropdown trigger={<Button icon='dotsThree' />}>
-                <div className='flex flex-col p-2 space-y-2'>
-                  <Button
-                    icon='arrowSquareOut'
-                    onClick={() =>
-                      (window.location.href = postToEdit
-                        ? `/post/action/edit/${postToEdit.id}`
-                        : '/post/action/create/new')
-                    }
-                  >
-                    <span>Open in full screen</span>
-                  </Button>
-
-                  {postToEdit && (
-                    <Button
-                      type='destructive'
-                      icon='trash'
-                      onClick={confirmDelete}
-                      className='w-full'
-                    >
-                      <span>Delete</span>
-                    </Button>
-                  )}
-
-                  {postToEdit ? (
-                    <Button
-                      type='primary'
-                      icon='floppyDisk'
-                      onClick={handleSubmit}
-                      className='w-full'
-                    >
-                      <span>Save</span>
-                    </Button>
-                  ) : (
-                    <Button
-                      type='primary'
-                      icon='plus'
-                      onClick={handleSubmit}
-                      className='w-full'
-                    >
-                      <span>Add</span>
-                    </Button>
-                  )}
-                </div>
-              </Dropdown>
-
-              <Button icon='close' onClick={() => drawer.close()} />
-            </div>
-          </div>
+      <div className='space-y-6'>
+        {/* Post Preview */}
+        <div className='flex justify-center'>
+          <PostCard post={currentPreviewPost} isInForm />
         </div>
-      )}
 
-      <Separator margin='0' />
+        <Separator margin='5' />
 
-      {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
-        <div className='p-4 sm:px-8 sm:py-8 space-y-6'>
-          {/* Post Preview */}
-          <div className='flex justify-center'>
-            <PostCard post={currentPreviewPost} isInForm />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <FormLabel htmlFor='title' required>
+              Title
+            </FormLabel>
+            <Input
+              type='text'
+              value={post.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              placeholder='Post title'
+              required
+            />
           </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className='space-y-4'>
-            <div>
-              <FormLabel htmlFor='title' required>
-                Title
-              </FormLabel>
-              <Input
-                type='text'
-                value={post.title}
-                onChange={(e) => handleChange('title', e.target.value)}
-                placeholder='Post title'
-                required
-              />
-            </div>
-            {/* Editor Section */}
-            <div>
-              <FormLabel htmlFor='content' required>
-                Content
-              </FormLabel>
-              <Editor
-                content={post.content}
-                onUpdate={(content) => handleChange('content', content)}
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='excerpt' required>
-                Excerpt
-              </FormLabel>
-              <Textarea
-                value={post.excerpt}
-                onChange={(e) => handleChange('excerpt', e.target.value)}
-                placeholder='Post excerpt'
-                rows={4}
-                required
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='categories' required>
-                Categories (Comma-separated)
-              </FormLabel>
-              <Input
-                type='text'
-                value={post.categories?.join(', ') || ''}
-                onChange={(e) =>
-                  handleChange(
-                    'categories',
-                    e.target.value.split(',').map((cat) => cat.trim()),
-                  )
-                }
-                placeholder='Category 1, Category 2'
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='publicationDate' required>
-                Publication Date
-              </FormLabel>
-              <DateSelect
-                value={selectedDate}
-                onChange={handleDateChange}
-                mode='day-month-year'
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='imgUrl'>Image URL</FormLabel>
-              <Input
-                type='text'
-                value={post.img || ''}
-                onChange={(e) => handleChange('img', e.target.value)}
-                placeholder='https://image-url.com'
-              />
-            </div>
-            <div>
-              <FormLabel htmlFor='audioUrl'>Audio URL</FormLabel>
-              <Input
-                type='text'
-                value={post.audioUrl || ''}
-                onChange={(e) => handleChange('audioUrl', e.target.value)}
-                placeholder='https://audio-url.com'
-              />
-            </div>
-          </form>
-        </div>
+          <div>
+            <FormLabel htmlFor='excerpt' required>
+              Excerpt
+            </FormLabel>
+            <Textarea
+              value={post.excerpt}
+              onChange={(e) => handleChange('excerpt', e.target.value)}
+              placeholder='Post excerpt'
+              rows={4}
+              required
+            />
+          </div>
+          {/* Editor Section */}
+          <div>
+            <FormLabel htmlFor='content' required>
+              Content
+            </FormLabel>
+            <Editor
+              content={post.content}
+              onUpdate={(content) => handleChange('content', content)}
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='categories' required>
+              Categories (Comma-separated)
+            </FormLabel>
+            <Input
+              type='text'
+              value={post.categories?.join(', ') || ''}
+              onChange={(e) =>
+                handleChange(
+                  'categories',
+                  e.target.value.split(',').map((cat) => cat.trim()),
+                )
+              }
+              placeholder='Category 1, Category 2'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='publicationDate' required>
+              Publication Date
+            </FormLabel>
+            <DateSelect
+              value={selectedDate}
+              onChange={handleDateChange}
+              mode='day-month-year'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='imgUrl'>Image URL</FormLabel>
+            <Input
+              type='text'
+              value={post.img || ''}
+              onChange={(e) => handleChange('img', e.target.value)}
+              placeholder='https://image-url.com'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='audioUrl'>Audio URL</FormLabel>
+            <Input
+              type='text'
+              value={post.audioUrl || ''}
+              onChange={(e) => handleChange('audioUrl', e.target.value)}
+              placeholder='https://audio-url.com'
+            />
+          </div>
+        </form>
       </div>
+
+      <Separator margin='5' />
+
+      {postToEdit ? (
+        <div className='flex space-x-4'>
+          <Button
+            type='destructive'
+            icon='trash'
+            onClick={confirmDelete}
+            className='w-full'
+          >
+            Delete
+          </Button>
+          <Button
+            type='primary'
+            icon='floppyDisk'
+            onClick={handleSubmit}
+            className='w-full'
+          >
+            Save
+          </Button>
+        </div>
+      ) : (
+        <Button
+          type='primary'
+          icon='plus'
+          onClick={handleSubmit}
+          className='w-full'
+        >
+          Add
+        </Button>
+      )}
     </>
   );
 };

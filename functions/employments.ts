@@ -187,3 +187,27 @@ export async function deleteEmployment(
     };
   }
 }
+
+/**
+ * Get a single employment by ID from Firebase
+ * @param id ID of the employment to fetch
+ * @returns Promise with the employment or null if not found
+ */
+export async function getEmploymentById(
+  id: string,
+): Promise<Employment | null> {
+  try {
+    if (!id) throw new Error('Employment ID is required');
+
+    const employmentRef = ref(database, `employments/${id}`);
+    const snapshot = await get(employmentRef);
+
+    if (!snapshot.exists()) return null;
+
+    const data = snapshot.val();
+    return { id, ...data };
+  } catch (error) {
+    console.error('Error fetching employment by ID:', error);
+    return null;
+  }
+}

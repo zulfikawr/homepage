@@ -121,19 +121,15 @@ const PostCardLoading = () => (
 const PlaylistCardLoading = () => (
   <BaseCardLoading>
     <>
-      {/* Image and Title Section */}
       <div className='grid grid-cols-4 items-center gap-4 p-4'>
-        {/* Image Placeholder */}
         <div className='col-span-1 flex justify-center aspect-square'>
           <div className='h-20 w-20 rounded-md bg-neutral-200 dark:bg-neutral-700' />
         </div>
-        {/* Title and Subtitle Placeholder */}
         <div className='col-span-3 space-y-1'>
           <div className='h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
           <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
         </div>
       </div>
-      {/* Footer Section */}
       <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
         <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
         <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
@@ -146,12 +142,16 @@ const CertificateCardLoading = () => (
   <BaseCardLoading>
     <>
       <div className='grid grid-cols-4 items-center gap-4 p-4'>
-        <div className='col-span-1 flex justify-center aspect-square'>
-          <div className='h-20 w-20 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+        <div className='col-span-1 flex justify-center aspect-square md:aspect-video'>
+          <div className='h-20 w-20 md:h-[5rem] md:w-full rounded-md bg-neutral-200 dark:bg-neutral-700' />
         </div>
-        <div className='col-span-3 space-y-1'>
+        <div className='col-span-3'>
           <div className='h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
-          <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+          <Separator margin='2' />
+          <div className='space-y-1'>
+            <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+            <div className='h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-700' />
+          </div>
         </div>
       </div>
       <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
@@ -162,22 +162,37 @@ const CertificateCardLoading = () => (
   </BaseCardLoading>
 );
 
+const PublicationCardLoading = () => (
+  <BaseCardLoading>
+    <div className='p-4 space-y-2'>
+      <div className='h-6 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
+      <div className='h-4 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
+      <div className='h-4 w-2/3 rounded bg-neutral-200 dark:bg-neutral-700' />
+      <div className='flex flex-wrap gap-2'>
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className='h-6 w-16 rounded-full bg-neutral-200 dark:bg-neutral-700'
+          />
+        ))}
+      </div>
+    </div>
+    <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-sm font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+      <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+      <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
+    </div>
+  </BaseCardLoading>
+);
+
 const TrackCardLoading = () => (
   <BaseCardLoading>
     <div className='flex items-center space-x-4 p-3'>
-      {/* Track number placeholder */}
       <div className='h-4 w-6 rounded bg-neutral-200 dark:bg-neutral-700' />
-
-      {/* Album art placeholder */}
       <div className='h-12 w-12 rounded-md bg-neutral-200 dark:bg-neutral-700' />
-
-      {/* Track info placeholder */}
       <div className='flex-1 space-y-2'>
         <div className='h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
         <div className='h-3 w-1/2 rounded bg-neutral-200 dark:bg-neutral-700' />
       </div>
-
-      {/* Duration placeholder */}
       <div className='h-3 w-10 rounded bg-neutral-200 dark:bg-neutral-700' />
     </div>
   </BaseCardLoading>
@@ -192,6 +207,7 @@ type CardLoadingProps = {
     | 'post'
     | 'playlist'
     | 'certificate'
+    | 'publication'
     | 'track';
 };
 
@@ -211,6 +227,8 @@ const CardLoading = ({ type }: CardLoadingProps) => {
       return <PlaylistCardLoading />;
     case 'certificate':
       return <CertificateCardLoading />;
+    case 'publication':
+      return <PublicationCardLoading />;
     case 'track':
       return <TrackCardLoading />;
     default:

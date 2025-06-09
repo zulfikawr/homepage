@@ -22,7 +22,7 @@ export default function ReadingListContent() {
       <PageTitle
         emoji='📚'
         title='Reading List'
-        subtitle="I'm reading or re-reading (on average) one book every month in 2025"
+        subtitle="I'm reading or re-reading (on average) one book every 3 month in 2025"
         badge={{
           color: 'yellow',
           text: '2025',

@@ -5,16 +5,18 @@ import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { incrementPageViews } from '@/functions/analytics';
+import Separator from '../UI/Separator';
 
 interface PageTitleProps {
-  emoji: string;
+  emoji?: string;
   title: string;
   subtitle?: string;
   badge?: {
     color: 'red' | 'yellow' | 'green' | 'blue';
     text: string;
   };
-  route: string;
+  route?: string;
+  noBackButton?: boolean;
 }
 
 const PageTitle = ({
@@ -23,13 +25,14 @@ const PageTitle = ({
   subtitle,
   badge,
   route,
+  noBackButton,
 }: PageTitleProps) => {
   const { setHeaderTitle } = useTitle();
   const router = useRouter();
 
   useEffect(() => {
     setHeaderTitle(`${emoji} ${title}`);
-    incrementPageViews(route);
+    if (route) incrementPageViews(route);
   }, [emoji, title, setHeaderTitle, route]);
 
   const badgeStyles = {
@@ -46,11 +49,13 @@ const PageTitle = ({
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
           <div className='flex flex-1 items-center'>
-            <div className='mr-4.5 mt-1 flex -rotate-6 items-center'>
-              <span className='text-[35px] drop-shadow-lg'>{emoji}</span>
-            </div>
+            {emoji && (
+              <div className='mr-4.5 mt-1 flex -rotate-6 items-center'>
+                <span className='text-[35px] drop-shadow-lg'>{emoji}</span>
+              </div>
+            )}
             <div>
-              <h2 className='flex items-center gap-x-1.5 text-[28px] font-medium tracking-wide text-black dark:text-white'>
+              <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-black dark:text-white'>
                 {title}
                 {badge && (
                   <span className={badgeStyles[badge.color]}>{badge.text}</span>
@@ -63,24 +68,24 @@ const PageTitle = ({
               )}
             </div>
           </div>
-          <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
-            <div className='flex-1 pl-5 pr-3'>
-              <button
-                onClick={() => router.back()}
-                className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
-              >
-                <span className='mr-2 h-5 w-5'>
-                  <Icon name='arrowLeft' />
-                </span>
-                Back
-              </button>
+          {!noBackButton && (
+            <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
+              <div className='flex-1 pl-5 pr-3'>
+                <button
+                  onClick={() => router.back()}
+                  className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
+                >
+                  <span className='mr-2 h-5 w-5'>
+                    <Icon name='arrowLeft' />
+                  </span>
+                  Back
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
-      <div className='my-5'>
-        <hr className='dark:border-neutral-600' />
-      </div>
+      <Separator margin='5' />
     </>
   );
 };

@@ -132,7 +132,7 @@ const LocationAndTime = () => {
         <div className='flex flex-col items-start space-y-4'>
           <div className='flex items-center justify-between w-full'>
             <div className='flex items-center gap-2'>
-              <Icon name='mapPin' className='size-5' />
+              <Icon name='mapPin' className='size-5 text-white' />
               <h2 className='text-[15px] font-medium text-white'>
                 Jakarta, Indonesia
               </h2>
