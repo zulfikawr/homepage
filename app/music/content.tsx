@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Button, Dropdown, Icon } from '@/components/UI';
+import { Button, Dropdown, Icon, Tooltip } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
 import {
   getAccessToken,
@@ -16,7 +16,6 @@ import CardEmpty from '@/components/Card/Empty';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import CurrentlyListening from '@/components/Banners/CurrentlyListening';
 import PlaylistCard from '@/components/Card/Playlist/Spotify';
-import Tooltip from '@/components/UI/Tooltip';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { formatDate } from '@/utilities/formatDate';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
