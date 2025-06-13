@@ -8,6 +8,7 @@ import { Card } from 'components/Card';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PostCardProps {
   post: Post;
@@ -93,22 +94,32 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
                   {post.categories[0]}
                 </Label>
               ) : (
-                <Link href={`/post/cate/${post.categories[0]}`}>
-                  <Label type='primary' icon='folder'>
-                    {post.categories[0]}
-                  </Label>
-                </Link>
+                <div className='flex flex-wrap gap-3'>
+                  {post.categories?.map((category) =>
+                    isInForm ? (
+                      <Label key={category} type='primary' icon='folder'>
+                        {category}
+                      </Label>
+                    ) : (
+                      <Link key={category} href={`/post/cate/${category}`}>
+                        <Label type='primary' icon='folder'>
+                          {category}
+                        </Label>
+                      </Link>
+                    ),
+                  )}
+                </div>
               ))}
           </div>
 
-          <h1 className='text-xl lg:text-2xl font-bold tracking-wider text-neutral-700 dark:text-white'>
+          <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-black dark:text-white leading-tight'>
             {post.title}
           </h1>
 
-          <p
+          <div
             className='leading-relaxed overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-neutral-500 dark:text-neutral-400 line-clamp-2'
             dangerouslySetInnerHTML={{
-              __html: trimStr(post.excerpt, 150),
+              __html: trimStr(renderMarkdown(post.excerpt), 150),
             }}
           />
         </div>
@@ -116,7 +127,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
       {renderAudio()}
 
       <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-neutral-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-neutral-700'>
-        <p className='leading-2 flex items-center justify-between whitespace-nowrap text-5 tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-4 lg:leading-8'>
+        <div className='leading-2 flex items-center justify-between whitespace-nowrap text-5 tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-4 lg:leading-8'>
           <span className='flex items-center gap-x-2'>
             <span>Posted {getTimeAgo(post.dateString)}</span>
           </span>
@@ -131,7 +142,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
               Share
             </button>
           </span>
-        </p>
+        </div>
       </div>
     </Card>
   );

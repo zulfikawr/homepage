@@ -196,7 +196,6 @@ body::-webkit-scrollbar {
   animation-delay: var(--animation-delay);
 }
 
-/* Typography defaults using Tailwind's prose plugin */
 .prose {
   @apply prose-base dark:prose-invert tracking-wide max-w-none;
 }
@@ -242,31 +241,59 @@ body::-webkit-scrollbar {
 }
 
 .prose img {
-  @apply rounded-md border shadow-md my-6 max-w-full;
+  @apply mx-auto my-6 max-w-full h-auto rounded-lg border border-neutral-300 dark:border-neutral-700 shadow-md;
+  max-height: 500px;
+  object-fit: contain;
 }
 
-/* Code block container */
+.prose table {
+  @apply w-full border-collapse bg-white dark:bg-neutral-800 mt-4;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border-style: hidden;
+  box-shadow: 0 0 0 0.75px var(--border-color);
+}
+
+.prose table {
+  --border-color: theme(colors.neutral.200);
+}
+
+.dark .prose table {
+  --border-color: theme(colors.neutral.700);
+}
+
+.prose thead {
+  @apply bg-neutral-100 dark:bg-neutral-900;
+}
+
+.prose tbody {
+  @apply bg-white dark:bg-neutral-800;
+}
+
+.prose tr {
+  @apply border border-neutral-200 dark:border-neutral-800;
+}
+
+.prose th {
+  @apply py-4 px-6 font-medium text-left border border-neutral-200 dark:border-neutral-700;
+}
+
+.prose td {
+  @apply py-4 px-6 border border-neutral-200 dark:border-neutral-700;
+}
+
 .prose pre {
-  @apply rounded-lg overflow-x-auto my-6;
-  background: none !important; /* prevent override */
-  padding: 0 !important;
+  @apply rounded-lg overflow-x-auto my-6 bg-neutral-200 dark:bg-neutral-800;
 }
 
-/* Inline code */
 .prose p code {
-  @apply text-sm px-1 py-0.5 rounded bg-neutral-100 dark:bg-neutral-700;
+  @apply text-sm px-1 py-0.5 rounded bg-neutral-200 dark:bg-neutral-800;
 }
 
-/* Remove prose styling for <pre><code> */
-.prose pre code {
-  @apply p-0 bg-transparent;
-}
-
-/* Blockquote styling with embedded icon background */
 .prose blockquote {
   background-repeat: no-repeat;
   background-size: 8%;
   background-position: 12px 6px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0H24V24H0z'/%3E%3Cpath d='M21 3c.552 0 1 .448 1 1v14c0 .552-.448 1-1 1H6.455L2 22.5V4c0-.552.448-1 1-1h18zm-1 2H4v13.385L5.763 17H20V5zm-9.485 2.412l.447.688c-1.668.903-1.639 2.352-1.639 2.664.155-.02.318-.024.48-.009.902.084 1.613.825 1.613 1.745 0 .966-.784 1.75-1.75 1.75-.537 0-1.05-.245-1.374-.59-.515-.546-.792-1.16-.792-2.155 0-1.75 1.228-3.318 3.015-4.093zm5 0l.447.688c-1.668.903-1.639 2.352-1.639 2.664.155-.02.318-.024.48-.009.902.084 1.613.825 1.613 1.745 0 .966-.784 1.75-1.75 1.75-.537 0-1.05-.245-1.374-.59-.515-.546-.792-1.16-.792-2.155 0-1.75 1.228-3.318 3.015-4.093z' fill='rgba(119,119,119,0.34)'/%3E%3C/svg%3E");
-  @apply block my-6 px-6 py-4 pl-20 rounded-r-md border-l-4 border-neutral-300 bg-neutral-50 dark:border-neutral-500 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 text-base italic;
+  @apply block my-6 px-6 py-4 pl-[4.5rem] rounded-r-md border-l-4 border-neutral-300 bg-neutral-50 dark:border-neutral-500 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 text-base italic;
 }
