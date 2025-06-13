@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { twMerge } from 'tailwind-merge';
-import MarkdownIt from 'markdown-it';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Icon, Toggle, Tooltip } from '@/components/UI';
 
 interface EditorProps {
@@ -18,7 +18,6 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
     {},
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const md = new MarkdownIt({ html: true, breaks: false, linkify: true });
 
   useEffect(() => {
     setMarkdown(content);
@@ -97,6 +96,7 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
       heading: testInlineMatch(/(^|\n)#+\s.*$/gm),
       link: testInlineMatch(/\[(.*?)\]\((.*?)\)/g),
       image: testInlineMatch(/!\[(.*?)\]\((.*?)\)/g),
+      table: testInlineMatch(/^\|(.+\|)+\n\|([ -:|]+)\n(\|.*\n)*/gm),
       hr: testInlineMatch(/(^|\n)(\*\s?){3,}|(-\s?){3,}|(_\s?){3,}/g),
       code: testInlineMatch(/`[^`]+`/g),
       codeBlock: testInlineMatch(/```[\s\S]*?```/g),
@@ -169,6 +169,15 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
       active: cursorStyle.image,
     },
     {
+      icon: 'table',
+      label: 'Table',
+      action: () =>
+        insertMarkdown(
+          '\n| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n',
+        ),
+      active: cursorStyle.table,
+    },
+    {
       icon: 'minus',
       label: 'HR',
       action: () => insertMarkdown('\n---\n'),
@@ -190,17 +199,6 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
 
   const inputClassName =
     'h-auto min-h-[300px] w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resize-y';
-
-  const renderMarkdown = (text: unknown): string => {
-    try {
-      const safeText = typeof text === 'string' ? text : '';
-      if (!safeText) return '';
-      return md.render(safeText);
-    } catch (err) {
-      console.error('Markdown rendering failed:', err);
-      return '<p style="color:red;">Preview error: Invalid markdown content</p>';
-    }
-  };
 
   return (
     <div className={twMerge('space-y-2', className)}>

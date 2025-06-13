@@ -13,7 +13,7 @@ const Toggle: React.FC<ToggleProps> = ({
 }) => {
   return (
     <button
-      className={`flex items-center justify-center p-1 h-8 w-8 rounded-md transition-colors duration-200 ${
+      className={`flex items-center justify-center p-1 h-8 w-8 rounded-md transition-colors duration-200 w-fit ${
         isActive
           ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100'
           : 'bg-transparent text-neutral-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-600'

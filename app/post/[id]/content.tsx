@@ -25,14 +25,11 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   return (
     <div>
       <PageTitle
-        title={`${post.title}`}
-        subtitle={`${post.excerpt}`}
-        badge={{
-          color: 'blue',
-          text: post.categories[0],
-        }}
+        title={post.title}
+        subtitle={post.excerpt}
         route={`/post/${post.id}`}
-        noBackButton
+        isPostTitle
+        category={post.categories[0]}
       />
 
       <PostContent content={post.content || ''} />

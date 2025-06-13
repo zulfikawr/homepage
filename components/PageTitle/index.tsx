@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Icon } from '@/components/UI';
+import { Icon, Label } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { incrementPageViews } from '@/functions/analytics';
 import Separator from '../UI/Separator';
+import Link from 'next/link';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PageTitleProps {
   emoji?: string;
@@ -16,7 +18,8 @@ interface PageTitleProps {
     text: string;
   };
   route?: string;
-  noBackButton?: boolean;
+  isPostTitle?: boolean;
+  category?: string;
 }
 
 const PageTitle = ({
@@ -25,13 +28,14 @@ const PageTitle = ({
   subtitle,
   badge,
   route,
-  noBackButton,
+  isPostTitle,
+  category,
 }: PageTitleProps) => {
   const { setHeaderTitle } = useTitle();
   const router = useRouter();
 
   useEffect(() => {
-    setHeaderTitle(`${emoji} ${title}`);
+    setHeaderTitle(`${emoji ?? ''} ${title}`);
     if (route) incrementPageViews(route);
   }, [emoji, title, setHeaderTitle, route]);
 
@@ -48,27 +52,44 @@ const PageTitle = ({
     <>
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
-          <div className='flex flex-1 items-center'>
+          <div className='flex flex-1 items-start flex-col sm:flex-row sm:items-center'>
             {emoji && (
               <div className='mr-4.5 mt-1 flex -rotate-6 items-center'>
                 <span className='text-[35px] drop-shadow-lg'>{emoji}</span>
               </div>
             )}
             <div>
-              <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-black dark:text-white'>
+              {isPostTitle && category && (
+                <div className='mb-3 w-fit'>
+                  <Link href={`/post/cate/${category}`}>
+                    <Label type='primary' icon='folder'>
+                      {category}
+                    </Label>
+                  </Link>
+                </div>
+              )}
+              <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-black dark:text-white leading-tight'>
                 {title}
                 {badge && (
                   <span className={badgeStyles[badge.color]}>{badge.text}</span>
                 )}
               </h2>
               {subtitle && (
-                <p className='-mt-1 text-sm text-neutral-500 dark:text-neutral-400'>
-                  {subtitle}
+                <p
+                  className={`text-sm text-neutral-500 dark:text-neutral-400 ${
+                    isPostTitle ? 'mt-2' : ''
+                  }`}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: renderMarkdown(subtitle),
+                    }}
+                  />
                 </p>
               )}
             </div>
           </div>
-          {!noBackButton && (
+          {!isPostTitle && (
             <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
               <div className='flex-1 pl-5 pr-3'>
                 <button
