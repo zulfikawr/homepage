@@ -14,7 +14,9 @@ interface EditorProps {
 const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
   const [markdown, setMarkdown] = useState(content);
   const [isViewerMode, setIsViewerMode] = useState(false);
-  const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>({});
+  const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>(
+    {},
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const md = new MarkdownIt({ html: true, breaks: false, linkify: true });
 
@@ -76,7 +78,10 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
     const testInlineMatch = (regex: RegExp) => {
       let match;
       while ((match = regex.exec(context)) !== null) {
-        if (match.index < relativePos && relativePos <= match.index + match[0].length) {
+        if (
+          match.index < relativePos &&
+          relativePos <= match.index + match[0].length
+        ) {
           return true;
         }
       }
@@ -115,17 +120,72 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
       },
       active: isViewerMode,
     },
-    { icon: 'heading', label: 'Heading', action: () => insertMarkdown('# ', ''), active: cursorStyle.heading },
-    { icon: 'bold', label: 'Bold', action: () => insertMarkdown('**', '**'), active: cursorStyle.bold },
-    { icon: 'italic', label: 'Italic', action: () => insertMarkdown('_', '_'), active: cursorStyle.italic },
-    { icon: 'underline', label: 'Underline', action: () => insertMarkdown('<u>', '</u>'), active: cursorStyle.underline },
-    { icon: 'list', label: 'List', action: () => insertMarkdown('- ', ''), active: cursorStyle.list },
-    { icon: 'link', label: 'Link', action: () => insertMarkdown('[', '](url)'), active: cursorStyle.link },
-    { icon: 'quote', label: 'Quote', action: () => insertMarkdown('> ', ''), active: cursorStyle.quote },
-    { icon: 'image', label: 'Image', action: () => insertMarkdown('![alt](', ')'), active: cursorStyle.image },
-    { icon: 'minus', label: 'HR', action: () => insertMarkdown('\n---\n'), active: cursorStyle.hr },
-    { icon: 'code', label: 'Inline Code', action: () => insertMarkdown('`', '`'), active: cursorStyle.code },
-    { icon: 'codeBlock', label: 'Code Block', action: () => insertMarkdown('\n```\n', '\n```\n'), active: cursorStyle.codeBlock },
+    {
+      icon: 'heading',
+      label: 'Heading',
+      action: () => insertMarkdown('# ', ''),
+      active: cursorStyle.heading,
+    },
+    {
+      icon: 'bold',
+      label: 'Bold',
+      action: () => insertMarkdown('**', '**'),
+      active: cursorStyle.bold,
+    },
+    {
+      icon: 'italic',
+      label: 'Italic',
+      action: () => insertMarkdown('_', '_'),
+      active: cursorStyle.italic,
+    },
+    {
+      icon: 'underline',
+      label: 'Underline',
+      action: () => insertMarkdown('<u>', '</u>'),
+      active: cursorStyle.underline,
+    },
+    {
+      icon: 'list',
+      label: 'List',
+      action: () => insertMarkdown('- ', ''),
+      active: cursorStyle.list,
+    },
+    {
+      icon: 'link',
+      label: 'Link',
+      action: () => insertMarkdown('[', '](url)'),
+      active: cursorStyle.link,
+    },
+    {
+      icon: 'quote',
+      label: 'Quote',
+      action: () => insertMarkdown('> ', ''),
+      active: cursorStyle.quote,
+    },
+    {
+      icon: 'image',
+      label: 'Image',
+      action: () => insertMarkdown('![alt](', ')'),
+      active: cursorStyle.image,
+    },
+    {
+      icon: 'minus',
+      label: 'HR',
+      action: () => insertMarkdown('\n---\n'),
+      active: cursorStyle.hr,
+    },
+    {
+      icon: 'code',
+      label: 'Inline Code',
+      action: () => insertMarkdown('`', '`'),
+      active: cursorStyle.code,
+    },
+    {
+      icon: 'codeBlock',
+      label: 'Code Block',
+      action: () => insertMarkdown('\n```\n', '\n```\n'),
+      active: cursorStyle.codeBlock,
+    },
   ];
 
   const inputClassName =
@@ -144,25 +204,29 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
 
   return (
     <div className={twMerge('space-y-2', className)}>
-      <div className="flex flex-wrap gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-md">
+      <div className='flex flex-wrap gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-md'>
         {toolbarButtons.map((button, index) => (
-          <Tooltip key={index} text={button.label} position="top">
+          <Tooltip key={index} text={button.label} position='top'>
             <Toggle
               isActive={button.active}
               onChange={(e) => {
                 if (e && 'preventDefault' in e) e.preventDefault();
-                (button.action as (e?: React.MouseEvent<HTMLButtonElement>) => void)(e);
+                (
+                  button.action as (
+                    e?: React.MouseEvent<HTMLButtonElement>,
+                  ) => void
+                )(e);
               }}
             >
-              <Icon name={button.icon} className="w-5 h-5" />
+              <Icon name={button.icon} className='w-5 h-5' />
             </Toggle>
           </Tooltip>
         ))}
       </div>
-      <div className="min-h-[310px]">
+      <div className='min-h-[310px]'>
         {isViewerMode ? (
           <div
-            className="prose dark:prose-invert -py-2 px-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 min-h-[300px]"
+            className='prose dark:prose-invert -py-2 px-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 min-h-[300px]'
             dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
           />
         ) : (
@@ -172,7 +236,7 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
             onChange={handleChange}
             onSelect={updateCursorStyles}
             className={inputClassName}
-            placeholder="Write your markdown here..."
+            placeholder='Write your markdown here...'
           />
         )}
       </div>
