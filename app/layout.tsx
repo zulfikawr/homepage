@@ -31,7 +31,7 @@ export default function RootLayout({
           data-website-id='438f9662-37d9-47e8-ba04-c58c1c2d30f2'
         />
         {/* Define isSpace function globally to fix markdown-it issues with Next.js + Turbopack */}
-        <Script id="markdown-it-fix" strategy="beforeInteractive">
+        <Script id='markdown-it-fix' strategy='beforeInteractive'>
           {`
             if (typeof window !== 'undefined' && typeof window.isSpace === 'undefined') {
               window.isSpace = function(code) {

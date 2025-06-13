@@ -60,7 +60,9 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           </section>
 
           <section>
-            <h2 className='text-xl sm:text-2xl font-medium mb-4'>Description</h2>
+            <h2 className='text-xl sm:text-2xl font-medium mb-4'>
+              Description
+            </h2>
             <p className='text-md'>{project.description}</p>
           </section>
 
