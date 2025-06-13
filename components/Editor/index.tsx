@@ -1,329 +1,185 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
-import Document from '@tiptap/extension-document';
-import Text from '@tiptap/extension-text';
-import Bold from '@tiptap/extension-bold';
-import Italic from '@tiptap/extension-italic';
-import Underline from '@tiptap/extension-underline';
-import LinkExtension from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
-import Strike from '@tiptap/extension-strike';
-import Heading, { Level } from '@tiptap/extension-heading';
-import Paragraph from '@tiptap/extension-paragraph';
-import Code from '@tiptap/extension-code';
-import CodeBlock from '@tiptap/extension-code-block';
-import { Button, Dropdown, Input, Textarea } from '@/components/UI';
-import Tooltip from '@/components/UI/Tooltip';
-import Toggle from '@/components/UI/Toggle';
+import React, { useState, useRef, useEffect } from 'react';
+import { twMerge } from 'tailwind-merge';
+import MarkdownIt from 'markdown-it';
+import { Icon, Toggle, Tooltip } from '@/components/UI';
 
 interface EditorProps {
-  content?: string;
-  onUpdate?: (content: string) => void;
+  content: string;
+  onUpdate: (content: string) => void;
+  className?: string;
 }
 
-interface HeadingOption {
-  level: Level;
-  label: string;
-}
-
-export const Editor = ({ content = '', onUpdate }: EditorProps) => {
-  const [linkUrl, setLinkUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [codeSnippet, setCodeSnippet] = useState('');
-  const [isLinkDropdownOpen, setIsLinkDropdownOpen] = useState(false);
-  const [isImageDropdownOpen, setIsImageDropdownOpen] = useState(false);
-  const [isCodeDropdownOpen, setIsCodeDropdownOpen] = useState(false);
-  const linkInputRef = useRef<HTMLInputElement>(null);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const codeInputRef = useRef<HTMLTextAreaElement>(null);
-
-  const editor = useEditor({
-    extensions: [
-      Document,
-      Text,
-      Bold,
-      Italic,
-      Underline,
-      LinkExtension.configure({
-        openOnClick: false,
-      }),
-      Heading,
-      Paragraph,
-      Image,
-      Strike,
-      Code,
-      CodeBlock.configure({
-        languageClassPrefix: 'language-',
-      }),
-    ],
-    content: content || '<p></p>',
-    autofocus: false,
-    editorProps: {
-      attributes: {
-        class: 'prose dark:prose-invert focus:outline-none min-h-[400px] p-4',
-      },
-    },
-    onUpdate: ({ editor }) => {
-      if (onUpdate) {
-        onUpdate(editor.getHTML());
-      }
-    },
-    immediatelyRender: false,
-  });
+const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
+  const [markdown, setMarkdown] = useState(content);
+  const [isViewerMode, setIsViewerMode] = useState(false);
+  const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>({});
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const md = new MarkdownIt({ html: true, breaks: false, linkify: true });
 
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content);
-    }
-  }, [content, editor]);
+    setMarkdown(content);
+  }, [content]);
 
-  useEffect(() => {
-    if (isLinkDropdownOpen && linkInputRef.current) {
-      linkInputRef.current.focus();
-    }
-  }, [isLinkDropdownOpen]);
-
-  useEffect(() => {
-    if (isImageDropdownOpen && imageInputRef.current) {
-      imageInputRef.current.focus();
-    }
-  }, [isImageDropdownOpen]);
-
-  useEffect(() => {
-    if (isCodeDropdownOpen && codeInputRef.current) {
-      codeInputRef.current.focus();
-    }
-  }, [isCodeDropdownOpen]);
-
-  if (!editor) {
-    return null;
-  }
-
-  const HEADING_OPTIONS: HeadingOption[] = [
-    { level: 1 as Level, label: 'H1' },
-    { level: 2 as Level, label: 'H2' },
-    { level: 3 as Level, label: 'H3' },
-  ];
-
-  const getCurrentHeading = () => {
-    if (editor.isActive('heading', { level: 1 })) return 'H1';
-    if (editor.isActive('heading', { level: 2 })) return 'H2';
-    if (editor.isActive('heading', { level: 3 })) return 'H3';
-    return 'Paragraph';
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setMarkdown(newContent);
+    onUpdate(newContent);
   };
 
-  const currentHeading = getCurrentHeading();
+  const insertMarkdown = (prefix: string, suffix: string = '') => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = markdown.slice(start, end);
+    const newText = `${markdown.slice(0, start)}${prefix}${selectedText}${suffix}${markdown.slice(end)}`;
+
+    setMarkdown(newText);
+    onUpdate(newText);
+
+    const newCursorPos = start + prefix.length + selectedText.length;
+    setTimeout(() => {
+      if (textarea) {
+        textarea.selectionStart = newCursorPos;
+        textarea.selectionEnd = newCursorPos;
+        textarea.focus();
+        updateCursorStyles();
+      }
+    }, 0);
+  };
+
+  const getCursorContext = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return { context: '', offset: 0 };
+
+    const cursorPos = textarea.selectionStart;
+    const lookBehind = 50;
+    const lookAhead = 50;
+
+    const start = Math.max(0, cursorPos - lookBehind);
+    const end = Math.min(markdown.length, cursorPos + lookAhead);
+    const context = markdown.slice(start, end);
+    return { context, offset: start };
+  };
+
+  const updateCursorStyles = () => {
+    const { context, offset } = getCursorContext();
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const cursorPos = textarea.selectionStart;
+    const relativePos = cursorPos - offset;
+
+    const testInlineMatch = (regex: RegExp) => {
+      let match;
+      while ((match = regex.exec(context)) !== null) {
+        if (match.index < relativePos && relativePos <= match.index + match[0].length) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    setCursorStyle({
+      bold: testInlineMatch(/\*\*(?!\s)([^*]+?)(?!\s)\*\*/g),
+      italic: testInlineMatch(/_(?!\s)([^_]+?)(?!\s)_/g),
+      underline: testInlineMatch(/<u>(.*?)<\/u>/g),
+      quote: testInlineMatch(/^>\s.*$/gm),
+      list: testInlineMatch(/(^|\n)-\s.*$/gm),
+      heading: testInlineMatch(/(^|\n)#+\s.*$/gm),
+      link: testInlineMatch(/\[(.*?)\]\((.*?)\)/g),
+      image: testInlineMatch(/!\[(.*?)\]\((.*?)\)/g),
+      hr: testInlineMatch(/(^|\n)(\*\s?){3,}|(-\s?){3,}|(_\s?){3,}/g),
+      code: testInlineMatch(/`[^`]+`/g),
+      codeBlock: testInlineMatch(/```[\s\S]*?```/g),
+    });
+  };
+
+  useEffect(() => {
+    document.addEventListener('selectionchange', updateCursorStyles);
+    return () => {
+      document.removeEventListener('selectionchange', updateCursorStyles);
+    };
+  }, [markdown]);
+
+  const toolbarButtons = [
+    {
+      icon: isViewerMode ? 'pencilSimpleLine' : 'eye',
+      label: isViewerMode ? 'Edit' : 'Preview',
+      action: (e?: React.MouseEvent<HTMLButtonElement>) => {
+        if (e) e.preventDefault();
+        setIsViewerMode(!isViewerMode);
+      },
+      active: isViewerMode,
+    },
+    { icon: 'heading', label: 'Heading', action: () => insertMarkdown('# ', ''), active: cursorStyle.heading },
+    { icon: 'bold', label: 'Bold', action: () => insertMarkdown('**', '**'), active: cursorStyle.bold },
+    { icon: 'italic', label: 'Italic', action: () => insertMarkdown('_', '_'), active: cursorStyle.italic },
+    { icon: 'underline', label: 'Underline', action: () => insertMarkdown('<u>', '</u>'), active: cursorStyle.underline },
+    { icon: 'list', label: 'List', action: () => insertMarkdown('- ', ''), active: cursorStyle.list },
+    { icon: 'link', label: 'Link', action: () => insertMarkdown('[', '](url)'), active: cursorStyle.link },
+    { icon: 'quote', label: 'Quote', action: () => insertMarkdown('> ', ''), active: cursorStyle.quote },
+    { icon: 'image', label: 'Image', action: () => insertMarkdown('![alt](', ')'), active: cursorStyle.image },
+    { icon: 'minus', label: 'HR', action: () => insertMarkdown('\n---\n'), active: cursorStyle.hr },
+    { icon: 'code', label: 'Inline Code', action: () => insertMarkdown('`', '`'), active: cursorStyle.code },
+    { icon: 'codeBlock', label: 'Code Block', action: () => insertMarkdown('\n```\n', '\n```\n'), active: cursorStyle.codeBlock },
+  ];
+
+  const inputClassName =
+    'h-auto min-h-[300px] w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resize-y';
+
+  const renderMarkdown = (text: unknown): string => {
+    try {
+      const safeText = typeof text === 'string' ? text : '';
+      if (!safeText) return '';
+      return md.render(safeText);
+    } catch (err) {
+      console.error('Markdown rendering failed:', err);
+      return '<p style="color:red;">Preview error: Invalid markdown content</p>';
+    }
+  };
 
   return (
-    <div>
-      <div className='flex space-x-2 p-2 rounded-t-md border border-neutral-300 bg-neutral-50 shadow-sm dark:border-neutral-600 dark:bg-neutral-800'>
-        <Dropdown
-          trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
-              {currentHeading}
-            </span>
-          }
-        >
-          <div className='p-2'>
-            {HEADING_OPTIONS.map((heading) => (
-              <button
-                key={heading.level}
-                type='button'
-                onClick={() =>
-                  editor
-                    .chain()
-                    .focus()
-                    .toggleHeading({ level: heading.level })
-                    .run()
-                }
-                className={`block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md ${
-                  editor.isActive('heading', { level: heading.level })
-                    ? 'bg-neutral-200 dark:bg-neutral-700'
-                    : ''
-                }`}
-              >
-                {heading.label}
-              </button>
-            ))}
-            <button
-              type='button'
-              onClick={() => editor.chain().focus().setParagraph().run()}
-              className={`block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md ${
-                editor.isActive('paragraph')
-                  ? 'bg-neutral-200 dark:bg-neutral-700'
-                  : ''
-              }`}
+    <div className={twMerge('space-y-2', className)}>
+      <div className="flex flex-wrap gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-md">
+        {toolbarButtons.map((button, index) => (
+          <Tooltip key={index} text={button.label} position="top">
+            <Toggle
+              isActive={button.active}
+              onChange={(e) => {
+                if (e && 'preventDefault' in e) e.preventDefault();
+                (button.action as (e?: React.MouseEvent<HTMLButtonElement>) => void)(e);
+              }}
             >
-              Paragraph
-            </button>
-          </div>
-        </Dropdown>
-
-        <Tooltip text='Bold' position='top'>
-          <Toggle
-            isActive={editor.isActive('bold')}
-            onChange={() => editor.chain().focus().toggleBold().run()}
-          >
-            <b>B</b>
-          </Toggle>
-        </Tooltip>
-
-        <Tooltip text='Italic' position='top'>
-          <Toggle
-            isActive={editor.isActive('italic')}
-            onChange={() => editor.chain().focus().toggleItalic().run()}
-          >
-            <i>I</i>
-          </Toggle>
-        </Tooltip>
-
-        <Tooltip text='Underline' position='top'>
-          <Toggle
-            isActive={editor.isActive('underline')}
-            onChange={() => editor.chain().focus().toggleUnderline().run()}
-          >
-            <u>U</u>
-          </Toggle>
-        </Tooltip>
-
-        <Tooltip text='Strikethrough' position='top'>
-          <Toggle
-            isActive={editor.isActive('strike')}
-            onChange={() => editor.chain().focus().toggleStrike().run()}
-          >
-            <s>S</s>
-          </Toggle>
-        </Tooltip>
-
-        <Tooltip text='Inline Code' position='top'>
-          <Toggle
-            isActive={editor.isActive('code')}
-            onChange={() => editor.chain().focus().toggleCode().run()}
-          >
-            <code>{'</>'}</code>
-          </Toggle>
-        </Tooltip>
-
-        <Dropdown
-          trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
-              Code Block
-            </span>
-          }
-          onOpenChange={setIsCodeDropdownOpen}
-        >
-          <div className='p-2'>
-            <Textarea
-              ref={codeInputRef}
-              placeholder='Enter your code here...'
-              value={codeSnippet}
-              onChange={(e) => setCodeSnippet(e.target.value)}
-              className='w-fit p-3 text-sm'
-              rows={8}
-            />
-            <Button
-              type='primary'
-              onClick={() => {
-                if (codeSnippet) {
-                  editor.chain().focus().toggleCodeBlock().run();
-                  editor.commands.insertContent(codeSnippet);
-                  setCodeSnippet('');
-                  setIsCodeDropdownOpen(false);
-                }
-              }}
-              className='w-full'
-            >
-              Insert Code
-            </Button>
-          </div>
-        </Dropdown>
-
-        <Dropdown
-          trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
-              Link
-            </span>
-          }
-          onOpenChange={setIsLinkDropdownOpen}
-        >
-          <div className='p-2'>
-            <Input
-              ref={linkInputRef}
-              type='text'
-              placeholder='Enter URL'
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              className='w-fit p-3 text-sm mb-2'
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && linkUrl) {
-                  editor.chain().setLink({ href: linkUrl }).focus().run();
-                  setLinkUrl('');
-                  setIsLinkDropdownOpen(false);
-                }
-              }}
-            />
-            <Button
-              type='primary'
-              onClick={() => {
-                if (linkUrl) {
-                  editor.chain().setLink({ href: linkUrl }).focus().run();
-                  setLinkUrl('');
-                  setIsLinkDropdownOpen(false);
-                }
-              }}
-              className='w-full'
-            >
-              Apply
-            </Button>
-          </div>
-        </Dropdown>
-
-        <Dropdown
-          trigger={
-            <span className='block cursor-pointer px-3 py-2 text-sm w-full text-center rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-700'>
-              Image
-            </span>
-          }
-          onOpenChange={setIsImageDropdownOpen}
-        >
-          <div className='p-2'>
-            <Input
-              ref={imageInputRef}
-              type='text'
-              placeholder='Enter Image URL'
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              className='w-fit p-3 text-sm mb-2'
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && imageUrl) {
-                  editor.chain().setImage({ src: imageUrl }).focus().run();
-                  setImageUrl('');
-                  setIsImageDropdownOpen(false);
-                }
-              }}
-            />
-            <Button
-              type='primary'
-              onClick={() => {
-                if (imageUrl) {
-                  editor.chain().setImage({ src: imageUrl }).focus().run();
-                  setImageUrl('');
-                  setIsImageDropdownOpen(false);
-                }
-              }}
-              className='w-full'
-            >
-              Apply
-            </Button>
-          </div>
-        </Dropdown>
+              <Icon name={button.icon} className="w-5 h-5" />
+            </Toggle>
+          </Tooltip>
+        ))}
       </div>
-
-      <div className='cursor-text border-b border-r border-l border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-700 h-[calc(80vh)] overflow-y-scroll'>
-        <EditorContent editor={editor} />
+      <div className="min-h-[310px]">
+        {isViewerMode ? (
+          <div
+            className="prose dark:prose-invert -py-2 px-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 min-h-[300px]"
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
+          />
+        ) : (
+          <textarea
+            ref={textareaRef}
+            value={markdown}
+            onChange={handleChange}
+            onSelect={updateCursorStyles}
+            className={inputClassName}
+            placeholder="Write your markdown here..."
+          />
+        )}
       </div>
     </div>
   );
 };
+
+Editor.displayName = 'Editor';
+
+export { Editor };

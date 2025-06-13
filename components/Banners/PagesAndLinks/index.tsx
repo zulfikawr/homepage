@@ -1,5 +1,4 @@
-import { Icon } from '@/components/UI';
-import Tooltip from '@/components/UI/Tooltip';
+import { Icon, Tooltip } from '@/components/UI';
 import Link from 'next/link';
 
 const PagesAndLinks = () => {

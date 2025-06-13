@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ToggleProps {
   isActive?: boolean;
-  onChange?: () => void;
+  onChange?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
 }
 
@@ -13,7 +13,7 @@ const Toggle: React.FC<ToggleProps> = ({
 }) => {
   return (
     <button
-      className={`p-1 h-8 w-8 rounded-md transition-colors duration-200 ${
+      className={`flex items-center justify-center p-1 h-8 w-8 rounded-md transition-colors duration-200 ${
         isActive
           ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100'
           : 'bg-transparent text-neutral-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-600'
@@ -28,4 +28,4 @@ const Toggle: React.FC<ToggleProps> = ({
 
 Toggle.displayName = 'Toggle';
 
-export default Toggle;
+export { Toggle };

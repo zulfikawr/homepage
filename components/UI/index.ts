@@ -8,3 +8,5 @@ export { Input } from './Input';
 export { Label } from './Label';
 export { Textarea } from './Textarea';
 export { Table, TableHeader, TableBody, TableRow, TableCell } from './Table';
+export { Toggle } from './Toggle';
+export { Tooltip } from './Tooltip';
