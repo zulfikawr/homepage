@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Badge, Button, Checkbox, Dropdown, Icon } from '@/components/UI';
+import { Badge, Button, Checkbox, Dropdown, Icon, Toggle, Tooltip } from '@/components/UI';
 import { drawer } from '@/components/Drawer';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
-import Tooltip from '@/components/UI/Tooltip';
-import Toggle from '@/components/UI/Toggle';
 import PageTitle from '@/components/PageTitle';
 import Separator from '@/components/UI/Separator';
 
