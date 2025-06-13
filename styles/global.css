@@ -8,7 +8,6 @@
 }
 
 body {
-  @apply w-full;
   font-family: 'EB Garamond', serif;
   font-optical-sizing: auto;
   font-style: normal;
@@ -203,15 +202,15 @@ body::-webkit-scrollbar {
 }
 
 .prose h1 {
-  @apply text-4xl font-bold mt-8 mb-4;
+  @apply text-4xl font-bold my-4;
 }
 
 .prose h2 {
-  @apply text-3xl font-semibold mt-6 mb-3;
+  @apply text-3xl font-semibold my-3;
 }
 
 .prose h3 {
-  @apply text-2xl font-medium mt-5 mb-2;
+  @apply text-2xl font-medium my-2;
 }
 
 .prose p {

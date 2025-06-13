@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import '@/styles/tailwind.css';
 import '@/styles/global.css';
 import '@/styles/atom-one-dark.css';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Zulfikar',
@@ -29,6 +30,16 @@ export default function RootLayout({
           src='https://cloud.umami.is/script.js'
           data-website-id='438f9662-37d9-47e8-ba04-c58c1c2d30f2'
         />
+        {/* Define isSpace function globally to fix markdown-it issues with Next.js + Turbopack */}
+        <Script id="markdown-it-fix" strategy="beforeInteractive">
+          {`
+            if (typeof window !== 'undefined' && typeof window.isSpace === 'undefined') {
+              window.isSpace = function(code) {
+                return code === 0x20 || code === 0x09 || code === 0x0A || code === 0x0B || code === 0x0C || code === 0x0D;
+              };
+            }
+          `}
+        </Script>
       </head>
       <body>
         <Providers>

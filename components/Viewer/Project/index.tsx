@@ -28,13 +28,15 @@ const ProjectViewer = ({ project }: { project: Project }) => {
             </h1>
           </div>
           <div className='flex gap-4'>
-            <Button
-              type='primary'
-              icon='arrowSquareOut'
-              onClick={() => window.open(project.link, '_blank')}
-            >
-              <span className='hidden lg:block'>Visit</span>
-            </Button>
+            {project.link && (
+              <Button
+                type='primary'
+                icon='arrowSquareOut'
+                onClick={() => window.open(project.link, '_blank')}
+              >
+                <span className='hidden lg:block'>Link</span>
+              </Button>
+            )}
             <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
@@ -58,7 +60,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           </section>
 
           <section>
-            <h2 className='text-xl sm:text-2xl font-medium mb-4'>Overview</h2>
+            <h2 className='text-xl sm:text-2xl font-medium mb-4'>Description</h2>
             <p className='text-md'>{project.description}</p>
           </section>
 
