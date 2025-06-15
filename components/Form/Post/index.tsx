@@ -46,7 +46,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     id: post.id || 'preview',
     title: post.title || 'Post Title',
     excerpt: post.excerpt || 'This is a post excerpt.',
-    content: post.content || '<p></p>',
+    content: post.content || '',
     img: post.img,
     categories: post.categories.length ? post.categories : ['Post Categories'],
     dateString: post.dateString || formatDate(selectedDate),
