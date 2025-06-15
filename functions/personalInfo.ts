@@ -5,7 +5,7 @@ import { PersonalInfo } from '@/types/personalInfo';
 const defaultPersonalInfo: PersonalInfo = {
   name: 'Zulfikar',
   title: 'IR student, journalist, and web developer.',
-  avatarUrl: '/tetris.jpg',
+  avatarUrl: '/avatar.jpg',
 };
 
 /**
