@@ -52,13 +52,13 @@ const PageTitle = ({
     <>
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
         <div className='mb-4 flex items-center'>
-          <div className='flex flex-1 items-start flex-col sm:flex-row sm:items-center'>
+          <div className='flex flex-1 items-center gap-3'>
             {emoji && (
-              <div className='mr-4.5 mt-1 flex -rotate-6 items-center'>
-                <span className='text-[35px] drop-shadow-lg'>{emoji}</span>
+              <div className='text-[35px] drop-shadow-lg -rotate-6'>
+                {emoji}
               </div>
             )}
-            <div>
+            <div className='flex flex-col'>
               {isPostTitle && category && (
                 <div className='mb-3 w-fit'>
                   <Link href={`/post/cate/${category}`}>
@@ -75,7 +75,7 @@ const PageTitle = ({
                 )}
               </h2>
               {subtitle && (
-                <p
+                <div
                   className={`text-sm text-neutral-500 dark:text-neutral-400 ${
                     isPostTitle ? 'mt-2' : ''
                   }`}
@@ -85,7 +85,7 @@ const PageTitle = ({
                       __html: renderMarkdown(subtitle),
                     }}
                   />
-                </p>
+                </div>
               )}
             </div>
           </div>

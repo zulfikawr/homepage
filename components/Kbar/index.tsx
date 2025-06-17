@@ -10,10 +10,10 @@ export function Kbar() {
   });
 
   return (
-    <div className='effect-pressing hidden lg:flex lg:w-content mx-auto px-6'>
+    <div className='w-content effect-pressing hidden lg:flex'>
       <div
         aria-label='Command + K to open the command palette'
-        className='absolute left-[26px] top-[7px] z-10 rounded-md border bg-neutral-50 px-1.5 py-0.5 text-xs text-neutral-400 dark:border-neutral-600 dark:bg-transparent'
+        className='absolute left-3 top-[7px] z-10 rounded-md border bg-neutral-50 px-1.5 py-0.5 text-xs text-neutral-400 dark:border-neutral-600 dark:bg-transparent'
       >
         ⌘+K
       </div>

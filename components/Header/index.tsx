@@ -21,7 +21,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
   const { resolvedTheme } = useTheme();
   const titleRef = useRef<HTMLDivElement>(null);
 
-  const { isPagesPage, nonHomePage } = useRouteInfo();
+  const { isHomePage, nonHomePage } = useRouteInfo();
 
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
@@ -33,79 +33,67 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       <header
         ref={headerRef}
         id='header'
-        className='header fixed top-0 z-50 grid h-auto w-full grid-cols-8 px-1 py-2 duration-300 lg:px-5 lg:py-4'
+        className='header fixed top-0 z-50 w-full px-3 py-2 lg:px-5 lg:py-4 duration-300'
       >
-        {/* Left side - Avatar and Name */}
-        <div className='col-start-1 col-end-3 flex h-full items-center'>
-          <div className='group mx-auto flex h-full cursor-pointer items-center justify-center space-x-3 px-5'>
-            <div className='flex h-[18px] w-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
-              <ImageWithFallback
-                className='rounded-full'
-                src={resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'}
-                alt='Zulfikar'
-                height={18}
-                width={18}
-                loading='lazy'
-                type='square'
-              />
-            </div>
-            <div className='text-3 font-medium text-neutral-700 dark:text-neutral-300 dark:group-hover:text-neutral-200'>
-              <Link href='/' passHref>
+        <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
+          <Link href='/' passHref className='relative z-10'>
+            <div className='group flex items-center space-x-3 flex-shrink-0 z-10'>
+              <div className='flex size-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
+                <ImageWithFallback
+                  className='rounded-full'
+                  src={
+                    resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'
+                  }
+                  alt='Zulfikar'
+                  height={18}
+                  width={18}
+                  loading='lazy'
+                  type='square'
+                />
+              </div>
+              <div className='text-3 font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-800 dark:group-hover:text-neutral-200'>
                 Zulfikar
-              </Link>
+              </div>
             </div>
-          </div>
-        </div>
+          </Link>
 
-        {/* Center - Title or Kbar */}
-        <OffsetTransition disabled={!nonHomePage} componentRef={titleRef}>
-          <div
-            ref={titleRef}
-            className='col-start-3 col-end-7 flex items-center justify-center mx-3'
-          >
-            {nonHomePage ? <HeaderTitle /> : <Kbar />}
-          </div>
-        </OffsetTransition>
-
-        {/* Right side - Navigation buttons */}
-        <div className='col-start-7 col-end-9 flex h-full items-center justify-end space-x-2 mr-2'>
-          {nonHomePage && (
-            <Button
-              type='ghost'
-              icon='houseLine'
-              className='hidden sm:flex sm:items-center sm:space-x-2'
+          <OffsetTransition disabled={!nonHomePage} componentRef={titleRef}>
+            <div
+              ref={titleRef}
+              className='absolute inset-x-0 mx-auto w-full flex justify-center pointer-events-none'
             >
-              <Link href='/'>Home</Link>
-            </Button>
-          )}
+              <div className='pointer-events-auto'>
+                {!isHomePage ? <HeaderTitle /> : <Kbar />}
+              </div>
+            </div>
+          </OffsetTransition>
 
-          {!isPagesPage && (
+          <div className='ml-auto flex items-center space-x-2'>
+            {isHomePage ? (
+              <Button
+                type='ghost'
+                icon='folder'
+                className='hidden lg:flex items-center space-x-2'
+              >
+                <Link href='/pages'>Pages</Link>
+              </Button>
+            ) : (
+              <Button
+                type='ghost'
+                icon='magnifyingGlass'
+                className='hidden lg:flex items-center space-x-2'
+                onClick={() => drawer.open(<KbarContent />)}
+              >
+                Search
+              </Button>
+            )}
             <Button
               type='ghost'
-              icon='folder'
-              className='hidden sm:flex items-center space-x-2'
-            >
-              <Link href='/pages'>Pages</Link>
-            </Button>
-          )}
-
-          {nonHomePage && (
-            <Button
-              type='ghost'
-              icon='magnifyingGlass'
-              className='hidden lg:flex items-center space-x-2'
+              icon='menu'
+              className='flex lg:hidden'
               onClick={() => drawer.open(<KbarContent />)}
-            >
-              Search
-            </Button>
-          )}
-
-          <Button
-            type='ghost'
-            icon='menu'
-            className='flex lg:hidden'
-            onClick={() => drawer.open(<KbarContent />)}
-          />
+            />
+          </div>
         </div>
       </header>
     </ScrollWrapper>
@@ -118,11 +106,9 @@ const HeaderTitle = () => {
   if (!headerTitle) return null;
 
   return (
-    <div className='mx-auto flex items-center justify-center space-x-3 overflow-hidden'>
-      <h3 className='overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-3'>
-        {headerTitle}
-      </h3>
-    </div>
+    <h3 className='w-full max-w-[calc(90vw-180px)] text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-3'>
+      {headerTitle}
+    </h3>
   );
 };
 
