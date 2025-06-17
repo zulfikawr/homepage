@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it';
+import anchor from 'markdown-it-anchor';
 import hljs from 'highlight.js';
 
 const md = new MarkdownIt({
@@ -6,13 +7,19 @@ const md = new MarkdownIt({
   breaks: false,
   linkify: true,
   highlight: (code, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
+    try {
+      if (lang && hljs.getLanguage(lang)) {
         return `<pre class="hljs"><code>${hljs.highlight(code, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
-      } catch (_) {}
+      }
+    } catch (e) {
+      console.error('Highlight.js error:', e);
     }
     return `<pre class="hljs"><code>${md.utils.escapeHtml(code)}</code></pre>`;
   },
+});
+
+md.use(anchor, {
+  slugify: (s: string) => s.toLowerCase().replace(/[^\w]+/g, '-'),
 });
 
 md.enable('table');
@@ -24,6 +31,6 @@ export function renderMarkdown(text: unknown): string {
     return md.render(safeText);
   } catch (err) {
     console.error('Markdown rendering failed:', err);
-    return '<p style="color:red;">Preview error: Invalid markdown content</p>';
+    return '';
   }
 }

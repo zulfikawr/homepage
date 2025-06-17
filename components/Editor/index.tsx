@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Icon, Toggle, Tooltip } from '@/components/UI';
@@ -52,7 +52,7 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
     }, 0);
   };
 
-  const getCursorContext = () => {
+  const getCursorContext = useCallback(() => {
     const textarea = textareaRef.current;
     if (!textarea) return { context: '', offset: 0 };
 
@@ -64,9 +64,9 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
     const end = Math.min(markdown.length, cursorPos + lookAhead);
     const context = markdown.slice(start, end);
     return { context, offset: start };
-  };
+  }, [markdown]);
 
-  const updateCursorStyles = () => {
+  const updateCursorStyles = useCallback(() => {
     const { context, offset } = getCursorContext();
     const textarea = textareaRef.current;
     if (!textarea) return;
@@ -101,7 +101,7 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
       code: testInlineMatch(/`[^`]+`/g),
       codeBlock: testInlineMatch(/```[\s\S]*?```/g),
     });
-  };
+  }, [markdown]);
 
   useEffect(() => {
     document.addEventListener('selectionchange', updateCursorStyles);
