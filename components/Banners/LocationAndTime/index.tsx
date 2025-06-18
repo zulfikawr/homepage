@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@/components/UI';
 import LoadingSkeleton from './loading';
+import { Card } from '@/components/Card';
 
 const FlipNumber = ({ number }: { number: string }) => (
   <div className='relative w-8 h-12 bg-white/10 rounded-md overflow-hidden mx-0.5'>
@@ -94,14 +95,15 @@ const LocationAndTime = () => {
   if (!mounted) return <LoadingSkeleton />;
 
   return (
-    <div
-      className={`relative w-full min-h-[120px] rounded-md border shadow-sm dark:border-neutral-700 dark:bg-neutral-800 overflow-hidden
+    <Card
+      className={`relative w-full min-h-[120px] overflow-hidden
         ${
           isDaytime
             ? 'bg-gradient-to-br from-blue-400 to-yellow-300'
             : 'bg-gradient-to-br from-[#0B1026] to-[#1B103F]'
         }
       `}
+      isPreview
     >
       {isDaytime ? (
         <div className='absolute top-4 right-4 w-10 h-10 bg-yellow-300 rounded-full' />
@@ -183,7 +185,7 @@ const LocationAndTime = () => {
           }
         }
       `}</style>
-    </div>
+    </Card>
   );
 };
 

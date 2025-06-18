@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffectToggle } from '@/contexts/effectContext';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 interface DropdownProps {
@@ -17,6 +18,8 @@ const Dropdown = ({
   className = '',
   matchTriggerWidth = false,
 }: DropdownProps) => {
+  const { effectEnabled } = useEffectToggle();
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -79,6 +82,10 @@ const Dropdown = ({
     onOpenChange?.(newIsOpen);
   };
 
+  const effectStyles = effectEnabled
+    ? 'bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md'
+    : 'bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 backdrop-blur-none';
+
   return (
     <div className={`relative inline-block ${className}`} ref={dropdownRef}>
       {/* Trigger Element */}
@@ -99,11 +106,13 @@ const Dropdown = ({
           position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
         } left-0 z-[9998] ${
           matchTriggerWidth ? 'w-[var(--trigger-width)]' : 'min-w-fit'
-        } bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 rounded-md shadow-lg transition-all duration-200 ease-in-out ${
+        } rounded-md shadow-lg transition-all duration-200 ease-in-out ${
           isOpen
             ? 'opacity-100 scale-y-100'
             : 'opacity-0 scale-y-95 pointer-events-none'
-        }`}
+        }
+          ${effectStyles}
+        `}
         role='menu'
         style={
           matchTriggerWidth

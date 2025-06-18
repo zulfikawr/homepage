@@ -1,23 +1,33 @@
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface ToggleProps {
   isActive?: boolean;
   onChange?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
+  className?: string;
 }
 
 const Toggle: React.FC<ToggleProps> = ({
   isActive = false,
   onChange,
   children,
+  className,
 }) => {
+  const baseClasses =
+    'flex items-center justify-center p-1 h-8 w-fit transition-colors duration-200';
+  const activeClasses =
+    'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100';
+  const inactiveClasses =
+    'bg-transparent text-neutral-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-600';
+
   return (
     <button
-      className={`flex items-center justify-center p-1 h-8 w-8 rounded-md transition-colors duration-200 w-fit ${
-        isActive
-          ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100'
-          : 'bg-transparent text-neutral-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-600'
-      }`}
+      className={twMerge(
+        baseClasses,
+        isActive ? activeClasses : inactiveClasses,
+        className,
+      )}
       onClick={onChange}
       aria-pressed={isActive}
     >
@@ -27,5 +37,4 @@ const Toggle: React.FC<ToggleProps> = ({
 };
 
 Toggle.displayName = 'Toggle';
-
 export { Toggle };

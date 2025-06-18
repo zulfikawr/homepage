@@ -9,4 +9,6 @@ export { Label } from './Label';
 export { Textarea } from './Textarea';
 export { Table, TableHeader, TableBody, TableRow, TableCell } from './Table';
 export { Toggle } from './Toggle';
+export { ToggleGroup } from './ToggleGroup';
 export { Tooltip } from './Tooltip';
+export { Switch } from './Switch';

@@ -1,9 +1,10 @@
+import { Card } from '@/components/Card';
 import { Icon, Tooltip } from '@/components/UI';
 import Link from 'next/link';
 
 const PagesAndLinks = () => {
   return (
-    <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+    <Card isPreview>
       <div className='flex w-full items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
         <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
           <span className='size-5'>
@@ -102,7 +103,7 @@ const PagesAndLinks = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

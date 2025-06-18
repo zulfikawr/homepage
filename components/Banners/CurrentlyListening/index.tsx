@@ -14,6 +14,7 @@ import LoadingSkeleton from './loading';
 import { formatDate } from '@/utilities/formatDate';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
+import { Card } from '@/components/Card';
 
 const apiCache = {
   currentTrack: null,
@@ -234,7 +235,7 @@ const CurrentlyListening = () => {
   if (!currentTrack) return null;
 
   return (
-    <div className='w-full rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 relative overflow-hidden'>
+    <Card isPreview>
       <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
           <Icon name='musicNotes' className='size-5' />
@@ -312,7 +313,7 @@ const CurrentlyListening = () => {
           </div>
         </div>
       </Link>
-    </div>
+    </Card>
   );
 };
 
