@@ -1,9 +1,9 @@
 'use client';
 
-import Waves from './waves';
+import Waves from './component';
 import { useTheme } from 'next-themes';
 
-export default function GlitchBackground() {
+export default function WavesBackground() {
   const { resolvedTheme } = useTheme();
 
   const isDark = resolvedTheme === 'dark';
