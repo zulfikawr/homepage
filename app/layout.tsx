@@ -1,16 +1,15 @@
-// app/layout.tsx
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import Providers from './providers';
 import Drawer from '@/components/Drawer';
 import Modal from '@/components/Modal';
 import Toast from '@/components/Toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import GlitchBackground from '@/components/Visual/background';
 import '@/styles/tailwind.css';
 import '@/styles/global.css';
 import '@/styles/atom-one-dark.css';
-import Script from 'next/script';
+import StarryBackground from '@/components/Visual/Background/StarryNight';
 
 export const metadata: Metadata = {
   title: 'Zulfikar',
@@ -36,10 +35,10 @@ export default function RootLayout({
       <body className='relative transition-all duration-300'>
         <Providers>
           {/* Background layer */}
-          <GlitchBackground />
+          <StarryBackground />
 
           {/* Content layer */}
-          <div className='relative z-10 min-h-screen bg-neutral-100/80 dark:bg-neutral-900/80'>
+          <div className='relative z-10 min-h-screen bg-neutral-100/50 dark:bg-neutral-900/50'>
             <Header />
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
               {children}
