@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Icon } from '@/components/UI';
+import { useEffectToggle } from '@/contexts/effectContext';
 
 interface SectionTitleProps {
   icon: string;
@@ -17,11 +18,19 @@ const SectionTitle = ({
   link,
   iconClassName = '',
 }: SectionTitleProps) => {
+  const { effectEnabled } = useEffectToggle();
+
   return (
     <div
       className={`flex items-center relative z-10 mb-5 ${link ? 'justify-between' : 'justify-start'}`}
     >
-      <div className='inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-[4px] font-medium tracking-wider shadow-sm dark:border-neutral-600 dark:bg-neutral-700'>
+      <div
+        className={`inline-flex items-center rounded-2xl border shadow-md px-4 py-[4px] font-medium tracking-wider ${
+          effectEnabled
+            ? 'border-white/20 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md'
+            : 'border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800'
+        }`}
+      >
         <span className={`mr-1.5 flex h-5 w-5 ${iconClassName}`}>
           <Icon name={icon} />
         </span>

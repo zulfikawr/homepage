@@ -9,7 +9,7 @@ import Footer from '@/components/Footer';
 import '@/styles/tailwind.css';
 import '@/styles/global.css';
 import '@/styles/atom-one-dark.css';
-import StarryBackground from '@/components/Visual/Background/StarryNight';
+import DynamicBackground from '@/components/Visual/Background';
 
 export const metadata: Metadata = {
   title: 'Zulfikar',
@@ -35,7 +35,7 @@ export default function RootLayout({
       <body className='relative transition-all duration-300'>
         <Providers>
           {/* Background layer */}
-          <StarryBackground />
+          <DynamicBackground />
 
           {/* Content layer */}
           <div className='relative z-10 min-h-screen bg-neutral-100/50 dark:bg-neutral-900/50'>

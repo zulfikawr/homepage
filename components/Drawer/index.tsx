@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useBodyScroll } from 'hooks';
+import { useEffectToggle } from '@/contexts/effectContext';
 
 type DrawerInstance = {
   isOpen: boolean;
@@ -58,6 +59,7 @@ const Drawer = () => {
     null,
   );
   const [, setBodyScrollable] = useBodyScroll();
+  const { effectEnabled } = useEffectToggle();
 
   useEffect(() => {
     if (isOpen) {
@@ -104,6 +106,7 @@ const Drawer = () => {
 
   return (
     <div className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}>
+      {/* Overlay */}
       <div
         className={`absolute inset-0 bg-black transition-opacity duration-500 ${
           animation === 'in'
@@ -113,11 +116,16 @@ const Drawer = () => {
         onClick={handleClose}
       />
 
+      {/* Drawer Panel */}
       <div
-        className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto 
-          bg-white dark:bg-neutral-800 rounded-t-xl border-t dark:border-neutral-700 
-          shadow-md flex flex-col transition-transform duration-500 ease-in-out
-          ${animation === 'in' ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
+          rounded-t-2xl border-t-xl flex flex-col transition-transform duration-500 ease-in-out
+          ${animation === 'in' ? 'translate-y-0' : 'translate-y-full'}
+          ${
+            effectEnabled
+              ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md shadow-md'
+              : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
+          }`}
       >
         {currentContent}
       </div>

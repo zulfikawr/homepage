@@ -1,20 +1,24 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function StarryBackground() {
+export default function CloudAndStarsBackground() {
   const { resolvedTheme } = useTheme();
-  const [isDark, setIsDark] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsDark(resolvedTheme === 'dark');
-  }, [resolvedTheme]);
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null; // Avoid rendering on server
 
   return (
     <div className='fixed inset-0 -z-10 pointer-events-none overflow-hidden'>
       <div
-        className={`absolute inset-0 ${!isDark ? 'invert brightness-[1.3]' : ''}`}
+        className={`background-container absolute inset-0 ${
+          resolvedTheme === 'light' ? 'invert brightness-[1.5]' : ''
+        }`}
       >
         <div className='stars'></div>
         <div className='twinkling'></div>
@@ -22,9 +26,26 @@ export default function StarryBackground() {
       </div>
 
       <style jsx>{`
+        @keyframes move-background {
+          from {
+            transform: translate3d(0px, 0px, 0px);
+          }
+          to {
+            transform: translate3d(1000px, 0px, 0px);
+          }
+        }
+
+        .background-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+        }
+
         .stars {
           background: black
-            url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png')
+            url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png)
             repeat;
           position: absolute;
           top: 0;
@@ -42,10 +63,10 @@ export default function StarryBackground() {
             repeat;
           background-size: 1000px 1000px;
           position: absolute;
+          right: 0;
           top: 0;
           bottom: 0;
-          right: 0;
-          z-index: 1;
+          z-index: 2;
           animation: move-background 70s linear infinite;
         }
 
@@ -57,20 +78,11 @@ export default function StarryBackground() {
             repeat;
           background-size: 1000px 1000px;
           position: absolute;
+          right: 0;
           top: 0;
           bottom: 0;
-          right: 0;
-          z-index: 2;
+          z-index: 3;
           animation: move-background 150s linear infinite;
-        }
-
-        @keyframes move-background {
-          from {
-            transform: translate3d(0px, 0px, 0px);
-          }
-          to {
-            transform: translate3d(1000px, 0px, 0px);
-          }
         }
       `}</style>
     </div>

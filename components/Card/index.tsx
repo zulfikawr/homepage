@@ -1,12 +1,14 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
+import { useEffectToggle } from '@/contexts/effectContext';
 
 export interface CardProps {
   onClick?: () => void;
   isInDrawer?: boolean;
   openForm?: boolean;
   isInForm?: boolean;
+  isPreview?: boolean;
   className?: string;
-  children?: ReactNode;
+  children?: React.ReactNode;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -14,21 +16,29 @@ const Card: React.FC<CardProps> = ({
   isInDrawer,
   openForm,
   isInForm,
+  isPreview,
   className = '',
   children,
 }) => {
-  const baseStyles = `group relative flex flex-col ${
-    isInDrawer || openForm || isInForm ? 'w-full' : ''
-  } rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 ${className}`;
+  const { effectEnabled } = useEffectToggle();
 
-  const interactiveStyles = isInForm
-    ? ''
-    : 'cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-neutral-200 dark:hover:border-neutral-600 dark:hover:shadow-none';
+  const baseStyles = `group relative flex flex-col ${
+    isInDrawer || openForm || isInForm || isPreview ? 'w-full' : ''
+  } rounded-2xl border shadow-md ${className}`;
+
+  const effectStyles = effectEnabled
+    ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
+    : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 backdrop-blur-none';
+
+  const interactiveStyles =
+    isInForm || isPreview
+      ? ''
+      : 'cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl';
 
   return (
     <div
-      className={`${baseStyles} ${interactiveStyles}`}
-      onClick={isInForm ? undefined : onClick}
+      className={`${baseStyles} ${effectStyles} ${interactiveStyles}`}
+      onClick={isInForm || isPreview ? undefined : onClick}
     >
       {children}
     </div>
