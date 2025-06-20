@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { EmploymentCard } from '@/components/Card/Employment';
 import { employmentsData } from '@/functions/employments';
 import { sortByDate } from '@/utilities/sortByDate';
@@ -17,17 +17,17 @@ const EmploymentSection = () => {
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showLeftMask, setShowLeftMask] = useState(false);
-  const [showRightMask, setShowRightMask] = useState(true);
+  // const [showLeftMask, setShowLeftMask] = useState(false);
+  // const [showRightMask, setShowRightMask] = useState(true);
 
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setShowLeftMask(scrollLeft > 0);
-      setShowRightMask(scrollLeft < scrollWidth - clientWidth);
-    }
-  };
+  // const handleScroll = () => {
+  //   if (scrollContainerRef.current) {
+  //     const { scrollLeft, scrollWidth, clientWidth } =
+  //       scrollContainerRef.current;
+  //     setShowLeftMask(scrollLeft > 0);
+  //     setShowRightMask(scrollLeft < scrollWidth - clientWidth);
+  //   }
+  // };
 
   if (error) return <div>Failed to load employments</div>;
 
@@ -62,7 +62,7 @@ const EmploymentSection = () => {
           {/* Scrollable Container */}
           <div
             ref={scrollContainerRef}
-            onScroll={handleScroll}
+            // onScroll={handleScroll}
             className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
           >
             {loading
