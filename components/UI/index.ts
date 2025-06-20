@@ -12,3 +12,4 @@ export { Toggle } from './Toggle';
 export { ToggleGroup } from './ToggleGroup';
 export { Tooltip } from './Tooltip';
 export { Switch } from './Switch';
+export { Slider } from './Slider';

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRadius } from '@/contexts/radiusContext';
 
 interface TooltipProps {
   text: string;
@@ -14,6 +15,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const { radius } = useRadius();
 
   const getPositionClass = () => {
     switch (position) {
@@ -41,11 +43,12 @@ const Tooltip: React.FC<TooltipProps> = ({
 
       {/* Tooltip */}
       <div
-        className={`absolute ${getPositionClass()} px-3 py-2 text-sm text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 rounded-md shadow-lg whitespace-nowrap transition-all duration-200 ${
+        className={`absolute ${getPositionClass()} px-3 py-2 text-sm text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 shadow-lg whitespace-nowrap transition-all duration-200 ${
           isVisible ? 'opacity-100 translate-y-0 translate-x-0' : 'opacity-0'
         }`}
         style={{
-          pointerEvents: 'none', // Disable pointer events on the tooltip
+          pointerEvents: 'none',
+          borderRadius: `${radius}px`,
           transform: isVisible
             ? 'translate(-50%, 0)'
             : `translate(-50%, ${position === 'top' ? '10px' : position === 'bottom' ? '-10px' : '0'})`,

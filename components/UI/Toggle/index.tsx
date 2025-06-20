@@ -37,4 +37,5 @@ const Toggle: React.FC<ToggleProps> = ({
 };
 
 Toggle.displayName = 'Toggle';
+
 export { Toggle };

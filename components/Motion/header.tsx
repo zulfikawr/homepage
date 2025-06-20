@@ -15,6 +15,14 @@ const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
   const handler = (position: number) => {
     if (!ref?.current) return;
 
+    if (position === 0) {
+      ref.current.style.backdropFilter = '';
+      ref.current.style.background = 'transparent';
+      ref.current.style.borderBottom = 'transparent';
+      ref.current.style.boxShadow = 'none';
+      return;
+    }
+
     const ratio = Math.min(position / 40, 1);
 
     if (effectEnabled) {
@@ -37,13 +45,10 @@ const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
       ref.current.style.backdropFilter = '';
       ref.current.style.border = '';
       ref.current.style.boxShadow = '';
-      if (resolvedTheme === 'dark') {
-        ref.current.style.background = `rgba(38, 38, 38, ${ratio})`;
-        ref.current.style.borderBottom = `1px solid rgba(255, 255, 255, ${0.1 * ratio})`;
-      } else {
-        ref.current.style.background = `rgba(255, 255, 255, ${ratio})`;
-        ref.current.style.boxShadow = `0px 1px 3px rgba(0, 0, 0, ${0.08 * ratio})`;
-      }
+      ref.current.style.background =
+        resolvedTheme === 'dark'
+          ? `rgba(38, 38, 38, ${ratio})`
+          : `rgba(255, 255, 255, ${ratio})`;
     }
   };
 

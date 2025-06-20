@@ -4,14 +4,22 @@ import { useEffect, useState } from 'react';
 import { Icon } from '@/components/UI';
 import LoadingSkeleton from './loading';
 import { Card } from '@/components/Card';
+import { useRadius } from '@/contexts/radiusContext';
 
-const FlipNumber = ({ number }: { number: string }) => (
-  <div className='relative w-8 h-12 bg-white/10 rounded-md overflow-hidden mx-0.5'>
-    <div className='absolute inset-0 flex items-center justify-center'>
-      <span className='text-xl font-mono font-bold text-white'>{number}</span>
+const FlipNumber = ({ number }: { number: string }) => {
+  const { radius } = useRadius();
+
+  return (
+    <div
+      className='relative w-8 h-12 bg-white/10 overflow-hidden mx-0.5'
+      style={{ borderRadius: `${radius}px` }}
+    >
+      <div className='absolute inset-0 flex items-center justify-center'>
+        <span className='text-xl font-mono font-bold text-white'>{number}</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Separator = () => (
   <div className='mx-1 text-white/80 text-xl font-bold'>:</div>

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useBodyScroll } from 'hooks';
 import { useEffectToggle } from '@/contexts/effectContext';
+import { useRadius } from '@/contexts/radiusContext';
 
 type DrawerInstance = {
   isOpen: boolean;
@@ -60,6 +61,7 @@ const Drawer = () => {
   );
   const [, setBodyScrollable] = useBodyScroll();
   const { effectEnabled } = useEffectToggle();
+  const { radius } = useRadius();
 
   useEffect(() => {
     if (isOpen) {
@@ -119,13 +121,14 @@ const Drawer = () => {
       {/* Drawer Panel */}
       <div
         className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
-          rounded-t-2xl border-t-xl flex flex-col transition-transform duration-500 ease-in-out
+          border-t-xl flex flex-col transition-transform duration-500 ease-in-out
           ${animation === 'in' ? 'translate-y-0' : 'translate-y-full'}
           ${
             effectEnabled
               ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md shadow-md'
               : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
           }`}
+        style={{ borderRadius: `${radius}px` }}
       >
         {currentContent}
       </div>

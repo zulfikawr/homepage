@@ -6,6 +6,7 @@ import PageTitle from '@/components/PageTitle';
 import Separator from '@/components/UI/Separator';
 import { database, ref, set } from '@/lib/firebase';
 import { toast } from '@/components/Toast';
+import { Card } from '@/components/Card';
 
 export default function FeedbackContent() {
   const [feedback, setFeedback] = useState('');
@@ -58,7 +59,7 @@ export default function FeedbackContent() {
         route='/feedback'
       />
 
-      <div className='w-full rounded-md p-6 border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+      <Card isPreview className='p-6'>
         <p className='text-sm text-neutral-700 dark:text-neutral-400'>
           Please use this form to share whatever you&apos;d like with me. This
           form is anonymous (really). If you&apos;d like me to respond, please
@@ -67,7 +68,7 @@ export default function FeedbackContent() {
 
         <Separator />
 
-        <div className='mt-6 space-y-4'>
+        <div className='space-y-4'>
           <div>
             <FormLabel htmlFor='feedback' required>
               Comments/Feedback
@@ -103,7 +104,7 @@ export default function FeedbackContent() {
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

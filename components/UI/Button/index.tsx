@@ -1,6 +1,8 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Icon } from '../Icon';
+import { Icon } from '@/components/UI';
+import type { IconName } from '@/components/UI/Icon';
+import { useRadius } from '@/contexts/radiusContext';
 
 type ButtonTypes =
   | 'default'
@@ -12,7 +14,7 @@ type ButtonTypes =
 
 interface Props {
   type?: ButtonTypes;
-  icon?: string;
+  icon?: IconName;
   className?: string;
   children?: React.ReactNode;
   [prop: string]: unknown;
@@ -32,6 +34,8 @@ const Button = ({
   children,
   ...rest
 }: ButtonProps) => {
+  const { radius } = useRadius();
+
   const getButtonClasses = () => {
     switch (type) {
       case 'primary':
@@ -53,11 +57,12 @@ const Button = ({
     <button
       type='button'
       className={twMerge(
-        'rounded-md cursor-pointer focus:outline-none justify-center items-center text-sm lg:text-md tracking-wider flex select-none',
+        'cursor-pointer focus:outline-none justify-center items-center text-sm lg:text-md tracking-wider flex select-none effect-pressing',
         getButtonClasses(),
         icon ? 'flex items-center gap-2' : '',
         className,
       )}
+      style={{ borderRadius: `${radius}px` }}
       {...rest}
     >
       {icon && (

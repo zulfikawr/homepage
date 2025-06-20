@@ -1,11 +1,14 @@
+import Link from 'next/link';
+import { Card } from '@/components/Card';
 import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
+import { IconName } from '@/components/UI/Icon';
 
 interface ContactItem {
   platform: string;
   link: string;
   username: string;
-  icon: string;
+  icon: IconName;
   color: string;
 }
 
@@ -50,31 +53,33 @@ export default function ContactsContent() {
         route='/contacts'
       />
 
-      <div className='grid gap-4 sm:grid-cols-2'>
-        {contacts.map((contact, index) => (
-          <NavigationCard
-            key={index}
-            title={contact.platform}
-            desc={contact.username}
-            icon={contact.icon}
-            className={contact.color}
-            href={contact.link}
-          />
-        ))}
-      </div>
+      <div className='flex flex-col gap-8'>
+        <div className='grid gap-4 sm:grid-cols-2'>
+          {contacts.map((contact, index) => (
+            <NavigationCard
+              key={index}
+              title={contact.platform}
+              desc={contact.username}
+              icon={contact.icon}
+              className={contact.color}
+              href={contact.link}
+            />
+          ))}
+        </div>
 
-      <div className='mt-8 rounded-lg border bg-white p-6 dark:border-neutral-700 dark:bg-neutral-800'>
-        <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
-        <p className='text-sm text-neutral-600 dark:text-neutral-400'>
-          Prefer to send a private message? Feel free to use the{' '}
-          <a
-            href='/feedback'
-            className='text-blue-600 hover:underline dark:text-blue-400'
-          >
-            feedback form
-          </a>{' '}
-          or reach out through any of the platforms above.
-        </p>
+        <Card isPreview className='p-6'>
+          <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
+          <p className='text-sm text-neutral-600 dark:text-neutral-400'>
+            Prefer to send a private message? Feel free to use the{' '}
+            <Link
+              href='/feedback'
+              className='text-blue-600 hover:underline dark:text-blue-400'
+            >
+              feedback form
+            </Link>{' '}
+            or reach out through any of the platforms above.
+          </p>
+        </Card>
       </div>
     </div>
   );

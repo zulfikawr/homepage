@@ -6,12 +6,13 @@ import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { IconName } from '@/components/UI/Icon';
 
 export default function DatabaseContent() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const databaseCategories = [
+  const databaseCategories: { title: string; desc: string; icon: IconName; href: string }[] = [
     {
       title: 'Analytics',
       desc: 'Page views and analytics',

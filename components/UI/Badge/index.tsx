@@ -1,27 +1,27 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import { Icon } from '../Icon';
-import icons from '../Icon/icons';
+import type { IconName } from '@/components/UI/Icon';
+import { useRadius } from '@/contexts/radiusContext';
 
 type BadgeTypes = 'default' | 'primary' | 'outline';
 
 interface Props {
   type?: BadgeTypes;
-  icon?: string | boolean;
+  icon?: IconName | boolean;
   className?: string;
   children?: React.ReactNode;
 }
 
 type NativeAttrs = Omit<React.HTMLAttributes<HTMLSpanElement>, keyof Props>;
-
 export type BadgeProps = Props & NativeAttrs;
 
-const getIconName = (toolName: string): string => {
+const getIconName = (toolName: string): IconName => {
   return toolName
     .toLowerCase()
     .replace(/[ .]/g, '')
     .replace('++', 'plusplus')
-    .replace('#', 'sharp');
+    .replace('#', 'sharp') as IconName;
 };
 
 const Badge = ({
@@ -31,6 +31,8 @@ const Badge = ({
   children,
   ...rest
 }: BadgeProps) => {
+  const { radius } = useRadius();
+
   const getBadgeClasses = () => {
     switch (type) {
       case 'primary':
@@ -42,9 +44,9 @@ const Badge = ({
     }
   };
 
-  let iconName: string | undefined;
+  let iconName: IconName | undefined;
   if (typeof icon === 'string') {
-    iconName = icon;
+    iconName = icon as IconName;
   } else if (icon === true && typeof children === 'string') {
     iconName = getIconName(children);
   }
@@ -52,16 +54,17 @@ const Badge = ({
   return (
     <span
       className={twMerge(
-        'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium shadow-sm',
-        iconName && icons[iconName as keyof typeof icons] && 'gap-1.5',
+        'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm',
+        iconName && 'gap-1.5',
         getBadgeClasses(),
         className,
       )}
+      style={{ borderRadius: `${radius}px` }}
       {...rest}
     >
-      {iconName && icons[iconName as keyof typeof icons] && (
+      {iconName && (
         <span className='size-[12px] flex-shrink-0'>
-          <Icon name={iconName} />
+          <Icon name={iconName!} />
         </span>
       )}
       {children}

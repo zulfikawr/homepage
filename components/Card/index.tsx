@@ -1,5 +1,8 @@
+'use client';
+
 import React from 'react';
 import { useEffectToggle } from '@/contexts/effectContext';
+import { useRadius } from '@/contexts/radiusContext';
 
 export interface CardProps {
   onClick?: () => void;
@@ -21,10 +24,11 @@ const Card: React.FC<CardProps> = ({
   children,
 }) => {
   const { effectEnabled } = useEffectToggle();
+  const { radius } = useRadius();
 
   const baseStyles = `group relative flex flex-col ${
     isInDrawer || openForm || isInForm || isPreview ? 'w-full' : ''
-  } rounded-2xl border shadow-md ${className}`;
+  } border shadow-md ${className}`;
 
   const effectStyles = effectEnabled
     ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
@@ -38,6 +42,7 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       className={`${baseStyles} ${effectStyles} ${interactiveStyles}`}
+      style={{ borderRadius: `${radius}px` }}
       onClick={isInForm || isPreview ? undefined : onClick}
     >
       {children}

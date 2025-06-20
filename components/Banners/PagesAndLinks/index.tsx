@@ -1,5 +1,5 @@
 import { Card } from '@/components/Card';
-import { Icon, Tooltip } from '@/components/UI';
+import { Button, Icon, Tooltip } from '@/components/UI';
 import Link from 'next/link';
 
 const PagesAndLinks = () => {
@@ -14,92 +14,83 @@ const PagesAndLinks = () => {
         </div>
         <div className='hidden md:block'>
           <Tooltip text='All Pages'>
-            <Link
-              href='/pages'
-              className='h-[25px] w-[25px] effect-pressing flex items-center justify-center rounded-full border p-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-            >
-              <Icon name='caretRight' />
+            <Link href='/pages'>
+              <Button className='h-7 p-1 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'>
+                <span className='size-5'>
+                  <Icon name='caretRight' />
+                </span>
+              </Button>
             </Link>
           </Tooltip>
         </div>
         <div className='block md:hidden'>
-          <Link
-            href='/pages'
-            className='h-[25px] w-[25px] effect-pressing flex items-center justify-center rounded-full border p-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <Icon name='caretRight' />
+          <Link href='/pages'>
+            <Button className='h-7 p-1 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'>
+              <span className='size-5'>
+                <Icon name='caretRight' />
+              </span>
+            </Button>
           </Link>
         </div>
       </div>
-      <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4 text-sm text-neutral-600 dark:text-neutral-300'>
+      <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4'>
         <div className='flex items-center gap-x-2.5'>
-          <Link
-            href='/contacts'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='addressBook' />
-              </div>
-              <span>Contacts</span>
-            </span>
+          <Link href='/contacts'>
+            <Button
+              icon='addressBook'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Contacts
+            </Button>
           </Link>
+
           <Link
             href='/documents/resume.pdf'
             target='_blank'
             rel='noopener noreferrer'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
           >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='file' />
-              </div>
-              <span>Résumé</span>
-            </span>
+            <Button
+              icon='file'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Résumé
+            </Button>
           </Link>
-          <Link
-            href='/projects'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='package' />
-              </div>
-              <span>Projects</span>
-            </span>
+
+          <Link href='/projects'>
+            <Button
+              icon='package'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Projects
+            </Button>
           </Link>
-          <Link
-            href='/publications'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='newspaper' />
-              </div>
-              <span>Publications</span>
-            </span>
+
+          <Link href='/publications'>
+            <Button
+              icon='newspaper'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Publications
+            </Button>
           </Link>
-          <Link
-            href='/music'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='musicNotes' />
-              </div>
-              <span>Music</span>
-            </span>
+
+          <Link href='/music'>
+            <Button
+              icon='musicNotes'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Music
+            </Button>
           </Link>
-          <Link
-            href='/feedback'
-            className='effect-pressing flex items-center gap-x-[4px] rounded-md border px-3 py-1 shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-700 dark:hover:border-neutral-600 dark:hover:bg-neutral-600'
-          >
-            <span className='flex items-center gap-x-2'>
-              <div className='size-[18px]'>
-                <Icon name='chatCenteredText' />
-              </div>
-              <span>Feedback</span>
-            </span>
+
+          <Link href='/feedback'>
+            <Button
+              icon='chatCenteredText'
+              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+            >
+              Feedback
+            </Button>
           </Link>
         </div>
       </div>

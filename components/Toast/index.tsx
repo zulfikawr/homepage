@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Icon } from '@/components/UI/Icon';
+import { Icon, IconName } from '@/components/UI/Icon';
 
 type ToastVariant = 'default' | 'info' | 'success' | 'error';
 
@@ -129,7 +129,7 @@ export const useToast = () => {
 const getVariantProps = (
   variant: ToastVariant,
 ): {
-  icon?: string;
+  icon?: IconName;
   bgClass: string;
   textClass: string;
   borderClass: string;

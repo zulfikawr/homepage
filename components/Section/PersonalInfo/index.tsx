@@ -38,7 +38,7 @@ const PersonalInfoSection = () => {
           width={105}
           alt={personalInfo.name}
           priority
-          className='rounded-xl bg-neutral-200 shadow-sm dark:border dark:border-neutral-600 aspect-square object-cover'
+          className='bg-neutral-200 shadow-sm dark:border dark:border-neutral-600 aspect-square object-cover'
           type='square'
         />
       </Hover>
