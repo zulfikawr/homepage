@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { useAuth } from '@/contexts/authContext';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { drawer } from '@/components/Drawer';
@@ -11,18 +10,30 @@ import { Button, Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';
+import { IconName } from '@/components/UI/Icon';
+import NavigationCard from '@/components/Card/Navigation';
 
 export function KbarContent() {
   const router = useRouter();
   const { user } = useAuth();
-  const { setTheme, resolvedTheme } = useTheme();
   const [search, setSearch] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { confirmLogout } = useAuthActions();
   const { isHomePage } = useRouteInfo();
 
-  const allItems = useMemo(
+  const allItems: {
+    label: string;
+    icon: IconName;
+    items: {
+      key: string;
+      label: string;
+      desc: string;
+      action: () => void;
+      icon: IconName;
+      hidden?: boolean;
+    }[];
+  }[] = useMemo(
     () => [
       {
         label: 'Pages',
@@ -130,35 +141,6 @@ export function KbarContent() {
         ],
       },
       {
-        label: 'Theme',
-        icon: 'palette',
-        items: [
-          {
-            key: 'theme-dark',
-            label: 'Switch to Dark Theme',
-            desc: 'Enable dark mode',
-            action: () => setTheme('dark'),
-            hidden: resolvedTheme === 'dark',
-            icon: 'moon',
-          },
-          {
-            key: 'theme-light',
-            label: 'Switch to Light Theme',
-            desc: 'Enable light mode',
-            action: () => setTheme('light'),
-            hidden: resolvedTheme === 'light',
-            icon: 'sun',
-          },
-          {
-            key: 'theme-system',
-            label: 'Use System Theme',
-            desc: 'Match system appearance',
-            action: () => setTheme('system'),
-            icon: 'desktop',
-          },
-        ],
-      },
-      {
         label: 'Social',
         icon: 'shareNetwork',
         items: [
@@ -229,7 +211,7 @@ export function KbarContent() {
             ],
       },
     ],
-    [resolvedTheme, user, isHomePage, router, setTheme, confirmLogout],
+    [user, isHomePage, router, confirmLogout],
   );
 
   const filteredSections = useMemo(
@@ -295,29 +277,13 @@ export function KbarContent() {
             <SectionTitle icon={section.icon} title={section.label} />
             <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
               {section.items.map((item) => (
-                <div
+                <NavigationCard
                   key={item.key}
-                  onClick={() => handleAction(item.action)}
-                  className='relative flex cursor-pointer items-center rounded-md border bg-white px-4 pb-4 pt-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:border-neutral-600 dark:hover:shadow-none select-none'
-                >
-                  <div className='relative z-10 flex items-center overflow-hidden w-full'>
-                    {item.icon && (
-                      <div className='mr-3 flex h-10 w-10 items-center justify-center rounded-md bg-neutral-100 dark:bg-neutral-700'>
-                        <Icon name={item.icon} className='size-5' />
-                      </div>
-                    )}
-                    <div className='w-full'>
-                      <h1 className='text-md md:text-2 font-medium tracking-wide line-clamp-1 text-ellipsis'>
-                        {item.label}
-                      </h1>
-                      {item.desc && (
-                        <p className='text-xs md:text-sm tracking-wide text-neutral-600 dark:text-neutral-400 line-clamp-1 text-ellipsis'>
-                          {item.desc}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  title={item.label}
+                  desc={item.desc}
+                  icon={item.icon}
+                  action={() => handleAction(item.action)}
+                />
               ))}
             </div>
           </div>

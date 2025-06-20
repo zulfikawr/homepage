@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Icon } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
+import { useRadius } from '@/contexts/radiusContext';
+import type { IconName } from '@/components/UI/Icon';
 
 interface SectionTitleProps {
-  icon: string;
+  icon: IconName;
   title: string;
   iconClassName?: string;
   link?: {
@@ -19,17 +21,19 @@ const SectionTitle = ({
   iconClassName = '',
 }: SectionTitleProps) => {
   const { effectEnabled } = useEffectToggle();
+  const { radius } = useRadius();
 
   return (
     <div
       className={`flex items-center relative z-10 mb-5 ${link ? 'justify-between' : 'justify-start'}`}
     >
       <div
-        className={`inline-flex items-center rounded-2xl border shadow-md px-4 py-[4px] font-medium tracking-wider ${
+        className={`inline-flex items-center border shadow-md px-4 py-[4px] font-medium tracking-wider ${
           effectEnabled
             ? 'border-white/20 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md'
             : 'border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800'
         }`}
+        style={{ borderRadius: `${radius}px` }}
       >
         <span className={`mr-1.5 flex h-5 w-5 ${iconClassName}`}>
           <Icon name={icon} />

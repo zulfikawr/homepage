@@ -1,22 +1,25 @@
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 import icons from './icons';
 
-type IconNames = string;
+export type IconName = keyof typeof icons;
 
 interface IconProps {
-  name: IconNames;
+  name: IconName;
   className?: string;
 }
 
 const Icon = ({ name, className }: IconProps) => {
-  const IconComponent = icons[name as keyof typeof icons];
+  const Element = icons[name];
 
-  if (!IconComponent) {
+  if (!Element) {
     console.warn(`Icon with name "${name}" not found`);
     return null;
   }
 
-  return React.cloneElement(IconComponent, { className });
+  return React.cloneElement(Element, {
+    className: twMerge(Element.props.className, className),
+  });
 };
 
 Icon.displayName = 'Icon';

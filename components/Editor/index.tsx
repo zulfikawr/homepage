@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Icon, Toggle, Tooltip } from '@/components/UI';
+import { IconName } from '@/components/UI/Icon';
 
 interface EditorProps {
   content: string;
@@ -101,16 +102,21 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
       code: testInlineMatch(/`[^`]+`/g),
       codeBlock: testInlineMatch(/```[\s\S]*?```/g),
     });
-  }, [markdown]);
+  }, [getCursorContext]);
 
   useEffect(() => {
     document.addEventListener('selectionchange', updateCursorStyles);
     return () => {
       document.removeEventListener('selectionchange', updateCursorStyles);
     };
-  }, [markdown]);
+  }, [updateCursorStyles]);
 
-  const toolbarButtons = [
+  const toolbarButtons: {
+    icon: IconName;
+    label: string;
+    action: () => void;
+    active: boolean;
+  }[] = [
     {
       icon: isViewerMode ? 'pencilSimpleLine' : 'eye',
       label: isViewerMode ? 'Edit' : 'Preview',

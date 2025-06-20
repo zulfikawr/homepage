@@ -26,12 +26,12 @@ const SkeletonLoader = () => {
           <TableRow key={index}>
             <TableCell className='bg-neutral-50 dark:bg-neutral-700 font-medium border-r border-neutral-300 dark:border-neutral-600 w-2/3'>
               <div className='animate-pulse'>
-                <div className='h-6 w-24 rounded bg-neutral-100 dark:bg-neutral-900' />
+                <div className='h-6 w-24 bg-neutral-100 dark:bg-neutral-900' />
               </div>
             </TableCell>
             <TableCell>
               <div className='animate-pulse'>
-                <div className='h-6 w-24 rounded bg-neutral-200 dark:bg-neutral-700' />
+                <div className='h-6 w-24 bg-neutral-200 dark:bg-neutral-700' />
               </div>
             </TableCell>
           </TableRow>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Button, Dropdown, Icon, Tooltip } from '@/components/UI';
+import { Button, Icon, Tooltip } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
 import {
   getAccessToken,
@@ -19,6 +19,8 @@ import PlaylistCard from '@/components/Card/Playlist/Spotify';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { formatDate } from '@/utilities/formatDate';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
+import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { useRadius } from '@/contexts/radiusContext';
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
@@ -59,6 +61,8 @@ export default function SpotifyMusicContent() {
     useState<TimeRange>('short_term');
   const [artistsTimeRange, setArtistsTimeRange] =
     useState<TimeRange>('short_term');
+
+  const { radius } = useRadius();
 
   const loadData = useCallback(async () => {
     try {
@@ -132,28 +136,25 @@ export default function SpotifyMusicContent() {
     return (
       <Dropdown
         trigger={
-          <button className='w-32 flex items-center justify-end gap-2 text-sm text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'>
+          <Button
+            type='ghost'
+            className='w-32 flex items-center gap-2 text-sm px-0'
+          >
             {timeRangeOptions.find((opt) => opt.value === value)?.label}
             <Icon name='caretDown' className='size-4' />
-          </button>
+          </Button>
         }
         matchTriggerWidth
       >
-        <div className='p-1 space-y-1'>
-          {timeRangeOptions.map((option) => (
-            <button
-              key={option.value}
-              className={`w-full text-left px-4 py-2 text-sm rounded-md ${
-                value === option.value
-                  ? 'bg-neutral-100 dark:bg-neutral-700 text-green-600 dark:text-green-400'
-                  : 'hover:bg-neutral-50 dark:hover:bg-neutral-700'
-              }`}
-              onClick={() => onChange(option.value as TimeRange)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        {timeRangeOptions.map((option) => (
+          <DropdownItem
+            key={option.value}
+            onClick={() => onChange(option.value as TimeRange)}
+            isActive={value === option.value}
+          >
+            {option.label}
+          </DropdownItem>
+        ))}
       </Dropdown>
     );
   };
@@ -234,7 +235,8 @@ export default function SpotifyMusicContent() {
               recentTracks.map((item, index) => (
                 <div
                   key={index}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-md transition-colors'
+                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                  style={{ borderRadius: `${radius}px` }}
                 >
                   <span className='hidden md:flex text-neutral-400 dark:text-neutral-500 w-5 text-sm'>
                     {index + 1}
@@ -246,7 +248,6 @@ export default function SpotifyMusicContent() {
                         alt={item.track.album.name}
                         width={48}
                         height={48}
-                        className='rounded-md'
                         type='square'
                       />
                     </Tooltip>
@@ -296,7 +297,8 @@ export default function SpotifyMusicContent() {
               topTracks.map((track, index) => (
                 <div
                   key={track.id}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-md transition-colors'
+                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                  style={{ borderRadius: `${radius}px` }}
                 >
                   <span className='hidden md:flex text-neutral-400 dark:text-neutral-500 w-5 text-sm'>
                     {index + 1}
@@ -308,7 +310,6 @@ export default function SpotifyMusicContent() {
                         alt={track.album.name}
                         width={48}
                         height={48}
-                        className='rounded-md'
                         type='square'
                       />
                     </Tooltip>
@@ -367,14 +368,15 @@ export default function SpotifyMusicContent() {
                     key={artist.id}
                     href={artist.external_urls.spotify}
                     target='_blank'
-                    className='flex flex-col items-center space-y-2 p-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-md transition-colors'
+                    className='flex flex-col items-center space-y-2 p-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                    style={{ borderRadius: `${radius}px` }}
                   >
                     <ImageWithFallback
                       src={artist.images[0]?.url}
                       alt={artist.name}
                       width={96}
                       height={96}
-                      className='rounded-full object-cover aspect-square'
+                      className='object-cover aspect-square'
                       type='square'
                     />
                     <h3 className='font-medium text-center'>{artist.name}</h3>

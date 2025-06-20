@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { twMerge } from 'tailwind-merge';
+import { useRadius } from '@/contexts/radiusContext';
 
 type FallbackType = 'landscape' | 'square' | 'portrait';
 
@@ -27,6 +28,8 @@ export default function ImageWithFallback({
   const [imgSrc, setImgSrc] = useState(src || fallback);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { radius } = useRadius();
+
   useEffect(() => {
     setImgSrc(src || fallback);
   }, [src, fallback]);
@@ -43,6 +46,7 @@ export default function ImageWithFallback({
         isLoading ? 'blur-sm' : '',
         className,
       )}
+      style={{ borderRadius: `${radius}px` }}
     />
   );
 }

@@ -20,6 +20,7 @@ import { formatDateRange } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
 import Separator from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
+import { IconName } from '@/components/UI/Icon';
 
 interface ProjectFormProps {
   projectToEdit?: Project;
@@ -260,7 +261,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     );
   };
 
-  const statusOptions = [
+  const statusOptions: { key: string; label: string; icon: IconName }[] = [
     { key: 'inProgress', label: 'Work in Progress', icon: 'gear' },
     { key: 'completed', label: 'Completed', icon: 'checkCircle' },
     { key: 'upcoming', label: 'Upcoming', icon: 'clock' },

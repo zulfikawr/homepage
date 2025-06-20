@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+'use client';
+
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const BackgroundContext = createContext<{
   background: string;
@@ -13,7 +15,20 @@ export const BackgroundProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [background, setBackground] = useState('clouds');
+  const [background, setBackgroundState] = useState('clouds');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('background');
+    if (stored) {
+      setBackgroundState(stored);
+    }
+  }, []);
+
+  const setBackground = (bg: string) => {
+    setBackgroundState(bg);
+    localStorage.setItem('background', bg);
+  };
+
   return (
     <BackgroundContext.Provider value={{ background, setBackground }}>
       {children}

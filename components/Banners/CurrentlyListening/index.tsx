@@ -277,7 +277,7 @@ const CurrentlyListening = () => {
             alt={currentTrack.album.name}
             width={200}
             height={200}
-            className='rounded-md object-cover'
+            className='object-cover'
             type='square'
           />
         </Hover>
