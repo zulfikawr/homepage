@@ -212,7 +212,6 @@ const Stars: React.FC<StarsProps> = ({
     const onTouchMove = (e: TouchEvent) => {
       touchInput = true;
       movePointer(e.touches[0].clientX, e.touches[0].clientY);
-      e.preventDefault();
     };
 
     const onMouseLeave = () => {
@@ -226,7 +225,8 @@ const Stars: React.FC<StarsProps> = ({
 
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    // Use a passive touch listener so we don't block page scrolling on mobile
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
     window.addEventListener('touchend', onMouseLeave);
     document.addEventListener('mouseleave', onMouseLeave);
 
