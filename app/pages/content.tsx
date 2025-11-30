@@ -30,6 +30,12 @@ export default function PagesContent() {
         href: '/feedback',
       },
       {
+        title: 'Movies',
+        desc: 'My watched movies list',
+        icon: 'playCircle',
+        href: '/movies',
+      },
+      {
         title: 'Music',
         desc: 'My music stats',
         icon: 'musicNotes',

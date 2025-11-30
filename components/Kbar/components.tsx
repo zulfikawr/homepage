@@ -83,6 +83,13 @@ export function KbarContent() {
             icon: 'chatCenteredText',
           },
           {
+            key: 'movies',
+            label: 'Movies',
+            desc: 'Browse my watched movies',
+            action: () => router.push('/movies'),
+            icon: 'playCircle',
+          },
+          {
             key: 'music',
             label: 'Music',
             desc: 'Browse my spotify stats',

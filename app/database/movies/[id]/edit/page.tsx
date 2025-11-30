@@ -1,0 +1,41 @@
+import { getMovieById, getMovies } from '@/functions/movies';
+import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
+import EditMoviePage from './content';
+
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+async function MovieLoader({ params }: Props) {
+  const { id } = await params;
+  const movie = await getMovieById(id);
+
+  if (!movie) return notFound();
+
+  return <EditMoviePage movie={movie} />;
+}
+
+export async function generateStaticParams() {
+  try {
+    const movies = await getMovies();
+    return movies.map((m) => ({ id: m.id }));
+  } catch {
+    return [];
+  }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const movie = await getMovieById(id);
+
+  return {
+    title: movie ? `Edit ${movie.title}` : 'Edit Movie',
+  };
+}
+
+export default function MovieEditPage({ params }: Props) {
+  return <MovieLoader params={params} />;
+}
