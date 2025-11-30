@@ -12,7 +12,12 @@ export default function DatabaseContent() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const databaseCategories: { title: string; desc: string; icon: IconName; href: string }[] = [
+  const databaseCategories: {
+    title: string;
+    desc: string;
+    icon: IconName;
+    href: string;
+  }[] = [
     {
       title: 'Analytics',
       desc: 'Page views and analytics',
@@ -42,6 +47,12 @@ export default function DatabaseContent() {
       desc: 'Manage your interests and objectives',
       icon: 'microscope',
       href: '/database/interests-and-objectives',
+    },
+    {
+      title: 'Movies',
+      desc: 'Manage your movie list',
+      icon: 'playCircle',
+      href: '/database/movies',
     },
     {
       title: 'Personal Info',
