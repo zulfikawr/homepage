@@ -13,6 +13,24 @@ interface EmploymentCardProps {
   isInForm?: boolean;
 }
 
+const JOB_TYPE_LABELS: Record<string, string> = {
+  fullTime: 'Full-time',
+  partTime: 'Part-time',
+  contract: 'Contract',
+  freelance: 'Freelance',
+  internship: 'Internship',
+};
+
+function formatJobType(key?: string) {
+  if (!key) return '';
+  if (JOB_TYPE_LABELS[key]) return JOB_TYPE_LABELS[key];
+  const spaced = key
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/[-_]/g, ' ')
+    .trim();
+  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+}
+
 export default function EmploymentCard({
   employment,
   openForm,
@@ -68,7 +86,7 @@ export default function EmploymentCard({
             {trimStr(employment.organizationIndustry, 25)}
           </p>
           <p className='text-sm text-neutral-500 dark:text-neutral-400'>
-            {employment.jobType}
+            {formatJobType(employment.jobType)}
           </p>
         </div>
       )}
