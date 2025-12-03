@@ -9,6 +9,7 @@ import {
   getSpotifyAuthUrl,
 } from '@/lib/spotify';
 import { Hover } from '@/components/Visual';
+import { useAuth } from '@/contexts/authContext';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import LoadingSkeleton from './loading';
 import { formatDate } from '@/utilities/formatDate';
@@ -36,6 +37,7 @@ const CurrentlyListening = () => {
   const lastUpdateTime = useRef<number>(0);
   const retryDelay = useRef(1000);
   const isMounted = useRef(false);
+  const { user } = useAuth();
 
   // Clear interval when unmounting
   useEffect(() => {
@@ -220,13 +222,21 @@ const CurrentlyListening = () => {
         </div>
 
         <div className='p-4'>
-          <button
-            onClick={() => (window.location.href = getSpotifyAuthUrl())}
-            className='w-full flex items-center justify-center gap-2 bg-[#1DB954] text-white py-2 px-4 rounded-md hover:bg-[#1ed760] transition-colors'
-          >
-            <Icon name='spotifyLogo' className='size-5' />
-            <span>Connect with Spotify</span>
-          </button>
+          {user ? (
+            <div className='flex gap-2'>
+              <button
+                onClick={() => (window.location.href = getSpotifyAuthUrl())}
+                className='flex-1 flex items-center justify-center gap-2 bg-[#1DB954] text-white py-2 px-4 rounded-md hover:bg-[#1ed760] transition-colors'
+              >
+                <Icon name='spotifyLogo' className='size-5' />
+                <span>Connect with Spotify</span>
+              </button>
+            </div>
+          ) : (
+            <div className='text-sm text-neutral-500 dark:text-neutral-400'>
+              Spotify integration is private.
+            </div>
+          )}
         </div>
       </div>
     );
@@ -236,7 +246,7 @@ const CurrentlyListening = () => {
 
   return (
     <Card isPreview>
-      <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+      <div className='flex w-full items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
           <Icon name='musicNotes' className='size-5' />
           <span className='h-5'>
