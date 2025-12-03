@@ -3,15 +3,25 @@
 import { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { database, ref, set } from '@/lib/firebase';
+import { useAuth } from '@/contexts/authContext';
 
 function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     async function handleCallback() {
       if (!code) {
+        router.push('/');
+        return;
+      }
+
+      if (loading) return;
+
+      if (!user) {
+        console.warn('Non-owner attempted Spotify callback. Ignoring.');
         router.push('/');
         return;
       }
