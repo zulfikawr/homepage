@@ -204,11 +204,11 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
   ];
 
   const inputClassName =
-    'h-auto min-h-[300px] w-full rounded-md border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resize-y';
+    'h-auto min-h-[300px] md:min-h-[500px] w-full rounded-b-md border border-t-0 border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resizable-none';
 
   return (
-    <div className={twMerge('space-y-2', className)}>
-      <div className='flex flex-wrap gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-md'>
+    <div className={twMerge('', className)}>
+      <div className='flex flex-wrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600'>
         {toolbarButtons.map((button, index) => (
           <Tooltip key={index} text={button.label} position='top'>
             <Toggle
@@ -221,29 +221,28 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
                   ) => void
                 )(e);
               }}
+              className='px-2 rounded-md'
             >
               <Icon name={button.icon} className='w-5 h-5' />
             </Toggle>
           </Tooltip>
         ))}
       </div>
-      <div className='min-h-[310px]'>
-        {isViewerMode ? (
-          <div
-            className='prose dark:prose-invert -py-2 px-2 border border-neutral-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 min-h-[300px]'
-            dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
-          />
-        ) : (
-          <textarea
-            ref={textareaRef}
-            value={markdown}
-            onChange={handleChange}
-            onSelect={updateCursorStyles}
-            className={inputClassName}
-            placeholder='Write your markdown here...'
-          />
-        )}
-      </div>
+      {isViewerMode ? (
+        <div
+          className='prose dark:prose-invert max-w-none p-2 border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-white dark:bg-neutral-700 min-h-[300px] md:min-h-[500px]'
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
+        />
+      ) : (
+        <textarea
+          ref={textareaRef}
+          value={markdown}
+          onChange={handleChange}
+          onSelect={updateCursorStyles}
+          className={inputClassName}
+          placeholder='Write your markdown here...'
+        />
+      )}
     </div>
   );
 };
