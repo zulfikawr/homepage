@@ -5,6 +5,7 @@ export interface Project {
   image: string;
   description: string;
   tools: string[];
+  readme?: string;
   status: 'inProgress' | 'completed' | 'upcoming';
   link?: string;
   favicon?: string;

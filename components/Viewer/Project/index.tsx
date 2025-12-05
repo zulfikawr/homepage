@@ -4,8 +4,21 @@ import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
 import Separator from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 const ProjectViewer = ({ project }: { project: Project }) => {
+  const formatPeriod = () => {
+    const ds = project.dateString || '';
+    if (!ds) return '';
+    if (ds.includes(' - ')) {
+      const [start, end] = ds.split(' - ');
+      if (end === 'Present') return `${start} - Present`;
+      if (start === end) return start;
+      return `${start} - ${end}`;
+    }
+    return ds;
+  };
+
   return (
     <>
       {/* Header */}
@@ -59,6 +72,23 @@ const ProjectViewer = ({ project }: { project: Project }) => {
             </div>
           </section>
 
+          {project.readme ? (
+            <section>
+              <h2 className='text-xl sm:text-2xl font-medium mb-4'>
+                README.md
+              </h2>
+              <Separator margin='2' />
+              <div
+                className='max-w-none prose dark:prose-invert'
+                dangerouslySetInnerHTML={{
+                  __html: renderMarkdown(project.readme),
+                }}
+              />
+            </section>
+          ) : null}
+
+          <Separator margin='4' />
+
           <section>
             <h2 className='text-xl sm:text-2xl font-medium mb-4'>
               Description
@@ -68,7 +98,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
 
           <section>
             <h2 className='text-xl sm:text-2xl font-medium mb-4'>Period</h2>
-            <p className='text-md'>{project.dateString}</p>
+            <p className='text-md'>{formatPeriod()}</p>
           </section>
 
           <section>

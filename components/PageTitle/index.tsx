@@ -62,7 +62,7 @@ const PageTitle = ({
               {isPostTitle && category && (
                 <div className='mb-3 w-fit'>
                   <Link href={`/post/cate/${category}`}>
-                    <Label type='primary' icon='folder'>
+                    <Label type='primary' icon='tag'>
                       {category}
                     </Label>
                   </Link>
