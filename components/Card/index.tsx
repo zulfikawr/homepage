@@ -28,7 +28,7 @@ const Card: React.FC<CardProps> = ({
 
   const baseStyles = `group relative flex flex-col ${
     isInDrawer || openForm || isInForm || isPreview ? 'w-full' : ''
-  } border shadow-md ${className}`;
+  } border shadow-md select-none ${className}`;
 
   const effectStyles = effectEnabled
     ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'

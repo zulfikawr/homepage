@@ -22,11 +22,11 @@ export default function MoviesContent() {
         route='/movies'
       />
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {loading ? (
           Array(4)
             .fill(0)
-            .map((_, index) => <CardLoading key={index} type='certificate' />)
+            .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : movies && movies.length > 0 ? (
           movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
         ) : (

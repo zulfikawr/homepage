@@ -15,6 +15,7 @@ import { formatDate } from '@/utilities/formatDate';
 import { generateId } from '@/utilities/generateId';
 import { Icon } from '@/components/UI/Icon';
 import { useRouter } from 'next/navigation';
+import { Card } from '@/components/Card';
 
 interface MovieFormProps {
   movieToEdit?: Movie;
@@ -262,41 +263,42 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                 const actors = getString(r['#ACTORS'] ?? '');
 
                 return (
-                  <button
-                    type='button'
-                    key={i}
-                    className='flex items-start gap-3 rounded-lg border border-neutral-200 dark:border-neutral-700 p-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors'
-                    onClick={() => handleSelectResult(r)}
-                  >
-                    {poster ? (
-                      <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'>
-                        <ImageWithFallback
-                          width={44}
-                          height={64}
-                          src={poster}
-                          alt={title}
-                          className='h-full w-full object-cover'
-                          loading='lazy'
-                          type='portrait'
-                        />
-                      </div>
-                    ) : (
-                      <div className='h-16 w-11 flex-shrink-0 rounded-md bg-neutral-200 dark:bg-neutral-700' />
-                    )}
-                    <div className='flex-1 min-w-0'>
-                      <div className='font-semibold text-sm line-clamp-2 text-neutral-900 dark:text-white'>
-                        {title}
-                      </div>
-                      <div className='text-xs text-neutral-500 dark:text-neutral-400 mt-1'>
-                        {year}
-                      </div>
-                      {actors && (
-                        <div className='text-xs text-neutral-600 dark:text-neutral-400 mt-2 line-clamp-1'>
-                          {actors}
+                  <Card key={i} onClick={() => handleSelectResult(r)}>
+                    <div className='flex flex-1 items-center'>
+                      <div className='flex-shrink-0 px-4.5 py-4'>
+                        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
+                          {poster ? (
+                            <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'>
+                              <ImageWithFallback
+                                width={44}
+                                height={64}
+                                src={poster}
+                                alt={title}
+                                className='h-full w-full object-cover'
+                                loading='lazy'
+                                type='portrait'
+                              />
+                            </div>
+                          ) : (
+                            <div className='h-16 w-11 flex-shrink-0 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+                          )}
                         </div>
-                      )}
+                      </div>
+                      <div className='py-2 pr-4 space-y-1'>
+                        <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
+                          {title}
+                        </p>
+                        {actors && (
+                          <p className='text-xs text-neutral-600 dark:text-neutral-400 mt-2 line-clamp-1'>
+                            {actors}
+                          </p>
+                        )}
+                        <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm'>
+                          Released {year}
+                        </p>
+                      </div>
                     </div>
-                  </button>
+                  </Card>
                 );
               })}
             </div>

@@ -12,6 +12,7 @@ import {
   Input,
   Textarea,
 } from '@/components/UI';
+import { Editor } from '@/components/Editor';
 import { ProjectCard } from '@/components/Card/Project';
 import { toast } from '@/components/Toast';
 import { addProject, updateProject, deleteProject } from '@/functions/projects';
@@ -35,6 +36,7 @@ const initialProjectState: Project = {
   link: '',
   favicon: '',
   dateString: '',
+  readme: '',
   status: 'inProgress',
   pinned: false,
 };
@@ -79,6 +81,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     link: project.link || '#',
     favicon: project.favicon || '',
     dateString: project.dateString || formatDateRange(startDate, endDate),
+    readme: project.readme || '',
     status: project.status || 'inProgress',
     pinned: project.pinned || false,
   };
@@ -189,6 +192,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       ...project,
       id: projectToEdit?.id || generateId(project.name),
       dateString: formatDateRange(startDate, endDate, isPresent),
+      readme: project.readme || '',
     };
 
     try {
@@ -434,6 +438,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               value={project.favicon}
               onChange={(e) => handleChange('favicon', e.target.value)}
               placeholder='https://project-favicon.com'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='readme'>Readme (optional)</FormLabel>
+            <Editor
+              content={project.readme || ''}
+              onUpdate={(content) => handleChange('readme', content)}
             />
           </div>
         </form>

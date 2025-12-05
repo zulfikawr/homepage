@@ -24,22 +24,15 @@ export default function MoviesContent() {
     <div>
       <PageTitle emoji='🎬' title='Movies' subtitle='Manage your movie list' />
 
-      <div className='grid grid-cols-1 gap-4'>
+      <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {loading ? (
           Array(4)
             .fill(0)
-            .map((_, index) => <CardLoading key={index} type='certificate' />)
+            .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAdd}
-                className='mx-auto'
-              >
-                Add more
-              </Button>
+            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 flex items-center justify-center mx-auto'>
+              <Button type='primary' icon='plus' onClick={handleAdd} />
             </div>
 
             {Array.isArray(movies) && movies.length > 0 ? (

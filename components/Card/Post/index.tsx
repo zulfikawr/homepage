@@ -90,19 +90,19 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
           <div className='flex items-center'>
             {post.categories &&
               (isInForm ? (
-                <Label type='primary' icon='folder'>
+                <Label type='secondary' icon='tag'>
                   {post.categories[0]}
                 </Label>
               ) : (
                 <div className='flex flex-wrap gap-3'>
                   {post.categories?.map((category) =>
                     isInForm ? (
-                      <Label key={category} type='primary' icon='folder'>
+                      <Label key={category} type='secondary' icon='tag'>
                         {category}
                       </Label>
                     ) : (
                       <Link key={category} href={`/post/cate/${category}`}>
-                        <Label type='primary' icon='folder'>
+                        <Label type='secondary' icon='tag'>
                           {category}
                         </Label>
                       </Link>
