@@ -208,7 +208,7 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
 
   return (
     <div className={twMerge('', className)}>
-      <div className='flex flex-wrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600'>
+      <div className='flex flex-nowrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 overflow-x-auto'>
         {toolbarButtons.map((button, index) => (
           <Tooltip key={index} text={button.label} position='top'>
             <Toggle
