@@ -8,6 +8,8 @@ import { incrementPageViews } from '@/functions/analytics';
 import Separator from '../UI/Separator';
 import Link from 'next/link';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
+import { Hover } from '@/components/Visual';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 interface PageTitleProps {
   emoji?: string;
@@ -20,6 +22,7 @@ interface PageTitleProps {
   route?: string;
   isPostTitle?: boolean;
   category?: string;
+  image?: string;
 }
 
 const PageTitle = ({
@@ -30,6 +33,7 @@ const PageTitle = ({
   route,
   isPostTitle,
   category,
+  image,
 }: PageTitleProps) => {
   const { setHeaderTitle } = useTitle();
   const router = useRouter();
@@ -51,9 +55,28 @@ const PageTitle = ({
   return (
     <>
       <section className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
-        <div className='mb-4 flex items-center'>
-          <div className='flex flex-1 items-center gap-3'>
-            {emoji && (
+        <div className='mb-4 flex items-start'>
+          <div
+            className={`flex flex-1 items-start ${isPostTitle && image ? 'gap-6' : 'gap-3'}`}
+          >
+            {isPostTitle && image && (
+              <Hover
+                perspective={1000}
+                max={25}
+                scale={1.01}
+                className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-neutral-200 shadow-sm transition-all hover:shadow-md dark:opacity-90'
+              >
+                <ImageWithFallback
+                  src={image || '/images/placeholder.png'}
+                  alt={`featured-image-${title}`}
+                  fill
+                  className='rounded-md object-cover'
+                  loading='lazy'
+                  type='portrait'
+                />
+              </Hover>
+            )}
+            {!isPostTitle && emoji && (
               <div className='text-[35px] drop-shadow-lg -rotate-6'>
                 {emoji}
               </div>

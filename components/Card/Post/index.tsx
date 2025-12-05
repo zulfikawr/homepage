@@ -112,12 +112,12 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
               ))}
           </div>
 
-          <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-black dark:text-white leading-tight'>
+          <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-black dark:text-white'>
             {post.title}
           </h1>
 
           <div
-            className='leading-relaxed overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-neutral-500 dark:text-neutral-400 line-clamp-2'
+            className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-neutral-500 dark:text-neutral-400 line-clamp-3'
             dangerouslySetInnerHTML={{
               __html: trimStr(renderMarkdown(post.excerpt), 150),
             }}
