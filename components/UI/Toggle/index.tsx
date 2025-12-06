@@ -1,3 +1,4 @@
+import { useRadius } from '@/contexts/radiusContext';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -14,6 +15,8 @@ const Toggle: React.FC<ToggleProps> = ({
   children,
   className,
 }) => {
+  const { radius } = useRadius();
+
   const baseClasses =
     'flex items-center justify-center p-1 h-8 w-fit transition-colors duration-200';
   const activeClasses =
@@ -29,6 +32,7 @@ const Toggle: React.FC<ToggleProps> = ({
         className,
       )}
       onClick={onChange}
+      style={{ borderRadius: `${radius}px` }}
       aria-pressed={isActive}
     >
       {children}

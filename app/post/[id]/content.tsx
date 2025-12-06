@@ -1,6 +1,7 @@
 import PostContent from '@/components/PostContent';
 import { Post } from '@/types/post';
 import PageTitle from '@/components/PageTitle';
+import CommentSection from '@/components/CommentSection';
 
 interface BlogPostContentProps {
   post: Post;
@@ -19,6 +20,8 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       />
 
       <PostContent content={post.content} />
+
+      <CommentSection postId={post.id} />
     </div>
   );
 }
