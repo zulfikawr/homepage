@@ -7,19 +7,22 @@ import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';
-import { Toggle } from '@/components/UI';
+import { Toggle, Icon } from '@/components/UI';
+import { sortByDate } from '@/utilities/sortByDate';
 
 export default function PostsContent() {
   const { data: posts, loading, error } = useRealtimeData(postsData);
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
+  const sortedPosts = useMemo(() => (posts ? sortByDate(posts) : []), [posts]);
+
   const allCategories = useMemo(() => {
     const set = new Set<string>();
-    posts?.forEach((post) => {
+    sortedPosts?.forEach((post) => {
       post.categories?.forEach((cat) => set.add(cat));
     });
     return ['All', ...Array.from(set)];
-  }, [posts]);
+  }, [sortedPosts]);
 
   const toggleCategory = (category: string) => {
     if (category === 'All') {
@@ -35,12 +38,12 @@ export default function PostsContent() {
 
   const filteredPosts = useMemo(() => {
     if (!activeCategories.length || activeCategories.includes('All')) {
-      return posts;
+      return sortedPosts;
     }
-    return posts?.filter((post) =>
+    return sortedPosts?.filter((post) =>
       post.categories?.some((cat) => activeCategories.includes(cat)),
     );
-  }, [posts, activeCategories]);
+  }, [sortedPosts, activeCategories]);
 
   if (error) return <div>Failed to load posts</div>;
 
@@ -63,6 +66,11 @@ export default function PostsContent() {
             }
             onChange={() => toggleCategory(cat)}
           >
+            {cat !== 'All' && (
+              <span className='w-4 h-4 ml-2 shrink-0'>
+                <Icon name='tag' />
+              </span>
+            )}
             <span className='px-2 text-sm font-medium'>{cat}</span>
           </Toggle>
         ))}
