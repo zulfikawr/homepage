@@ -9,7 +9,7 @@ function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
-  const { user, loading } = useAuth();
+  const { isAdmin, loading } = useAuth();
 
   const handleCallback = useCallback(async () => {
     if (!code) {
@@ -19,7 +19,7 @@ function CallbackContent() {
 
     if (loading) return;
 
-    if (!user) {
+    if (!isAdmin) {
       console.warn('Non-owner attempted Spotify callback. Ignoring.');
       router.push('/');
       return;
@@ -55,7 +55,7 @@ function CallbackContent() {
       console.error('Error in callback:', error);
       router.push('/');
     }
-  }, [code, loading, user, router]);
+  }, [code, loading, isAdmin, router]);
 
   useEffect(() => {
     handleCallback();

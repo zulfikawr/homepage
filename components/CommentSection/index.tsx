@@ -1,71 +1,164 @@
 'use client';
 
 import { Comment } from '@/types/comment';
-import { useEffect, useState } from 'react';
-import CommentCard from '@/components/CommentCard';
+import { useCallback, useEffect, useState } from 'react';
+import CommentCard from '@/components/Card/Comment';
 import {
   addComment,
   subscribeToComments,
   likeComment,
+  deleteComment,
+  updateComment,
 } from '@/functions/comments';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 import { Card } from '@/components/Card';
+import { Editor } from '@/components/Editor';
+import { useAuth } from '@/contexts/authContext';
+import {
+  auth,
+  GithubAuthProvider,
+  signInWithPopup,
+  signOut,
+} from '@/lib/firebase';
+import { toast } from '@/components/Toast';
+import ImageWithFallback from '../ImageWithFallback';
+import { useRealtimeData } from '@/hooks/useRealtimeData';
 
 interface CommentSectionProps {
   postId: string;
 }
 
 export default function CommentSection({ postId }: CommentSectionProps) {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [author, setAuthor] = useState('Anonymous');
+  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
+  const { user, loading: authLoading } = useAuth();
 
-  // Subscribe to real-time comment updates
+  const githubUsername =
+    user?.providerData?.find(
+      (p: { providerId: string }) => p.providerId === 'github.com',
+    )?.displayName ||
+    user?.displayName ||
+    user?.email ||
+    '';
+
+  // Use the new realtime hook
+  const { data: comments, loading: isLoading } = useRealtimeData<Comment[]>(
+    useCallback((callback) => subscribeToComments(postId, callback), [postId]),
+    [],
+    [postId],
+  );
+
+  // Set author from user profile
   useEffect(() => {
-    const unsubscribe = subscribeToComments(postId, (updatedComments) => {
-      setComments(updatedComments);
-      setIsLoading(false);
-    });
+    if (user?.displayName) {
+      setAuthor(user.displayName);
+    }
+  }, [user]);
 
-    return () => unsubscribe?.();
-  }, [postId]);
+  const handleGithubLogin = async () => {
+    setIsAuthLoading(true);
+    try {
+      const provider = new GithubAuthProvider();
+      await signInWithPopup(auth, provider);
+      toast.show('Logged in with GitHub!');
+    } catch (error) {
+      console.error('GitHub login error:', error);
+      toast.show('Failed to login with GitHub', 'error');
+    } finally {
+      setIsAuthLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      setAuthor('');
+      setContent('');
+      toast.show('Logged out successfully!');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.show('Failed to logout', 'error');
+    }
+  };
 
   const handleSubmitComment = async () => {
     if (!content.trim()) return;
 
     setIsSubmitting(true);
     try {
-      await addComment(postId, author, content);
+      // Root comments path: posts/{postId}/comments
+      const rootCommentsPath = `posts/${postId}/comments`;
+
+      await addComment(
+        rootCommentsPath,
+        githubUsername || author || user?.displayName || 'Anonymous',
+        content,
+        user?.photoURL || undefined,
+      );
       setContent('');
-      setAuthor('Anonymous');
+      toast.show('Comment posted successfully!');
     } catch (error) {
       console.error('Error submitting comment:', error);
-      alert('Failed to submit comment. Please try again.');
+      toast.show('Failed to submit comment', 'error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleSubmitReply = async (
-    parentId: string,
+    path: string,
     replyAuthor: string,
     replyContent: string,
   ) => {
     try {
-      await addComment(postId, replyAuthor, replyContent, parentId);
+      // The 'path' passed here is where the replies should go (comment.path), so we just use it directly
+      await addComment(
+        path,
+        replyAuthor,
+        replyContent,
+        user?.photoURL || undefined,
+      );
+      toast.show('Reply posted!');
     } catch (error) {
       console.error('Error submitting reply:', error);
-      alert('Failed to submit reply. Please try again.');
+      toast.show('Failed to submit reply', 'error');
     }
   };
 
-  const handleLike = async (commentId: string) => {
+  const handleLike = async (path: string) => {
+    if (!user) {
+      toast.show('Please sign in with GitHub to like comments', 'info');
+      return;
+    }
+
     try {
-      await likeComment(postId, commentId);
+      // 'path' here is the path to the comment object itself.
+      await likeComment(path, user.uid);
     } catch (error) {
       console.error('Error liking comment:', error);
+      toast.show('Failed to update like', 'error');
+    }
+  };
+
+  const handleDelete = async (path: string) => {
+    try {
+      await deleteComment(path);
+      toast.show('Comment deleted');
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast.show('Failed to delete comment', 'error');
+    }
+  };
+
+  const handleEdit = async (path: string, newContent: string) => {
+    try {
+      await updateComment(path, newContent);
+      toast.show('Comment updated');
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      toast.show('Failed to update comment', 'error');
     }
   };
 
@@ -80,60 +173,18 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           Comments
         </h2>
         <span className='text-sm text-neutral-500 dark:text-neutral-400'>
-          {comments.length} {comments.length === 1 ? 'comment' : 'comments'}
+          {comments?.length || 0}{' '}
+          {(comments?.length || 0) === 1 ? 'comment' : 'comments'}
         </span>
       </div>
 
-      {/* Comment form */}
-      <Card className='mb-8' isPreview>
-        <div className='flex items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-          <h3 className='text-sm font-semibold tracking-wide text-neutral-900 dark:text-white'>
-            Add a comment
-          </h3>
-        </div>
-
-        <div className='p-4.5 space-y-3'>
-          <div>
-            <FormLabel htmlFor='comment-author'>Your name (optional)</FormLabel>
-            <Input
-              id='comment-author'
-              type='text'
-              placeholder='Anonymous'
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <FormLabel htmlFor='comment-content'>Comment</FormLabel>
-            <Textarea
-              id='comment-content'
-              placeholder='Share your thoughts...'
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={4}
-            />
-          </div>
-
-          <div className='flex justify-end'>
-            <Button
-              type='primary'
-              onClick={handleSubmitComment}
-              disabled={isSubmitting || !content.trim()}
-            >
-              {isSubmitting ? 'Posting...' : 'Post Comment'}
-            </Button>
-          </div>
-        </div>
-      </Card>
-
       {/* Comments list */}
-      <div className='space-y-4'>
+      <div className='space-y-4 mb-12'>
         {isLoading ? (
           <p className='text-center text-sm text-neutral-500 dark:text-neutral-400 py-8'>
             Loading comments...
           </p>
-        ) : comments.length === 0 ? (
+        ) : !comments || comments.length === 0 ? (
           <div className='text-center text-sm text-neutral-500 dark:text-neutral-400 py-12'>
             <p>No comments yet. Be the first to share your thoughts!</p>
           </div>
@@ -145,10 +196,87 @@ export default function CommentSection({ postId }: CommentSectionProps) {
               onReply={handleReply}
               onSubmitReply={handleSubmitReply}
               onLike={handleLike}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              currentUserName={githubUsername}
+              currentUserAvatar={user?.photoURL}
+              currentUserId={user?.uid}
+              isAuthenticated={!!user}
+              isAdmin={user?.uid === process.env.NEXT_PUBLIC_ADMIN_UID}
             />
           ))
         )}
       </div>
+
+      {/* Comment form */}
+      {!authLoading && !user ? (
+        <Card className='mb-8' isPreview>
+          <div className='flex items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+            <h3 className='text-sm font-semibold tracking-wide text-neutral-900 dark:text-white'>
+              Login to comment
+            </h3>
+          </div>
+
+          <div className='flex items-center justify-center py-6'>
+            <Button
+              type='primary'
+              onClick={handleGithubLogin}
+              disabled={isAuthLoading}
+            >
+              <span className='flex items-center gap-2'>
+                <Icon name='github' className='size-5' />
+                {isAuthLoading ? 'Signing in...' : 'Sign in with GitHub'}
+              </span>
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <Card className='mb-8' isPreview>
+          <div className='flex items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
+            <div className='flex items-center'>
+              <h3 className='text-sm font-semibold tracking-wide text-neutral-900 dark:text-white'>
+                Add a comment
+              </h3>
+            </div>
+            <Button
+              type='ghost'
+              onClick={handleLogout}
+              className='p-1 h-auto text-xs'
+            >
+              Logout
+            </Button>
+          </div>
+
+          <div className='p-4.5 space-y-3'>
+            <div className='flex items-center gap-3'>
+              <ImageWithFallback
+                src={user?.photoURL || undefined}
+                alt={user?.displayName || 'User'}
+                width={24}
+                height={24}
+                type='square'
+              />
+              <span className='font-medium text-neutral-900 dark:text-white'>
+                {githubUsername}
+              </span>
+            </div>
+            <Editor
+              content={content}
+              onUpdate={(newContent) => setContent(newContent)}
+              textareaClassName='min-h-[200px] md:min-h-[250px]'
+            />
+            <div className='flex justify-end'>
+              <Button
+                type='primary'
+                onClick={handleSubmitComment}
+                disabled={isSubmitting || !content.trim()}
+              >
+                {isSubmitting ? 'Posting...' : 'Post Comment'}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
     </section>
   );
 }

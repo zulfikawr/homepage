@@ -74,11 +74,20 @@ export default function FeedbackResponsesContent() {
   const router = useRouter();
   const [feedbacks, setFeedbacks] = useState<Record<string, FeedbackEntry>>({});
 
+  const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
+  const isAuthorized = !!user && ADMIN_UID && user.uid === ADMIN_UID;
+
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
+      return;
     }
-  }, [user, loading, router]);
+
+    if (!loading && user && !isAuthorized) {
+      // Logged-in but not admin — redirect home (deny access)
+      router.push('/');
+    }
+  }, [user, loading, router, isAuthorized]);
 
   useEffect(() => {
     const feedbackRef = ref(database, 'feedback');
