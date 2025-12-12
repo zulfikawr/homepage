@@ -15,7 +15,13 @@ import {
   onValue,
   update,
 } from 'firebase/database';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  GithubAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -49,4 +55,6 @@ export {
   auth,
   signInWithEmailAndPassword,
   signOut,
+  GithubAuthProvider,
+  signInWithPopup,
 };

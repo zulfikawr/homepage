@@ -10,9 +10,15 @@ interface EditorProps {
   content: string;
   onUpdate: (content: string) => void;
   className?: string;
+  textareaClassName?: string;
 }
 
-const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
+const Editor: React.FC<EditorProps> = ({
+  content,
+  onUpdate,
+  className,
+  textareaClassName,
+}) => {
   const [markdown, setMarkdown] = useState(content);
   const [isViewerMode, setIsViewerMode] = useState(false);
   const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>(
@@ -203,8 +209,10 @@ const Editor: React.FC<EditorProps> = ({ content, onUpdate, className }) => {
     },
   ];
 
-  const inputClassName =
-    'h-auto min-h-[300px] md:min-h-[500px] w-full rounded-b-md border border-t-0 border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resizable-none';
+  const inputClassName = twMerge(
+    'h-auto min-h-[300px] md:min-h-[500px] w-full rounded-b-md border border-t-0 border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resizable-none',
+    textareaClassName,
+  );
 
   return (
     <div className={twMerge('', className)}>

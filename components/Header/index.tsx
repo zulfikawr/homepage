@@ -1,7 +1,6 @@
 'use client';
 
 import { type MutableRefObject, useRef } from 'react';
-import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { drawer } from '@/components/Drawer';
 import { HeaderTransition, OffsetTransition } from '@/components/Motion';
@@ -18,7 +17,6 @@ interface HeaderComponentProps {
 }
 
 const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
-  const { resolvedTheme } = useTheme();
   const titleRef = useRef<HTMLDivElement>(null);
 
   const { isHomePage, nonHomePage } = useRouteInfo();
@@ -38,15 +36,13 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
           <Link href='/' passHref className='relative z-10'>
             <div className='group flex items-center space-x-3 flex-shrink-0 z-10'>
-              <div className='flex size-[18px] flex-shrink-0 items-center rounded-full border border-neutral-300 dark:border-neutral-500'>
+              <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                 <ImageWithFallback
                   className='rounded-full'
-                  src={
-                    resolvedTheme === 'dark' ? '/icon-dark.png' : '/icon.png'
-                  }
+                  src='/favicon/android-chrome-192x192.png'
                   alt='Zulfikar'
-                  height={18}
-                  width={18}
+                  height={24}
+                  width={24}
                   loading='lazy'
                   type='square'
                 />

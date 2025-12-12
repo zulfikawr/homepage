@@ -1,4 +1,4 @@
-import { getPostById, getPosts } from '@/functions/posts';
+import { getPostById } from '@/functions/posts';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogPostContent from './content';
@@ -22,26 +22,12 @@ async function PostLoader({ params }: Props) {
   return <BlogPostContent post={post} />;
 }
 
-export async function generateStaticParams() {
-  try {
-    const posts = await getPosts();
-    return posts.map((post) => ({
-      id: post.id,
-    }));
-  } catch (error) {
-    console.error('Error generating params:', error);
-    return [];
-  }
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const post = await getPostById(id);
 
   if (!post) {
-    return {
-      title: 'Post Not Found - Zulfikar',
-    };
+    return notFound();
   }
 
   return {

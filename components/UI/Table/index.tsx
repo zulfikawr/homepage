@@ -6,8 +6,7 @@ interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   className?: string;
 }
 
-interface TableHeaderProps
-  extends React.HTMLAttributes<HTMLTableSectionElement> {
+interface TableHeaderProps extends React.HTMLAttributes<HTMLTableSectionElement> {
   className?: string;
 }
 

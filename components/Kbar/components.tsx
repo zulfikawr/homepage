@@ -15,7 +15,7 @@ import NavigationCard from '@/components/Card/Navigation';
 
 export function KbarContent() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [search, setSearch] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -190,7 +190,7 @@ export function KbarContent() {
       {
         label: 'Account',
         icon: 'userCircle',
-        items: user
+        items: isAdmin
           ? [
               {
                 key: 'database',
@@ -207,18 +207,28 @@ export function KbarContent() {
                 icon: 'signOut',
               },
             ]
-          : [
-              {
-                key: 'login',
-                label: 'Login',
-                desc: 'Sign in to your account',
-                action: () => router.push('/login'),
-                icon: 'signIn',
-              },
-            ],
+          : user
+            ? [
+                {
+                  key: 'logout',
+                  label: 'Logout',
+                  desc: 'Sign out of your account',
+                  action: () => confirmLogout(),
+                  icon: 'signOut',
+                },
+              ]
+            : [
+                {
+                  key: 'login',
+                  label: 'Login',
+                  desc: 'Sign in to your account',
+                  action: () => router.push('/login'),
+                  icon: 'signIn',
+                },
+              ],
       },
     ],
-    [user, isHomePage, router, confirmLogout],
+    [isAdmin, user, isHomePage, router, confirmLogout],
   );
 
   const filteredSections = useMemo(

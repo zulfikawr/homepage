@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import Providers from './providers';
 import Drawer from '@/components/Drawer';
 import Modal from '@/components/Modal';
@@ -25,11 +24,36 @@ export default function RootLayout({
   return (
     <html lang='en-us' suppressHydrationWarning>
       <head>
-        <link rel='icon' type='image/x-icon' href='/favicon.ico' />
-        <Script
-          defer
-          src='https://cloud.umami.is/script.js'
-          data-website-id='438f9662-37d9-47e8-ba04-c58c1c2d30f2'
+        <link
+          rel='apple-touch-icon'
+          sizes='180x180'
+          href='/favicon/apple-touch-icon.png'
+        />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='32x32'
+          href='/favicon/favicon-32x32.png'
+        />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='16x16'
+          href='/favicon/favicon-16x16.png'
+        />
+        <link rel='manifest' href='/favicon/site.webmanifest' />
+        <link rel='icon' href='/favicon/favicon.ico' />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='192x192'
+          href='/favicon/android-chrome-192x192.png'
+        />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='512x512'
+          href='/favicon/android-chrome-512x512.png'
         />
       </head>
       <body className='relative transition-all duration-300'>
