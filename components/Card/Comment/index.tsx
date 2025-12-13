@@ -122,11 +122,16 @@ export default function CommentCard({
   const canDelete = isAdmin || isOwner;
 
   return (
-    <div className={`${level > 0 ? 'ml-4 md:ml-8' : ''}`}>
+    <div className={`${level > 0 ? 'md:ml-8' : ''}`}>
       <div className='relative'>
         {/* Reply Tree Line Indicator */}
         {level > 0 && (
-          <div className='absolute -left-5 -top-4 bottom-1/2 w-6 border-l-2 border-b-2 border-neutral-200 rounded-bl-xl dark:border-neutral-700' />
+          <>
+            {/* Mobile: Line between cards */}
+            <div className='md:hidden absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-neutral-200 dark:bg-neutral-700' />
+            {/* Desktop: Traditional corner line */}
+            <div className='hidden md:block absolute -left-4 -top-4 bottom-1/2 w-6 border-l-2 border-b-2 border-neutral-200 rounded-bl-xl dark:border-neutral-700' />
+          </>
         )}
 
         <Card className='mb-4' isPreview>
@@ -320,7 +325,7 @@ export default function CommentCard({
       {comment.replies && Object.values(comment.replies).length > 0 && (
         <div className='space-y-3 mt-3'>
           {Object.values(comment.replies)
-            .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)) // Sort replies by oldest first usually
+            .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))
             .map((reply) => (
               <CommentCard
                 key={reply.id}
