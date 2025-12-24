@@ -10,6 +10,10 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { Editor } from '@/components/Editor';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { escapeHtml } from '@/utilities/escapeHtml';
+import { toast } from '@/components/Toast';
+
+const MAX_CHARS = 5000;
 
 interface CommentCardProps {
   comment: Comment;
@@ -55,17 +59,62 @@ export default function CommentCard({
   const [editContent, setEditContent] = useState(comment.content);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  const handleReplyChange = (val: string) => {
+    if (val.length <= MAX_CHARS) setReplyContent(val);
+  };
+
+  const handleEditChange = (val: string) => {
+    if (val.length <= MAX_CHARS) setEditContent(val);
+  };
+
   const handleSubmitReply = async () => {
     if (!replyContent.trim() || !comment.path) return;
 
+    if (replyContent.length > MAX_CHARS) {
+      toast.error(`Reply cannot exceed ${MAX_CHARS} characters.`);
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await onSubmitReply(comment.path, replyAuthor, replyContent);
+      // Sanitize Content and Author
+      const safeContent = escapeHtml(replyContent.trim());
+      const safeAuthor = escapeHtml(replyAuthor.trim());
+
+      await onSubmitReply(comment.path, safeAuthor, safeContent);
       setReplyContent('');
       setReplyAuthor('Anonymous');
       setIsReplying(false);
+    } catch (error) {
+      console.error('Reply failed', error);
+      toast.error('Failed to post reply.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleEditSubmit = async () => {
+    if (!comment.path || !editContent.trim() || !onEdit) return;
+
+    if (editContent.length > MAX_CHARS) {
+      toast.error(`Comment cannot exceed ${MAX_CHARS} characters.`);
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const commentSelfPath = comment.path.replace(/\/replies$/, '');
+
+      // Sanitize Content
+      const safeContent = escapeHtml(editContent.trim());
+
+      await onEdit(commentSelfPath, safeContent);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating comment:', error);
+      toast.error('Failed to update comment.');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -99,22 +148,7 @@ export default function CommentCard({
     }
   };
 
-  const handleEditSubmit = async () => {
-    if (!comment.path || !editContent.trim() || !onEdit) return;
-
-    setIsUpdating(true);
-    try {
-      const commentSelfPath = comment.path.replace(/\/replies$/, '');
-      await onEdit(commentSelfPath, editContent);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error updating comment:', error);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
-
-  const maxNesting = 10; // Increased nesting limit since we support it now
+  const maxNesting = 10;
   const canReply = level < maxNesting;
   const isLiked =
     currentUserId && comment.likedBy && comment.likedBy[currentUserId];
@@ -208,7 +242,7 @@ export default function CommentCard({
               <div className='space-y-3'>
                 <Editor
                   content={editContent}
-                  onUpdate={setEditContent}
+                  onUpdate={handleEditChange}
                   textareaClassName='min-h-[100px] md:min-h-[150px]'
                 />
                 <div className='flex justify-end gap-2'>
@@ -295,7 +329,7 @@ export default function CommentCard({
                 </div>
                 <Editor
                   content={replyContent}
-                  onUpdate={(newContent) => setReplyContent(newContent)}
+                  onUpdate={handleReplyChange}
                   textareaClassName='min-h-[100px] md:min-h-[100px]'
                 />
                 <div className='flex gap-2 justify-end'>

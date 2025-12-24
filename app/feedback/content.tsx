@@ -7,11 +7,21 @@ import Separator from '@/components/UI/Separator';
 import { database, ref, set } from '@/lib/firebase';
 import { toast } from '@/components/Toast';
 import { Card } from '@/components/Card';
+import { escapeHtml } from '@/utilities/escapeHtml';
+
+const MAX_CHARS = 5000;
 
 export default function FeedbackContent() {
   const [feedback, setFeedback] = useState('');
   const [contact, setContact] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    if (text.length <= MAX_CHARS) {
+      setFeedback(text);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!feedback.trim()) {
@@ -19,22 +29,40 @@ export default function FeedbackContent() {
       return;
     }
 
+    if (feedback.length > MAX_CHARS) {
+      toast.error(`Feedback must be under ${MAX_CHARS} characters`);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const timestamp = new Date();
-      const timestampLocale = timestamp.toLocaleDateString('en-GB', {
+      const safeFeedback = escapeHtml(feedback.trim());
+      const safeContact = escapeHtml(contact.trim());
+
+      const now = new Date();
+
+      const datePath = now.toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
       });
 
-      const feedbackRef = ref(database, `feedback/${timestampLocale}`);
+      const timePath = now
+        .toLocaleTimeString('en-GB', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        })
+        .replace(/:/g, '-');
+
+      const feedbackRef = ref(database, `feedback/${datePath}/${timePath}`);
 
       const feedbackData = {
-        feedback: feedback.trim(),
-        contact: contact.trim() || 'Anonymous',
-        timestamp: timestamp.toISOString(),
+        feedback: safeFeedback,
+        contact: safeContact || 'Anonymous',
+        timestamp: now.toISOString(),
       };
 
       await set(feedbackRef, feedbackData);
@@ -70,16 +98,25 @@ export default function FeedbackContent() {
 
         <div className='space-y-4'>
           <div>
-            <FormLabel htmlFor='feedback' required>
-              Comments/Feedback
-            </FormLabel>
+            <div className='flex justify-between items-center'>
+              <FormLabel htmlFor='feedback' required>
+                Comments/Feedback
+              </FormLabel>
+              <span
+                className={`text-xs ${feedback.length === MAX_CHARS ? 'text-red-500 font-bold' : 'text-neutral-500'}`}
+              >
+                {feedback.length}/{MAX_CHARS}
+              </span>
+            </div>
+
             <Textarea
               id='feedback'
               rows={5}
               value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
+              onChange={handleFeedbackChange}
               required
               placeholder="What's on your mind?"
+              maxLength={MAX_CHARS}
             />
           </div>
 
@@ -91,6 +128,7 @@ export default function FeedbackContent() {
               value={contact}
               onChange={(e) => setContact(e.target.value)}
               placeholder='Email or other contact information'
+              maxLength={100}
             />
           </div>
 
