@@ -4,6 +4,7 @@ import { getAllPageViews } from '@/database/analytics';
 import PageTitle from '@/components/PageTitle';
 import Link from 'next/link';
 import { useRealtimeData } from '@/hooks';
+import CardEmpty from '@/components/Card/Empty';
 import {
   Table,
   TableHeader,
@@ -93,7 +94,7 @@ export default function AnalyticsContent() {
         <SkeletonLoader />
       ) : error ? (
         <p className='text-center text-lg text-red-500'>{error}</p>
-      ) : (
+      ) : sortedPageViews.length > 0 ? (
         <Table>
           <TableHeader>
             <TableRow>
@@ -122,6 +123,10 @@ export default function AnalyticsContent() {
             })}
           </TableBody>
         </Table>
+      ) : (
+        <div className='mt-4'>
+          <CardEmpty message='No analytics data available' />
+        </div>
       )}
     </div>
   );

@@ -37,7 +37,7 @@ export default function EmploymentDatabase() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='employment' />)
-        ) : Array.isArray(employments) && employments.length > 0 ? (
+        ) : (
           <>
             <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
@@ -46,20 +46,24 @@ export default function EmploymentDatabase() {
                 onClick={handleAddEmployment}
                 className='mx-auto'
               >
-                Add more
+                {employments && employments.length > 0
+                  ? 'Add more'
+                  : 'Add employment'}
               </Button>
             </div>
 
-            {employments.map((employment) => (
-              <EmploymentCard
-                key={employment.id}
-                employment={employment}
-                openForm
-              />
-            ))}
+            {Array.isArray(employments) && employments.length > 0 ? (
+              employments.map((employment) => (
+                <EmploymentCard
+                  key={employment.id}
+                  employment={employment}
+                  openForm
+                />
+              ))
+            ) : (
+              <CardEmpty message='No employments available' />
+            )}
           </>
-        ) : (
-          <CardEmpty message='No employments available' />
         )}
       </div>
     </div>

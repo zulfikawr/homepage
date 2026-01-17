@@ -139,22 +139,22 @@ const Editor: React.FC<EditorProps> = ({
   const toolbarButtons = useMemo(
     () => [
       {
-        icon: 'heading' as IconName,
+        icon: 'textH' as IconName,
         label: 'Heading',
         active: cursorStyle.heading,
       },
       {
-        icon: 'bold' as IconName,
+        icon: 'textBolder' as IconName,
         label: 'Bold',
         active: cursorStyle.bold,
       },
       {
-        icon: 'italic' as IconName,
+        icon: 'textItalic' as IconName,
         label: 'Italic',
         active: cursorStyle.italic,
       },
       {
-        icon: 'underline' as IconName,
+        icon: 'textUnderline' as IconName,
         label: 'Underline',
         active: cursorStyle.underline,
       },
@@ -169,7 +169,7 @@ const Editor: React.FC<EditorProps> = ({
         active: cursorStyle.link,
       },
       {
-        icon: 'quote' as IconName,
+        icon: 'quotes' as IconName,
         label: 'Quote',
         active: cursorStyle.quote,
       },

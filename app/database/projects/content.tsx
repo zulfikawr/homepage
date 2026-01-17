@@ -29,7 +29,7 @@ export default function ProjectDatabase() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='project' />)
-        ) : Array.isArray(projects) && projects.length > 0 ? (
+        ) : (
           <>
             <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
@@ -38,16 +38,18 @@ export default function ProjectDatabase() {
                 onClick={handleAddProject}
                 className='mx-auto'
               >
-                Add more
+                {projects && projects.length > 0 ? 'Add more' : 'Add project'}
               </Button>
             </div>
 
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} openForm />
-            ))}
+            {Array.isArray(projects) && projects.length > 0 ? (
+              projects.map((project) => (
+                <ProjectCard key={project.id} project={project} openForm />
+              ))
+            ) : (
+              <CardEmpty message='No projects available' />
+            )}
           </>
-        ) : (
-          <CardEmpty message='No projects available' />
         )}
       </div>
     </div>

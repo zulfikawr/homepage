@@ -37,7 +37,7 @@ export default function PublicationDatabase() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='publication' />)
-        ) : Array.isArray(publications) && publications.length > 0 ? (
+        ) : (
           <>
             <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
@@ -46,20 +46,24 @@ export default function PublicationDatabase() {
                 onClick={handleAddPublication}
                 className='mx-auto'
               >
-                Add more
+                {publications && publications.length > 0
+                  ? 'Add more'
+                  : 'Add publication'}
               </Button>
             </div>
 
-            {publications.map((publication) => (
-              <PublicationCard
-                key={publication.id}
-                publication={publication}
-                openForm
-              />
-            ))}
+            {Array.isArray(publications) && publications.length > 0 ? (
+              publications.map((publication) => (
+                <PublicationCard
+                  key={publication.id}
+                  publication={publication}
+                  openForm
+                />
+              ))
+            ) : (
+              <CardEmpty message='No publications available' />
+            )}
           </>
-        ) : (
-          <CardEmpty message='No publications available' />
         )}
       </div>
     </div>

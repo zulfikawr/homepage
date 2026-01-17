@@ -30,7 +30,7 @@ export default function MoviesContent() {
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto'>
+            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
               <Button type='primary' icon='plus' onClick={handleAdd} />
             </div>
 
@@ -39,7 +39,9 @@ export default function MoviesContent() {
                 <MovieCard key={movie.id} movie={movie} openForm />
               ))
             ) : (
-              <CardEmpty message='No movies available' />
+              <div className='col-span-3 md:col-span-4'>
+                <CardEmpty message='No movies available' />
+              </div>
             )}
           </>
         )}

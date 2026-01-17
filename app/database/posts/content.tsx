@@ -33,7 +33,7 @@ export default function PostDatabase() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='post' />)
-        ) : Array.isArray(posts) && posts.length > 0 ? (
+        ) : (
           <>
             <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
@@ -42,16 +42,18 @@ export default function PostDatabase() {
                 onClick={handleAddPost}
                 className='mx-auto'
               >
-                Add more
+                {posts && posts.length > 0 ? 'Add more' : 'Add post'}
               </Button>
             </div>
 
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} openForm />
-            ))}
+            {Array.isArray(posts) && posts.length > 0 ? (
+              posts.map((post) => (
+                <PostCard key={post.id} post={post} openForm />
+              ))
+            ) : (
+              <CardEmpty message='No posts available' />
+            )}
           </>
-        ) : (
-          <CardEmpty message='No posts available' />
         )}
       </div>
     </div>

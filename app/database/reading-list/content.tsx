@@ -33,27 +33,29 @@ export default function ReadingListDatabase() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='book' />)
-        ) : Array.isArray(books) && books.length > 0 ? (
-          <>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5'>
-                <Button
-                  type='primary'
-                  icon='plus'
-                  onClick={handleAddBook}
-                  className='mx-auto'
-                >
-                  Add more
-                </Button>
-              </div>
-
-              {books.map((book) => (
-                <BookCard key={book.id} book={book} openForm />
-              ))}
-            </div>
-          </>
         ) : (
-          <CardEmpty message='No books available' />
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5 min-h-[100px]'>
+              <Button
+                type='primary'
+                icon='plus'
+                onClick={handleAddBook}
+                className='mx-auto'
+              >
+                {books && books.length > 0 ? 'Add more' : 'Add book'}
+              </Button>
+            </div>
+
+            {Array.isArray(books) && books.length > 0 ? (
+              books.map((book) => (
+                <BookCard key={book.id} book={book} openForm />
+              ))
+            ) : (
+              <div className='md:col-span-1'>
+                <CardEmpty message='No books available' />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

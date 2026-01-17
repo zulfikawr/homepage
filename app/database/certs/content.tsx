@@ -37,7 +37,7 @@ export default function CertsContent() {
           Array(4)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='certificate' />)
-        ) : Array.isArray(certificates) && certificates.length > 0 ? (
+        ) : (
           <>
             <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
@@ -46,20 +46,24 @@ export default function CertsContent() {
                 onClick={handleAddCertificate}
                 className='mx-auto'
               >
-                Add more
+                {certificates && certificates.length > 0
+                  ? 'Add more'
+                  : 'Add certificate'}
               </Button>
             </div>
 
-            {certificates.map((certificate) => (
-              <CertificateCard
-                key={certificate.id}
-                certificate={certificate}
-                openForm
-              />
-            ))}
+            {Array.isArray(certificates) && certificates.length > 0 ? (
+              certificates.map((certificate) => (
+                <CertificateCard
+                  key={certificate.id}
+                  certificate={certificate}
+                  openForm
+                />
+              ))
+            ) : (
+              <CardEmpty message='No certificates available' />
+            )}
           </>
-        ) : (
-          <CardEmpty message='No certificates available' />
         )}
       </div>
     </div>

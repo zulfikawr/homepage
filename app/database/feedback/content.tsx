@@ -18,6 +18,7 @@ import {
 } from '@/components/UI';
 import { toast } from '@/components/Toast';
 import { useRealtimeData } from '@/hooks';
+import CardEmpty from '@/components/Card/Empty';
 
 const SkeletonLoader = () => {
   return (
@@ -160,7 +161,9 @@ export default function FeedbackResponsesContent() {
           </TableBody>
         </Table>
       ) : (
-        <p className='mt-4 text-sm text-muted-foreground'>No feedback yet.</p>
+        <div className='mt-4'>
+          <CardEmpty message='No feedback yet' />
+        </div>
       )}
     </div>
   );
