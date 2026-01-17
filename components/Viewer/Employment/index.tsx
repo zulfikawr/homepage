@@ -1,4 +1,3 @@
-import React from 'react';
 import { Employment } from '@/types/employment';
 import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';

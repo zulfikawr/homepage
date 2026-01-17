@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import EmploymentCard from '@/components/Card/Employment';
 import { employmentsData } from '@/database/employments';
 import PageTitle from '@/components/PageTitle';
@@ -19,7 +18,7 @@ export default function EmploymentDatabase() {
     error,
   } = useRealtimeData(employmentsData);
 
-  if (error) return <div>Failed to load employments</div>;
+  if (error) return <CardEmpty message='Failed to load employments' />;
 
   const handleAddEmployment = () => {
     router.push('/database/employments/new');

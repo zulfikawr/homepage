@@ -24,7 +24,7 @@ export default function ProjectsContent() {
     (project) => project.status === 'upcoming',
   );
 
-  if (error) return <div>Failed to load projects</div>;
+  if (error) return <CardEmpty message='Failed to load projects' />;
 
   return (
     <div>

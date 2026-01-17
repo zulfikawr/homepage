@@ -11,7 +11,7 @@ const PostSection = () => {
 
   const sortedPosts = posts ? sortByDate(posts) : [];
 
-  if (error) return <div>Failed to load posts</div>;
+  if (error) return <CardEmpty message='Failed to load posts' />;
 
   return (
     <section>

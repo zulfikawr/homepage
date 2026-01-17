@@ -24,7 +24,7 @@ const ProjectSection = () => {
 
   const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];
 
-  if (error) return <div>Failed to load projects</div>;
+  if (error) return <CardEmpty message='Failed to load projects' />;
 
   return (
     <section>

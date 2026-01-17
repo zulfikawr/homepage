@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import ProjectCard from '@/components/Card/Project';
 import { projectsData } from '@/database/projects';
 import PageTitle from '@/components/PageTitle';
@@ -15,7 +14,7 @@ export default function ProjectDatabase() {
 
   const { data: projects, loading, error } = useRealtimeData(projectsData);
 
-  if (error) return <div>Failed to load projects</div>;
+  if (error) return <CardEmpty message='Failed to load projects' />;
 
   const handleAddProject = () => {
     router.push('/database/projects/new');

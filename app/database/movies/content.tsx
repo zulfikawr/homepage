@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import MovieCard from '@/components/Card/Movie';
 import { moviesData } from '@/database/movies';
 import PageTitle from '@/components/PageTitle';
@@ -14,7 +13,7 @@ export default function MoviesContent() {
   const router = useRouter();
   const { data: movies, loading, error } = useRealtimeData(moviesData);
 
-  if (error) return <div>Failed to load movies</div>;
+  if (error) return <CardEmpty message='Failed to load movies' />;
 
   const handleAdd = () => {
     router.push('/database/movies/new');

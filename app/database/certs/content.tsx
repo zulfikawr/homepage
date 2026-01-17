@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import CertificateCard from '@/components/Card/Certificate';
 import { certificatesData } from '@/database/certificates';
 import PageTitle from '@/components/PageTitle';
@@ -19,7 +18,7 @@ export default function CertsContent() {
     error,
   } = useRealtimeData(certificatesData);
 
-  if (error) return <div>Failed to load certificates</div>;
+  if (error) return <CardEmpty message='Failed to load certificates' />;
 
   const handleAddCertificate = () => {
     router.push('/database/certs/new');

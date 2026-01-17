@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import PublicationCard from '@/components/Card/Publication';
 import { publicationsData } from '@/database/publications';
 import PageTitle from '@/components/PageTitle';
@@ -15,7 +14,7 @@ export default function PublicationsContent() {
     error,
   } = useRealtimeData(publicationsData);
 
-  if (error) return <div>Failed to load publications</div>;
+  if (error) return <CardEmpty message='Failed to load publications' />;
 
   return (
     <div>

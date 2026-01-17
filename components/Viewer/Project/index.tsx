@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Badge } from '@/components/UI';
 import { Project } from '@/types/project';
 import { Separator } from '@/components/UI/Separator';

@@ -45,7 +45,7 @@ export default function PostsContent() {
     );
   }, [sortedPosts, activeCategories]);
 
-  if (error) return <div>Failed to load posts</div>;
+  if (error) return <CardEmpty message='Failed to load posts' />;
 
   return (
     <div>

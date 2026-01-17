@@ -8,6 +8,7 @@ import { Switch, Icon, Button } from '@/components/UI';
 import { toast } from '@/components/Toast';
 import { Section } from '@/types/section';
 import { drawer } from '@/components/Drawer';
+import CardEmpty from '@/components/Card/Empty';
 
 // Preview Components
 import PagesAndLinks from '@/components/Banners/PagesAndLinks';
@@ -65,7 +66,7 @@ export default function SectionDatabase() {
     }
   }, [sections]);
 
-  if (error) return <div>Failed to load sections</div>;
+  if (error) return <CardEmpty message='Failed to load sections' />;
 
   const handleToggle = async (section: Section) => {
     const originalEnabled = section.enabled;

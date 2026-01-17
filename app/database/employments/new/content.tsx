@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import PageTitle from '@/components/PageTitle';
 import EmploymentForm from '@/components/Form/Employment';
 

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 

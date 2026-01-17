@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import BookCard from '@/components/Card/Book';
 import { booksData } from '@/database/books';
 import PageTitle from '@/components/PageTitle';
@@ -15,7 +14,7 @@ export default function ReadingListDatabase() {
 
   const { data: books, loading, error } = useRealtimeData(booksData);
 
-  if (error) return <div>Failed to load books</div>;
+  if (error) return <CardEmpty message='Failed to load books' />;
 
   const handleAddBook = () => {
     router.push('/database/reading-list/new');

@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
 import { IconName } from '@/components/UI/Icon';

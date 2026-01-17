@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { BookCard } from '@/components/Card/Book';
 import { booksData } from '@/database/books';
 import PageTitle from '@/components/PageTitle';
@@ -15,7 +14,7 @@ export default function ReadingListContent() {
 
   const booksArray = Array.isArray(books) ? books : [];
 
-  if (error) return <div>Failed to load reading list</div>;
+  if (error) return <CardEmpty message='Failed to load reading list' />;
 
   return (
     <div>

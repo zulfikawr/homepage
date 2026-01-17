@@ -6,6 +6,7 @@ import { employmentsData } from '@/database/employments';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
+import CardEmpty from '@/components/Card/Empty';
 import { useRealtimeData } from '@/hooks';
 
 const EmploymentSection = () => {
@@ -29,7 +30,7 @@ const EmploymentSection = () => {
   //   }
   // };
 
-  if (error) return <div>Failed to load employments</div>;
+  if (error) return <CardEmpty message='Failed to load employments' />;
 
   return (
     <section className='relative'>

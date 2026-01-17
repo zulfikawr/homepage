@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import PostCard from '@/components/Card/Post';
 import { postsData } from '@/database/posts';
 import PageTitle from '@/components/PageTitle';
@@ -15,7 +14,7 @@ export default function PostDatabase() {
 
   const { data: posts, loading, error } = useRealtimeData(postsData);
 
-  if (error) return <div>Failed to load posts</div>;
+  if (error) return <CardEmpty message='Failed to load posts' />;
 
   const handleAddPost = () => {
     router.push('/database/posts/new');

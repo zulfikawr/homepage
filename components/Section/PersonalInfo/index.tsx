@@ -1,4 +1,3 @@
-import React from 'react';
 import { personalInfoData } from '@/database/personalInfo';
 import Loading from './loading';
 import { Hover } from '@/components/Visual';

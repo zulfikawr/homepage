@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import PublicationCard from '@/components/Card/Publication';
 import { publicationsData } from '@/database/publications';
 import PageTitle from '@/components/PageTitle';
@@ -19,7 +18,7 @@ export default function PublicationDatabase() {
     error,
   } = useRealtimeData(publicationsData);
 
-  if (error) return <div>Failed to load publications</div>;
+  if (error) return <CardEmpty message='Failed to load publications' />;
 
   const handleAddPublication = () => {
     router.push('/database/publications/new');
