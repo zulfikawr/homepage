@@ -49,7 +49,10 @@ export async function addBook(
     const record = await pb.collection('books').create<Book>(data);
     return { success: true, book: record };
   } catch (error: unknown) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 
@@ -73,7 +76,10 @@ export async function updateBook(
     const record = await pb.collection('books').update<Book>(recordId, rest);
     return { success: true, book: record };
   } catch (error: unknown) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 
@@ -96,7 +102,10 @@ export async function deleteBook(
     await pb.collection('books').delete(recordId);
     return { success: true };
   } catch (error: unknown) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 }
 

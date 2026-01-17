@@ -28,7 +28,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(false);
-  const { user, loading: authLoading } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   const githubUsername =
     (user as any)?.username || (user as any)?.name || user?.email || '';
@@ -82,7 +82,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         githubUsername || author || (user as any)?.name || 'Anonymous',
         content,
         (user as any)?.avatar
-          ? pb.files.getUrl(user, (user as any).avatar)
+          ? pb.files.getUrl(user as any, (user as any).avatar)
           : undefined,
       );
       setContent('');
@@ -96,7 +96,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   };
 
   const handleSubmitReply = async (
-    path: string, // This will be the parentId in PB
+    parentId: string,
     replyAuthor: string,
     replyContent: string,
   ) => {
@@ -106,14 +106,15 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         replyAuthor,
         replyContent,
         (user as any)?.avatar
-          ? pb.files.getUrl(user, (user as any).avatar)
+          ? pb.files.getUrl(user as any, (user as any).avatar)
           : undefined,
-        path, // parentId
+        parentId,
       );
       toast.show('Reply posted successfully!');
     } catch (error) {
       console.error('Error submitting reply:', error);
       toast.show('Failed to submit reply', 'error');
+      throw error;
     }
   };
 
@@ -153,7 +154,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         <div className='flex items-center gap-x-3'>
           <h2 className='text-2xl font-bold dark:text-white'>Comments</h2>
           <span className='rounded-full bg-neutral-100 px-2.5 py-0.5 text-sm font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'>
-            {comments.length}
+            {comments?.length || 0}
           </span>
         </div>
       </div>
@@ -167,7 +168,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                 <ImageWithFallback
                   src={
                     (user as any)?.avatar
-                      ? pb.files.getUrl(user, (user as any).avatar)
+                      ? pb.files.getUrl(user as any, (user as any).avatar)
                       : ''
                   }
                   alt={githubUsername}
@@ -183,11 +184,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                 Logout
               </Button>
             </div>
-            <Editor
-              value={content}
-              onChange={setContent}
-              placeholder='Write a comment...'
-            />
+            <Editor content={content} onUpdate={setContent} />
             <div className='flex justify-end'>
               <Button
                 onClick={handleSubmitComment}
@@ -201,7 +198,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         ) : (
           <div className='flex flex-col items-center justify-center py-8 text-center'>
             <Icon
-              name='messageSquare'
+              name='chatCenteredText'
               className='mb-4 h-12 w-12 text-neutral-300'
             />
             <h3 className='mb-2 text-lg font-medium dark:text-white'>
@@ -227,7 +224,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           <div className='flex justify-center py-12'>
             <div className='h-8 w-8 animate-spin rounded-full border-4 border-neutral-200 border-t-primary' />
           </div>
-        ) : comments.length > 0 ? (
+        ) : comments && comments.length > 0 ? (
           comments
             .filter((c) => !c.parentId) // Only show top-level comments
             .map((comment) => (
@@ -240,8 +237,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                   handleSubmitReply(comment.id, author, content)
                 }
                 onDelete={() => handleDelete(comment.id)}
-                onUpdate={(newContent) => handleUpdate(comment.id, newContent)}
+                onEdit={(newContent) => handleUpdate(comment.id, newContent)}
                 currentUserId={user?.id}
+                isAdmin={isAdmin}
               />
             ))
         ) : (

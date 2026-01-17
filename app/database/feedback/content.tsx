@@ -1,9 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
-import pb from '@/lib/pocketbase';
+import {
+  feedbackData,
+  deleteFeedback,
+  FeedbackEntry,
+} from '@/database/feedback';
 import PageTitle from '@/components/PageTitle';
 import {
   Table,
@@ -14,13 +18,7 @@ import {
   Button,
 } from '@/components/UI';
 import { toast } from '@/components/Toast';
-
-interface FeedbackEntry {
-  id: string;
-  feedback: string;
-  contact: string;
-  created: string;
-}
+import { useRealtimeData } from '@/hooks';
 
 const SkeletonLoader = () => {
   return (
@@ -71,35 +69,12 @@ const SkeletonLoader = () => {
 };
 
 export default function FeedbackResponsesContent() {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
-  const [feedbacks, setFeedbacks] = useState<FeedbackEntry[]>([]);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-      return;
-    }
-
-    if (!loading && user && !isAdmin) {
-      router.push('/');
-    }
-  }, [user, loading, router, isAdmin]);
-
-  useEffect(() => {
-    pb.collection('feedback')
-      .getFullList<FeedbackEntry>({ sort: '-created' })
-      .then(setFeedbacks);
-
-    const unsubscribe = pb.collection('feedback').subscribe('*', async () => {
-      const data = await pb
-        .collection('feedback')
-        .getFullList<FeedbackEntry>({ sort: '-created' });
-      setFeedbacks(data);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const { data: feedbacks, loading } = useRealtimeData<FeedbackEntry[]>(
+    feedbackData,
+    [],
+  );
 
   const handleDelete = async (id: string) => {
     const confirmDelete = confirm(
@@ -107,16 +82,23 @@ export default function FeedbackResponsesContent() {
     );
     if (!confirmDelete) return;
 
-    try {
-      await pb.collection('feedback').delete(id);
+    const result = await deleteFeedback(id);
+    if (result.success) {
       toast.success('Feedback deleted successfully');
-    } catch (error) {
-      toast.error(
-        'Failed to delete feedback: ' + (error as Error).message ||
-          'Unknown error',
-      );
+    } else {
+      toast.error('Failed to delete feedback: ' + result.error);
     }
   };
+
+  if (!authLoading && !user) {
+    router.push('/login');
+    return null;
+  }
+
+  if (!authLoading && user && !isAdmin) {
+    router.push('/');
+    return null;
+  }
 
   return (
     <div>
@@ -129,7 +111,7 @@ export default function FeedbackResponsesContent() {
 
       {loading ? (
         <SkeletonLoader />
-      ) : feedbacks.length > 0 ? (
+      ) : feedbacks && feedbacks.length > 0 ? (
         <Table>
           <TableHeader>
             <TableRow>

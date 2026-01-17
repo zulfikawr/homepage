@@ -2,6 +2,7 @@
 
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
+import { Icon, type IconName } from '../Icon';
 import React, {
   useState,
   useEffect,
@@ -146,6 +147,7 @@ interface DropdownItemProps {
   onClick?: () => void;
   className?: string;
   isActive?: boolean;
+  icon?: IconName | string;
 }
 
 const DropdownItem = ({
@@ -153,6 +155,7 @@ const DropdownItem = ({
   onClick,
   className = '',
   isActive = false,
+  icon,
 }: DropdownItemProps) => {
   const { setIsOpen } = useContext(DropdownContext);
   const { radius } = useRadius();
@@ -172,11 +175,12 @@ const DropdownItem = ({
   return (
     <button
       onClick={handleClick}
-      className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150 ${
+      className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150 flex items-center gap-2 ${
         isActive ? activeStyles : inactiveStyles
       } ${className}`}
       style={{ borderRadius: `${radius}px` }}
     >
+      {icon && <Icon name={icon as IconName} className='size-4' />}
       {children}
     </button>
   );

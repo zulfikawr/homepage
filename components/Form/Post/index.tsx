@@ -109,7 +109,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
     try {
       const result = postToEdit
-        ? await updatePost(postData)
+        ? await updatePost(postData.id, postData)
         : await addPost(postData);
 
       if (result.success) {

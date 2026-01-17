@@ -1,37 +1,50 @@
-export const getTimeAgo = (dateString: string): string => {
+export const getTimeAgo = (date: string | number | Date): string => {
   // Handle "Present" case from formatDateRange
-  if (dateString === 'Present') {
+  if (date === 'Present') {
     return 'Present';
   }
 
   // Handle invalid date strings
-  if (dateString === 'Invalid Date') {
+  if (date === 'Invalid Date') {
     return 'Invalid date';
   }
 
   try {
-    // Parse the date string which could be in formats like:
-    // "Jan 2023", "1 Jan 2023", "January 2023", etc.
-    const parsedDate = new Date(dateString);
+    let parsedDate: Date;
 
-    // Validate if date is valid
-    if (isNaN(parsedDate.getTime())) {
-      // Try an alternative approach for formats like "Jan 2023" which might not parse directly
-      const parts = dateString.split(' ');
-      if (parts.length >= 2) {
-        const month = parts[0];
-        const year = parts[parts.length - 1];
-        const tempDate = new Date(`${month} 1, ${year}`);
-        if (!isNaN(tempDate.getTime())) {
-          return calculateTimeDifference(tempDate);
+    if (date instanceof Date) {
+      parsedDate = date;
+    } else if (typeof date === 'number') {
+      parsedDate = new Date(date);
+    } else {
+      // Parse the date string
+      parsedDate = new Date(date);
+
+      // Validate if date is valid
+      if (isNaN(parsedDate.getTime())) {
+        // Try an alternative approach for formats like "Jan 2023" which might not parse directly
+        const parts = date.split(' ');
+        if (parts.length >= 2) {
+          const month = parts[0];
+          const year = parts[parts.length - 1];
+          const tempDate = new Date(`${month} 1, ${year}`);
+          if (!isNaN(tempDate.getTime())) {
+            parsedDate = tempDate;
+          } else {
+            throw new Error('Invalid date format');
+          }
+        } else {
+          throw new Error('Invalid date format');
         }
       }
-      throw new Error('Invalid date format');
+    }
+
+    if (isNaN(parsedDate.getTime())) {
+      return 'Invalid date';
     }
 
     return calculateTimeDifference(parsedDate);
-  } catch (error) {
-    console.error('Error processing date:', error);
+  } catch {
     return 'Invalid date';
   }
 };
@@ -39,17 +52,16 @@ export const getTimeAgo = (dateString: string): string => {
 const calculateTimeDifference = (postedDate: Date): string => {
   const currentDate = new Date();
 
-  // Set both dates to start of day for accurate comparison
-  postedDate.setHours(0, 0, 0, 0);
-  currentDate.setHours(0, 0, 0, 0);
-
   // Handle future dates
   if (postedDate > currentDate) {
     return 'In the future';
   }
 
   const timeDifference = currentDate.getTime() - postedDate.getTime();
-  const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
   const weeks = Math.floor(days / 7);
   const months = Math.floor(days / 30);
   const years = Math.floor(days / 365);
@@ -60,11 +72,13 @@ const calculateTimeDifference = (postedDate: Date): string => {
     return `${months} month${months > 1 ? 's' : ''} ago`;
   } else if (weeks > 0) {
     return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-  } else if (days > 1) {
-    return `${days} days ago`;
-  } else if (days === 1) {
-    return 'Yesterday';
+  } else if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  } else if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
   } else {
-    return 'Today';
+    return 'Just now';
   }
 };
