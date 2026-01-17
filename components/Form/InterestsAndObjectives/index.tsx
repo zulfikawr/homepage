@@ -18,12 +18,10 @@ const initialInterestsAndObjectivesState: InterestsAndObjectives = {
 const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
   data,
 }) => {
-  const [interestsAndObjectives, setInterestsAndObjectives] =
-    useState<InterestsAndObjectives>(
-      data || initialInterestsAndObjectivesState,
-    );
+  const [interestsAndObjectives, setInterestsAndObjectives] = useState<
+    InterestsAndObjectives & { id?: string }
+  >(data || initialInterestsAndObjectivesState);
 
-  const [objectives, setObjectives] = useState<string[]>([]);
   const [newObjective, setNewObjective] = useState<string>('');
 
   useEffect(() => {
@@ -32,7 +30,10 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     }
   }, [data]);
 
-  const handleChange = (field: keyof InterestsAndObjectives, value: string) => {
+  const handleChange = (
+    field: keyof InterestsAndObjectives,
+    value: string | string[],
+  ) => {
     setInterestsAndObjectives((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -56,7 +57,11 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
 
   const handleAddObjective = () => {
     if (newObjective.trim()) {
-      setObjectives([...objectives, newObjective.trim()]);
+      const updatedObjectives = [
+        ...(interestsAndObjectives.objectives || []),
+        newObjective.trim(),
+      ];
+      handleChange('objectives', updatedObjectives);
       setNewObjective('');
     }
   };
@@ -65,7 +70,13 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     const updatedObjectives = interestsAndObjectives.objectives.filter(
       (_, i) => i !== index,
     );
-    setObjectives(updatedObjectives);
+    handleChange('objectives', updatedObjectives);
+  };
+
+  const handleObjectiveChange = (index: number, value: string) => {
+    const updatedObjectives = [...interestsAndObjectives.objectives];
+    updatedObjectives[index] = value;
+    handleChange('objectives', updatedObjectives);
   };
 
   return (
@@ -94,13 +105,9 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                   <Input
                     type='text'
                     value={objective}
-                    onChange={(e) => {
-                      const updatedObjectives = [
-                        ...interestsAndObjectives.objectives,
-                      ];
-                      updatedObjectives[index] = e.target.value;
-                      setObjectives(updatedObjectives);
-                    }}
+                    onChange={(e) =>
+                      handleObjectiveChange(index, e.target.value)
+                    }
                   />
                   <Button
                     type='destructive'
