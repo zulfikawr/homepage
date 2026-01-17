@@ -1,7 +1,6 @@
 import pb from '@/lib/pocketbase';
 import { Project } from '@/types/project';
 import { RecordModel } from 'pocketbase';
-import { generateId } from '@/utilities/generateId';
 
 /**
  * Maps a PocketBase record to a Project object with full URLs for images.
@@ -51,6 +50,7 @@ function mapRecordToProject(record: RecordModel): Project {
     link: record.link,
     favicon,
     pinned: record.pinned,
+    slug: record.slug,
   };
 }
 
@@ -197,16 +197,25 @@ export async function deleteProject(
  */
 export async function getProjectById(id: string): Promise<Project | null> {
   try {
-    let record: RecordModel;
     if (id.length === 15) {
-      record = await pb.collection('projects').getOne<RecordModel>(id);
-    } else {
-      record = await pb
-        .collection('projects')
-        .getFirstListItem<RecordModel>(`slug="${id}"`);
+      try {
+        const record = await pb.collection('projects').getOne<RecordModel>(id);
+        if (record) return mapRecordToProject(record);
+      } catch (e) {}
     }
-    return mapRecordToProject(record);
-  } catch {
+
+    const records = await pb.collection('projects').getFullList<RecordModel>({
+      filter: `slug = "${id}"`,
+      requestKey: null,
+    });
+
+    if (records.length > 0) {
+      return mapRecordToProject(records[0]);
+    }
+
+    return null;
+  } catch (error) {
+    console.error('getProjectById error:', error);
     return null;
   }
 }

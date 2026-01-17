@@ -3,10 +3,10 @@
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 import pb from '@/lib/pocketbase';
-import type { AuthModel } from 'pocketbase';
+import type { AuthRecord } from 'pocketbase';
 
 interface AuthContextType {
-  user: AuthModel | null;
+  user: AuthRecord | null;
   loading: boolean;
   isAdmin: boolean;
 }
@@ -18,30 +18,30 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthModel | null>(pb.authStore.model);
+  const [user, setUser] = useState<AuthRecord | null>(pb.authStore.record);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     // Initial check
-    setUser(pb.authStore.model);
+    const record = pb.authStore.record;
+    setUser(record);
     setIsAdmin(
-      !!pb.authStore.model &&
+      !!record &&
         pb.authStore.isValid &&
-        (pb.authStore.isAdmin ||
-          (pb.authStore.model as unknown as { role?: string }).role ===
-            'admin'),
+        (pb.authStore.isSuperuser ||
+          (record as unknown as { role?: string }).role === 'admin'),
     );
     setLoading(false);
 
     // Listen to auth changes
-    const unsubscribe = pb.authStore.onChange((_token, model) => {
-      setUser(model);
+    const unsubscribe = pb.authStore.onChange((_token, record) => {
+      setUser(record);
       setIsAdmin(
-        !!model &&
+        !!record &&
           pb.authStore.isValid &&
-          (pb.authStore.isAdmin ||
-            (model as unknown as { role?: string }).role === 'admin'),
+          (pb.authStore.isSuperuser ||
+            (record as unknown as { role?: string }).role === 'admin'),
       );
     });
 

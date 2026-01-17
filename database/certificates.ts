@@ -1,7 +1,6 @@
 import pb from '@/lib/pocketbase';
 import { Certificate } from '@/types/certificate';
 import { RecordModel } from 'pocketbase';
-import { generateId } from '@/utilities/generateId';
 
 /**
  * Maps a PocketBase record to a Certificate object with full URLs for images.

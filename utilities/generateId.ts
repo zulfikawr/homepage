@@ -4,5 +4,7 @@ export const generateId = (text: string): string => {
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
+    .replace(/-+/g, '-')
+    .substring(0, 100)
+    .replace(/-$/, ''); // Remove trailing dash if truncation ends on one
 };

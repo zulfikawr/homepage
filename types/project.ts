@@ -12,4 +12,5 @@ export interface Project {
   favicon?: string;
   favicon_url?: string;
   pinned?: boolean;
+  slug: string;
 }

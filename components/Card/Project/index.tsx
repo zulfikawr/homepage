@@ -23,8 +23,9 @@ export default function ProjectCard({
   const handleCardClick = () => {
     if (isInForm) return;
 
+    const identifier = project.slug || project.id;
     if (openForm) {
-      router.push(`/database/projects/${project.id}/edit`);
+      router.push(`/database/projects/${identifier}/edit`);
     } else {
       drawer.open(<ProjectViewer project={project} />);
     }

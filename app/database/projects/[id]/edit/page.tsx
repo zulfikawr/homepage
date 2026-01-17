@@ -18,17 +18,6 @@ async function ProjectLoader({ params }: Props) {
   return <EditProjectPage project={project} />;
 }
 
-export async function generateStaticParams() {
-  try {
-    const projects = await getProjects();
-    return projects.map((project) => ({
-      id: project.id,
-    }));
-  } catch {
-    return [];
-  }
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const project = await getProjectById(id);

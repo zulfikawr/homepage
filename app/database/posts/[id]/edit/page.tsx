@@ -18,17 +18,6 @@ async function PostLoader({ params }: Props) {
   return <EditPostPage post={post} />;
 }
 
-export async function generateStaticParams() {
-  try {
-    const posts = await getPosts();
-    return posts.map((post) => ({
-      id: post.id,
-    }));
-  } catch {
-    return [];
-  }
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const post = await getPostById(id);

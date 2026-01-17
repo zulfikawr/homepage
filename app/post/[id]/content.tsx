@@ -15,7 +15,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         subtitle={post.excerpt}
         route={`/post/${post.id}`}
         category={post.categories[0]}
-        image={post.img}
+        image={post.image}
         isPostTitle
       />
 

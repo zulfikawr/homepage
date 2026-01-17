@@ -1,6 +1,5 @@
 import pb from '@/lib/pocketbase';
 import { Book } from '@/types/book';
-import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to books data.

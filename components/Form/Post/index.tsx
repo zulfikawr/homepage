@@ -5,7 +5,13 @@ import { Post } from '@/types/post';
 import { addPost, updatePost, deletePost } from '@/database/posts';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+import {
+  Button,
+  FormLabel,
+  Input,
+  Textarea,
+  FileUpload,
+} from '@/components/UI';
 import { modal } from '@/components/Modal';
 import PostCard from '@/components/Card/Post';
 import { Editor } from '@/components/Editor';
@@ -26,12 +32,17 @@ const initialPostState: Post = {
   categories: [],
   dateString: '',
   content: '<p></p>',
-  img: '',
-  audioUrl: '',
+  image: '',
+  image_url: '',
+  audio: '',
+  audio_url: '',
 };
 
 const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
   const [post, setPost] = useState<Post>(postToEdit || initialPostState);
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
 
   const initialDate = useMemo(() => {
     const date = postToEdit?.dateString
@@ -47,12 +58,16 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     title: post.title || 'Post Title',
     excerpt: post.excerpt || 'This is a post excerpt.',
     content: post.content || '',
-    img: post.img,
-    categories: post.categories.length ? post.categories : ['Post Categories'],
+    image: post.image || post.image_url || '/images/placeholder.png',
+    audio: post.audio || post.audio_url || '',
+    categories:
+      post.categories && post.categories.length
+        ? post.categories
+        : ['Post Categories'],
     dateString: post.dateString || formatDate(selectedDate),
   };
 
-  const handleChange = (field: keyof Post, value: string | string[] | Date) => {
+  const handleChange = (field: keyof Post, value: any) => {
     setPost((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -101,16 +116,42 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
     if (!validateForm()) return;
 
+    const slug = generateId(post.title || '');
     const postData = {
       ...post,
-      id: postToEdit?.id || generateId(post.title),
+      slug,
       dateString: formatDate(selectedDate),
     };
 
     try {
-      const result = postToEdit
-        ? await updatePost(postData.id, postData)
-        : await addPost(postData);
+      let result;
+      const recordId = postToEdit?.id || '';
+
+      if (imageFile || audioFile) {
+        const formData = new FormData();
+        if (recordId) formData.append('id', recordId);
+
+        // Append all post fields
+        Object.entries(postData).forEach(([key, value]) => {
+          if (key === 'categories' && Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+          }
+        });
+
+        // Append files
+        if (imageFile) formData.append('image', imageFile);
+        if (audioFile) formData.append('audio', audioFile);
+
+        result = postToEdit
+          ? await updatePost(recordId, formData)
+          : await addPost(formData);
+      } else {
+        result = postToEdit
+          ? await updatePost(recordId, postData)
+          : await addPost(postData);
+      }
 
       if (result.success) {
         toast.success(
@@ -137,6 +178,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
       if (result.success) {
         toast.success('Post deleted successfully!');
+        router.push('/database/posts');
       }
     } catch (error) {
       toast.error(
@@ -246,22 +288,41 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
             />
           </div>
           <div>
-            <FormLabel htmlFor='imgUrl'>Image URL</FormLabel>
-            <Input
-              type='text'
-              value={post.img || ''}
-              onChange={(e) => handleChange('img', e.target.value)}
-              placeholder='https://image-url.com'
-            />
+            <FormLabel htmlFor='image_url'>Image URL</FormLabel>
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={post.image_url || ''}
+                onChange={(e) => handleChange('image_url', e.target.value)}
+                placeholder='https://image-url.com'
+              />
+              <FileUpload
+                collectionName='posts'
+                recordId={postToEdit?.id}
+                fieldName='image'
+                onUploadSuccess={(url) => handleChange('image', url)}
+                onFileSelect={setImageFile}
+              />
+            </div>
           </div>
           <div>
-            <FormLabel htmlFor='audioUrl'>Audio URL</FormLabel>
-            <Input
-              type='text'
-              value={post.audioUrl || ''}
-              onChange={(e) => handleChange('audioUrl', e.target.value)}
-              placeholder='https://audio-url.com'
-            />
+            <FormLabel htmlFor='audio_url'>Audio URL</FormLabel>
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={post.audio_url || ''}
+                onChange={(e) => handleChange('audio_url', e.target.value)}
+                placeholder='https://audio-url.com'
+              />
+              <FileUpload
+                collectionName='posts'
+                recordId={postToEdit?.id}
+                fieldName='audio'
+                accept='audio/*'
+                onUploadSuccess={(url) => handleChange('audio', url)}
+                onFileSelect={setAudioFile}
+              />
+            </div>
           </div>
         </form>
       </div>

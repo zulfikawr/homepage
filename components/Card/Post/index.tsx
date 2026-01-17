@@ -2,6 +2,7 @@ import { Icon, Label } from '@/components/UI';
 import Link from 'next/link';
 import { Hover } from '@/components/Visual';
 import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 import { trimStr } from 'utilities/string';
 import { Post } from 'types/post';
 import { Card } from 'components/Card';
@@ -22,10 +23,11 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
   const handleCardClick = () => {
     if (isInForm) return;
 
+    const identifier = post.slug || post.id;
     if (openForm) {
-      router.push(`/database/posts/${post.id}/edit`);
+      router.push(`/database/posts/${identifier}/edit`);
     } else {
-      router.push(`/post/${post.id}`);
+      router.push(`/post/${identifier}`);
     }
   };
 
@@ -33,7 +35,8 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
     if (isInForm) return;
     e.stopPropagation();
     try {
-      const shareUrl = `${window.location.origin}/post/${post.id}`;
+      const identifier = post.slug || post.id;
+      const shareUrl = `${window.location.origin}/post/${identifier}`;
       await navigator.share({
         title: post.title,
         url: shareUrl,
@@ -44,7 +47,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
   };
 
   const renderMedia = () => {
-    if (post.img) {
+    if (post.image) {
       return (
         <Hover
           perspective={1000}
@@ -53,7 +56,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
           className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-neutral-200 shadow-sm transition-all hover:shadow-md dark:opacity-90'
         >
           <ImageWithFallback
-            src={post.img || '/images/placeholder.png'}
+            src={post.image || '/images/placeholder.png'}
             alt={`featured-image-${post.title}`}
             fill
             className='rounded-md object-cover'
@@ -67,13 +70,13 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
   };
 
   const renderAudio = () => {
-    if (post.audioUrl) {
+    if (post.audio) {
       return (
-        <div className='px-2 py-4 lg:px-5'>
+        <div className='px-4 pb-4 lg:px-6 lg:pb-6'>
           <AudioPlayer
-            className='focus:outline-none'
+            className='rhap_container focus:outline-none'
             autoPlayAfterSrcChange={false}
-            src={post.audioUrl}
+            src={post.audio}
             preload='metadata'
           />
         </div>

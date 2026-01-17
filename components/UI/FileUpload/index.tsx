@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button } from '@/components/UI';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
-import { RecordModel } from 'pocketbase';
+import { RecordModel, ClientResponseError } from 'pocketbase';
 import { twMerge } from 'tailwind-merge';
 
 interface FileUploadProps {
@@ -57,39 +57,45 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     formData.append(fieldName, file);
 
     try {
+      // Create a clean update request with ONLY the file to avoid 5000 char limit on content/excerpt
       const record = await pb
         .collection(collectionName)
-        .update(recordId, formData);
+        .update<RecordModel>(recordId, formData);
 
       const fileName = record[fieldName] as string;
 
       if (!fileName) {
-        if (record.avatar) {
-          const url = pb.files.getUrl(
-            { collectionName, id: recordId } as unknown as RecordModel,
-            record.avatar as string,
-          );
-          onUploadSuccess(url);
-          toast.success('File uploaded successfully');
-          return;
-        }
         toast.error('Upload succeeded but no filename returned');
         return;
       }
 
       // Force using collectionName instead of the internal ID for a "pretty" URL
-      const fullUrl = pb.files.getUrl(
-        { collectionName, id: recordId } as unknown as RecordModel,
-        fileName,
-      );
+      const fullUrl = pb.files.getUrl(record, fileName);
 
       onUploadSuccess(fullUrl);
       toast.success('File uploaded successfully');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Upload error:', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to upload file',
-      );
+      let message = 'Failed to upload file';
+
+      if (error instanceof ClientResponseError) {
+        message = error.message;
+        // Extract detailed validation errors if available
+        const details = error.response.data;
+        if (details && typeof details === 'object') {
+          const errors = Object.entries(details)
+            .map(([key, val]) => {
+              const err = val as { message?: string };
+              return `${key}: ${err.message || 'invalid'}`;
+            })
+            .join(', ');
+          if (errors) message += ` (${errors})`;
+        }
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
+      toast.error(message);
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

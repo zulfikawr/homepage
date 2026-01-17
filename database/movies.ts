@@ -1,7 +1,5 @@
 import pb from '@/lib/pocketbase';
 import { Movie } from '@/types/movie';
-import { RecordModel } from 'pocketbase';
-import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to movies data.
