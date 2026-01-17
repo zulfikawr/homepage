@@ -26,25 +26,25 @@ const SkeletonLoader = () => {
         <TableRow>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
           >
             Date
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
           >
             Feedback
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
           >
             Contact
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
           >
             Actions
           </TableCell>
@@ -56,7 +56,7 @@ const SkeletonLoader = () => {
             {[...Array(4)].map((_, i) => (
               <TableCell key={i}>
                 <div className='animate-pulse'>
-                  <div className='h-6 w-24 rounded bg-neutral-200 dark:bg-neutral-700' />
+                  <div className='h-6 w-24 rounded bg-muted dark:bg-muted' />
                 </div>
               </TableCell>
             ))}
@@ -116,25 +116,25 @@ export default function FeedbackResponsesContent() {
             <TableRow>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
               >
                 Date
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
               >
                 Feedback
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
               >
                 Contact
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-neutral-700 font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
               >
                 Actions
               </TableCell>
@@ -160,9 +160,7 @@ export default function FeedbackResponsesContent() {
           </TableBody>
         </Table>
       ) : (
-        <p className='mt-4 text-sm text-neutral-500 dark:text-neutral-400'>
-          No feedback yet.
-        </p>
+        <p className='mt-4 text-sm text-muted-foreground'>No feedback yet.</p>
       )}
     </div>
   );

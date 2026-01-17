@@ -31,7 +31,7 @@ const SectionTitle = ({
         className={`inline-flex items-center border shadow-md px-4 py-[4px] font-medium tracking-wider ${
           effectEnabled
             ? 'border-white/20 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md'
-            : 'border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800'
+            : 'border-border bg-card'
         }`}
         style={{ borderRadius: `${radius}px` }}
       >
@@ -44,7 +44,7 @@ const SectionTitle = ({
         <Link
           href={link.href}
           target='_blank'
-          className='flex items-center gap-x-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
+          className='flex items-center gap-x-2 text-muted-foreground hover:text-muted-foreground dark:hover:text-neutral-300'
         >
           {link.label}
           <span className='h-5 w-5'>

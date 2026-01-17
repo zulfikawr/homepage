@@ -33,7 +33,7 @@ export default function PublicationCard({
         <p className='text-lg line-clamp-2 text-ellipsis font-medium leading-tight dark:text-white'>
           {publication.title}
         </p>
-        <p className='text-sm font-light text-neutral-500 dark:text-neutral-400'>
+        <p className='text-sm font-light text-muted-foreground'>
           {publication.authors.join(', ')}
         </p>
         <div className='flex flex-wrap gap-2 pt-2'>
@@ -43,7 +43,7 @@ export default function PublicationCard({
         </div>
       </div>
 
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
         <span>{publication.publisher}</span>
         <span>
           {publication.openAccess ? (

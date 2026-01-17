@@ -25,7 +25,7 @@ const contacts: ContactItem[] = [
     link: 'https://github.com/zulfikawr',
     username: '@zulfikawr',
     icon: 'github',
-    color: 'text-black dark:text-white',
+    color: 'text-foreground',
   },
   {
     platform: 'LinkedIn',
@@ -69,7 +69,7 @@ export default function ContactsContent() {
 
         <Card isPreview className='p-6'>
           <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
-          <p className='text-sm text-neutral-600 dark:text-neutral-400'>
+          <p className='text-sm text-muted-foreground dark:text-neutral-400'>
             Prefer to send a private message? Feel free to use the{' '}
             <Link
               href='/feedback'

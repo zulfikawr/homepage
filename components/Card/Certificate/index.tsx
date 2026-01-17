@@ -39,11 +39,11 @@ export default function CertificateCard({
               height={200}
               src={certificate.imageUrl}
               alt={certificate.title}
-              className='w-full h-full rounded-t-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
+              className='w-full h-full rounded-t-md border border-neutral-300 dark:border-border shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
               loading='lazy'
             />
           </div>
-          <div className='flex w-full border-b border-neutral-100 px-4 py-3 dark:border-neutral-700 dark:text-neutral-400'>
+          <div className='flex w-full border-b border-neutral-100 px-4 py-3 dark:border-border dark:text-neutral-400'>
             <p className='line-clamp-1 text-ellipsis text-md font-medium leading-tight tracking-wider dark:text-white'>
               {certificate.title}
             </p>
@@ -60,14 +60,14 @@ export default function CertificateCard({
                   type='square'
                 />
               )}
-              <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+              <p className='text-xs font-light text-muted-foreground'>
                 {certificate.issuedBy}
               </p>
             </div>
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+            <p className='text-xs font-light text-muted-foreground'>
               Issued {certificate.dateIssued}
             </p>
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+            <p className='text-xs font-light text-muted-foreground'>
               Credential ID: {certificate.credentialId}
             </p>
           </div>
@@ -82,7 +82,7 @@ export default function CertificateCard({
             height={150}
             src={certificate.imageUrl}
             alt={certificate.title}
-            className='rounded-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
+            className='rounded-md border border-neutral-300 dark:border-border shadow-sm shadow-neutral-200 dark:shadow-none object-cover'
             loading='lazy'
           />
         </div>
@@ -102,16 +102,16 @@ export default function CertificateCard({
                 type='square'
               />
             )}
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+            <p className='text-xs font-light text-muted-foreground'>
               {certificate.issuedBy}
             </p>
           </div>
           <div className='flex items-center space-x-2'>
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+            <p className='text-xs font-light text-muted-foreground'>
               Issued {certificate.dateIssued}
             </p>
             <span className='text-neutral-400 font-light text-xs'>|</span>
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+            <p className='text-xs font-light text-muted-foreground'>
               Credential ID: {certificate.credentialId}
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function CertificateCard({
       </div>
 
       {/* Footer */}
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
         <span>Certificate</span>
         <span>View</span>
       </div>

@@ -40,17 +40,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const getButtonClasses = () => {
       switch (type) {
         case 'primary':
-          return 'py-2 px-5 h-9 shadow-sm border border-blue-500 dark:border-blue-900 dark:bg-blue-900 dark:text-neutral-300 bg-blue-500 hover:bg-blue-600 hover:border-blue-600 dark:hover:bg-blue-800 dark:hover:border-blue-800 hover:shadow-inner text-white';
+          return 'py-2 px-5 h-9 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-inner';
         case 'destructive':
-          return 'w-max py-2 px-5 h-9 shadow-sm border border-red-500 dark:border-red-900 dark:bg-red-900 dark:text-neutral-300 bg-red-500 hover:bg-red-600 hover:border-red-600 dark:hover:bg-red-800 dark:hover:border-red-800 hover:shadow-inner text-white';
+          return 'w-max py-2 px-5 h-9 shadow-sm bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-inner';
         case 'outline':
-          return 'w-max py-2 px-5 h-9 shadow-sm border border-neutral-300 dark:border-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:shadow-inner bg-transparent';
+          return 'w-max py-2 px-5 h-9 shadow-sm border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground hover:shadow-inner';
         case 'ghost':
-          return 'w-max py-2 px-5 h-9 hover:bg-neutral-100 dark:hover:bg-neutral-800 bg-transparent text-neutral-700 dark:text-neutral-300 dark:hover:text-neutral-100';
+          return 'w-max py-2 px-5 h-9 hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground';
         case 'link':
-          return 'w-max py-2 px-5 h-9 hover:underline bg-transparent text-blue-500 dark:text-blue-400';
+          return 'w-max py-2 px-5 h-9 hover:underline bg-transparent text-primary';
         default:
-          return 'w-max py-2 px-5 h-9 shadow-sm border border-neutral-300 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600 hover:shadow-inner bg-white';
+          return 'w-max py-2 px-5 h-9 shadow-sm border border-border bg-card text-foreground hover:bg-accent hover:text-accent-foreground hover:shadow-inner';
       }
     };
 

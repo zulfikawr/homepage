@@ -37,7 +37,7 @@ export default function ReadingListDatabase() {
         ) : Array.isArray(books) && books.length > 0 ? (
           <>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-5'>
+              <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5'>
                 <Button
                   type='primary'
                   icon='plus'

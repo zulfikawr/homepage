@@ -194,7 +194,7 @@ const Drawer = () => {
           ${
             effectEnabled
               ? 'bg-white/70 dark:bg-neutral-900/70 border-white/20 dark:border-white/10 backdrop-blur-xl shadow-2xl'
-              : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800'
+              : 'bg-background border-border dark:border-border'
           }`}
         style={{
           borderRadius: `${radius}px ${radius}px 0 0`,
@@ -214,7 +214,7 @@ const Drawer = () => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className='w-12 h-1.5 bg-neutral-300 dark:bg-neutral-700 rounded-full' />
+          <div className='w-12 h-1.5 bg-neutral-300 dark:bg-muted rounded-full' />
         </div>
 
         <div className='flex-1 flex flex-col overflow-hidden'>

@@ -158,7 +158,7 @@ const getVariantProps = (
       };
     default:
       return {
-        bgClass: 'bg-white dark:bg-neutral-800',
+        bgClass: 'bg-card',
         textClass: 'text-neutral-800 dark:text-white',
         borderClass: 'border-neutral-300 dark:border-neutral-600',
       };

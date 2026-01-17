@@ -156,7 +156,7 @@ export default function SectionDatabase() {
               onDragStart={(e) => onDragStart(e, section)}
               onDragOver={(e) => onDragOver(e, index)}
               onDragEnd={onDragEnd}
-              className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-neutral-700 dark:bg-neutral-800 ${
+              className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
                 draggedItem?.id === section.id
                   ? 'opacity-50 scale-95 border-blue-500'
                   : 'opacity-100'
@@ -168,7 +168,7 @@ export default function SectionDatabase() {
 
               <div className='flex-1 min-w-0'>
                 <p className='font-medium truncate text-sm'>{section.title}</p>
-                <p className='text-[10px] text-neutral-500 font-mono'>
+                <p className='text-[10px] text-muted-foreground font-mono'>
                   {section.name}
                 </p>
               </div>

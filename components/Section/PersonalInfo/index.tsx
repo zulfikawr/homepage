@@ -18,11 +18,11 @@ const PersonalInfoSection = () => {
   return (
     <section className='flex items-center justify-between gap-x-10 gap-y-8'>
       <div className='flex flex-col gap-y-1'>
-        <h1 className='text-4xl font-medium tracking-wide text-black dark:text-white'>
+        <h1 className='text-4xl font-medium tracking-wide text-foreground'>
           <span className='mr-3 inline-block'>👋</span>
           {personalInfo.name}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-neutral-500 dark:text-neutral-300 lg:text-lg'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-neutral-300 lg:text-lg'>
           <p>{personalInfo.title}</p>
         </div>
       </div>
@@ -38,7 +38,7 @@ const PersonalInfoSection = () => {
           width={105}
           alt={personalInfo.name}
           priority
-          className='bg-neutral-200 shadow-sm dark:border dark:border-neutral-600 aspect-square object-cover'
+          className='bg-muted shadow-sm dark:border dark:border-neutral-600 aspect-square object-cover'
           type='square'
         />
       </Hover>

@@ -22,7 +22,7 @@ export default function PlaylistCard({ playlist }: PlaylistCardProps) {
             height={80}
             src={playlist.images[0]?.url}
             alt={playlist.name}
-            className='rounded-md border border-gray-300 dark:border-neutral-700 shadow-sm shadow-neutral-200 dark:shadow-none'
+            className='rounded-md border border-neutral-300 dark:border-border shadow-sm shadow-neutral-200 dark:shadow-none'
             loading='lazy'
             type='square'
           />
@@ -32,16 +32,16 @@ export default function PlaylistCard({ playlist }: PlaylistCardProps) {
             {playlist.name}
           </p>
           {playlist.description && (
-            <p className='text-xs font-light text-neutral-500 dark:text-neutral-400 line-clamp-1'>
+            <p className='text-xs font-light text-muted-foreground line-clamp-1'>
               {playlist.description}
             </p>
           )}
-          <p className='text-xs font-light text-neutral-500 dark:text-neutral-400'>
+          <p className='text-xs font-light text-muted-foreground'>
             {playlist.tracks?.total || 0} songs
           </p>
         </div>
       </div>
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
         <div className='flex items-center space-x-1'>
           <Icon name='spotifyLogo' className='size-4.5' />
           <span>Spotify</span>

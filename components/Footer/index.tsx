@@ -26,7 +26,7 @@ const FooterLink = ({
 );
 
 const FooterContent = () => (
-  <div className='text-sm tracking-wide text-neutral-500 dark:text-neutral-400'>
+  <div className='text-sm tracking-wide text-muted-foreground'>
     <FooterLink href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>
       CC BY-NC-SA 4.0
     </FooterLink>
@@ -51,20 +51,20 @@ export default function Footer() {
 
   if (!mounted) {
     return (
-      <footer className='mt-20 border-b border-t border-neutral-200 bg-white py-4 text-center dark:border-neutral-700 dark:bg-neutral-800'>
+      <footer className='mt-20 border-b border-t border-border bg-card py-4 text-center'>
         <FooterContent />
       </footer>
     );
   }
 
   return (
-    <footer className='mt-20 border-b border-t border-neutral-200 bg-white py-4 text-center dark:border-neutral-700 dark:bg-neutral-800'>
+    <footer className='mt-20 border-b border-t border-border bg-white py-4 text-center dark:border-border dark:bg-card'>
       {/* Settings Button */}
-      <div className='fixed bottom-8 left-8 z-[9997] text-neutral-500 dark:text-neutral-300'>
+      <div className='fixed bottom-8 left-8 z-[9997] text-muted-foreground dark:text-neutral-300'>
         <Settings />
       </div>
       {/* Scroll To Top Button */}
-      <div className='fixed bottom-8 right-8 z-[9997] text-neutral-500 dark:text-neutral-300'>
+      <div className='fixed bottom-8 right-8 z-[9997] text-muted-foreground dark:text-neutral-300'>
         <OffsetTransition componentRef={backToTopRef}>
           <Button
             type='default'
@@ -72,7 +72,7 @@ export default function Footer() {
             icon='caretUp'
             aria-label='scroll to top'
             onClick={handleScrollToTop}
-            className='bg-white dark:bg-neutral-800 dark:hover:bg-neutral-700 w-10 h-10'
+            className='bg-card dark:hover:bg-neutral-700 w-10 h-10'
           />
         </OffsetTransition>
       </div>

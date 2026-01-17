@@ -174,14 +174,14 @@ export default function SpotifyMusicContent() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className='mt-8 border-b border-neutral-200 dark:border-neutral-700 overflow-x-auto scrollbar-hide'>
+      <div className='mt-8 border-b border-border overflow-x-auto scrollbar-hide'>
         <nav className='flex space-x-8 min-w-max'>
           <button
             onClick={() => setActiveTab('recent')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'recent'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
             }`}
           >
             <Icon name='playCircle' className='size-5' />
@@ -192,7 +192,7 @@ export default function SpotifyMusicContent() {
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'top'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
             }`}
           >
             <Icon name='musicNotes' className='size-5' />
@@ -203,7 +203,7 @@ export default function SpotifyMusicContent() {
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'artists'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
             }`}
           >
             <Icon name='userCircle' className='size-5' />
@@ -214,7 +214,7 @@ export default function SpotifyMusicContent() {
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'playlists'
                 ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300'
+                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
             }`}
           >
             <Icon name='playlist' className='size-5' />
@@ -235,10 +235,10 @@ export default function SpotifyMusicContent() {
               recentTracks.map((item, index) => (
                 <div
                   key={index}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
                   style={{ borderRadius: `${radius}px` }}
                 >
-                  <span className='hidden md:flex text-neutral-400 dark:text-neutral-500 w-5 text-sm'>
+                  <span className='hidden md:flex text-neutral-400 dark:text-muted-foreground w-5 text-sm'>
                     {index + 1}
                   </span>
                   <div className='flex-shrink-0'>
@@ -261,13 +261,13 @@ export default function SpotifyMusicContent() {
                     >
                       {item.track.name}
                     </Link>
-                    <p className='text-sm text-neutral-500 dark:text-neutral-400 truncate'>
+                    <p className='text-sm text-muted-foreground truncate'>
                       {item.track.artists
                         .map((artist) => artist.name)
                         .join(', ')}
                     </p>
                   </div>
-                  <div className='text-xs text-neutral-500 dark:text-neutral-400 whitespace-nowrap flex-shrink-0'>
+                  <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
                     {getTimeAgo(lastPlayedAt)}
                   </div>
                 </div>
@@ -297,10 +297,10 @@ export default function SpotifyMusicContent() {
               topTracks.map((track, index) => (
                 <div
                   key={track.id}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
                   style={{ borderRadius: `${radius}px` }}
                 >
-                  <span className='hidden md:flex text-neutral-400 dark:text-neutral-500 w-5 text-sm'>
+                  <span className='hidden md:flex text-neutral-400 dark:text-muted-foreground w-5 text-sm'>
                     {index + 1}
                   </span>
                   <div className='flex-shrink-0'>
@@ -323,11 +323,11 @@ export default function SpotifyMusicContent() {
                     >
                       {track.name}
                     </Link>
-                    <p className='text-sm text-neutral-500 dark:text-neutral-400 truncate'>
+                    <p className='text-sm text-muted-foreground truncate'>
                       {track.artists.map((artist) => artist.name).join(', ')}
                     </p>
                   </div>
-                  <div className='text-xs text-neutral-500 dark:text-neutral-400 whitespace-nowrap flex-shrink-0'>
+                  <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
                     {formatDuration(track.duration_ms)}
                   </div>
                 </div>
@@ -358,8 +358,8 @@ export default function SpotifyMusicContent() {
                       key={index}
                       className='flex flex-col items-center space-y-2 p-3'
                     >
-                      <div className='h-24 w-24 rounded-full bg-neutral-200 dark:bg-neutral-700' />
-                      <div className='h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
+                      <div className='h-24 w-24 rounded-full bg-muted dark:bg-muted' />
+                      <div className='h-4 w-3/4 rounded bg-muted dark:bg-muted' />
                     </div>
                   ))
               ) : topArtists.length > 0 ? (
@@ -368,7 +368,7 @@ export default function SpotifyMusicContent() {
                     key={artist.id}
                     href={artist.external_urls.spotify}
                     target='_blank'
-                    className='flex flex-col items-center space-y-2 p-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 transition-colors'
+                    className='flex flex-col items-center space-y-2 p-3 hover:bg-muted/50 hover:bg-muted transition-colors'
                     style={{ borderRadius: `${radius}px` }}
                   >
                     <ImageWithFallback

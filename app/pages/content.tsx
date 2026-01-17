@@ -92,7 +92,7 @@ export default function PagesContent() {
     'text-indigo-500',
     'text-purple-500',
     'text-pink-500',
-    'text-neutral-500',
+    'text-muted-foreground',
     'text-violet-500',
   ];
 

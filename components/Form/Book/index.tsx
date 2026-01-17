@@ -218,7 +218,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-black dark:text-white'>
+                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-foreground'>
                   {currentType?.label}
                   <Icon name='caretDown' className='size-3' />
                 </Button>

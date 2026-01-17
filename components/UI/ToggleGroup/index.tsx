@@ -24,14 +24,12 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 
   return (
     <div
-      className='inline-flex items-center overflow-hidden border border-neutral-300 dark:border-neutral-600'
+      className='inline-flex items-center overflow-hidden border border-border'
       style={{ borderRadius: `${radius}px` }}
     >
       {options.map((option, index) => {
         const isFirst = index === 0;
-        const baseBorder = !isFirst
-          ? 'border-l border-neutral-300 dark:border-neutral-600'
-          : '';
+        const baseBorder = !isFirst ? 'border-l border-border' : '';
 
         return (
           <Toggle

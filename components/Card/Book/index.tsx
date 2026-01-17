@@ -48,12 +48,12 @@ export default function BookCard({ book, openForm, isInForm }: BookCardProps) {
           <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
             {book.title}
           </p>
-          <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm'>
+          <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
             by {book.author}
           </p>
         </div>
       </div>
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-neutral-500 dark:border-neutral-700 dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
         <span>Date Added</span>
         <span>{book.dateAdded}</span>
       </div>

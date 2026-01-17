@@ -115,7 +115,7 @@ export default function CommentCard({
 
   return (
     <div
-      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border-neutral-100 dark:border-neutral-800 pl-4 sm:pl-6' : ''}`}
+      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border-neutral-100 dark:border-border pl-4 sm:pl-6' : ''}`}
     >
       <Card className='p-4'>
         <div className='flex items-start justify-between'>
@@ -133,10 +133,12 @@ export default function CommentCard({
                   {comment.author}
                 </span>
                 {comment.parentId && (
-                  <span className='text-xs text-neutral-500'>replying</span>
+                  <span className='text-xs text-muted-foreground'>
+                    replying
+                  </span>
                 )}
               </div>
-              <span className='text-xs text-neutral-500'>
+              <span className='text-xs text-muted-foreground'>
                 {comment.createdAt ? getTimeAgo(comment.createdAt) : ''}
               </span>
             </div>
@@ -201,7 +203,9 @@ export default function CommentCard({
             onClick={handleLike}
             disabled={isLiking}
             className={`flex items-center gap-x-1 text-sm font-medium transition-colors ${
-              isLiking ? 'text-primary' : 'text-neutral-500 hover:text-primary'
+              isLiking
+                ? 'text-primary'
+                : 'text-muted-foreground hover:text-primary'
             }`}
           >
             <Icon
@@ -213,14 +217,14 @@ export default function CommentCard({
 
           <button
             onClick={() => setIsReplying(!isReplying)}
-            className='text-sm font-medium text-neutral-500 hover:text-primary transition-colors'
+            className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'
           >
             Reply
           </button>
         </div>
 
         {isReplying && (
-          <div className='mt-4 space-y-4 rounded-md bg-neutral-50 p-4 dark:bg-neutral-900'>
+          <div className='mt-4 space-y-4 rounded-md bg-muted/50 p-4 dark:bg-neutral-900'>
             <Editor content={replyContent} onUpdate={handleReplyChange} />
             <div className='flex justify-end gap-x-2'>
               <Button onClick={() => setIsReplying(false)} type='outline'>

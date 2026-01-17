@@ -21,10 +21,9 @@ const Toggle: React.FC<ToggleProps> = ({
 
   const baseClasses =
     'flex items-center justify-center p-1 h-8 w-fit cursor-pointer transition-colors duration-200';
-  const activeClasses =
-    'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100';
+  const activeClasses = 'bg-primary text-primary-foreground';
   const inactiveClasses =
-    'bg-transparent text-neutral-700 hover:bg-neutral-300 dark:text-neutral-200 dark:hover:bg-neutral-600';
+    'bg-transparent text-foreground hover:bg-accent hover:text-accent-foreground';
 
   return (
     <button

@@ -40,7 +40,7 @@ export default function PublicationDatabase() {
             .map((_, index) => <CardLoading key={index} type='publication' />)
         ) : Array.isArray(publications) && publications.length > 0 ? (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-5'>
+            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
                 type='primary'
                 icon='plus'

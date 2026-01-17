@@ -36,11 +36,11 @@ const Badge = ({
   const getBadgeClasses = () => {
     switch (type) {
       case 'primary':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-blue-200 dark:border-blue-700';
+        return 'bg-primary text-primary-foreground hover:bg-primary/80';
       case 'outline':
-        return 'bg-transparent text-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600';
+        return 'bg-transparent text-foreground border border-border';
       default:
-        return 'bg-neutral-100 text-neutral-500 dark:bg-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-600';
+        return 'bg-muted text-muted-foreground border border-border';
     }
   };
 

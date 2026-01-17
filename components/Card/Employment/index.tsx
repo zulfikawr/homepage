@@ -55,7 +55,7 @@ export default function EmploymentCard({
       isInForm={isInForm}
       className='min-w-[18rem] lg:min-w-[25rem]'
     >
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-neutral-200 px-4.5 py-2.5 font-medium tracking-wide text-neutral-700 dark:border-neutral-700 dark:text-white'>
+      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-neutral-700 dark:border-border dark:text-white'>
         <div className='flex items-center gap-x-2'>
           {employment.orgLogoSrc && (
             <ImageWithFallback
@@ -63,7 +63,7 @@ export default function EmploymentCard({
               height={24}
               width={24}
               alt={`${employment.organization} logo`}
-              className='rounded-full border bg-white dark:border-neutral-700'
+              className='rounded-full border bg-white dark:border-border'
               type='square'
             />
           )}
@@ -72,20 +72,20 @@ export default function EmploymentCard({
         <Badge icon='mapPin'>{employment.organizationLocation}</Badge>
       </div>
       <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
-        <div className='text-sm tracking-wide text-neutral-600 dark:text-neutral-300'>
+        <div className='text-sm tracking-wide text-muted-foreground dark:text-neutral-300'>
           <p>{employment.jobTitle}</p>
         </div>
-        <div className='flex flex-col items-start text-xs font-medium text-neutral-500 lg:items-center'>
+        <div className='flex flex-col items-start text-xs font-medium text-muted-foreground lg:items-center'>
           {employment.dateString}
         </div>
       </div>
 
       {employment.organizationIndustry && (
-        <div className='flex items-center justify-between border-t border-neutral-200 px-4.5 py-1.5 dark:border-neutral-700 w-full'>
-          <p className='text-sm text-neutral-500 dark:text-neutral-400'>
+        <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5 dark:border-border w-full'>
+          <p className='text-sm text-muted-foreground'>
             {trimStr(employment.organizationIndustry, 25)}
           </p>
-          <p className='text-sm text-neutral-500 dark:text-neutral-400'>
+          <p className='text-sm text-muted-foreground'>
             {formatJobType(employment.jobType)}
           </p>
         </div>

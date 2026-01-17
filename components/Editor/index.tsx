@@ -274,7 +274,7 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <div className={twMerge('flex flex-col', className)}>
-      <div className='relative flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 shrink-0 overflow-visible'>
+      <div className='relative flex items-center bg-muted dark:bg-card rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 shrink-0 overflow-visible'>
         {/* Scrollable Formatting Tools */}
         <div className='flex flex-nowrap items-center gap-2 px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
           {toolbarButtons.map((button, index) => (
@@ -294,7 +294,7 @@ const Editor: React.FC<EditorProps> = ({
         </div>
 
         {/* Fixed Preview Button */}
-        <div className='flex items-center px-2 py-1 border-l border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 ml-auto shrink-0 sticky right-0'>
+        <div className='flex items-center px-2 py-1 border-l border-neutral-300 dark:border-neutral-600 bg-muted dark:bg-card ml-auto shrink-0 sticky right-0'>
           <Tooltip text='Preview' position='top'>
             <Button
               type='ghost'
@@ -310,7 +310,7 @@ const Editor: React.FC<EditorProps> = ({
       </div>
       <div
         className={twMerge(
-          'relative w-full h-[300px] md:h-[500px] border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-900 overflow-y-auto',
+          'relative w-full h-[300px] md:h-[500px] border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-muted/50 dark:bg-neutral-900 overflow-y-auto',
           className,
         )}
       >

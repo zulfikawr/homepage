@@ -31,7 +31,7 @@ export default function MoviesContent() {
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 flex items-center justify-center mx-auto'>
+            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto'>
               <Button type='primary' icon='plus' onClick={handleAdd} />
             </div>
 

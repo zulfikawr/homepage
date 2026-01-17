@@ -31,7 +31,7 @@ export default function LoginContent() {
           </div>
         </div>
       ) : user ? (
-        <div className='w-full mx-auto rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>
+        <div className='w-full mx-auto rounded-md border bg-white shadow-sm dark:border-border dark:bg-card'>
           <div className='px-6 py-10'>
             <p className='text-center text-lg dark:text-white'>
               You are already logged in as {user.email || user.displayName}.
@@ -47,7 +47,7 @@ export default function LoginContent() {
           </div>
         </div>
       ) : (
-        <div className='space-y-6 mx-auto rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800 px-6 py-10'>
+        <div className='space-y-6 mx-auto rounded-md border bg-white shadow-sm dark:border-border dark:bg-card px-6 py-10'>
           <div className='flex flex-col space-y-4'>
             <Button
               className='w-full'
@@ -62,7 +62,7 @@ export default function LoginContent() {
                 <span className='w-full border-t border-neutral-300 dark:border-neutral-600' />
               </div>
               <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-white px-2 text-neutral-500 dark:bg-neutral-800'>
+                <span className='bg-white px-2 text-muted-foreground dark:bg-card'>
                   Or Admin Login
                 </span>
               </div>

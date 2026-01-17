@@ -83,7 +83,7 @@ export default function FeedbackContent() {
                 Comments/Feedback
               </FormLabel>
               <span
-                className={`text-xs ${feedback.length === MAX_CHARS ? 'text-red-500 font-bold' : 'text-neutral-500'}`}
+                className={`text-xs ${feedback.length === MAX_CHARS ? 'text-red-500 font-bold' : 'text-muted-foreground'}`}
               >
                 {feedback.length}/{MAX_CHARS}
               </span>

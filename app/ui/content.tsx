@@ -92,9 +92,9 @@ export default function UIComponentsContent() {
 
       <div className='space-y-6'>
         {/* Button Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+        <div className='w-full rounded-md border shadow-sm dark:border-border'>
+          <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
               <span>Buttons</span>
             </div>
           </div>
@@ -115,9 +115,9 @@ export default function UIComponentsContent() {
         </div>
 
         {/* Icon Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+        <div className='w-full rounded-md border shadow-sm dark:border-border'>
+          <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
               <span>Icons</span>
             </div>
           </div>
@@ -147,9 +147,9 @@ export default function UIComponentsContent() {
         </div>
 
         {/* Dropdown Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+        <div className='w-full rounded-md border shadow-sm dark:border-border'>
+          <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
               <span>Dropdown</span>
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function UIComponentsContent() {
                 <input
                   type='text'
                   placeholder='Enter URL'
-                  className='w-fit p-3 text-sm border border-neutral-200 dark:border-neutral-700 rounded-md mb-2 focus:outline-none'
+                  className='w-fit p-3 text-sm border border-border rounded-md mb-2 focus:outline-none'
                 />
                 <Button type='primary' className='w-full'>
                   Submit
@@ -191,9 +191,9 @@ export default function UIComponentsContent() {
 
         <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
           {/* Modal Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>Modal</span>
               </div>
             </div>
@@ -205,9 +205,9 @@ export default function UIComponentsContent() {
           </div>
 
           {/* Drawer Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>Drawer</span>
               </div>
             </div>
@@ -221,9 +221,9 @@ export default function UIComponentsContent() {
 
         <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
           {/* Badge Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>Badge</span>
               </div>
             </div>
@@ -244,9 +244,9 @@ export default function UIComponentsContent() {
           </div>
 
           {/* Checkbox Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>Checkbox</span>
               </div>
             </div>
@@ -263,9 +263,9 @@ export default function UIComponentsContent() {
 
         <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
           {/* Tooltip Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>Tooltip</span>
               </div>
             </div>
@@ -277,12 +277,12 @@ export default function UIComponentsContent() {
           </div>
 
           {/* Toggle Component */}
-          <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-            <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-              <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+          <div className='w-full rounded-md border shadow-sm dark:border-border'>
+            <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                 <span>
                   Toggle{' '}
-                  <span className='text-neutral-600 dark:text-neutral-500'>
+                  <span className='text-muted-foreground dark:text-muted-foreground'>
                     (with tooltip)
                   </span>
                 </span>
@@ -320,9 +320,9 @@ export default function UIComponentsContent() {
         </div>
 
         {/* Toast Component */}
-        <div className='w-full rounded-md border shadow-sm dark:border-neutral-700'>
-          <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+        <div className='w-full rounded-md border shadow-sm dark:border-border'>
+          <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
               <span>Toast</span>
             </div>
           </div>

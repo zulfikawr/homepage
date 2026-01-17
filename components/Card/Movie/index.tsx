@@ -34,7 +34,7 @@ export default function MovieCard({
     const filled = index <= rating;
     return (
       <div
-        className={`p-0.5 ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-neutral-600'}`}
+        className={`p-0.5 ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-muted-foreground'}`}
         aria-hidden
       >
         <div className='w-2.5 h-2.5 md:w-3 md:h-3'>
@@ -71,7 +71,7 @@ export default function MovieCard({
               <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
                 {movie.title}
               </p>
-              <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm'>
+              <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
                 Released {movie.releaseDate}
               </p>
             </div>
@@ -79,7 +79,7 @@ export default function MovieCard({
 
           <Separator margin='0' />
 
-          <div className='flex items-center gap-2 px-4.5 py-2 text-xs font-light text-neutral-500 dark:text-neutral-400'>
+          <div className='flex items-center gap-2 px-4.5 py-2 text-xs font-light text-muted-foreground'>
             <span className='text-neutral-400'>Rating</span>
             <div className='flex items-center gap-0.5'>
               {[1, 2, 3, 4, 5].map((i) => (
@@ -93,7 +93,7 @@ export default function MovieCard({
           {/* Main container for image and hover overlay */}
           <div className='relative h-full overflow-hidden group'>
             {/* Image container */}
-            <div className='h-auto w-full bg-neutral-200 dark:bg-neutral-800 lg:h-[196px]'>
+            <div className='h-auto w-full bg-muted dark:bg-card lg:h-[196px]'>
               <ImageWithFallback
                 className='z-10 h-full w-full transition-all duration-300 group-hover:blur-sm group-hover:brightness-50'
                 src={movie.posterUrl}

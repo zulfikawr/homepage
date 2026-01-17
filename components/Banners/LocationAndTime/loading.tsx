@@ -1,7 +1,7 @@
 import { Icon } from '@/components/UI';
 
 const LoadingSkeleton = () => (
-  <div className='overflow-hidden min-h-[120px] relative w-full rounded-md border bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-900 shadow-sm dark:border-neutral-700'>
+  <div className='overflow-hidden min-h-[120px] relative w-full rounded-md border bg-gradient-to-br from-neutral-200 to-neutral-300 dark:from-neutral-800 dark:to-neutral-900 shadow-sm dark:border-border'>
     {/* Glass overlay */}
     <div className='absolute inset-0 bg-white/5 backdrop-blur-[2px]' />
 

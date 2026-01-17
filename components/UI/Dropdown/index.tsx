@@ -104,7 +104,7 @@ const Dropdown = ({
 
   const effectStyles = effectEnabled
     ? 'bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md'
-    : 'bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-600 backdrop-blur-none';
+    : 'bg-popover border border-border backdrop-blur-none';
 
   return (
     <DropdownContext.Provider value={{ setIsOpen }}>
@@ -175,9 +175,8 @@ const DropdownItem = ({
     });
   };
 
-  const activeStyles =
-    'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100';
-  const inactiveStyles = 'hover:bg-neutral-50 dark:hover:bg-neutral-700';
+  const activeStyles = 'bg-accent text-accent-foreground';
+  const inactiveStyles = 'hover:bg-accent hover:text-accent-foreground';
 
   return (
     <button

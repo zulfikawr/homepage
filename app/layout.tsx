@@ -71,7 +71,7 @@ export default function RootLayout({
           <DynamicBackground />
 
           {/* Content layer */}
-          <div className='relative z-20 min-h-screen bg-neutral-100/50 dark:bg-neutral-900/50'>
+          <div className='relative z-20 min-h-screen bg-background/50'>
             <Header />
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
               {children}

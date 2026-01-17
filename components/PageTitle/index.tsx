@@ -63,7 +63,7 @@ const PageTitle = ({
                 perspective={1000}
                 max={25}
                 scale={1.01}
-                className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-neutral-200 shadow-sm transition-all hover:shadow-md dark:opacity-90'
+                className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-border shadow-sm transition-all hover:shadow-md dark:opacity-90'
               >
                 <ImageWithFallback
                   src={image || '/images/placeholder.png'}
@@ -90,7 +90,7 @@ const PageTitle = ({
                   </Link>
                 </div>
               )}
-              <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-black dark:text-white leading-tight'>
+              <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-foreground leading-tight'>
                 {title}
                 {badge && (
                   <span className={badgeStyles[badge.color]}>{badge.text}</span>
@@ -98,7 +98,7 @@ const PageTitle = ({
               </h2>
               {subtitle && (
                 <div
-                  className={`text-sm text-neutral-500 dark:text-neutral-400 ${
+                  className={`text-sm text-muted-foreground ${
                     isPostTitle ? 'mt-2' : ''
                   }`}
                 >

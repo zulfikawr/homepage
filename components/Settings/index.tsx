@@ -29,8 +29,7 @@ export default function Settings() {
   const { effectEnabled, toggleEffect } = useEffectToggle();
   const { radius, setRadius } = useRadius();
 
-  const sectionTitleClass =
-    'text-left text-md text-neutral-700 dark:text-neutral-300';
+  const sectionTitleClass = 'text-left text-md text-muted-foreground';
 
   const selectedBackground = backgroundOptions.find(
     (option) => option.value === background,
@@ -43,7 +42,7 @@ export default function Settings() {
           type='default'
           aria-label='Open settings'
           icon='gear'
-          className='bg-white dark:bg-neutral-800 dark:hover:bg-neutral-700 w-10 h-10'
+          className='bg-card dark:hover:bg-neutral-700 w-10 h-10'
         />
       }
     >

@@ -33,10 +33,9 @@ const Label = ({
     'cursor-pointer justify-center font-medium items-center inline-flex w-auto lg:px-4 lg:py-1 px-2 py-1 text-center text-sm align-middle effect-pressing';
 
   const typeClassNames = {
-    primary:
-      'bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 text-blue-500 dark:text-blue-300',
+    primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary:
-      'bg-neutral-100 dark:bg-neutral-700 hover:bg-neutral-200 dark:hover:bg-neutral-600 text-neutral-500 dark:text-neutral-300 focus:animate-pulse',
+      'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:animate-pulse',
   };
 
   return (

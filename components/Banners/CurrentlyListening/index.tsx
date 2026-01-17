@@ -247,8 +247,8 @@ const CurrentlyListening = () => {
   if (!isAuthorized) {
     return (
       <Card isPreview>
-        <div className='flex w-full items-center border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-          <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+        <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+          <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
             <span className='h-4.5 w-4.5 lg:h-7 lg:w-7'>
               <Icon name='musicNotes' />
             </span>
@@ -268,7 +268,7 @@ const CurrentlyListening = () => {
               </button>
             </div>
           ) : (
-            <div className='text-sm text-neutral-500 dark:text-neutral-400'>
+            <div className='text-sm text-muted-foreground'>
               Spotify integration is private.
             </div>
           )}
@@ -281,8 +281,8 @@ const CurrentlyListening = () => {
 
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-        <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+      <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
+        <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
           <Icon name='musicNotes' className='size-5' />
           <span className='h-5'>
             {isPlaying ? 'Currently Listening' : 'Last Played'}
@@ -293,11 +293,11 @@ const CurrentlyListening = () => {
       <Link
         href={currentTrack.external_urls.spotify}
         target='_blank'
-        className='group relative flex items-center gap-4 p-4 hover:bg-neutral-50 dark:hover:bg-neutral-700/50'
+        className='group relative flex items-center gap-4 p-4 hover:bg-muted/50 hover:bg-muted'
       >
         {isPlaying && (
           <div className='absolute inset-0 overflow-hidden rounded-b-md'>
-            <div className='absolute bottom-0 left-0 right-0 h-1 bg-neutral-200/50 dark:bg-neutral-700/50'>
+            <div className='absolute bottom-0 left-0 right-0 h-1 bg-muted/50 dark:bg-muted/50'>
               <div
                 className='h-full bg-green-500'
                 style={{
@@ -328,17 +328,17 @@ const CurrentlyListening = () => {
         </Hover>
 
         <div className='flex-1 min-w-0 space-y-1'>
-          <h3 className='font-medium text-md text-neutral-900 dark:text-white truncate'>
+          <h3 className='font-medium text-md text-foreground truncate'>
             {currentTrack.name}
           </h3>
-          <p className='text-sm text-neutral-500 dark:text-neutral-400 truncate'>
+          <p className='text-sm text-muted-foreground truncate'>
             {currentTrack.artists.map((artist) => artist.name).join(', ')}
           </p>
           <div className='flex items-center gap-x-2'>
-            <span className='text-xs text-neutral-500 dark:text-neutral-400 truncate'>
+            <span className='text-xs text-muted-foreground truncate'>
               {currentTrack.album.name}
             </span>
-            <span className='text-xs text-neutral-500 dark:text-neutral-40'>
+            <span className='text-xs text-muted-foreground dark:text-neutral-40'>
               |
             </span>
             {isPlaying ? (
@@ -347,11 +347,11 @@ const CurrentlyListening = () => {
                 <span className='truncate'>Playing now</span>
               </span>
             ) : lastPlayedAt ? (
-              <span className='text-xs text-neutral-500 dark:text-neutral-400 flex-shrink-0'>
+              <span className='text-xs text-muted-foreground flex-shrink-0'>
                 Played {getTimeAgo(lastPlayedAt)}
               </span>
             ) : (
-              <span className='text-xs text-neutral-500 dark:text-neutral-400 flex-shrink-0'>
+              <span className='text-xs text-muted-foreground flex-shrink-0'>
                 Played just now
               </span>
             )}

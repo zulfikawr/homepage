@@ -268,7 +268,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                       <div className='flex-shrink-0 px-4.5 py-4'>
                         <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
                           {poster ? (
-                            <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700'>
+                            <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-muted dark:bg-card border border-border'>
                               <ImageWithFallback
                                 width={44}
                                 height={64}
@@ -280,7 +280,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                               />
                             </div>
                           ) : (
-                            <div className='h-16 w-11 flex-shrink-0 rounded-md bg-neutral-200 dark:bg-neutral-700' />
+                            <div className='h-16 w-11 flex-shrink-0 rounded-md bg-muted dark:bg-muted' />
                           )}
                         </div>
                       </div>
@@ -289,11 +289,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                           {title}
                         </p>
                         {actors && (
-                          <p className='text-xs text-neutral-600 dark:text-neutral-400 mt-2 line-clamp-1'>
+                          <p className='text-xs text-muted-foreground dark:text-neutral-400 mt-2 line-clamp-1'>
                             {actors}
                           </p>
                         )}
-                        <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm'>
+                        <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
                           Released {year}
                         </p>
                       </div>
@@ -364,7 +364,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     type='button'
                     onClick={() => handleChange('rating', i)}
                     onMouseDown={(e) => e.preventDefault()}
-                    className={`p-0.5 focus:outline-none ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-neutral-600'}`}
+                    className={`p-0.5 focus:outline-none ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-muted-foreground'}`}
                     aria-label={`${i} star`}
                   >
                     <div className='w-4 h-4'>

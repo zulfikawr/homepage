@@ -65,7 +65,7 @@ export default function ProjectCard({
         {/* Main content container */}
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           {/* Name at the top */}
-          <div className='border-b border-neutral-200 pb-2 text-lg font-semibold text-neutral-700 dark:border-neutral-700 dark:text-white'>
+          <div className='border-b border-border pb-2 text-lg font-semibold text-neutral-700 dark:border-border dark:text-white'>
             <div className='flex items-center'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
@@ -83,12 +83,12 @@ export default function ProjectCard({
           </div>
 
           {/* Description in the middle */}
-          <p className='text-sm text-neutral-600 dark:text-neutral-300'>
+          <p className='text-sm text-muted-foreground dark:text-neutral-300'>
             {project.description}
           </p>
 
           {/* Tools at the bottom */}
-          <div className='flex flex-wrap gap-2 border-t border-neutral-200 pt-2.5 dark:border-neutral-700'>
+          <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 dark:border-border'>
             {project.tools.map((tool, index) => (
               <Badge key={index} icon>
                 {tool}

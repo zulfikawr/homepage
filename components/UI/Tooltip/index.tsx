@@ -56,7 +56,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       {/* Tooltip */}
       {isVisible && (
         <div
-          className='absolute z-50 px-3 py-1.5 text-xs font-medium text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 shadow-lg whitespace-nowrap pointer-events-none transition-opacity duration-200'
+          className='absolute z-50 px-3 py-1.5 text-xs font-medium text-popover-foreground bg-popover border border-border shadow-lg whitespace-nowrap pointer-events-none transition-opacity duration-200'
           style={{
             ...getPositionStyles(),
             borderRadius: `${radius}px`,

@@ -32,10 +32,7 @@ const Slider = ({
   return (
     <div className={twMerge('flex flex-col space-y-1', className)}>
       {label && (
-        <label
-          htmlFor={id}
-          className='text-sm text-neutral-600 dark:text-neutral-400'
-        >
+        <label htmlFor={id} className='text-sm text-muted-foreground'>
           {label}
         </label>
       )}

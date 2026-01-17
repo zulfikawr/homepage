@@ -40,7 +40,7 @@ export default function CertsContent() {
             .map((_, index) => <CardLoading key={index} type='certificate' />)
         ) : Array.isArray(certificates) && certificates.length > 0 ? (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-neutral-700 dark:bg-neutral-800 p-5'>
+            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
               <Button
                 type='primary'
                 icon='plus'

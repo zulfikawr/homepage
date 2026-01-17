@@ -5,8 +5,8 @@ import Link from 'next/link';
 const PagesAndLinks = () => {
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-neutral-700 dark:text-white'>
+      <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
+        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
           <span className='size-5'>
             <Icon name='cube' />
           </span>
@@ -15,7 +15,7 @@ const PagesAndLinks = () => {
         <div className='hidden md:block'>
           <Tooltip text='All Pages'>
             <Link href='/pages'>
-              <Button className='h-7 p-1 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'>
+              <Button className='h-7 p-1 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'>
                 <span className='size-5'>
                   <Icon name='caretRight' />
                 </span>
@@ -25,7 +25,7 @@ const PagesAndLinks = () => {
         </div>
         <div className='block md:hidden'>
           <Link href='/pages'>
-            <Button className='h-7 p-1 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'>
+            <Button className='h-7 p-1 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'>
               <span className='size-5'>
                 <Icon name='caretRight' />
               </span>
@@ -38,7 +38,7 @@ const PagesAndLinks = () => {
           <Link href='/contacts'>
             <Button
               icon='addressBook'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Contacts
             </Button>
@@ -51,7 +51,7 @@ const PagesAndLinks = () => {
           >
             <Button
               icon='file'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Résumé
             </Button>
@@ -60,7 +60,7 @@ const PagesAndLinks = () => {
           <Link href='/projects'>
             <Button
               icon='package'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Projects
             </Button>
@@ -69,7 +69,7 @@ const PagesAndLinks = () => {
           <Link href='/publications'>
             <Button
               icon='newspaper'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Publications
             </Button>
@@ -78,7 +78,7 @@ const PagesAndLinks = () => {
           <Link href='/music'>
             <Button
               icon='musicNotes'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Music
             </Button>
@@ -87,7 +87,7 @@ const PagesAndLinks = () => {
           <Link href='/feedback'>
             <Button
               icon='chatCenteredText'
-              className='h-7 px-3 hover:bg-neutral-50 dark:bg-neutral-700 dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Feedback
             </Button>

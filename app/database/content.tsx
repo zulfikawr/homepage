@@ -97,7 +97,7 @@ export default function DatabaseContent() {
     'text-indigo-500',
     'text-purple-500',
     'text-pink-500',
-    'text-neutral-500',
+    'text-muted-foreground',
     'text-violet-500',
     'text-rose-500',
   ];

@@ -93,13 +93,13 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     <div className={twMerge('group/dropzone space-y-3', className)}>
       <div
         className={twMerge(
-          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-400 dark:bg-neutral-700',
+          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-neutral-300 bg-muted/50 p-2 shadow-sm focus:outline-none dark:border-neutral-400 dark:bg-muted',
           aspectRatio === 'video'
             ? 'aspect-video'
             : 'aspect-square max-w-[200px]',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
-            : 'hover:bg-neutral-100/50 dark:hover:bg-white/20',
+            : 'hover:bg-muted/50 dark:hover:bg-white/20',
           previewUrl ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}
@@ -142,12 +142,12 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             </div>
           </>
         ) : (
-          <div className='flex flex-col items-center gap-3 text-neutral-400 dark:text-neutral-500'>
-            <div className='size-14 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center border border-neutral-300 dark:border-neutral-700'>
+          <div className='flex flex-col items-center gap-3 text-neutral-400 dark:text-muted-foreground'>
+            <div className='size-14 rounded-full bg-muted dark:bg-card flex items-center justify-center border border-neutral-300 dark:border-border'>
               <Icon name='plus' className='size-7' />
             </div>
             <div className='text-center px-4'>
-              <p className='text-sm font-semibold text-neutral-700 dark:text-neutral-300'>
+              <p className='text-sm font-semibold text-muted-foreground'>
                 Click to upload or drag and drop
               </p>
               <p className='text-xs mt-1'>Supports PNG, JPG, WEBP (max 10MB)</p>
@@ -164,7 +164,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={placeholder}
-          className='bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 pl-9 h-11'
+          className='bg-card border-border pl-9 h-11'
         />
       </div>
     </div>

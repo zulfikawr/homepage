@@ -32,7 +32,7 @@ const Card: React.FC<CardProps> = ({
 
   const effectStyles = effectEnabled
     ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
-    : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 backdrop-blur-none';
+    : 'bg-card border-border backdrop-blur-none';
 
   const interactiveStyles =
     isInForm || isPreview

@@ -160,7 +160,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-x-3'>
           <h2 className='text-2xl font-bold dark:text-white'>Comments</h2>
-          <span className='rounded-full bg-neutral-100 px-2.5 py-0.5 text-sm font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'>
+          <span className='rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-muted-foreground dark:bg-card dark:text-neutral-400'>
             {comments?.length || 0}
           </span>
         </div>
@@ -214,7 +214,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             <h3 className='mb-2 text-lg font-medium dark:text-white'>
               Join the conversation
             </h3>
-            <p className='mb-6 text-neutral-500 dark:text-neutral-400'>
+            <p className='mb-6 text-muted-foreground'>
               Please login with GitHub to post a comment.
             </p>
             <Button
@@ -232,7 +232,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       <div className='space-y-6'>
         {isLoading ? (
           <div className='flex justify-center py-12'>
-            <div className='h-8 w-8 animate-spin rounded-full border-4 border-neutral-200 border-t-primary' />
+            <div className='h-8 w-8 animate-spin rounded-full border-4 border-border border-t-primary' />
           </div>
         ) : comments && comments.length > 0 ? (
           comments
@@ -253,7 +253,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
               />
             ))
         ) : (
-          <div className='py-12 text-center text-neutral-500 dark:text-neutral-400'>
+          <div className='py-12 text-center text-muted-foreground'>
             No comments yet. Be the first to share your thoughts!
           </div>
         )}
