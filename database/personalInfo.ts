@@ -82,30 +82,33 @@ export async function getPersonalInfo(): Promise<PersonalInfo> {
 
 /**
  * Updates the personal info data.
- * @param data New personal info data.
+ * @param data New personal info data or FormData.
  * @returns Promise with operation result.
  */
 export async function updatePersonalInfo(
-  data: PersonalInfo,
+  data: PersonalInfo | FormData,
 ): Promise<{ success: boolean; data?: PersonalInfo; error?: string }> {
   try {
-    // Prepare the update data
-    const updateData: Record<string, string | number | boolean | null> = {
-      name: data.name,
-      title: data.title,
-    };
+    let updateData: any;
 
-    // 2. Extract filename if it's a PocketBase URL, or keep as is if it's a local path
-    let finalAvatarUrl = data.avatarUrl;
-    if (finalAvatarUrl.includes('/api/files/')) {
-      // Extract just the filename from the end of the URL
-      const parts = finalAvatarUrl.split('/');
-      const fileName = parts[parts.length - 1].split('?')[0]; // remove query params if any
-      updateData.avatar = fileName;
-      // We also clear avatarUrl if we're using the 'avatar' field to avoid confusion
-      updateData.avatarUrl = '';
+    if (data instanceof FormData) {
+      updateData = data;
     } else {
-      updateData.avatarUrl = finalAvatarUrl;
+      updateData = {
+        name: data.name,
+        title: data.title,
+      };
+
+      // 2. Extract filename if it's a PocketBase URL, or keep as is if it's a local path
+      let finalAvatarUrl = data.avatarUrl;
+      if (finalAvatarUrl.includes('/api/files/')) {
+        const parts = finalAvatarUrl.split('/');
+        const fileName = parts[parts.length - 1].split('?')[0];
+        updateData.avatar = fileName;
+        updateData.avatarUrl = '';
+      } else {
+        updateData.avatarUrl = finalAvatarUrl;
+      }
     }
 
     const record = await pb

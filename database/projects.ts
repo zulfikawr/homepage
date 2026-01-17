@@ -9,7 +9,8 @@ import { generateId } from '@/utilities/generateId';
  * @returns Project object.
  */
 function mapRecordToProject(record: RecordModel): Project {
-  let image = (record.image as string) || '';
+  // Prioritize the new 'image' file field, fallback to 'image_url' text field
+  let image = (record.image as string) || (record.image_url as string) || '';
 
   if (image) {
     if (image.startsWith('http')) {
@@ -25,6 +26,16 @@ function mapRecordToProject(record: RecordModel): Project {
     }
   }
 
+  // Prioritize the new 'favicon' file field, fallback to 'favicon_url' text field
+  let favicon =
+    (record.favicon as string) || (record.favicon_url as string) || '';
+  if (favicon && !favicon.startsWith('http') && !favicon.startsWith('/')) {
+    favicon = pb.files.getUrl(
+      { collectionName: 'projects', id: record.id } as unknown as RecordModel,
+      favicon,
+    );
+  }
+
   return {
     id: record.id,
     name: record.name,
@@ -38,7 +49,7 @@ function mapRecordToProject(record: RecordModel): Project {
     readme: record.readme,
     status: record.status,
     link: record.link,
-    favicon: record.favicon,
+    favicon,
     pinned: record.pinned,
   };
 }
@@ -83,11 +94,11 @@ export async function getProjects(): Promise<Project[]> {
 
 /**
  * Adds a new project to the database.
- * @param data Project data without ID.
+ * @param data Project data or FormData.
  * @returns Promise with operation result.
  */
 export async function addProject(
-  data: Omit<Project, 'id'>,
+  data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
     const record = await pb.collection('projects').create<RecordModel>(data);
@@ -102,33 +113,43 @@ export async function addProject(
 
 /**
  * Updates an existing project in the database.
- * @param data Updated project data.
+ * @param data Updated project data or FormData.
  * @returns Promise with operation result.
  */
 export async function updateProject(
-  data: Project,
+  data: Project | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
-    if (id.length !== 15) {
-      try {
-        const record = await pb
-          .collection('projects')
-          .getFirstListItem(`slug="${id}"`);
-        recordId = record.id;
-      } catch {
-        // ID might be correct ID but not 15 chars (unlikely in PB)
+    let recordId: string;
+    let updateData: any;
+
+    if (data instanceof FormData) {
+      recordId = data.get('id') as string;
+      updateData = data;
+    } else {
+      const { id, ...rest } = data;
+      recordId = id;
+
+      // Basic slug-to-ID matching if ID is not standard
+      if (id.length !== 15) {
+        try {
+          const record = await pb
+            .collection('projects')
+            .getFirstListItem(`slug="${id}"`);
+          recordId = record.id;
+        } catch {}
       }
-    }
 
-    const updateData: Partial<Project> = { ...rest };
+      const cleanData: Partial<Project> = { ...rest };
 
-    // Extract filename if it's a PocketBase URL
-    if (data.image && data.image.includes('/api/files/')) {
-      const parts = data.image.split('/');
-      const fileName = parts[parts.length - 1].split('?')[0];
-      updateData.image = fileName;
+      // Extract filename if it's a PocketBase URL
+      if (data.image && data.image.includes('/api/files/')) {
+        const parts = data.image.split('/');
+        const fileName = parts[parts.length - 1].split('?')[0];
+        cleanData.image = fileName;
+      }
+
+      updateData = cleanData;
     }
 
     const record = await pb

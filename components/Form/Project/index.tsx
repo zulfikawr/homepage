@@ -7,6 +7,7 @@ import {
   Button,
   Checkbox,
   Dropdown,
+  DropdownItem,
   FormLabel,
   Icon,
   Input,
@@ -51,6 +52,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   );
 
   const [newTool, setNewTool] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [faviconFile, setFaviconFile] = useState<File | null>(null);
 
   const initialDates = useMemo(() => {
     if (!projectToEdit?.dateString) {
@@ -72,6 +75,84 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   const [startDate, setStartDate] = useState(initialDates.start);
   const [endDate, setEndDate] = useState(initialDates.end);
+
+  // GitHub fetch states
+  const [githubUrl, setGithubUrl] = useState('');
+  const [githubLoading, setGithubLoading] = useState(false);
+  const [githubError, setGithubError] = useState<string | null>(null);
+
+  const fetchGitHubData = async () => {
+    if (!githubUrl || !githubUrl.includes('github.com/')) return;
+
+    setGithubLoading(true);
+    setGithubError(null);
+
+    try {
+      // Extract owner and repo from URL
+      const parts = githubUrl.replace(/\/$/, '').split('/');
+      const repo = parts.pop();
+      const owner = parts.pop();
+
+      if (!owner || !repo) throw new Error('Invalid GitHub URL');
+
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+      if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+      const data = await res.json();
+
+      // Update project state with GitHub data
+      setProject((prev) => ({
+        ...prev,
+        name: data.name || prev.name,
+        description: data.description || prev.description,
+        link: data.homepage || data.html_url || prev.link,
+        tools: data.language ? [data.language] : prev.tools,
+        image: prev.image, // Keep existing image by default
+      }));
+
+      // Try to fetch languages for more tools
+      const langRes = await fetch(data.languages_url);
+      if (langRes.ok) {
+        const langs = await langRes.json();
+        const topLangs = Object.keys(langs).slice(0, 5);
+        if (topLangs.length > 0) {
+          handleChange('tools', topLangs);
+        }
+      }
+
+      // Try to fetch README
+      const readmeRes = await fetch(
+        `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
+      );
+      if (readmeRes.ok) {
+        const readmeText = await readmeRes.text();
+        handleChange('readme', readmeText);
+
+        // Try to find an image in the README (markdown or html)
+        const mdImageRegex = /!\[.*?\]\((.*?)\)/;
+        const htmlImageRegex = /<img.*?src=["'](.*?)["']/;
+        const match =
+          readmeText.match(mdImageRegex) || readmeText.match(htmlImageRegex);
+
+        if (match && match[1]) {
+          let imageUrl = match[1];
+          // Handle relative paths
+          if (!imageUrl.startsWith('http')) {
+            imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${imageUrl.replace(/^\.\//, '')}`;
+          }
+          handleChange('image', imageUrl);
+        }
+      }
+
+      toast.success('GitHub data fetched successfully!');
+      setGithubUrl('');
+    } catch (err) {
+      setGithubError(err instanceof Error ? err.message : String(err));
+      toast.error('Failed to fetch GitHub data');
+    } finally {
+      setGithubLoading(false);
+    }
+  };
 
   const currentPreviewProject: Project = {
     id: project.id || 'preview',
@@ -197,9 +278,31 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     };
 
     try {
-      const result = projectToEdit
-        ? await updateProject(projectData)
-        : await addProject(projectData);
+      let result;
+
+      if (imageFile || faviconFile) {
+        const formData = new FormData();
+        // Append all project fields
+        Object.entries(projectData).forEach(([key, value]) => {
+          if (key === 'tools' && Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+          }
+        });
+
+        // Append files
+        if (imageFile) formData.append('image', imageFile);
+        if (faviconFile) formData.append('favicon', faviconFile);
+
+        result = projectToEdit
+          ? await updateProject(formData)
+          : await addProject(formData);
+      } else {
+        result = projectToEdit
+          ? await updateProject(projectData)
+          : await addProject(projectData);
+      }
 
       if (result.success) {
         toast.success(
@@ -284,6 +387,36 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
         <Separator margin='5' />
 
+        {/* GitHub Fetch */}
+        <div className='space-y-3'>
+          <FormLabel htmlFor='github-fetch'>Fetch from GitHub</FormLabel>
+          <div className='flex gap-2'>
+            <Input
+              id='github-fetch'
+              type='text'
+              placeholder='https://github.com/username/repo'
+              value={githubUrl}
+              onChange={(e) => setGithubUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  fetchGitHubData();
+                }
+              }}
+            />
+            <Button
+              type='primary'
+              onClick={fetchGitHubData}
+              disabled={githubLoading}
+            >
+              {githubLoading ? 'Fetching...' : 'Fetch'}
+            </Button>
+          </div>
+          {githubError && <p className='text-xs text-red-500'>{githubError}</p>}
+        </div>
+
+        <Separator margin='5' />
+
         {/* Form */}
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
@@ -299,7 +432,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             />
           </div>
           <div>
-            <FormLabel htmlFor='imageUrl' required>
+            <FormLabel htmlFor='image' required>
               Image URL
             </FormLabel>
             <div className='flex gap-2'>
@@ -310,14 +443,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 placeholder='https://project-image-url.com'
                 required
               />
-              {project.id && project.id !== 'preview' && (
-                <FileUpload
-                  collectionName='projects'
-                  recordId={project.id}
-                  fieldName='image'
-                  onUploadSuccess={(url) => handleChange('image', url)}
-                />
-              )}
+              <FileUpload
+                collectionName='projects'
+                recordId={projectToEdit?.id}
+                fieldName='image'
+                onUploadSuccess={(url) => handleChange('image', url)}
+                onFileSelect={setImageFile}
+              />
             </div>
           </div>
           <div>
@@ -404,11 +536,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             </FormLabel>
             <Dropdown
               trigger={
-                <Button
-                  icon={currentStatus?.icon}
-                  className='w-full flex items-center justify-start gap-2 px-1 text-sm md:text-md text-black dark:text-white'
-                >
-                  {currentStatus?.label}
+                <Button className='w-full flex items-center justify-between gap-2 text-sm md:text-md text-black dark:text-white'>
+                  <div className='flex items-center gap-2'>
+                    {currentStatus?.icon && (
+                      <Icon name={currentStatus.icon} className='size-4.5' />
+                    )}
+                    <span>{currentStatus?.label}</span>
+                  </div>
+                  <Icon name='caretDown' className='size-3' />
                 </Button>
               }
               className='w-full'
@@ -416,19 +551,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             >
               <div className='flex flex-col p-1 space-y-1 w-full'>
                 {statusOptions.map((option) => (
-                  <div
+                  <DropdownItem
                     key={option.key}
                     onClick={() => handleChange('status', option.key)}
-                    className={`flex items-center gap-3 px-4 py-2 text-sm rounded-md cursor-pointer transition-colors
-                      ${
-                        option.key === project.status
-                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-100'
-                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
-                      }`}
+                    isActive={option.key === project.status}
+                    icon={option.icon}
                   >
-                    <Icon name={option.icon} className='w-4 h-4' />
-                    <span>{option.label}</span>
-                  </div>
+                    {option.label}
+                  </DropdownItem>
                 ))}
               </div>
             </Dropdown>
@@ -444,12 +574,21 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           </div>
           <div>
             <FormLabel htmlFor='faviconUrl'>Favicon URL</FormLabel>
-            <Input
-              type='text'
-              value={project.favicon}
-              onChange={(e) => handleChange('favicon', e.target.value)}
-              placeholder='https://project-favicon.com'
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={project.favicon}
+                onChange={(e) => handleChange('favicon', e.target.value)}
+                placeholder='https://project-favicon.com'
+              />
+              <FileUpload
+                collectionName='projects'
+                recordId={projectToEdit?.id}
+                fieldName='favicon'
+                onUploadSuccess={(url) => handleChange('favicon', url)}
+                onFileSelect={setFaviconFile}
+              />
+            </div>
           </div>
           <div>
             <FormLabel htmlFor='readme'>Readme (optional)</FormLabel>

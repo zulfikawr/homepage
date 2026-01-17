@@ -41,12 +41,6 @@ export default function PagesContent() {
         icon: 'musicNotes',
         href: '/music',
       },
-      // {
-      //   title: 'Podcasts',
-      //   desc: 'Recommended listens',
-      //   icon: 'microphone',
-      //   href: '/podcasts',
-      // },
       {
         title: 'Posts',
         desc: 'Browse my posts',

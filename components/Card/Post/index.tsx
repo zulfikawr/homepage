@@ -71,7 +71,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
       return (
         <div className='px-2 py-4 lg:px-5'>
           <AudioPlayer
-            className='podcast-player focus:outline-none'
+            className='focus:outline-none'
             autoPlayAfterSrcChange={false}
             src={post.audioUrl}
             preload='metadata'

@@ -13,6 +13,7 @@ import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import Separator from '@/components/UI/Separator';
 import pb from '@/lib/pocketbase';
+import { useRouter } from 'next/navigation';
 
 interface PersonalInfoFormProps {
   data?: PersonalInfo;
@@ -28,6 +29,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(
     data || initialPersonalInfoState,
   );
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (data) {
@@ -43,10 +46,22 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
     e.preventDefault();
 
     try {
-      const result = await updatePersonalInfo(personalInfo);
+      let result;
+
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append('name', personalInfo.name);
+        formData.append('title', personalInfo.title);
+        formData.append('avatar', avatarFile);
+
+        result = await updatePersonalInfo(formData);
+      } else {
+        result = await updatePersonalInfo(personalInfo);
+      }
 
       if (result.success && result.data) {
         toast.success('Personal info successfully updated!');
+        router.push('/database');
       }
     } catch (error) {
       toast.error(
@@ -121,9 +136,9 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               />
               <FileUpload
                 collectionName={COLLECTION}
-                recordId={RECORD_ID}
                 fieldName='avatar'
                 onUploadSuccess={(url) => handleChange('avatarUrl', url)}
+                onFileSelect={setAvatarFile}
               />
             </div>
           </div>

@@ -6,34 +6,6 @@ const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-// Podcast: Image + Title + Description + Footer
-const PodcastCardLoading = () => (
-  <BaseCardLoading>
-    <>
-      {/* Image */}
-      <div className='h-[196px] w-full rounded-t-md bg-neutral-200 dark:bg-neutral-700' />
-
-      {/* Content */}
-      <div className='px-3.5 pb-5 pt-4.5'>
-        {/* Title */}
-        <div className='mb-2 h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700' />
-
-        {/* Description (2 lines) */}
-        <div className='space-y-2'>
-          <div className='h-4 w-full rounded bg-neutral-200 dark:bg-neutral-700' />
-          <div className='h-4 w-5/6 rounded bg-neutral-200 dark:bg-neutral-700' />
-        </div>
-      </div>
-
-      {/* Footer: Podcast label + Listen Now */}
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 dark:border-neutral-700'>
-        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
-        <div className='h-3 w-16 rounded bg-neutral-200 dark:bg-neutral-700' />
-      </div>
-    </>
-  </BaseCardLoading>
-);
-
 // Book: Small image + Title + Author + Footer
 const BookCardLoading = () => (
   <BaseCardLoading>
@@ -335,7 +307,6 @@ const MovieCardLoading = () => (
 
 type CardLoadingProps = {
   type:
-    | 'podcast'
     | 'book'
     | 'employment'
     | 'project'
@@ -349,8 +320,6 @@ type CardLoadingProps = {
 
 const CardLoading = ({ type }: CardLoadingProps) => {
   switch (type) {
-    case 'podcast':
-      return <PodcastCardLoading />;
     case 'book':
       return <BookCardLoading />;
     case 'employment':
@@ -370,7 +339,7 @@ const CardLoading = ({ type }: CardLoadingProps) => {
     case 'movie':
       return <MovieCardLoading />;
     default:
-      return <PodcastCardLoading />;
+      return <ProjectCardLoading />;
   }
 };
 

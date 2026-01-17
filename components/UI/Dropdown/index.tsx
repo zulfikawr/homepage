@@ -160,7 +160,9 @@ const DropdownItem = ({
   const { setIsOpen } = useContext(DropdownContext);
   const { radius } = useRadius();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     onClick?.();
 
     requestAnimationFrame(() => {
@@ -174,13 +176,16 @@ const DropdownItem = ({
 
   return (
     <button
+      type='button'
       onClick={handleClick}
       className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150 flex items-center gap-2 ${
         isActive ? activeStyles : inactiveStyles
       } ${className}`}
       style={{ borderRadius: `${radius}px` }}
     >
-      {icon && <Icon name={icon as IconName} className='size-4' />}
+      {icon && (
+        <Icon name={icon as IconName} className='size-4.5 flex-shrink-0' />
+      )}
       {children}
     </button>
   );

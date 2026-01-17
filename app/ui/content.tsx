@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   Dropdown,
+  DropdownItem,
   Icon,
   Toggle,
   Tooltip,
@@ -155,24 +156,22 @@ export default function UIComponentsContent() {
           </div>
           <div className='my-6 flex justify-center gap-x-4'>
             <Dropdown trigger={<Button type='ghost'>{currentHeading}</Button>}>
-              <div className='p-2'>
+              <div className='p-1 flex flex-col w-32'>
                 {HEADING_OPTIONS.map((heading) => (
-                  <button
+                  <DropdownItem
                     key={heading.label}
-                    type='button'
                     onClick={() => handleHeadingSelect(heading.label)}
-                    className='block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md'
+                    isActive={currentHeading === heading.label}
                   >
                     {heading.label}
-                  </button>
+                  </DropdownItem>
                 ))}
-                <button
-                  type='button'
+                <DropdownItem
                   onClick={() => handleHeadingSelect('Paragraph')}
-                  className='block w-full px-4 py-2 text-sm text-left hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-md'
+                  isActive={currentHeading === 'Paragraph'}
                 >
                   Paragraph
-                </button>
+                </DropdownItem>
               </div>
             </Dropdown>
 

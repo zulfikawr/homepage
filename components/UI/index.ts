@@ -1,7 +1,7 @@
 export { Button } from './Button';
 export { Badge } from './Badge';
 export { Checkbox } from './Checkbox';
-export { Dropdown } from './Dropdown';
+export { Dropdown, DropdownItem } from './Dropdown';
 export { FormLabel } from './FormLabel';
 export { Icon } from './Icon';
 export { Input } from './Input';

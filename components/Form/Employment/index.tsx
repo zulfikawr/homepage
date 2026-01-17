@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Dropdown,
+  DropdownItem,
   FormLabel,
   Icon,
   Input,
@@ -285,18 +286,13 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             >
               <div className='flex flex-col p-1 space-y-1 w-full'>
                 {jobTypeOptions.map((option) => (
-                  <div
+                  <DropdownItem
                     key={option.key}
                     onClick={() => handleChange('jobType', option.key)}
-                    className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
-                      ${
-                        option.key === employment.jobType
-                          ? 'bg-neutral-100 dark:bg-neutral-700'
-                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
-                      }`}
+                    isActive={option.key === employment.jobType}
                   >
                     {option.label}
-                  </div>
+                  </DropdownItem>
                 ))}
               </div>
             </Dropdown>

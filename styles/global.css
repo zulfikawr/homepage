@@ -34,10 +34,6 @@ body {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
 }
 
-.podcast-player {
-  box-shadow: none !important;
-}
-
 .rhap_container {
   @apply dark:!bg-neutral-800;
 }
@@ -80,11 +76,6 @@ body {
 
 .rhap_repeat-button {
   @apply dark:text-neutral-500;
-}
-
-.podcast-image-placeholder {
-  width: 160px !important;
-  height: 160px !important;
 }
 
 .tabs-highlighter {

@@ -96,13 +96,6 @@ export function KbarContent() {
             action: () => router.push('/music'),
             icon: 'musicNotes',
           },
-          // {
-          //   key: 'podcast',
-          //   label: 'Podcast',
-          //   desc: 'My recommended podcasts',
-          //   action: () => router.push('/podcast'),
-          //   icon: 'microphone',
-          // },
           {
             key: 'post',
             label: 'Post',

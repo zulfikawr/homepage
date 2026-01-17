@@ -2,7 +2,14 @@
 
 import React, { useState, useMemo } from 'react';
 import { Book } from '@/types/book';
-import { Button, Dropdown, FormLabel, Icon, Input } from '@/components/UI';
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  FormLabel,
+  Icon,
+  Input,
+} from '@/components/UI';
 import { BookCard } from '@/components/Card/Book';
 import { addBook, updateBook, deleteBook } from '@/database/books';
 import { toast } from '@/components/Toast';
@@ -221,18 +228,15 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
             >
               <div className='flex flex-col p-1 space-y-1 w-full'>
                 {typeOptions.map((option) => (
-                  <div
+                  <DropdownItem
                     key={option.key}
-                    onClick={() => handleChange('type', option.key)}
-                    className={`px-4 py-2 text-left text-sm rounded-md cursor-pointer transition-colors duration-300
-                      ${
-                        option.key === book.type
-                          ? 'bg-neutral-100 dark:bg-neutral-700'
-                          : 'hover:bg-neutral-100 dark:hover:bg-neutral-700'
-                      }`}
+                    onClick={() =>
+                      handleChange('type', option.key as Book['type'])
+                    }
+                    isActive={option.key === book.type}
                   >
                     {option.label}
-                  </div>
+                  </DropdownItem>
                 ))}
               </div>
             </Dropdown>

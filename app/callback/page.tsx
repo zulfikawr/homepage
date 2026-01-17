@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 
-export default function CallbackPage() {
+function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isProcessing = useRef(false);
@@ -76,5 +76,20 @@ export default function CallbackPage() {
       <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500'></div>
       <p className='text-lg font-medium'>Connecting to Spotify...</p>
     </div>
+  );
+}
+
+export default function CallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
+          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500'></div>
+          <p className='text-lg font-medium'>Loading...</p>
+        </div>
+      }
+    >
+      <CallbackContent />
+    </Suspense>
   );
 }

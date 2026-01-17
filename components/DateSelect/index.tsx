@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import { Button, Dropdown, Icon } from '@/components/UI';
+import { Button, Dropdown, DropdownItem, Icon } from '@/components/UI';
 
 interface DateSelectProps {
   value: Date;
@@ -88,17 +88,14 @@ const DateSelect: React.FC<DateSelectProps> = ({
         >
           <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
             {days.map((day) => (
-              <button
+              <DropdownItem
                 key={day}
-                className={`w-full text-center px-3 py-2 text-sm rounded-md ${
-                  day === value.getDate()
-                    ? 'bg-neutral-100 dark:bg-neutral-700'
-                    : 'hover:bg-neutral-50 dark:hover:bg-neutral-700'
-                }`}
-                onClick={(e) => handleItemClick(e, () => handleDayChange(day))}
+                isActive={day === value.getDate()}
+                className='justify-center text-center'
+                onClick={() => handleDayChange(day)}
               >
                 {day}
-              </button>
+              </DropdownItem>
             ))}
           </div>
         </Dropdown>
@@ -118,19 +115,14 @@ const DateSelect: React.FC<DateSelectProps> = ({
       >
         <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
           {months.map((month) => (
-            <button
+            <DropdownItem
               key={month}
-              className={`w-full text-center px-3 py-2 text-sm rounded-md ${
-                month === value.getMonth()
-                  ? 'bg-neutral-100 dark:bg-neutral-700'
-                  : 'hover:bg-neutral-50 dark:hover:bg-neutral-700'
-              }`}
-              onClick={(e) =>
-                handleItemClick(e, () => handleMonthChange(month))
-              }
+              isActive={month === value.getMonth()}
+              className='justify-center text-center'
+              onClick={() => handleMonthChange(month)}
             >
               {formatMonth(month)}
-            </button>
+            </DropdownItem>
           ))}
         </div>
       </Dropdown>
@@ -149,17 +141,14 @@ const DateSelect: React.FC<DateSelectProps> = ({
       >
         <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
           {years.map((year) => (
-            <button
+            <DropdownItem
               key={year}
-              className={`w-full text-center px-3 py-2 text-sm rounded-md ${
-                year === value.getFullYear()
-                  ? 'bg-neutral-100 dark:bg-neutral-700'
-                  : 'hover:bg-neutral-50 dark:hover:bg-neutral-700'
-              }`}
-              onClick={(e) => handleItemClick(e, () => handleYearChange(year))}
+              isActive={year === value.getFullYear()}
+              className='justify-center text-center'
+              onClick={() => handleYearChange(year)}
             >
               {year}
-            </button>
+            </DropdownItem>
           ))}
         </div>
       </Dropdown>

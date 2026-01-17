@@ -3,11 +3,13 @@ import { Button } from '@/components/UI';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { RecordModel } from 'pocketbase';
+import { twMerge } from 'tailwind-merge';
 
 interface FileUploadProps {
   onUploadSuccess: (url: string) => void;
+  onFileSelect?: (file: File) => void;
   collectionName: string;
-  recordId: string;
+  recordId?: string;
   fieldName: string;
   className?: string;
   accept?: string;
@@ -15,6 +17,7 @@ interface FileUploadProps {
 
 export const FileUpload: React.FC<FileUploadProps> = ({
   onUploadSuccess,
+  onFileSelect,
   collectionName,
   recordId,
   fieldName,
@@ -23,6 +26,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -33,6 +37,20 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // If no recordId, we are in 'selection mode' (likely a new record)
+    if (!recordId) {
+      if (onFileSelect) {
+        onFileSelect(file);
+        setSelectedFileName(file.name);
+        toast.success(`Selected: ${file.name}`);
+      } else {
+        toast.error(
+          'Record must be saved first or form must handle file selection',
+        );
+      }
+      return;
+    }
 
     setIsUploading(true);
     const formData = new FormData();
@@ -68,6 +86,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       onUploadSuccess(fullUrl);
       toast.success('File uploaded successfully');
     } catch (error) {
+      console.error('Upload error:', error);
       toast.error(
         error instanceof Error ? error.message : 'Failed to upload file',
       );
@@ -94,10 +113,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           handleButtonClick(e)
         }
         disabled={isUploading}
-        icon={isUploading ? undefined : 'plus'}
-        className='h-9'
+        icon={
+          isUploading ? undefined : selectedFileName ? 'checkCircle' : 'plus'
+        }
+        className={twMerge('h-9', isUploading && 'opacity-70')}
       >
-        {isUploading ? '...' : 'Upload'}
+        {isUploading ? '...' : selectedFileName ? 'Selected' : 'Upload'}
       </Button>
     </div>
   );
