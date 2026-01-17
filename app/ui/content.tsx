@@ -20,11 +20,10 @@ import Separator from '@/components/UI/Separator';
 export default function UIComponentsContent() {
   const openDrawer = () => {
     drawer.open(
-      <>
-        <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
+      <div className='flex flex-col h-full overflow-hidden'>
+        <div className='flex-shrink-0 px-4 pt-2 pb-4 sm:px-8 sm:pt-4 sm:pb-6'>
           <div className='flex flex-row justify-between items-center'>
             <h1 className='text-xl md:text-2xl font-semibold'>Drawer</h1>
-            <Button icon='close' onClick={() => drawer.close()} />
           </div>
         </div>
 
@@ -34,7 +33,7 @@ export default function UIComponentsContent() {
         <div className='grid grid-cols-2 gap-4 overflow-y-auto w-fit p-4 md:p-8'>
           This is an example of a drawer component.
         </div>
-      </>,
+      </div>,
     );
   };
 

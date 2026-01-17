@@ -8,9 +8,9 @@ import { Table, TableBody, TableRow, TableCell } from '@/components/UI';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
   return (
-    <>
+    <div className='flex flex-col h-full overflow-hidden'>
       {/* Header */}
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
+      <div className='flex-shrink-0 px-4 pt-2 pb-4 sm:px-8 sm:pt-4 sm:pb-6'>
         <div className='flex flex-row justify-between items-center gap-4'>
           <div className='flex-1 items-center'>
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
@@ -29,7 +29,6 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
               {employment.organization}
             </h1>
           </div>
-          <Button icon='close' onClick={() => drawer.close()} />
         </div>
       </div>
 
@@ -108,7 +107,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
           </section>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

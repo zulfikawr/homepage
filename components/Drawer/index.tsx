@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useBodyScroll } from 'hooks';
 import { useEffectToggle } from '@/contexts/effectContext';
@@ -59,14 +59,26 @@ const Drawer = () => {
   const [currentContent, setCurrentContent] = useState<React.ReactNode | null>(
     null,
   );
+
+  // Drag states
+  const [dragY, setDragY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startYRef = useRef(0);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
   const [, setBodyScrollable] = useBodyScroll();
   const { effectEnabled } = useEffectToggle();
   const { radius } = useRadius();
+
+  const handleClose = useCallback(() => {
+    drawer.close();
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       setAnimation('out');
+      setDragY(0);
       setTimeout(() => {
         setCurrentContent(content);
         setAnimation('in');
@@ -76,6 +88,7 @@ const Drawer = () => {
       setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);
+        setDragY(0);
 
         if (pendingContent) {
           drawerInstance = { isOpen: true, content: pendingContent };
@@ -98,8 +111,59 @@ const Drawer = () => {
     { enabled: isVisible, enableOnTags: ['INPUT'] },
   );
 
-  const handleClose = () => {
-    drawer.close();
+  // Drag Handlers
+  const onDragStart = (y: number) => {
+    setIsDragging(true);
+    startYRef.current = y;
+  };
+
+  const onDragMove = (y: number) => {
+    if (!isDragging) return;
+    const deltaY = y - startYRef.current;
+    if (deltaY > 0) {
+      setDragY(deltaY);
+    }
+  };
+
+  const onDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    if (dragY > 150) {
+      handleClose();
+    } else {
+      setDragY(0);
+    }
+  };
+
+  // Touch Events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    onDragStart(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    onDragMove(e.touches[0].clientY);
+  };
+
+  const handleTouchEnd = () => {
+    onDragEnd();
+  };
+
+  // Mouse Events
+  const handleMouseDown = (e: React.MouseEvent) => {
+    onDragStart(e.clientY);
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      onDragMove(moveEvent.clientY);
+    };
+
+    const handleMouseUp = () => {
+      onDragEnd();
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
   };
 
   if (!isVisible && !isOpen) {
@@ -120,17 +184,39 @@ const Drawer = () => {
 
       {/* Drawer Panel */}
       <div
+        ref={drawerRef}
         className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
-          border-t-xl flex flex-col transition-transform duration-500 ease-in-out
-          ${animation === 'in' ? 'translate-y-0' : 'translate-y-full'}
+          border-t flex flex-col overflow-hidden
+          ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}
           ${
             effectEnabled
-              ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md shadow-md'
-              : 'bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
+              ? 'bg-white/70 dark:bg-neutral-900/70 border-white/20 dark:border-white/10 backdrop-blur-xl shadow-2xl'
+              : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800'
           }`}
-        style={{ borderRadius: `${radius}px` }}
+        style={{
+          borderRadius: `${radius}px ${radius}px 0 0`,
+          transform: isDragging
+            ? `translateY(${dragY}px)`
+            : animation === 'in'
+              ? 'translateY(0)'
+              : 'translateY(100%)',
+          touchAction: 'none',
+        }}
       >
-        {currentContent}
+        {/* Drag Handle / Thumb */}
+        <div
+          className='w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing'
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className='w-12 h-1.5 bg-neutral-300 dark:bg-neutral-700 rounded-full' />
+        </div>
+
+        <div className='flex-1 flex flex-col overflow-hidden'>
+          {currentContent}
+        </div>
       </div>
     </div>
   );

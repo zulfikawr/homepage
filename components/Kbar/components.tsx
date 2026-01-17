@@ -252,13 +252,12 @@ export function KbarContent() {
 
   return (
     <div className='flex h-full flex-col'>
-      <div className='flex-shrink-0 p-4 sm:px-8 sm:py-6'>
+      <div className='flex-shrink-0 px-4 pt-2 pb-4 sm:px-8 sm:pt-4 sm:pb-6'>
         <div className='flex flex-row justify-between items-center'>
           <div className='flex items-center space-x-4'>
             <Icon name='menu' className='size-[28px] md:size-[32px]' />
             <h1 className='text-xl md:text-2xl font-semibold'>Navigation</h1>
           </div>
-          <Button icon='close' onClick={() => drawer.close()} />
         </div>
       </div>
 
