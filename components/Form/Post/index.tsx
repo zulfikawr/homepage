@@ -259,6 +259,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
             <Editor
               content={post.content}
               onUpdate={(content) => handleChange('content', content)}
+              className='h-[800px] md:h-[500px]'
             />
           </div>
           <div>

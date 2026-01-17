@@ -17,24 +17,36 @@ const Tooltip: React.FC<TooltipProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const { radius } = useRadius();
 
-  const getPositionClass = () => {
+  const getPositionStyles = (): React.CSSProperties => {
     switch (position) {
       case 'top':
-        return 'bottom-full left-1/2 transform -translate-x-1/2 mb-2';
+        return {
+          bottom: '100%',
+          left: '50%',
+          transform: 'translate(-50%, -8px)',
+        };
       case 'bottom':
-        return 'top-full left-1/2 transform -translate-x-1/2 mt-2';
+        return { top: '100%', left: '50%', transform: 'translate(-50%, 8px)' };
       case 'left':
-        return 'right-full top-1/2 transform -translate-y-1/2 mr-2';
+        return {
+          right: '100%',
+          top: '50%',
+          transform: 'translate(-8px, -50%)',
+        };
       case 'right':
-        return 'left-full top-1/2 transform -translate-y-1/2 ml-2';
+        return { left: '100%', top: '50%', transform: 'translate(8px, -50%)' };
       default:
-        return 'bottom-full left-1/2 transform -translate-x-1/2 mb-2';
+        return {
+          bottom: '100%',
+          left: '50%',
+          transform: 'translate(-50%, -8px)',
+        };
     }
   };
 
   return (
     <div
-      className='relative inline-block'
+      className='relative inline-flex items-center justify-center'
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
@@ -42,20 +54,17 @@ const Tooltip: React.FC<TooltipProps> = ({
       {children}
 
       {/* Tooltip */}
-      <div
-        className={`absolute ${getPositionClass()} px-3 py-2 text-sm text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 shadow-lg whitespace-nowrap transition-all duration-200 ${
-          isVisible ? 'opacity-100 translate-y-0 translate-x-0' : 'opacity-0'
-        }`}
-        style={{
-          pointerEvents: 'none',
-          borderRadius: `${radius}px`,
-          transform: isVisible
-            ? 'translate(-50%, 0)'
-            : `translate(-50%, ${position === 'top' ? '10px' : position === 'bottom' ? '-10px' : '0'})`,
-        }}
-      >
-        {text}
-      </div>
+      {isVisible && (
+        <div
+          className='absolute z-50 px-3 py-1.5 text-xs font-medium text-neutral-800 bg-white dark:bg-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 shadow-lg whitespace-nowrap pointer-events-none transition-opacity duration-200'
+          style={{
+            ...getPositionStyles(),
+            borderRadius: `${radius}px`,
+          }}
+        >
+          {text}
+        </div>
+      )}
     </div>
   );
 };

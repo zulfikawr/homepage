@@ -1,5 +1,3 @@
-'use client';
-
 import React, {
   useState,
   useRef,
@@ -9,9 +7,10 @@ import React, {
 } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
-import { Icon, Toggle, Tooltip } from '@/components/UI';
+import { Icon, Toggle, Tooltip, Button } from '@/components/UI';
 import { IconName } from '@/components/UI/Icon';
 import hljs from 'highlight.js';
+import { drawer } from '@/components/Drawer';
 
 interface EditorProps {
   content: string;
@@ -27,7 +26,6 @@ const Editor: React.FC<EditorProps> = ({
   textareaClassName,
 }) => {
   const [markdown, setMarkdown] = useState(content);
-  const [isViewerMode, setIsViewerMode] = useState(false);
   const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>(
     {},
   );
@@ -44,12 +42,16 @@ const Editor: React.FC<EditorProps> = ({
     onUpdate(newContent);
   };
 
-  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
-    if (highlightRef.current) {
-      highlightRef.current.scrollTop = e.currentTarget.scrollTop;
-      highlightRef.current.scrollLeft = e.currentTarget.scrollLeft;
-    }
-  };
+  const handlePreview = useCallback(() => {
+    drawer.open(
+      <div className='flex-1 overflow-y-auto p-6 lg:p-10'>
+        <div
+          className='prose dark:prose-invert max-w-none'
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
+        />
+      </div>,
+    );
+  }, [markdown]);
 
   const insertMarkdown = (prefix: string, suffix: string = '') => {
     const textarea = textareaRef.current;
@@ -139,15 +141,6 @@ const Editor: React.FC<EditorProps> = ({
     active: boolean;
   }[] = [
     {
-      icon: isViewerMode ? 'pencilSimpleLine' : 'eye',
-      label: isViewerMode ? 'Edit' : 'Preview',
-      action: (e?: React.MouseEvent<HTMLButtonElement>) => {
-        if (e) e.preventDefault();
-        setIsViewerMode(!isViewerMode);
-      },
-      active: isViewerMode,
-    },
-    {
       icon: 'heading',
       label: 'Heading',
       action: () => insertMarkdown('# ', ''),
@@ -222,6 +215,12 @@ const Editor: React.FC<EditorProps> = ({
       action: () => insertMarkdown('\n```\n', '\n```\n'),
       active: cursorStyle.codeBlock,
     },
+    {
+      icon: 'eye',
+      label: 'Preview',
+      action: () => handlePreview(),
+      active: false,
+    },
   ];
 
   const highlightedContent = useMemo(() => {
@@ -250,62 +249,80 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <div className={twMerge('flex flex-col', className)}>
-      <div className='flex flex-nowrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 overflow-x-auto shrink-0'>
-        {toolbarButtons.map((button, index) => (
-          <Tooltip key={index} text={button.label} position='top'>
-            <Toggle
-              isActive={button.active}
-              onChange={(e) => {
-                if (e && 'preventDefault' in e) e.preventDefault();
-                (
-                  button.action as (
-                    e?: React.MouseEvent<HTMLButtonElement>,
-                  ) => void
-                )(e);
-              }}
-              className='px-2 rounded-md'
-            >
-              <Icon name={button.icon} className='w-5 h-5' />
-            </Toggle>
-          </Tooltip>
-        ))}
-      </div>
-      {isViewerMode ? (
-        <div
-          className='prose dark:prose-invert max-w-none !p-4 border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-white dark:bg-neutral-800 h-[300px] md:h-[500px] overflow-y-auto'
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
-        />
-      ) : (
-        <div className='relative w-full h-[300px] md:h-[500px] border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-900 overflow-y-auto'>
-          <div className='relative w-full min-h-full'>
-            <pre
-              aria-hidden='true'
-              style={sharedStyles}
-              className={twMerge(
-                'relative w-full m-0 pointer-events-none hljs bg-transparent min-h-[300px] md:min-h-[500px]',
-                textareaClassName,
-              )}
-              dangerouslySetInnerHTML={{
-                __html:
-                  highlightedContent + (markdown.endsWith('\n') ? '\n' : ''),
-              }}
-            />
-            <textarea
-              ref={textareaRef}
-              value={markdown}
-              onChange={handleChange}
-              onSelect={updateCursorStyles}
-              style={sharedStyles}
-              className={twMerge(
-                'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-neutral-900 dark:caret-neutral-100 resize-none focus:outline-none overflow-hidden',
-                textareaClassName,
-              )}
-              placeholder='Write your markdown here...'
-              spellCheck={false}
-            />
-          </div>
+      <div className='relative flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 shrink-0 overflow-visible'>
+        {/* Scrollable Formatting Tools */}
+        <div className='flex flex-nowrap items-center gap-2 px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
+          {toolbarButtons
+            .filter((b) => b.label !== 'Preview')
+            .map((button, index) => (
+              <Tooltip key={index} text={button.label} position='top'>
+                <Toggle
+                  isActive={button.active}
+                  onChange={(e) => {
+                    if (e && 'preventDefault' in e) e.preventDefault();
+                    (
+                      button.action as (
+                        e?: React.MouseEvent<HTMLButtonElement>,
+                      ) => void
+                    )(e);
+                  }}
+                  className='px-2 rounded-md'
+                >
+                  <Icon name={button.icon} className='w-5 h-5' />
+                </Toggle>
+              </Tooltip>
+            ))}
         </div>
-      )}
+
+        {/* Fixed Preview Button */}
+        <div className='flex items-center px-2 py-1 border-l border-neutral-300 dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-800 ml-auto shrink-0 sticky right-0'>
+          <Tooltip text='Preview' position='top'>
+            <Button
+              type='ghost'
+              icon='eye'
+              onClick={(e) => {
+                e.preventDefault();
+                handlePreview();
+              }}
+              className='px-2 h-8'
+            />
+          </Tooltip>
+        </div>
+      </div>
+      <div
+        className={twMerge(
+          'relative w-full h-[300px] md:h-[500px] border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-900 overflow-y-auto',
+          className,
+        )}
+      >
+        <div className='relative w-full min-h-full'>
+          <pre
+            aria-hidden='true'
+            style={sharedStyles}
+            className={twMerge(
+              'relative w-full m-0 pointer-events-none hljs bg-transparent min-h-full',
+              textareaClassName,
+            )}
+            dangerouslySetInnerHTML={{
+              __html:
+                highlightedContent + (markdown.endsWith('\n') ? '\n' : ''),
+            }}
+          />
+          <textarea
+            ref={textareaRef}
+            value={markdown}
+            onChange={handleChange}
+            onSelect={updateCursorStyles}
+            style={sharedStyles}
+            className={twMerge(
+              'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-neutral-900 dark:caret-neutral-100 resize-none focus:outline-none overflow-hidden',
+              textareaClassName,
+            )}
+            placeholder='Write your markdown here...'
+            spellCheck={false}
+          />
+        </div>
+      </div>
     </div>
   );
 };
