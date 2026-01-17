@@ -61,6 +61,10 @@ module.exports = {
         4: '14px',
         5: '12px',
       },
+      fontFamily: {
+        sans: ['var(--font-eb-garamond)', 'serif'],
+        serif: ['var(--font-eb-garamond)', 'serif'],
+      },
     },
   },
   plugins: [typography],

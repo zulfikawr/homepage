@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { EB_Garamond } from 'next/font/google';
 import Script from 'next/script';
 import Providers from './providers';
 import Drawer from '@/components/Drawer';
@@ -10,6 +11,12 @@ import '@/styles/tailwind.css';
 import '@/styles/global.css';
 import '@/styles/atom-one-dark.css';
 import DynamicBackground from '@/components/Visual/Background';
+
+const ebGaramond = EB_Garamond({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-eb-garamond',
+});
 
 export const metadata: Metadata = {
   title: 'Zulfikar',
@@ -57,7 +64,9 @@ export default function RootLayout({
           href='/favicon/android-chrome-512x512.png'
         />
       </head>
-      <body className='relative transition-all duration-300'>
+      <body
+        className={`${ebGaramond.className} relative transition-all duration-300`}
+      >
         <Providers>
           {/* Background layer */}
           <DynamicBackground />
