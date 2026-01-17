@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { twMerge } from 'tailwind-merge';
 import { useRadius } from '@/contexts/radiusContext';
@@ -25,21 +25,20 @@ export default function ImageWithFallback({
   };
 
   const fallback = fallbackMap[type];
-  const [imgSrc, setImgSrc] = useState(src || fallback);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   const { radius } = useRadius();
 
-  useEffect(() => {
-    setImgSrc(src || fallback);
-  }, [src, fallback]);
+  const currentSrc = hasError || !src ? fallback : src;
 
   return (
     <Image
       {...props}
+      key={typeof src === 'string' ? src : 'fallback'}
       alt={alt}
-      src={imgSrc}
-      onError={() => setImgSrc(fallback)}
+      src={currentSrc}
+      onError={() => setHasError(true)}
       onLoad={() => setIsLoading(false)}
       className={twMerge(
         'transition duration-300',

@@ -89,26 +89,27 @@ export async function updatePersonalInfo(
   data: PersonalInfo | FormData,
 ): Promise<{ success: boolean; data?: PersonalInfo; error?: string }> {
   try {
-    let updateData: any;
+    let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
       updateData = data;
     } else {
-      updateData = {
+      const cleanData: Record<string, unknown> = {
         name: data.name,
         title: data.title,
       };
 
       // 2. Extract filename if it's a PocketBase URL, or keep as is if it's a local path
-      let finalAvatarUrl = data.avatarUrl;
+      const finalAvatarUrl = data.avatarUrl;
       if (finalAvatarUrl.includes('/api/files/')) {
         const parts = finalAvatarUrl.split('/');
         const fileName = parts[parts.length - 1].split('?')[0];
-        updateData.avatar = fileName;
-        updateData.avatarUrl = '';
+        cleanData.avatar = fileName;
+        cleanData.avatarUrl = '';
       } else {
-        updateData.avatarUrl = finalAvatarUrl;
+        cleanData.avatarUrl = finalAvatarUrl;
       }
+      updateData = cleanData;
     }
 
     const record = await pb
@@ -116,7 +117,7 @@ export async function updatePersonalInfo(
       .update(RECORD_ID, updateData);
 
     return { success: true, data: mapRecordToPersonalInfo(record) };
-  } catch (error: unknown) {
+  } catch {
     try {
       const record = await pb
         .collection(COLLECTION)

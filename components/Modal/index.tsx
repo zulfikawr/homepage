@@ -63,14 +63,18 @@ const Modal = () => {
 
   useEffect(() => {
     if (isOpen) {
-      setIsVisible(true);
-      setAnimation('out');
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+        setAnimation('out');
+      });
       setTimeout(() => {
         setCurrentContent(content);
         setAnimation('in');
       }, 50);
     } else {
-      setAnimation('out');
+      requestAnimationFrame(() => {
+        setAnimation('out');
+      });
       setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);
@@ -82,6 +86,10 @@ const Modal = () => {
     setBodyScrollable(!isVisible);
   }, [isVisible, setBodyScrollable]);
 
+  const handleClose = () => {
+    modal.close();
+  };
+
   useHotkeys(
     'esc',
     () => {
@@ -89,10 +97,6 @@ const Modal = () => {
     },
     { enabled: isVisible, enableOnTags: ['INPUT'] },
   );
-
-  const handleClose = () => {
-    modal.close();
-  };
 
   if (!isVisible && !isOpen) {
     return null;

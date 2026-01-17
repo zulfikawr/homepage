@@ -16,7 +16,7 @@ export function useAuthActions() {
     try {
       try {
         await pb.collection('_superusers').authWithPassword(email, password);
-      } catch (adminErr: unknown) {
+      } catch {
         await pb.collection('users').authWithPassword(email, password);
       }
 

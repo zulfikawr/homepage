@@ -102,8 +102,6 @@ export default function DatabaseContent() {
     'text-rose-500',
   ];
 
-  const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
-
   return (
     <div>
       <PageTitle
@@ -115,16 +113,20 @@ export default function DatabaseContent() {
 
       <AdminGuard>
         <div className='grid grid-cols-2 gap-4'>
-          {databaseCategories.map((category, index) => (
-            <NavigationCard
-              key={index}
-              title={category.title}
-              desc={category.desc}
-              icon={category.icon}
-              className={shuffledColors[index % shuffledColors.length]}
-              href={category.href}
-            />
-          ))}
+          {databaseCategories.map((category, index) => {
+            // Use a deterministic "shuffle" based on index
+            const colorIndex = (index * 7) % colors.length;
+            return (
+              <NavigationCard
+                key={index}
+                title={category.title}
+                desc={category.desc}
+                icon={category.icon}
+                className={colors[colorIndex]}
+                href={category.href}
+              />
+            );
+          })}
         </div>
       </AdminGuard>
     </div>

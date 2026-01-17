@@ -22,6 +22,61 @@ interface ParticleNetworkProps {
   className?: string;
 }
 
+class Particle implements IParticle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  private ctx: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private config: React.MutableRefObject<{
+    particleColor: string;
+    lineColor: string;
+    particleCount: number;
+    maxDistance: number;
+    particleSize: number;
+  }>;
+
+  constructor(
+    x: number,
+    y: number,
+    size: number,
+    ctx: CanvasRenderingContext2D,
+    canvas: HTMLCanvasElement,
+    config: React.MutableRefObject<{
+      particleColor: string;
+      lineColor: string;
+      particleCount: number;
+      maxDistance: number;
+      particleSize: number;
+    }>,
+  ) {
+    this.x = x;
+    this.y = y;
+    this.vx = (Math.random() - 0.5) * 0.5;
+    this.vy = (Math.random() - 0.5) * 0.5;
+    this.size = size;
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.config = config;
+  }
+
+  update() {
+    if (this.x < 0 || this.x > this.canvas.width) this.vx *= -1;
+    if (this.y < 0 || this.y > this.canvas.height) this.vy *= -1;
+    this.x += this.vx;
+    this.y += this.vy;
+  }
+
+  draw() {
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    this.ctx.fillStyle = this.config.current.particleColor;
+    this.ctx.fill();
+  }
+}
+
 const ParticleNetwork: FC<ParticleNetworkProps> = ({
   particleColor = '#FFFFFF',
   lineColor = '#FFFFFF',
@@ -60,36 +115,6 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
     const context = canvas.getContext('2d');
     if (!context) return;
 
-    class Particle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-
-      constructor(x: number, y: number, size: number) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = size;
-      }
-
-      update() {
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-        this.x += this.vx;
-        this.y += this.vy;
-      }
-
-      draw() {
-        context.beginPath();
-        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        context.fillStyle = configRef.current.particleColor;
-        context.fill();
-      }
-    }
-
     const init = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -98,7 +123,9 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
         const size = Math.random() * configRef.current.particleSize + 1;
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
-        particlesRef.current.push(new Particle(x, y, size));
+        particlesRef.current.push(
+          new Particle(x, y, size, context, canvas, configRef),
+        );
       }
     };
 

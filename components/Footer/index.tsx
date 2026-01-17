@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { OffsetTransition } from '@/components/Motion';
 import { Button } from '@/components/UI';
 import Settings from '@/components/Settings';
+
+const emptySubscribe = () => () => {};
 
 const FooterLink = ({
   href,
@@ -36,12 +38,12 @@ const FooterContent = () => (
 );
 
 export default function Footer() {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const backToTopRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleScrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

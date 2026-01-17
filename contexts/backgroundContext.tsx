@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const BackgroundContext = createContext<{
   background: string;
@@ -15,14 +15,13 @@ export const BackgroundProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [background, setBackgroundState] = useState('clouds');
-
-  useEffect(() => {
-    const stored = localStorage.getItem('background');
-    if (stored) {
-      setBackgroundState(stored);
+  const [background, setBackgroundState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('background');
+      return stored || 'clouds';
     }
-  }, []);
+    return 'clouds';
+  });
 
   const setBackground = (bg: string) => {
     setBackgroundState(bg);

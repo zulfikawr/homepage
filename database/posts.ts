@@ -99,7 +99,9 @@ export async function getPostById(id: string): Promise<Post | null> {
       try {
         const record = await pb.collection('posts').getOne<RecordModel>(id);
         if (record) return mapRecordToPost(record);
-      } catch (e) {}
+      } catch {
+        // Ignored
+      }
     }
 
     const records = await pb.collection('posts').getFullList<RecordModel>({
@@ -112,8 +114,8 @@ export async function getPostById(id: string): Promise<Post | null> {
     }
 
     return null;
-  } catch (error) {
-    console.error('getPostById error:', error);
+  } catch (_error) {
+    console.error('getPostById error:', _error);
     return null;
   }
 }

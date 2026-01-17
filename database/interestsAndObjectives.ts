@@ -94,7 +94,8 @@ export async function updateInterestsAndObjectives(
 }> {
   try {
     const id = data.id || 'main';
-    const { id: _, ...updateData } = data;
+    const updateData: Record<string, unknown> = { ...data };
+    if ('id' in updateData) delete updateData.id;
 
     let record;
     try {

@@ -64,11 +64,6 @@ const DateSelect: React.FC<DateSelectProps> = ({
     onChange(newDate);
   };
 
-  const handleItemClick = (e: React.MouseEvent, handler: () => void) => {
-    e.preventDefault();
-    handler();
-  };
-
   return (
     <div
       className={`grid ${mode === 'day-month-year' ? 'grid-cols-3' : 'grid-cols-2'} w-full gap-2 ${className}`}

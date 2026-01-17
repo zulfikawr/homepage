@@ -61,7 +61,9 @@ const Dropdown = ({
 
   useEffect(() => {
     if (isOpen) {
-      calculatePosition();
+      requestAnimationFrame(() => {
+        calculatePosition();
+      });
       window.addEventListener('resize', calculatePosition);
       return () => window.removeEventListener('resize', calculatePosition);
     }
@@ -87,7 +89,10 @@ const Dropdown = ({
 
   useEffect(() => {
     if (matchTriggerWidth && triggerRef.current) {
-      setTriggerWidth(`${triggerRef.current.offsetWidth}px`);
+      const width = triggerRef.current.offsetWidth;
+      requestAnimationFrame(() => {
+        setTriggerWidth(`${width}px`);
+      });
     }
   }, [isOpen, matchTriggerWidth]);
 

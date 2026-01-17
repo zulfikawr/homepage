@@ -1,7 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/UI';
 import { Employment } from '@/types/employment';
-import { drawer } from '@/components/Drawer';
 import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Table, TableBody, TableRow, TableCell } from '@/components/UI';

@@ -1,4 +1,4 @@
-import { getPostById, getPosts } from '@/database/posts';
+import { getPostById } from '@/database/posts';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogPostContent from './content';

@@ -12,7 +12,6 @@ import {
   Icon,
   Input,
   Textarea,
-  FileUpload,
   Dropzone,
 } from '@/components/UI';
 import { Editor } from '@/components/Editor';

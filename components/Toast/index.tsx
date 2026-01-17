@@ -189,7 +189,9 @@ const ToastItem = ({
   const variantProps = getVariantProps(toast.variant);
 
   useEffect(() => {
-    setIsMounted(true);
+    const mountTimeout = setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
 
     const visibilityTimeout = setTimeout(() => {
       setIsVisible(toast.isVisible);
@@ -201,12 +203,16 @@ const ToastItem = ({
       }, 300);
 
       return () => {
+        clearTimeout(mountTimeout);
         clearTimeout(visibilityTimeout);
         clearTimeout(removalTimeout);
       };
     }
 
-    return () => clearTimeout(visibilityTimeout);
+    return () => {
+      clearTimeout(mountTimeout);
+      clearTimeout(visibilityTimeout);
+    };
   }, [toast.isVisible, toast.isRemoving]);
 
   if (!isMounted) {

@@ -82,6 +82,8 @@ const CurrentlyListening = () => {
     };
   }, [isPlaying, currentTrack]);
 
+  const fetchTracksRef = useRef<() => Promise<void>>(null);
+
   const fetchTracks = useCallback(async () => {
     if (!isMounted.current) return;
 
@@ -99,7 +101,9 @@ const CurrentlyListening = () => {
       if (currentResponse.status === 429) {
         const retryAfter = currentResponse.headers.get('Retry-After') || '1';
         retryDelay.current = parseInt(retryAfter) * 1000;
-        setTimeout(fetchTracks, retryDelay.current);
+        setTimeout(() => {
+          fetchTracksRef.current?.();
+        }, retryDelay.current);
         retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
         setIsLoading(false);
@@ -159,16 +163,18 @@ const CurrentlyListening = () => {
             });
             setLastPlayedAt(lastPlayedAt);
           }
-        } catch (recentError) {
+        } catch {
           // Ignored
         }
 
         setIsLoading(false);
         setShowSkeleton(false);
       }
-    } catch (err) {
+    } catch {
       // Set a retry with backoff
-      setTimeout(fetchTracks, retryDelay.current);
+      setTimeout(() => {
+        fetchTracksRef.current?.();
+      }, retryDelay.current);
       retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
       setIsLoading(false);
@@ -176,8 +182,16 @@ const CurrentlyListening = () => {
     }
   }, []);
 
+  // Use an effect to assign the function to the ref
   useEffect(() => {
-    fetchTracks();
+    (fetchTracksRef as React.MutableRefObject<() => Promise<void>>).current =
+      fetchTracks;
+  }, [fetchTracks]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchTracks();
+    }, 0);
 
     // Adjust polling interval based on state
     const interval = setInterval(
@@ -190,7 +204,10 @@ const CurrentlyListening = () => {
       isPlaying ? 10000 : 30000,
     ); // 10s when playing, 30s when not
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, [isPlaying, fetchTracks]);
 
   if (error) return null;

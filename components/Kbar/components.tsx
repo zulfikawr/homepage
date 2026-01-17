@@ -6,7 +6,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { drawer } from '@/components/Drawer';
 import { useRouteInfo } from '@/hooks/useRouteInfo';
 import { useAuthActions } from '@/hooks/useAuthActions';
-import { Button, Input } from '@/components/UI';
+import { Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';

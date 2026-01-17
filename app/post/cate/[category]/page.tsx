@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     return categories.map((category) => ({
       category: category.toString(),
     }));
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -36,7 +36,7 @@ async function getCategoryPosts(category: string): Promise<Post[]> {
   try {
     const allPosts = await getPosts();
     return allPosts.filter((post: Post) => post.categories?.includes(category));
-  } catch (error) {
+  } catch {
     return [];
   }
 }

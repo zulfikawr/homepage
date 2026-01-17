@@ -58,11 +58,13 @@ function mapRecordToProject(record: RecordModel): Project {
  * Helper to clean project data before sending to PocketBase.
  * Handles file field vs text field URL issues.
  */
-function cleanProjectData(data: any): any {
-  const clean: any = { ...data };
+function cleanProjectData(
+  data: Omit<Project, 'id'> | Project,
+): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
 
   // Handle image field (file field vs image_url text field)
-  if (clean.image) {
+  if (typeof clean.image === 'string') {
     if (clean.image.includes('/api/files/')) {
       // PocketBase file URL -> extract filename for the file field
       const parts = clean.image.split('/');
@@ -76,7 +78,7 @@ function cleanProjectData(data: any): any {
   }
 
   // Handle favicon field
-  if (clean.favicon) {
+  if (typeof clean.favicon === 'string') {
     if (clean.favicon.includes('/api/files/')) {
       const parts = clean.favicon.split('/');
       clean.favicon = parts[parts.length - 1].split('?')[0];
@@ -93,7 +95,9 @@ function cleanProjectData(data: any): any {
   }
 
   // Remove the ID from the body as it's passed in the URL
-  delete clean.id;
+  if ('id' in clean) {
+    delete clean.id;
+  }
 
   return clean;
 }
@@ -145,14 +149,18 @@ export async function addProject(
   data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const payload = data instanceof FormData ? data : cleanProjectData(data);
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanProjectData(data) as Record<string, unknown>);
     const record = await pb.collection('projects').create<RecordModel>(payload);
     return { success: true, project: mapRecordToProject(record) };
-  } catch (error: any) {
-    console.error('PocketBase create error:', error.data || error);
+  } catch (error: unknown) {
+    const pbError = error as { data?: unknown; message?: string };
+    console.error('PocketBase create error:', pbError.data || pbError);
     return {
       success: false,
-      error: error.message || String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }
@@ -167,7 +175,7 @@ export async function updateProject(
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
     let recordId: string;
-    let updateData: any;
+    let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
       recordId = data.get('id') as string;
@@ -182,7 +190,9 @@ export async function updateProject(
             .collection('projects')
             .getFirstListItem(`slug="${recordId}"`);
           recordId = record.id;
-        } catch {}
+        } catch {
+          // Ignore error if not found by slug
+        }
       }
 
       updateData = cleanProjectData(data);
@@ -192,12 +202,13 @@ export async function updateProject(
       .collection('projects')
       .update<RecordModel>(recordId, updateData);
     return { success: true, project: mapRecordToProject(record) };
-  } catch (error: any) {
-    console.error('PocketBase update error details:', error.data);
-    console.error('PocketBase update error message:', error.message);
+  } catch (error: unknown) {
+    const pbError = error as { data?: unknown; message?: string };
+    console.error('PocketBase update error details:', pbError.data);
+    console.error('PocketBase update error message:', pbError.message);
     return {
       success: false,
-      error: error.message || String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }
@@ -239,7 +250,9 @@ export async function getProjectById(id: string): Promise<Project | null> {
       try {
         const record = await pb.collection('projects').getOne<RecordModel>(id);
         if (record) return mapRecordToProject(record);
-      } catch (e) {}
+      } catch {
+        // Ignored
+      }
     }
 
     const records = await pb.collection('projects').getFullList<RecordModel>({
@@ -252,8 +265,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
     }
 
     return null;
-  } catch (error) {
-    console.error('getProjectById error:', error);
+  } catch {
     return null;
   }
 }

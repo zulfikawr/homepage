@@ -50,7 +50,8 @@ export default function FeedbackContent() {
 
       setContact('');
       toast.success('Thank you for your feedback!');
-    } catch (error) {
+    } catch {
+      // Ignored
       toast.error('Failed to submit feedback. Please try again.');
     } finally {
       setIsSubmitting(false);

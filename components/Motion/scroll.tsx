@@ -36,7 +36,9 @@ const ScrollWrapper = (props: Props) => {
   }, [startPosition, endPosition, applyEffect]);
 
   useEffect(() => {
-    handler();
+    requestAnimationFrame(() => {
+      handler();
+    });
 
     window.addEventListener('scroll', handler, { passive: true });
 

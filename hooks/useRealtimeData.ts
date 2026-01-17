@@ -23,8 +23,8 @@ export function useRealtimeData<T>(
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    setLoading((prev) => (prev === true ? prev : true));
+    setError((prev) => (prev === null ? prev : null));
 
     let isMounted = true;
     let unsubscribe: Unsubscribe | null = null;
@@ -42,7 +42,7 @@ export function useRealtimeData<T>(
         } else if (result && typeof result === 'function') {
           result();
         }
-      } catch (err) {
+      } catch {
         if (isMounted) {
           setError('Realtime connection failed');
           setLoading(false);
@@ -58,7 +58,8 @@ export function useRealtimeData<T>(
         unsubscribe();
       }
     };
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subscribeFunction, ...dependencies]);
 
   return { data, loading, error };
 }

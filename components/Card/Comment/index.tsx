@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import { Button, Icon } from '@/components/UI';
 import { Card } from '@/components/Card';
-import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Editor } from '@/components/Editor';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
@@ -23,7 +22,6 @@ interface CommentCardProps {
   onEdit?: (newContent: string) => Promise<void>;
   level?: number;
   currentUserName?: string;
-  currentUserAvatar?: string;
   currentUserId?: string;
   isAdmin?: boolean;
   replies?: Comment[];
@@ -48,7 +46,6 @@ export default function CommentCard({
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
   const [isUpdating, setIsUpdating] = useState(false);

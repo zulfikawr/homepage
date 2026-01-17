@@ -26,7 +26,10 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
 
   useEffect(() => {
     if (data) {
-      setInterestsAndObjectives(data);
+      const timer = setTimeout(() => {
+        setInterestsAndObjectives(data);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 

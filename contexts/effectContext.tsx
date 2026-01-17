@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const EffectContext = createContext({
   effectEnabled: false,
@@ -8,14 +8,13 @@ const EffectContext = createContext({
 });
 
 export const EffectProvider = ({ children }: { children: React.ReactNode }) => {
-  const [effectEnabled, setEffectEnabled] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('effectEnabled');
-    if (stored !== null) {
-      setEffectEnabled(stored === 'true');
+  const [effectEnabled, setEffectEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('effectEnabled');
+      return stored !== null ? stored === 'true' : false;
     }
-  }, []);
+    return false;
+  });
 
   const toggleEffect = () => {
     setEffectEnabled((prev) => {

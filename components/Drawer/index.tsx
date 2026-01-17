@@ -76,17 +76,19 @@ const Drawer = () => {
 
   useEffect(() => {
     if (isOpen) {
-      setIsVisible(true);
-      setCurrentContent(content);
-      // Use double rAF to ensure the DOM is painted with isVisible: true
+      // Use requestAnimationFrame to ensure the DOM is painted with isVisible: true
       // before we trigger the 'in' animation class
       requestAnimationFrame(() => {
+        setIsVisible(true);
+        setCurrentContent(content);
         requestAnimationFrame(() => {
           setAnimation('in');
         });
       });
     } else {
-      setAnimation('out');
+      requestAnimationFrame(() => {
+        setAnimation('out');
+      });
       const timer = setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);

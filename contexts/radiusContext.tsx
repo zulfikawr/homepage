@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface RadiusContextType {
   radius: number;
@@ -13,14 +13,13 @@ const RadiusContext = createContext<RadiusContextType>({
 });
 
 export const RadiusProvider = ({ children }: { children: React.ReactNode }) => {
-  const [radius, setRadiusState] = useState(8);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('borderRadius');
-    if (stored !== null) {
-      setRadiusState(parseInt(stored));
+  const [radius, setRadiusState] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('borderRadius');
+      return stored !== null ? parseInt(stored) : 8;
     }
-  }, []);
+    return 8;
+  });
 
   const setRadius = (val: number) => {
     localStorage.setItem('borderRadius', String(val));

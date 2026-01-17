@@ -57,7 +57,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     try {
       await pb.collection('users').authWithOAuth2({ provider: 'github' });
       toast.show('Logged in with GitHub!');
-    } catch (error) {
+    } catch {
       toast.show('Failed to login with GitHub', 'error');
     } finally {
       setIsAuthLoading(false);
@@ -70,7 +70,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       setAuthor('');
       setContent('');
       toast.show('Logged out successfully!');
-    } catch (error) {
+    } catch {
       toast.show('Failed to logout', 'error');
     }
   };
@@ -93,7 +93,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       );
       setContent('');
       toast.show('Comment posted successfully!');
-    } catch (error) {
+    } catch {
       toast.show('Failed to submit comment', 'error');
     } finally {
       setIsSubmitting(false);
@@ -132,7 +132,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     }
     try {
       await likeComment(commentId, user.id);
-    } catch (error) {
+    } catch {
       // Ignored
     }
   };
@@ -141,7 +141,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     try {
       await deleteComment(commentId);
       toast.show('Comment deleted');
-    } catch (error) {
+    } catch {
       // Ignored
     }
   };
@@ -150,7 +150,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     try {
       await updateComment(commentId, newContent);
       toast.show('Comment updated');
-    } catch (error) {
+    } catch {
       // Ignored
     }
   };

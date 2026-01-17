@@ -67,7 +67,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     dateString: post.dateString || formatDate(selectedDate),
   };
 
-  const handleChange = (field: keyof Post, value: any) => {
+  const handleChange = <K extends keyof Post>(field: K, value: Post[K]) => {
     setPost((prev) => ({ ...prev, [field]: value }));
   };
 

@@ -1,15 +1,17 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import React, { useEffect, useState } from 'react';
+import React, { useSyncExternalStore } from 'react';
+
+const emptySubscribe = () => () => {};
 
 export default function CloudAndStarsBackground() {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   if (!mounted) return null; // Avoid rendering on server
 

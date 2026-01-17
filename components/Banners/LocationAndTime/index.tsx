@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Icon } from '@/components/UI';
 import LoadingSkeleton from './loading';
 import { Card } from '@/components/Card';
 import { useRadius } from '@/contexts/radiusContext';
+
+const emptySubscribe = () => () => {};
 
 const FlipNumber = ({ number }: { number: string }) => {
   const { radius } = useRadius();
@@ -26,7 +28,12 @@ const Separator = () => (
 );
 
 const LocationAndTime = () => {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
   const [timeData, setTimeData] = useState({
     hours: '00',
     minutes: '00',
@@ -46,7 +53,7 @@ const LocationAndTime = () => {
   >([]);
 
   useEffect(() => {
-    setMounted(true);
+    if (!mounted) return;
 
     const generateStars = () => {
       const starsArray = Array.from({ length: 50 }).map(() => ({
@@ -98,7 +105,7 @@ const LocationAndTime = () => {
     const timer = setInterval(updateTime, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [mounted]);
 
   if (!mounted) return <LoadingSkeleton />;
 

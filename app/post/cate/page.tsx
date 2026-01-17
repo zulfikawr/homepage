@@ -28,7 +28,7 @@ async function getCategories() {
         count,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  } catch (error) {
+  } catch {
     return [];
   }
 }

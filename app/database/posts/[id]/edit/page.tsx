@@ -1,4 +1,4 @@
-import { getPostById, getPosts } from '@/database/posts';
+import { getPostById } from '@/database/posts';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditPostPage from './content';

@@ -3,7 +3,6 @@ import { Icon, Input, Button } from '@/components/UI';
 import { twMerge } from 'tailwind-merge';
 import Image from 'next/image';
 import { useRadius } from '@/contexts/radiusContext';
-import { useEffectToggle } from '@/contexts/effectContext';
 
 interface DropzoneProps {
   value: string; // The URL
@@ -30,12 +29,15 @@ export const Dropzone: React.FC<DropzoneProps> = ({
 
   // Sync internal preview with external value
   useEffect(() => {
-    setInputValue(value);
-    if (value) {
-      setPreviewUrl(value);
-    } else {
-      setPreviewUrl(null);
-    }
+    const timer = setTimeout(() => {
+      setInputValue(value);
+      if (value) {
+        setPreviewUrl(value);
+      } else {
+        setPreviewUrl(null);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [value]);
 
   const handleDragOver = (e: React.DragEvent) => {

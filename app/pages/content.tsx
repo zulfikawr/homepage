@@ -1,3 +1,6 @@
+'use client';
+
+import React from 'react';
 import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
 import { IconName } from '@/components/UI/Icon';
@@ -93,8 +96,6 @@ export default function PagesContent() {
     'text-violet-500',
   ];
 
-  const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
-
   return (
     <div>
       <PageTitle
@@ -107,16 +108,19 @@ export default function PagesContent() {
       <div className='grid grid-cols-2 gap-4'>
         {pages
           .sort((a, b) => a.title.localeCompare(b.title))
-          .map((page, index) => (
-            <NavigationCard
-              key={index}
-              title={page.title}
-              desc={page.desc}
-              icon={page.icon}
-              className={shuffledColors[index % shuffledColors.length]}
-              href={page.href}
-            />
-          ))}
+          .map((page, index) => {
+            const colorIndex = (index * 7) % colors.length;
+            return (
+              <NavigationCard
+                key={index}
+                title={page.title}
+                desc={page.desc}
+                icon={page.icon}
+                className={colors[colorIndex]}
+                href={page.href}
+              />
+            );
+          })}
       </div>
     </div>
   );

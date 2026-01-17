@@ -13,7 +13,7 @@ const md = new MarkdownIt({
           hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
         }</code></pre>`;
       }
-    } catch (e) {
+    } catch {
       // Ignored
     }
     return '';
@@ -31,7 +31,7 @@ export function renderMarkdown(text: unknown): string {
     const safeText = typeof text === 'string' ? text : '';
     if (!safeText) return '';
     return md.render(safeText);
-  } catch (err) {
+  } catch {
     return '';
   }
 }

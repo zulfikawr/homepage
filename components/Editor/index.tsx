@@ -30,7 +30,6 @@ const Editor: React.FC<EditorProps> = ({
     {},
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const highlightRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     setMarkdown(content);
@@ -52,29 +51,6 @@ const Editor: React.FC<EditorProps> = ({
       </div>,
     );
   }, [markdown]);
-
-  const insertMarkdown = (prefix: string, suffix: string = '') => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = markdown.slice(start, end);
-    const newText = `${markdown.slice(0, start)}${prefix}${selectedText}${suffix}${markdown.slice(end)}`;
-
-    setMarkdown(newText);
-    onUpdate(newText);
-
-    const newCursorPos = start + prefix.length + selectedText.length;
-    setTimeout(() => {
-      if (textarea) {
-        textarea.selectionStart = newCursorPos;
-        textarea.selectionEnd = newCursorPos;
-        textarea.focus();
-        updateCursorStyles();
-      }
-    }, 0);
-  };
 
   const getCursorContext = useCallback(() => {
     const textarea = textareaRef.current;
@@ -127,6 +103,32 @@ const Editor: React.FC<EditorProps> = ({
     });
   }, [getCursorContext]);
 
+  const insertMarkdown = useCallback(
+    (prefix: string, suffix: string = '') => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = markdown.slice(start, end);
+      const newText = `${markdown.slice(0, start)}${prefix}${selectedText}${suffix}${markdown.slice(end)}`;
+
+      setMarkdown(newText);
+      onUpdate(newText);
+
+      const newCursorPos = start + prefix.length + selectedText.length;
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = newCursorPos;
+          textareaRef.current.selectionEnd = newCursorPos;
+          textareaRef.current.focus();
+          updateCursorStyles();
+        }
+      }, 0);
+    },
+    [markdown, onUpdate, updateCursorStyles],
+  );
+
   useEffect(() => {
     document.addEventListener('selectionchange', updateCursorStyles);
     return () => {
@@ -134,99 +136,122 @@ const Editor: React.FC<EditorProps> = ({
     };
   }, [updateCursorStyles]);
 
-  const toolbarButtons: {
-    icon: IconName;
-    label: string;
-    action: () => void;
-    active: boolean;
-  }[] = [
-    {
-      icon: 'heading',
-      label: 'Heading',
-      action: () => insertMarkdown('# ', ''),
-      active: cursorStyle.heading,
+  const toolbarButtons = useMemo(
+    () => [
+      {
+        icon: 'heading' as IconName,
+        label: 'Heading',
+        active: cursorStyle.heading,
+      },
+      {
+        icon: 'bold' as IconName,
+        label: 'Bold',
+        active: cursorStyle.bold,
+      },
+      {
+        icon: 'italic' as IconName,
+        label: 'Italic',
+        active: cursorStyle.italic,
+      },
+      {
+        icon: 'underline' as IconName,
+        label: 'Underline',
+        active: cursorStyle.underline,
+      },
+      {
+        icon: 'list' as IconName,
+        label: 'List',
+        active: cursorStyle.list,
+      },
+      {
+        icon: 'link' as IconName,
+        label: 'Link',
+        active: cursorStyle.link,
+      },
+      {
+        icon: 'quote' as IconName,
+        label: 'Quote',
+        active: cursorStyle.quote,
+      },
+      {
+        icon: 'image' as IconName,
+        label: 'Image',
+        active: cursorStyle.image,
+      },
+      {
+        icon: 'table' as IconName,
+        label: 'Table',
+        active: cursorStyle.table,
+      },
+      {
+        icon: 'minus' as IconName,
+        label: 'HR',
+        active: cursorStyle.hr,
+      },
+      {
+        icon: 'code' as IconName,
+        label: 'Inline Code',
+        active: cursorStyle.code,
+      },
+      {
+        icon: 'codeBlock' as IconName,
+        label: 'Code Block',
+        active: cursorStyle.codeBlock,
+      },
+    ],
+    [cursorStyle],
+  );
+
+  const handleToolbarAction = useCallback(
+    (label: string) => {
+      switch (label) {
+        case 'Heading':
+          insertMarkdown('# ', '');
+          break;
+        case 'Bold':
+          insertMarkdown('**', '**');
+          break;
+        case 'Italic':
+          insertMarkdown('_', '_');
+          break;
+        case 'Underline':
+          insertMarkdown('<u>', '</u>');
+          break;
+        case 'List':
+          insertMarkdown('- ', '');
+          break;
+        case 'Link':
+          insertMarkdown('[', '](url)');
+          break;
+        case 'Quote':
+          insertMarkdown('> ', '');
+          break;
+        case 'Image':
+          insertMarkdown('![alt](', ')');
+          break;
+        case 'Table':
+          insertMarkdown(
+            '\n| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n',
+          );
+          break;
+        case 'HR':
+          insertMarkdown('\n---\n');
+          break;
+        case 'Inline Code':
+          insertMarkdown('`', '`');
+          break;
+        case 'Code Block':
+          insertMarkdown('\n```\n', '\n```\n');
+          break;
+      }
     },
-    {
-      icon: 'bold',
-      label: 'Bold',
-      action: () => insertMarkdown('**', '**'),
-      active: cursorStyle.bold,
-    },
-    {
-      icon: 'italic',
-      label: 'Italic',
-      action: () => insertMarkdown('_', '_'),
-      active: cursorStyle.italic,
-    },
-    {
-      icon: 'underline',
-      label: 'Underline',
-      action: () => insertMarkdown('<u>', '</u>'),
-      active: cursorStyle.underline,
-    },
-    {
-      icon: 'list',
-      label: 'List',
-      action: () => insertMarkdown('- ', ''),
-      active: cursorStyle.list,
-    },
-    {
-      icon: 'link',
-      label: 'Link',
-      action: () => insertMarkdown('[', '](url)'),
-      active: cursorStyle.link,
-    },
-    {
-      icon: 'quote',
-      label: 'Quote',
-      action: () => insertMarkdown('> ', ''),
-      active: cursorStyle.quote,
-    },
-    {
-      icon: 'image',
-      label: 'Image',
-      action: () => insertMarkdown('![alt](', ')'),
-      active: cursorStyle.image,
-    },
-    {
-      icon: 'table',
-      label: 'Table',
-      action: () =>
-        insertMarkdown(
-          '\n| Header 1 | Header 2 | Header 3 |\n|----------|----------|----------|\n| Cell 1   | Cell 2   | Cell 3   |\n',
-        ),
-      active: cursorStyle.table,
-    },
-    {
-      icon: 'minus',
-      label: 'HR',
-      action: () => insertMarkdown('\n---\n'),
-      active: cursorStyle.hr,
-    },
-    {
-      icon: 'code',
-      label: 'Inline Code',
-      action: () => insertMarkdown('`', '`'),
-      active: cursorStyle.code,
-    },
-    {
-      icon: 'codeBlock',
-      label: 'Code Block',
-      action: () => insertMarkdown('\n```\n', '\n```\n'),
-      active: cursorStyle.codeBlock,
-    },
-    {
-      icon: 'eye',
-      label: 'Preview',
-      action: () => handlePreview(),
-      active: false,
-    },
-  ];
+    [insertMarkdown],
+  );
 
   const highlightedContent = useMemo(() => {
     try {
       return hljs.highlight(markdown || '', { language: 'markdown' }).value;
-    } catch (e) {
+    } catch {
       return markdown || '';
     }
   }, [markdown]);
@@ -252,26 +277,20 @@ const Editor: React.FC<EditorProps> = ({
       <div className='relative flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 shrink-0 overflow-visible'>
         {/* Scrollable Formatting Tools */}
         <div className='flex flex-nowrap items-center gap-2 px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
-          {toolbarButtons
-            .filter((b) => b.label !== 'Preview')
-            .map((button, index) => (
-              <Tooltip key={index} text={button.label} position='top'>
-                <Toggle
-                  isActive={button.active}
-                  onChange={(e) => {
-                    if (e && 'preventDefault' in e) e.preventDefault();
-                    (
-                      button.action as (
-                        e?: React.MouseEvent<HTMLButtonElement>,
-                      ) => void
-                    )(e);
-                  }}
-                  className='px-2 rounded-md'
-                >
-                  <Icon name={button.icon} className='w-5 h-5' />
-                </Toggle>
-              </Tooltip>
-            ))}
+          {toolbarButtons.map((button, index) => (
+            <Tooltip key={index} text={button.label} position='top'>
+              <Toggle
+                isActive={button.active}
+                onChange={(e) => {
+                  if (e && 'preventDefault' in e) e.preventDefault();
+                  handleToolbarAction(button.label);
+                }}
+                className='px-2 rounded-md'
+              >
+                <Icon name={button.icon} className='w-5 h-5' />
+              </Toggle>
+            </Tooltip>
+          ))}
         </div>
 
         {/* Fixed Preview Button */}

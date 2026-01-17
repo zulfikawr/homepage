@@ -1,4 +1,4 @@
-import { getProjectById, getProjects } from '@/database/projects';
+import { getProjectById } from '@/database/projects';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditProjectPage from './content';

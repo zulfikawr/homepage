@@ -65,16 +65,35 @@ export default function SectionDatabase() {
     }
   }, [sections]);
 
-  useEffect(() => {}, [localSections]);
-
   if (error) return <div>Failed to load sections</div>;
 
   const handleToggle = async (section: Section) => {
+    const originalEnabled = section.enabled;
+    const newEnabled = !originalEnabled;
+
+    // Optimistic update
+    setLocalSections((prev) =>
+      prev.map((s) =>
+        s.id === section.id ? { ...s, enabled: newEnabled } : s,
+      ),
+    );
+
     try {
-      await updateSection(section.id, { enabled: !section.enabled });
+      const result = await updateSection(section.id, { enabled: newEnabled });
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to update section');
+      }
       toast.success(`${section.title} visibility updated`);
     } catch (err) {
-      toast.error('Failed to update section');
+      // Revert on failure
+      setLocalSections((prev) =>
+        prev.map((s) =>
+          s.id === section.id ? { ...s, enabled: originalEnabled } : s,
+        ),
+      );
+      toast.error(
+        err instanceof Error ? err.message : 'Failed to update section',
+      );
     }
   };
 
@@ -88,7 +107,7 @@ export default function SectionDatabase() {
     if (!draggedItem) return;
     const draggedOverItem = localSections[index];
     if (draggedItem.id === draggedOverItem.id) return;
-    let items = localSections.filter((item) => item.id !== draggedItem.id);
+    const items = localSections.filter((item) => item.id !== draggedItem.id);
     items.splice(index, 0, draggedItem);
     setLocalSections(items);
   };
@@ -99,10 +118,16 @@ export default function SectionDatabase() {
       const updates = localSections.map((section, index) =>
         updateSection(section.id, { order: index }),
       );
-      await Promise.all(updates);
+      const results = await Promise.all(updates);
+      const failed = results.find((r) => !r.success);
+      if (failed) {
+        throw new Error(failed.error || 'Failed to update order');
+      }
       toast.success('Order updated');
     } catch (err) {
-      toast.error('Failed to save new order');
+      toast.error(
+        err instanceof Error ? err.message : 'Failed to save new order',
+      );
     }
   };
 
@@ -148,12 +173,14 @@ export default function SectionDatabase() {
                 </p>
               </div>
 
-              <Switch
-                id={`show-${section.id}`}
-                checked={section.enabled}
-                onChange={() => handleToggle(section)}
-                label=''
-              />
+              <div onPointerDown={(e) => e.stopPropagation()}>
+                <Switch
+                  id={`show-${section.id}`}
+                  checked={section.enabled}
+                  onChange={() => handleToggle(section)}
+                  label=''
+                />
+              </div>
             </div>
           ))
         )}

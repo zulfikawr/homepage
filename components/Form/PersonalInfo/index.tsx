@@ -3,16 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { PersonalInfo } from '@/types/personalInfo';
 import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
-import {
-  updatePersonalInfo,
-  COLLECTION,
-  RECORD_ID,
-} from '@/database/personalInfo';
+import { updatePersonalInfo, COLLECTION } from '@/database/personalInfo';
 import { toast } from '@/components/Toast';
 import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Separator } from '@/components/UI/Separator';
-import pb from '@/lib/pocketbase';
 import { useRouter } from 'next/navigation';
 
 interface PersonalInfoFormProps {
@@ -34,7 +29,10 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
 
   useEffect(() => {
     if (data) {
-      setPersonalInfo(data);
+      const timer = setTimeout(() => {
+        setPersonalInfo(data);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 

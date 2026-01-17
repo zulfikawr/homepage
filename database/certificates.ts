@@ -128,7 +128,7 @@ export async function updateCertificate(
 ): Promise<{ success: boolean; certificate?: Certificate; error?: string }> {
   try {
     let recordId: string;
-    let updateData: any;
+    let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
       recordId = data.get('id') as string;
@@ -137,7 +137,7 @@ export async function updateCertificate(
       const { id, ...rest } = data;
       recordId = id;
 
-      const cleanData: Partial<Certificate> = { ...rest };
+      const cleanData: Record<string, unknown> = { ...rest };
 
       // Extract filename if it's a PocketBase URL
       if (data.imageUrl && data.imageUrl.includes('/api/files/')) {

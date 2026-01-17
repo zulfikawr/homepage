@@ -172,7 +172,7 @@ const Waves: React.FC<WavesProps> = ({
     left: 0,
     top: 0,
   });
-  const noiseRef = useRef(new Noise(Math.random()));
+  const noiseRef = useRef<Noise | null>(null);
   const linesRef = useRef<Point[][]>([]);
   const mouseRef = useRef<Mouse>({
     x: -10,
@@ -234,6 +234,10 @@ const Waves: React.FC<WavesProps> = ({
     if (!canvas || !container) return;
     ctxRef.current = canvas.getContext('2d');
 
+    if (!noiseRef.current) {
+      noiseRef.current = new Noise(Math.random());
+    }
+
     function setSize() {
       if (!container || !canvas) return;
       const rect = container.getBoundingClientRect();
@@ -275,6 +279,8 @@ const Waves: React.FC<WavesProps> = ({
       const lines = linesRef.current;
       const mouse = mouseRef.current;
       const noise = noiseRef.current;
+      if (!noise) return;
+
       const {
         waveSpeedX,
         waveSpeedY,
