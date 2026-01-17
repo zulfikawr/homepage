@@ -66,8 +66,8 @@ const Badge = ({
       {...rest}
     >
       {hasValidIcon && (
-        <span className='size-[12px] flex-shrink-0'>
-          <Icon name={iconName!} />
+        <span className='size-[12px] flex-shrink-0 flex items-center justify-center'>
+          <Icon name={iconName!} size={12} />
         </span>
       )}
       {children}

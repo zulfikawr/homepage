@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-import { twMerge } from 'tailwind-merge';
 import * as PhosphorIcons from '@phosphor-icons/react';
 import * as DevIcons from 'developer-icons';
 
@@ -134,7 +132,7 @@ interface IconProps extends PhosphorIcons.IconProps {
   className?: string;
 }
 
-const Icon = ({ name, className, ...props }: IconProps) => {
+const Icon = ({ name, className, size = 20, ...props }: IconProps) => {
   const IconComponent = iconMap[name];
 
   if (!IconComponent) {
@@ -144,16 +142,9 @@ const Icon = ({ name, className, ...props }: IconProps) => {
 
   // developer-icons expects size as a number, while PhosphorIcons handles string/number
   // Standardizing to ensure compatibility
-  const iconSize =
-    typeof props.size === 'string' ? parseInt(props.size) : props.size;
+  const iconSize = typeof size === 'string' ? parseInt(size) : size;
 
-  return (
-    <IconComponent
-      className={twMerge('w-full h-full', className)}
-      {...props}
-      size={iconSize}
-    />
-  );
+  return <IconComponent className={className} {...props} size={iconSize} />;
 };
 
 Icon.displayName = 'Icon';

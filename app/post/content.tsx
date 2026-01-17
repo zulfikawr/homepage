@@ -67,9 +67,7 @@ export default function PostsContent() {
             onChange={() => toggleCategory(cat)}
           >
             {cat !== 'All' && (
-              <span className='w-4 h-4 ml-2 shrink-0'>
-                <Icon name='tag' />
-              </span>
+              <Icon name='tag' size={14} className='ml-2 shrink-0' />
             )}
             <span className='px-2 text-sm font-medium'>{cat}</span>
           </Toggle>

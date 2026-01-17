@@ -140,9 +140,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
               className='effect-pressing flex items-center gap-x-2 hover:text-neutral-600 dark:hover:text-neutral-300'
               onClick={handleShare}
             >
-              <div className='size-[15px]'>
-                <Icon name='share' />
-              </div>
+              <Icon name='share' size={15} />
               Share
             </button>
           </span>
