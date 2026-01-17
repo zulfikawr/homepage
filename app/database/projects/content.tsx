@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ProjectCard from '@/components/Card/Project';
-import { projectsData } from '@/functions/projects';
+import { projectsData } from '@/database/projects';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

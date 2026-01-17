@@ -2,7 +2,7 @@
 
 import React from 'react';
 import MovieCard from '@/components/Card/Movie';
-import { moviesData } from '@/functions/movies';
+import { moviesData } from '@/database/movies';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

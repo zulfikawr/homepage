@@ -6,14 +6,14 @@
     "dev": "rm -rf .next && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && npx prettier --write ."
+    "lint": "next lint && bunx prettier --write ."
   },
   "dependencies": {
-    "firebase": "^11.3.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",
     "next": "^15.5.7",
+    "pocketbase": "^0.26.6",
     "prettier": "^3.5.1",
     "react": "19.2.1",
     "react-dom": "19.2.1",

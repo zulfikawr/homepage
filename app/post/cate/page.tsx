@@ -1,4 +1,4 @@
-import { getPosts } from '@/functions/posts';
+import { getPosts } from '@/database/posts';
 import { Post } from '@/types/post';
 import { Metadata } from 'next';
 import CategoriesContent from './content';

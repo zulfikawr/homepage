@@ -1,4 +1,4 @@
-import { getCertificateById, getCertificates } from '@/functions/certificates';
+import { getCertificateById, getCertificates } from '@/database/certificates';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditCertificatePage from './content';

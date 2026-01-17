@@ -1,4 +1,4 @@
-import { interestsAndObjectivesData } from '@/functions/interestsAndObjectives';
+import { interestsAndObjectivesData } from '@/database/interestsAndObjectives';
 import { useRealtimeData } from '@/hooks';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';

@@ -7,7 +7,7 @@ import { Button, FormLabel, Input } from '@/components/UI';
 import MovieCard from '@/components/Card/Movie';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { toast } from '@/components/Toast';
-import { addMovie, updateMovie, deleteMovie } from '@/functions/movies';
+import { addMovie, updateMovie, deleteMovie } from '@/database/movies';
 import { modal } from '@/components/Modal';
 import Separator from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';

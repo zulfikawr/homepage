@@ -2,7 +2,7 @@
 
 import React from 'react';
 import CertificateCard from '@/components/Card/Certificate';
-import { certificatesData } from '@/functions/certificates';
+import { certificatesData } from '@/database/certificates';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

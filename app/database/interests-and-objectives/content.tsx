@@ -2,7 +2,7 @@
 
 import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
 import PageTitle from '@/components/PageTitle';
-import { interestsAndObjectivesData } from '@/functions/interestsAndObjectives';
+import { interestsAndObjectivesData } from '@/database/interestsAndObjectives';
 import { useRealtimeData } from '@/hooks';
 
 export default function PersonalInfoContent() {

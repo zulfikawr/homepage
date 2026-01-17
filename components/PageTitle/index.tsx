@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon, Label } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
-import { incrementPageViews } from '@/functions/analytics';
+import { incrementPageViews } from '@/database/analytics';
 import Separator from '../UI/Separator';
 import Link from 'next/link';
 import { renderMarkdown } from '@/utilities/renderMarkdown';

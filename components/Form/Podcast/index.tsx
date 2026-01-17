@@ -5,7 +5,7 @@ import { Podcast } from '@/types/podcast';
 import { drawer } from '@/components/Drawer';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import PodcastCard from '@/components/Card/Podcast';
-import { addPodcast, updatePodcast, deletePodcast } from '@/functions/podcasts';
+import { addPodcast, updatePodcast, deletePodcast } from '@/database/podcasts';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
 import { generateId } from '@/utilities/generateId';

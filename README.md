@@ -18,7 +18,7 @@
 ## 🛠️ Technologies Used
 
 - **Next.js 15** – React-based framework for fast and scalable web apps.
-- **Firebase Realtime Database** – Cloud database to store and sync data in real time.
+- **PocketBase** – Open source backend for real-time database and auth.
 - **Spotify API** – Fetches the currently playing track and listening history.
 - **Tailwind CSS** – Utility-first CSS framework for styling.
 

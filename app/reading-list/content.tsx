@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { BookCard } from '@/components/Card/Book';
-import { booksData } from '@/functions/books';
+import { booksData } from '@/database/books';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import Separator from '@/components/UI/Separator';

@@ -2,11 +2,11 @@
 
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '@/lib/firebase';
-import type { User } from 'firebase/auth';
+import pb from '@/lib/pocketbase';
+import type { AuthModel } from 'pocketbase';
 
 interface AuthContextType {
-  user: User | null;
+  user: AuthModel | null;
   loading: boolean;
   isAdmin: boolean;
 }
@@ -18,19 +18,28 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthModel | null>(pb.authStore.model);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setUser(user);
-      if (user && user.uid === process.env.NEXT_PUBLIC_ADMIN_UID) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
-      setLoading(false);
+    // Initial check
+    setUser(pb.authStore.model);
+    setIsAdmin(
+      !!pb.authStore.model &&
+        pb.authStore.isValid &&
+        (pb.authStore.isAdmin || (pb.authStore.model as any).role === 'admin'),
+    );
+    setLoading(false);
+
+    // Listen to auth changes
+    const unsubscribe = pb.authStore.onChange((token, model) => {
+      setUser(model);
+      setIsAdmin(
+        !!model &&
+          pb.authStore.isValid &&
+          (pb.authStore.isAdmin || (model as any).role === 'admin'),
+      );
     });
 
     return () => unsubscribe();

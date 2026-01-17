@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { EmploymentCard } from '@/components/Card/Employment';
-import { employmentsData } from '@/functions/employments';
+import { employmentsData } from '@/database/employments';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';

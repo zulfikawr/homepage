@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { incrementPageViews } from '@/functions/analytics';
+import { incrementPageViews } from '@/database/analytics';
 import PagesAndLinks from '@/components/Banners/PagesAndLinks';
 import EmploymentSection from '@/components/Section/Employment';
 import ProjectSection from '@/components/Section/Project';

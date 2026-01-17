@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
-import { database, ref, onValue, remove } from '@/lib/firebase';
+import pb from '@/lib/pocketbase';
 import PageTitle from '@/components/PageTitle';
 import {
   Table,
@@ -16,9 +16,10 @@ import {
 import { toast } from '@/components/Toast';
 
 interface FeedbackEntry {
+  id: string;
   feedback: string;
   contact: string;
-  timestamp: string;
+  created: string;
 }
 
 const SkeletonLoader = () => {
@@ -70,12 +71,9 @@ const SkeletonLoader = () => {
 };
 
 export default function FeedbackResponsesContent() {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const router = useRouter();
-  const [feedbacks, setFeedbacks] = useState<Record<string, FeedbackEntry>>({});
-
-  const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID;
-  const isAuthorized = !!user && ADMIN_UID && user.uid === ADMIN_UID;
+  const [feedbacks, setFeedbacks] = useState<FeedbackEntry[]>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -83,30 +81,34 @@ export default function FeedbackResponsesContent() {
       return;
     }
 
-    if (!loading && user && !isAuthorized) {
-      // Logged-in but not admin — redirect home (deny access)
+    if (!loading && user && !isAdmin) {
       router.push('/');
     }
-  }, [user, loading, router, isAuthorized]);
+  }, [user, loading, router, isAdmin]);
 
   useEffect(() => {
-    const feedbackRef = ref(database, 'feedback');
-    const unsubscribe = onValue(feedbackRef, (snapshot) => {
-      const data = snapshot.val();
-      setFeedbacks(data || {});
+    pb.collection('feedback')
+      .getFullList<FeedbackEntry>({ sort: '-created' })
+      .then(setFeedbacks);
+
+    const unsubscribe = pb.collection('feedback').subscribe('*', async () => {
+      const data = await pb
+        .collection('feedback')
+        .getFullList<FeedbackEntry>({ sort: '-created' });
+      setFeedbacks(data);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const handleDelete = async (date: string) => {
+  const handleDelete = async (id: string) => {
     const confirmDelete = confirm(
       'Are you sure you want to delete this feedback?',
     );
     if (!confirmDelete) return;
 
     try {
-      await remove(ref(database, `feedback/${date}`));
+      await pb.collection('feedback').delete(id);
       toast.success('Feedback deleted successfully');
     } catch (error) {
       toast.error(
@@ -127,7 +129,7 @@ export default function FeedbackResponsesContent() {
 
       {loading ? (
         <SkeletonLoader />
-      ) : Object.keys(feedbacks).length > 0 ? (
+      ) : feedbacks.length > 0 ? (
         <Table>
           <TableHeader>
             <TableRow>
@@ -158,16 +160,18 @@ export default function FeedbackResponsesContent() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Object.entries(feedbacks).map(([date, entry]) => (
-              <TableRow key={entry.timestamp}>
-                <TableCell>{date}</TableCell>
+            {feedbacks.map((entry) => (
+              <TableRow key={entry.id}>
+                <TableCell>
+                  {new Date(entry.created).toLocaleDateString()}
+                </TableCell>
                 <TableCell>{entry.feedback}</TableCell>
                 <TableCell>{entry.contact}</TableCell>
                 <TableCell>
                   <Button
                     type='destructive'
                     icon='trashSimple'
-                    onClick={() => handleDelete(date)}
+                    onClick={() => handleDelete(entry.id)}
                   />
                 </TableCell>
               </TableRow>

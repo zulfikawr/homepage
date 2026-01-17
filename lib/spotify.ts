@@ -1,4 +1,4 @@
-import { database, ref, set, get } from './firebase';
+import pb from './pocketbase';
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
 const REDIRECT_URI = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
@@ -22,9 +22,9 @@ export const getSpotifyAuthUrl = () => {
 
 export const getAccessToken = async () => {
   try {
-    const tokensRef = ref(database, 'spotify/tokens');
-    const snapshot = await get(tokensRef);
-    const tokens = snapshot.val();
+    const tokens = await pb
+      .collection('spotify_tokens')
+      .getOne('mainxxxxxxxxxxx');
 
     if (!tokens) {
       throw new Error('No tokens found');
@@ -51,8 +51,8 @@ export const getAccessToken = async () => {
 
       const data = await response.json();
 
-      // Update token in Firebase
-      await set(ref(database, 'spotify/tokens'), {
+      // Update token in PocketBase
+      await pb.collection('spotify_tokens').update('mainxxxxxxxxxxx', {
         access_token: data.access_token,
         refresh_token: tokens.refresh_token,
         timestamp: Date.now(),

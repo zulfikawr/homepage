@@ -1,7 +1,7 @@
 'use client';
 
 import PodcastCard from '@/components/Card/Podcast';
-import { podcastsData } from '@/functions/podcasts';
+import { podcastsData } from '@/database/podcasts';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import EmploymentCard from '@/components/Card/Employment';
-import { employmentsData } from '@/functions/employments';
+import { employmentsData } from '@/database/employments';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

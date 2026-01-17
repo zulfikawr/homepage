@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Post } from '@/types/post';
-import { addPost, updatePost, deletePost } from '@/functions/posts';
+import { addPost, updatePost, deletePost } from '@/database/posts';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';

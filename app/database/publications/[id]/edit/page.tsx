@@ -1,4 +1,4 @@
-import { getPublicationById, getPublications } from '@/functions/publications';
+import { getPublicationById, getPublications } from '@/database/publications';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditPublicationPage from './content';

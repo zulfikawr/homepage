@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
-import { updateInterestsAndObjectives } from '@/functions/interestsAndObjectives';
+import { updateInterestsAndObjectives } from '@/database/interestsAndObjectives';
 import { toast } from '@/components/Toast';
 import Separator from '@/components/UI/Separator';
 

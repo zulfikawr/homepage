@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
-type SubscribeFunction<T> = (callback: (data: T) => void) => () => void;
+type Unsubscribe = () => void;
+type SubscribeFunction<T> = (
+  callback: (data: T) => void,
+) => Unsubscribe | Promise<Unsubscribe>;
 
 /**
- * Hook for subscribing to Firebase realtime data
- * @param subscribeFunction Function that sets up the Firebase listener and returns unsubscribe function
+ * Hook for subscribing to PocketBase or Firebase realtime data
+ * @param subscribeFunction Function that sets up the listener and returns unsubscribe function
  * @param initialData Optional initial data to use before the listener is set up
  * @param dependencies Array of dependencies that should trigger listener reset
  */
@@ -24,26 +27,36 @@ export function useRealtimeData<T>(
     setError(null);
 
     let isMounted = true;
-    let unsubscribe: (() => void) | null = null;
+    let unsubscribe: Unsubscribe | null = null;
 
-    try {
-      unsubscribe = subscribeFunction((newData) => {
+    const setupListener = async () => {
+      try {
+        const result = subscribeFunction((newData) => {
+          if (isMounted) {
+            setData(newData);
+            setLoading(false);
+          }
+        });
+
+        if (result instanceof Promise) {
+          unsubscribe = await result;
+        } else {
+          unsubscribe = result;
+        }
+      } catch (err) {
+        console.error('Error setting up realtime listener:', err);
         if (isMounted) {
-          setData(newData);
+          setError('Failed to connect to database');
           setLoading(false);
         }
-      });
-    } catch (err) {
-      console.error('Error setting up realtime listener:', err);
-      if (isMounted) {
-        setError('Failed to connect to database');
-        setLoading(false);
       }
-    }
+    };
+
+    setupListener();
 
     return () => {
       isMounted = false;
-      if (unsubscribe) {
+      if (unsubscribe && typeof unsubscribe === 'function') {
         unsubscribe();
       }
     };

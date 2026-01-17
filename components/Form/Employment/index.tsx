@@ -14,7 +14,7 @@ import {
   addEmployment,
   updateEmployment,
   deleteEmployment,
-} from '@/functions/employments';
+} from '@/database/employments';
 import { generateId } from '@/utilities/generateId';
 import { formatDateRange } from '@/utilities/formatDate';
 import { modal } from '@/components/Modal';

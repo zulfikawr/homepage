@@ -1,4 +1,4 @@
-import { postsData } from '@/functions/posts';
+import { postsData } from '@/database/posts';
 import PostCard from '@/components/Card/Post';
 import CardEmpty from '@/components/Card/Empty';
 import { sortByDate } from '@/utilities/sortByDate';

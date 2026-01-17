@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PublicationCard from '@/components/Card/Publication';
-import { publicationsData } from '@/functions/publications';
+import { publicationsData } from '@/database/publications';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

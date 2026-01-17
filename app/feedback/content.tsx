@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
 import Separator from '@/components/UI/Separator';
-import { database, ref, set } from '@/lib/firebase';
+import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { Card } from '@/components/Card';
 import { escapeHtml } from '@/utilities/escapeHtml';
@@ -40,32 +40,13 @@ export default function FeedbackContent() {
       const safeFeedback = escapeHtml(feedback.trim());
       const safeContact = escapeHtml(contact.trim());
 
-      const now = new Date();
-
-      const datePath = now.toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      });
-
-      const timePath = now
-        .toLocaleTimeString('en-GB', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })
-        .replace(/:/g, '-');
-
-      const feedbackRef = ref(database, `feedback/${datePath}/${timePath}`);
-
       const feedbackData = {
         feedback: safeFeedback,
         contact: safeContact || 'Anonymous',
-        timestamp: now.toISOString(),
+        timestamp: new Date().toISOString(),
       };
 
-      await set(feedbackRef, feedbackData);
+      await pb.collection('feedback').create(feedbackData);
 
       setFeedback('');
       setContact('');

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import PostCard from '@/components/Card/Post';
-import { postsData } from '@/functions/posts';
+import { postsData } from '@/database/posts';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

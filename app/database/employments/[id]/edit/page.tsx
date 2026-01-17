@@ -1,4 +1,4 @@
-import { getEmploymentById, getEmployments } from '@/functions/employments';
+import { getEmploymentById, getEmployments } from '@/database/employments';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditEmploymentPage from './content';

@@ -9,17 +9,12 @@ import {
   likeComment,
   deleteComment,
   updateComment,
-} from '@/functions/comments';
+} from '@/database/comments';
 import { Button, Icon } from '@/components/UI';
 import { Card } from '@/components/Card';
 import { Editor } from '@/components/Editor';
 import { useAuth } from '@/contexts/authContext';
-import {
-  auth,
-  GithubAuthProvider,
-  signInWithPopup,
-  signOut,
-} from '@/lib/firebase';
+import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import ImageWithFallback from '../ImageWithFallback';
 import { useRealtimeData } from '@/hooks/useRealtimeData';
@@ -36,12 +31,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const { user, loading: authLoading } = useAuth();
 
   const githubUsername =
-    user?.providerData?.find(
-      (p: { providerId: string }) => p.providerId === 'github.com',
-    )?.displayName ||
-    user?.displayName ||
-    user?.email ||
-    '';
+    (user as any)?.username || (user as any)?.name || user?.email || '';
 
   // Use the new realtime hook
   const { data: comments, loading: isLoading } = useRealtimeData<Comment[]>(
@@ -52,16 +42,15 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   // Set author from user profile
   useEffect(() => {
-    if (user?.displayName) {
-      setAuthor(user.displayName);
+    if ((user as any)?.name) {
+      setAuthor((user as any).name);
     }
   }, [user]);
 
   const handleGithubLogin = async () => {
     setIsAuthLoading(true);
     try {
-      const provider = new GithubAuthProvider();
-      await signInWithPopup(auth, provider);
+      await pb.collection('users').authWithOAuth2({ provider: 'github' });
       toast.show('Logged in with GitHub!');
     } catch (error) {
       console.error('GitHub login error:', error);
@@ -73,7 +62,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      pb.authStore.clear();
       setAuthor('');
       setContent('');
       toast.show('Logged out successfully!');
@@ -88,14 +77,13 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
     setIsSubmitting(true);
     try {
-      // Root comments path: posts/{postId}/comments
-      const rootCommentsPath = `posts/${postId}/comments`;
-
       await addComment(
-        rootCommentsPath,
-        githubUsername || author || user?.displayName || 'Anonymous',
+        postId,
+        githubUsername || author || (user as any)?.name || 'Anonymous',
         content,
-        user?.photoURL || undefined,
+        (user as any)?.avatar
+          ? pb.files.getUrl(user, (user as any).avatar)
+          : undefined,
       );
       setContent('');
       toast.show('Comment posted successfully!');
@@ -108,175 +96,160 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   };
 
   const handleSubmitReply = async (
-    path: string,
+    path: string, // This will be the parentId in PB
     replyAuthor: string,
     replyContent: string,
   ) => {
     try {
-      // The 'path' passed here is where the replies should go (comment.path), so we just use it directly
       await addComment(
-        path,
+        postId,
         replyAuthor,
         replyContent,
-        user?.photoURL || undefined,
+        (user as any)?.avatar
+          ? pb.files.getUrl(user, (user as any).avatar)
+          : undefined,
+        path, // parentId
       );
-      toast.show('Reply posted!');
+      toast.show('Reply posted successfully!');
     } catch (error) {
       console.error('Error submitting reply:', error);
       toast.show('Failed to submit reply', 'error');
     }
   };
 
-  const handleLike = async (path: string) => {
+  const handleLike = async (commentId: string) => {
     if (!user) {
-      toast.show('Please sign in with GitHub to like comments', 'info');
+      toast.show('Please login to like comments', 'error');
       return;
     }
-
     try {
-      // 'path' here is the path to the comment object itself.
-      await likeComment(path, user.uid);
+      await likeComment(commentId, user.id);
     } catch (error) {
       console.error('Error liking comment:', error);
-      toast.show('Failed to update like', 'error');
     }
   };
 
-  const handleDelete = async (path: string) => {
+  const handleDelete = async (commentId: string) => {
     try {
-      await deleteComment(path);
+      await deleteComment(commentId);
       toast.show('Comment deleted');
     } catch (error) {
       console.error('Error deleting comment:', error);
-      toast.show('Failed to delete comment', 'error');
     }
   };
 
-  const handleEdit = async (path: string, newContent: string) => {
+  const handleUpdate = async (commentId: string, newContent: string) => {
     try {
-      await updateComment(path, newContent);
+      await updateComment(commentId, newContent);
       toast.show('Comment updated');
     } catch (error) {
       console.error('Error updating comment:', error);
-      toast.show('Failed to update comment', 'error');
     }
   };
 
-  const handleReply = () => {
-    // This can be expanded to auto-fill reply with mention
-  };
-
   return (
-    <section className='mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-700'>
-      <div className='flex items-center justify-between mb-6'>
-        <h2 className='text-xl font-semibold tracking-wide text-neutral-900 dark:text-white'>
-          Comments
-        </h2>
-        <span className='text-sm text-neutral-500 dark:text-neutral-400'>
-          {comments?.length || 0}{' '}
-          {(comments?.length || 0) === 1 ? 'comment' : 'comments'}
-        </span>
+    <section className='mt-12 space-y-8'>
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-x-3'>
+          <h2 className='text-2xl font-bold dark:text-white'>Comments</h2>
+          <span className='rounded-full bg-neutral-100 px-2.5 py-0.5 text-sm font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'>
+            {comments.length}
+          </span>
+        </div>
       </div>
 
-      {/* Comments list */}
-      <div className='space-y-4 mb-12'>
-        {isLoading ? (
-          <p className='text-center text-sm text-neutral-500 dark:text-neutral-400 py-8'>
-            Loading comments...
-          </p>
-        ) : !comments || comments.length === 0 ? (
-          <div className='text-center text-sm text-neutral-500 dark:text-neutral-400 py-12'>
-            <p>No comments yet. Be the first to share your thoughts!</p>
-          </div>
-        ) : (
-          comments.map((comment) => (
-            <CommentCard
-              key={comment.id}
-              comment={comment}
-              onReply={handleReply}
-              onSubmitReply={handleSubmitReply}
-              onLike={handleLike}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              currentUserName={githubUsername}
-              currentUserAvatar={user?.photoURL}
-              currentUserId={user?.uid}
-              isAuthenticated={!!user}
-              isAdmin={user?.uid === process.env.NEXT_PUBLIC_ADMIN_UID}
-            />
-          ))
-        )}
-      </div>
-
-      {/* Comment form */}
-      {!authLoading && !user ? (
-        <Card className='mb-8' isPreview>
-          <div className='flex items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <h3 className='text-sm font-semibold tracking-wide text-neutral-900 dark:text-white'>
-              Login to comment
-            </h3>
-          </div>
-
-          <div className='flex items-center justify-center py-6'>
-            <Button
-              type='primary'
-              onClick={handleGithubLogin}
-              disabled={isAuthLoading}
-            >
-              <span className='flex items-center gap-2'>
-                <Icon name='github' className='size-5' />
-                {isAuthLoading ? 'Signing in...' : 'Sign in with GitHub'}
-              </span>
-            </Button>
-          </div>
-        </Card>
-      ) : (
-        <Card className='mb-8' isPreview>
-          <div className='flex items-center justify-between border-b border-neutral-200 px-4.5 py-2.5 dark:border-neutral-700'>
-            <div className='flex items-center'>
-              <h3 className='text-sm font-semibold tracking-wide text-neutral-900 dark:text-white'>
-                Add a comment
-              </h3>
-            </div>
-            <Button
-              type='ghost'
-              onClick={handleLogout}
-              className='p-1 h-auto text-xs'
-            >
-              Logout
-            </Button>
-          </div>
-
-          <div className='p-4.5 space-y-3'>
-            <div className='flex items-center gap-3'>
-              <ImageWithFallback
-                src={user?.photoURL || undefined}
-                alt={user?.displayName || 'User'}
-                width={24}
-                height={24}
-                type='square'
-              />
-              <span className='font-medium text-neutral-900 dark:text-white'>
-                {githubUsername}
-              </span>
+      {/* Comment Input */}
+      <Card className='p-4 sm:p-6'>
+        {user ? (
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-x-3'>
+                <ImageWithFallback
+                  src={
+                    (user as any)?.avatar
+                      ? pb.files.getUrl(user, (user as any).avatar)
+                      : ''
+                  }
+                  alt={githubUsername}
+                  width={32}
+                  height={32}
+                  className='rounded-full'
+                />
+                <span className='font-medium dark:text-white'>
+                  {githubUsername}
+                </span>
+              </div>
+              <Button onClick={handleLogout} className='text-xs' type='outline'>
+                Logout
+              </Button>
             </div>
             <Editor
-              content={content}
-              onUpdate={(newContent) => setContent(newContent)}
-              textareaClassName='min-h-[200px] md:min-h-[250px]'
+              value={content}
+              onChange={setContent}
+              placeholder='Write a comment...'
             />
             <div className='flex justify-end'>
               <Button
-                type='primary'
                 onClick={handleSubmitComment}
                 disabled={isSubmitting || !content.trim()}
+                type='primary'
               >
                 {isSubmitting ? 'Posting...' : 'Post Comment'}
               </Button>
             </div>
           </div>
-        </Card>
-      )}
+        ) : (
+          <div className='flex flex-col items-center justify-center py-8 text-center'>
+            <Icon
+              name='messageSquare'
+              className='mb-4 h-12 w-12 text-neutral-300'
+            />
+            <h3 className='mb-2 text-lg font-medium dark:text-white'>
+              Join the conversation
+            </h3>
+            <p className='mb-6 text-neutral-500 dark:text-neutral-400'>
+              Please login with GitHub to post a comment.
+            </p>
+            <Button
+              onClick={handleGithubLogin}
+              icon='github'
+              disabled={isAuthLoading}
+            >
+              {isAuthLoading ? 'Logging in...' : 'Login with GitHub'}
+            </Button>
+          </div>
+        )}
+      </Card>
+
+      {/* Comments List */}
+      <div className='space-y-6'>
+        {isLoading ? (
+          <div className='flex justify-center py-12'>
+            <div className='h-8 w-8 animate-spin rounded-full border-4 border-neutral-200 border-t-primary' />
+          </div>
+        ) : comments.length > 0 ? (
+          comments
+            .filter((c) => !c.parentId) // Only show top-level comments
+            .map((comment) => (
+              <CommentCard
+                key={comment.id}
+                comment={comment}
+                replies={comments.filter((c) => c.parentId === comment.id)}
+                onLike={() => handleLike(comment.id)}
+                onReply={(author, content) =>
+                  handleSubmitReply(comment.id, author, content)
+                }
+                onDelete={() => handleDelete(comment.id)}
+                onUpdate={(newContent) => handleUpdate(comment.id, newContent)}
+                currentUserId={user?.id}
+              />
+            ))
+        ) : (
+          <div className='py-12 text-center text-neutral-500 dark:text-neutral-400'>
+            No comments yet. Be the first to share your thoughts!
+          </div>
+        )}
+      </div>
     </section>
   );
 }

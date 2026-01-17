@@ -1,4 +1,4 @@
-import { getBookById, getBooks } from '@/functions/books';
+import { getBookById, getBooks } from '@/database/books';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditBookPage from './content';

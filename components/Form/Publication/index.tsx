@@ -9,7 +9,7 @@ import {
   addPublication,
   updatePublication,
   deletePublication,
-} from '@/functions/publications';
+} from '@/database/publications';
 import { modal } from '@/components/Modal';
 import { generateId } from '@/utilities/generateId';
 import Separator from '@/components/UI/Separator';

@@ -9,7 +9,7 @@ import {
   addCertificate,
   updateCertificate,
   deleteCertificate,
-} from '@/functions/certificates';
+} from '@/database/certificates';
 import { modal } from '@/components/Modal';
 import Separator from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';

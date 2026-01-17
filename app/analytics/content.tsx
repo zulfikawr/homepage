@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllPageViews } from '@/functions/analytics';
+import { getAllPageViews } from '@/database/analytics';
 import PageTitle from '@/components/PageTitle';
 import Link from 'next/link';
 import { useRealtimeData } from '@/hooks';

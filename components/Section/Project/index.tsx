@@ -1,5 +1,5 @@
 import { ProjectCard } from '@/components/Card/Project';
-import { projectsData } from '@/functions/projects';
+import { projectsData } from '@/database/projects';
 import { parseDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';

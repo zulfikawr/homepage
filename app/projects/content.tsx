@@ -1,7 +1,7 @@
 'use client';
 
 import { ProjectCard } from '@/components/Card/Project';
-import { projectsData } from '@/functions/projects';
+import { projectsData } from '@/database/projects';
 import { sortByDate } from '@/utilities/sortByDate';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';

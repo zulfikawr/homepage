@@ -2,13 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  auth,
-  signInWithEmailAndPassword,
-  signOut,
-  signInWithPopup,
-  GithubAuthProvider,
-} from '@/lib/firebase';
+import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
 import { Button } from '@/components/UI';
@@ -18,19 +12,36 @@ export function useAuthActions() {
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
+    setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      // Strategy: Try admin first as this is a personal site management dashboard
+      try {
+        console.log('Attempting admin login...');
+        await pb.admins.authWithPassword(email, password);
+        console.log('Admin login successful');
+      } catch (adminErr: any) {
+        console.log(
+          'Admin login failed, trying user login...',
+          adminErr.message,
+        );
+        // If admin fails, try regular user
+        await pb.collection('users').authWithPassword(email, password);
+        console.log('User login successful');
+      }
+
       router.push('/database');
+      router.refresh();
       toast.show('You are now logged in!');
     } catch (err: any) {
-      setError(err.message);
+      console.error('Login error:', err);
+      setError(err.message || 'Failed to authenticate.');
+      toast.show(err.message || 'Failed to authenticate.', 'error');
     }
   };
 
   const handleGithubLogin = async () => {
     try {
-      const provider = new GithubAuthProvider();
-      await signInWithPopup(auth, provider);
+      await pb.collection('users').authWithOAuth2({ provider: 'github' });
       router.push('/');
       toast.show('You are now logged in with GitHub!');
     } catch (err: any) {
@@ -47,10 +58,11 @@ export function useAuthActions() {
           <Button onClick={() => modal.close()}>Cancel</Button>
           <Button
             type='destructive'
-            onClick={async () => {
-              await signOut(auth);
+            onClick={() => {
+              pb.authStore.clear();
               modal.close();
               router.push('/');
+              router.refresh();
               toast.show('Logged out successfully!');
             }}
           >

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { PersonalInfo } from '@/types/personalInfo';
 import { Button, FormLabel, Input } from '@/components/UI';
-import { updatePersonalInfo } from '@/functions/personalInfo';
+import { updatePersonalInfo } from '@/database/personalInfo';
 import { toast } from '@/components/Toast';
 import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';

@@ -15,7 +15,7 @@ import {
 import { Editor } from '@/components/Editor';
 import { ProjectCard } from '@/components/Card/Project';
 import { toast } from '@/components/Toast';
-import { addProject, updateProject, deleteProject } from '@/functions/projects';
+import { addProject, updateProject, deleteProject } from '@/database/projects';
 import { generateId } from '@/utilities/generateId';
 import { formatDateRange } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';

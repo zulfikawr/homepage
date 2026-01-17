@@ -1,4 +1,4 @@
-import { getMovieById, getMovies } from '@/functions/movies';
+import { getMovieById, getMovies } from '@/database/movies';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditMoviePage from './content';

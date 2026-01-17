@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { Book } from '@/types/book';
 import { Button, Dropdown, FormLabel, Icon, Input } from '@/components/UI';
 import { BookCard } from '@/components/Card/Book';
-import { addBook, updateBook, deleteBook } from '@/functions/books';
+import { addBook, updateBook, deleteBook } from '@/database/books';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import { modal } from '@/components/Modal';
