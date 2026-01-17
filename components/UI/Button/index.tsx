@@ -4,7 +4,7 @@ import { Icon } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 
-type ButtonTypes =
+type ButtonVariant =
   | 'default'
   | 'primary'
   | 'destructive'
@@ -13,22 +13,19 @@ type ButtonTypes =
   | 'link';
 
 interface Props {
-  type?: ButtonTypes;
+  type?: ButtonVariant;
+  nativeType?: 'button' | 'submit' | 'reset';
   icon?: IconName;
   className?: string;
   children?: React.ReactNode;
-  [prop: string]: unknown;
 }
 
-type NativeAttrs = Omit<
-  React.ButtonHTMLAttributes<HTMLButtonElement>,
-  keyof Props
->;
-
-export type ButtonProps = Props & NativeAttrs;
+export type ButtonProps = Props &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
 
 const Button = ({
   type = 'default',
+  nativeType = 'button',
   icon,
   className,
   children,
@@ -55,7 +52,7 @@ const Button = ({
 
   return (
     <button
-      type='button'
+      type={nativeType}
       className={twMerge(
         'cursor-pointer focus:outline-none justify-center items-center text-sm lg:text-md tracking-wider flex select-none effect-pressing',
         getButtonClasses(),

@@ -2,6 +2,8 @@
 
 @plugin "@tailwindcss/typography";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --spacing-1: 3px;
   --spacing-2: 6px;
@@ -69,6 +71,7 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    @apply text-neutral-900 dark:text-neutral-100;
   }
 
   .background::before {

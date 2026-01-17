@@ -55,6 +55,50 @@ function mapRecordToProject(record: RecordModel): Project {
 }
 
 /**
+ * Helper to clean project data before sending to PocketBase.
+ * Handles file field vs text field URL issues.
+ */
+function cleanProjectData(data: any): any {
+  const clean: any = { ...data };
+
+  // Handle image field (file field vs image_url text field)
+  if (clean.image) {
+    if (clean.image.includes('/api/files/')) {
+      // PocketBase file URL -> extract filename for the file field
+      const parts = clean.image.split('/');
+      clean.image = parts[parts.length - 1].split('?')[0];
+    } else if (clean.image.startsWith('http')) {
+      // External URL -> move to image_url and clear image (file field)
+      clean.image_url = clean.image;
+      clean.image = null;
+    }
+    // If it's a local asset or already a filename, leave as is
+  }
+
+  // Handle favicon field
+  if (clean.favicon) {
+    if (clean.favicon.includes('/api/files/')) {
+      const parts = clean.favicon.split('/');
+      clean.favicon = parts[parts.length - 1].split('?')[0];
+    } else if (clean.favicon.startsWith('http')) {
+      clean.favicon_url = clean.favicon;
+      clean.favicon = null;
+    }
+  }
+
+  // Ensure tools is stringified if it's an array and we're sending JSON
+  // (PocketBase usually handles this but being explicit is safer)
+  if (Array.isArray(clean.tools)) {
+    clean.tools = JSON.stringify(clean.tools);
+  }
+
+  // Remove the ID from the body as it's passed in the URL
+  delete clean.id;
+
+  return clean;
+}
+
+/**
  * Fetches and subscribes to projects data.
  * @param callback Function to call when data changes.
  * @returns Unsubscribe function.
@@ -101,12 +145,14 @@ export async function addProject(
   data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const record = await pb.collection('projects').create<RecordModel>(data);
+    const payload = data instanceof FormData ? data : cleanProjectData(data);
+    const record = await pb.collection('projects').create<RecordModel>(payload);
     return { success: true, project: mapRecordToProject(record) };
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.error('PocketBase create error:', error.data || error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error.message || String(error),
     };
   }
 }
@@ -127,39 +173,31 @@ export async function updateProject(
       recordId = data.get('id') as string;
       updateData = data;
     } else {
-      const { id, ...rest } = data;
-      recordId = id;
+      recordId = data.id;
 
       // Basic slug-to-ID matching if ID is not standard
-      if (id.length !== 15) {
+      if (recordId.length !== 15) {
         try {
           const record = await pb
             .collection('projects')
-            .getFirstListItem(`slug="${id}"`);
+            .getFirstListItem(`slug="${recordId}"`);
           recordId = record.id;
         } catch {}
       }
 
-      const cleanData: Partial<Project> = { ...rest };
-
-      // Extract filename if it's a PocketBase URL
-      if (data.image && data.image.includes('/api/files/')) {
-        const parts = data.image.split('/');
-        const fileName = parts[parts.length - 1].split('?')[0];
-        cleanData.image = fileName;
-      }
-
-      updateData = cleanData;
+      updateData = cleanProjectData(data);
     }
 
     const record = await pb
       .collection('projects')
       .update<RecordModel>(recordId, updateData);
     return { success: true, project: mapRecordToProject(record) };
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.error('PocketBase update error details:', error.data);
+    console.error('PocketBase update error message:', error.message);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error.message || String(error),
     };
   }
 }

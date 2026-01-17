@@ -14,3 +14,4 @@ export { Tooltip } from './Tooltip';
 export { Switch } from './Switch';
 export { Slider } from './Slider';
 export { FileUpload } from './FileUpload';
+export { Dropzone } from './Dropzone';

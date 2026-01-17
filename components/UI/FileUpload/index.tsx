@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react';
-import { Button } from '@/components/UI';
+import React, { useRef, useState, useEffect } from 'react';
+import { Button, Icon } from '@/components/UI';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { RecordModel, ClientResponseError } from 'pocketbase';
 import { twMerge } from 'tailwind-merge';
+import Image from 'next/image';
 
 interface FileUploadProps {
   onUploadSuccess: (url: string) => void;
-  onFileSelect?: (file: File) => void;
+  onFileSelect?: (file: File | null) => void;
   collectionName: string;
   recordId?: string;
   fieldName: string;
@@ -26,12 +27,37 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     fileInputRef.current?.click();
+  };
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedFile(null);
+    if (onFileSelect) {
+      onFileSelect(null);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +67,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     // If no recordId, we are in 'selection mode' (likely a new record)
     if (!recordId) {
       if (onFileSelect) {
+        setSelectedFile(file);
         onFileSelect(file);
-        setSelectedFileName(file.name);
         toast.success(`Selected: ${file.name}`);
       } else {
         toast.error(
@@ -57,7 +83,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     formData.append(fieldName, file);
 
     try {
-      // Create a clean update request with ONLY the file to avoid 5000 char limit on content/excerpt
       const record = await pb
         .collection(collectionName)
         .update<RecordModel>(recordId, formData);
@@ -69,10 +94,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         return;
       }
 
-      // Force using collectionName instead of the internal ID for a "pretty" URL
       const fullUrl = pb.files.getUrl(record, fileName);
 
       onUploadSuccess(fullUrl);
+      setSelectedFile(file);
       toast.success('File uploaded successfully');
     } catch (error: unknown) {
       console.error('Upload error:', error);
@@ -80,7 +105,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
       if (error instanceof ClientResponseError) {
         message = error.message;
-        // Extract detailed validation errors if available
         const details = error.response.data;
         if (details && typeof details === 'object') {
           const errors = Object.entries(details)
@@ -105,7 +129,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   };
 
   return (
-    <div className={className}>
+    <div className={twMerge('flex items-center gap-3', className)}>
       <input
         type='file'
         ref={fileInputRef}
@@ -113,18 +137,33 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         className='hidden'
         accept={accept}
       />
+      
+      {previewUrl && (
+        <div className="relative group size-12 rounded-md overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0">
+          <Image 
+            src={previewUrl} 
+            alt="Preview" 
+            fill 
+            className="object-cover"
+          />
+          <button
+            onClick={handleRemove}
+            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+            title="Remove file"
+          >
+            <Icon name="trash" className="size-5 text-white" />
+          </button>
+        </div>
+      )}
+
       <Button
         type='default'
-        onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-          handleButtonClick(e)
-        }
+        onClick={handleButtonClick}
         disabled={isUploading}
-        icon={
-          isUploading ? undefined : selectedFileName ? 'checkCircle' : 'plus'
-        }
+        icon={isUploading ? undefined : previewUrl ? 'pencilSimple' : 'plus'}
         className={twMerge('h-9', isUploading && 'opacity-70')}
       >
-        {isUploading ? '...' : selectedFileName ? 'Selected' : 'Upload'}
+        {isUploading ? '...' : previewUrl ? 'Replace' : 'Upload'}
       </Button>
     </div>
   );

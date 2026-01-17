@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Project } from '@/types/project';
 import { modal } from '@/components/Modal';
 import {
@@ -13,6 +13,7 @@ import {
   Input,
   Textarea,
   FileUpload,
+  Dropzone,
 } from '@/components/UI';
 import { Editor } from '@/components/Editor';
 import { ProjectCard } from '@/components/Card/Project';
@@ -54,6 +55,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [newTool, setNewTool] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
+
+  // Debounced image for preview
+  const [displayImage, setDisplayImage] = useState(project.image);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDisplayImage(project.image);
+    }, 2000); // 2 second debounce for better UX
+    return () => clearTimeout(timer);
+  }, [project.image]);
 
   const initialDates = useMemo(() => {
     if (!projectToEdit?.dateString) {
@@ -157,7 +167,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const currentPreviewProject: Project = {
     id: project.id || 'preview',
     name: project.name || 'Project Name',
-    image: project.image || '/images/placeholder.png',
+    image: displayImage || '/images/placeholder.png',
     description: project.description || 'Project Description',
     tools: project.tools.length ? project.tools : ['Project Tools'],
     link: project.link || '#',
@@ -194,35 +204,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     handleChange('tools', updated);
   };
 
-  const togglePin = async () => {
+  const togglePin = () => {
     const newPinnedStatus = !project.pinned;
-
-    try {
-      const result = await updateProject({
-        ...project,
-        pinned: newPinnedStatus,
-      });
-
-      if (result.success) {
-        setProject((prevProject) => ({
-          ...prevProject,
-          pinned: newPinnedStatus,
-        }));
-        toast.show(
-          `Project ${newPinnedStatus ? 'pinned' : 'unpinned'} successfully!`,
-        );
-      } else {
-        throw new Error(result.error || 'Failed to update pinned status');
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.show(`Error: ${error.message}`);
-      } else {
-        toast.show(
-          'An unknown error occurred while updating the pinned status.',
-        );
-      }
-    }
+    setProject((prevProject) => ({
+      ...prevProject,
+      pinned: newPinnedStatus,
+    }));
   };
 
   const requiredProjectFields: {
@@ -246,6 +233,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   ];
 
   const validateForm = () => {
+    console.log('Validating form...', project);
     for (const field of requiredProjectFields) {
       const value =
         field.key === 'dateRange' ? null : project[field.key as keyof Project];
@@ -256,10 +244,12 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           : !value;
 
       if (isEmpty) {
+        console.log(`Validation failed for field: ${field.label}`);
         toast.error(`${field.label} is required.`);
         return false;
       }
     }
+    console.log('Validation passed');
     return true;
   };
 
@@ -267,6 +257,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('handleSubmit triggered');
 
     if (!validateForm()) return;
 
@@ -276,6 +267,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       dateString: formatDateRange(startDate, endDate, isPresent),
       readme: project.readme || '',
     };
+    console.log('Submitting project data:', projectData);
 
     try {
       let result;
@@ -311,6 +303,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             : 'Project added successfully!',
         );
         router.push('/database/projects');
+      } else {
+        console.error('Save failed:', result.error);
+        toast.error(result.error || 'Failed to save the project.');
       }
     } catch (error) {
       toast.error(
@@ -433,24 +428,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           </div>
           <div>
             <FormLabel htmlFor='image' required>
-              Image URL
+              Project Image
             </FormLabel>
-            <div className='flex gap-2'>
-              <Input
-                type='text'
-                value={project.image}
-                onChange={(e) => handleChange('image', e.target.value)}
-                placeholder='https://project-image-url.com'
-                required
-              />
-              <FileUpload
-                collectionName='projects'
-                recordId={projectToEdit?.id}
-                fieldName='image'
-                onUploadSuccess={(url) => handleChange('image', url)}
-                onFileSelect={setImageFile}
-              />
-            </div>
+            <Dropzone
+              value={project.image}
+              onUrlChange={(url) => handleChange('image', url)}
+              onFileSelect={setImageFile}
+            />
           </div>
           <div>
             <FormLabel htmlFor='description' required>
@@ -573,22 +557,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             />
           </div>
           <div>
-            <FormLabel htmlFor='faviconUrl'>Favicon URL</FormLabel>
-            <div className='flex gap-2'>
-              <Input
-                type='text'
-                value={project.favicon}
-                onChange={(e) => handleChange('favicon', e.target.value)}
-                placeholder='https://project-favicon.com'
-              />
-              <FileUpload
-                collectionName='projects'
-                recordId={projectToEdit?.id}
-                fieldName='favicon'
-                onUploadSuccess={(url) => handleChange('favicon', url)}
-                onFileSelect={setFaviconFile}
-              />
-            </div>
+            <FormLabel htmlFor='faviconUrl'>Favicon</FormLabel>
+            <Dropzone
+              value={project.favicon || ''}
+              onUrlChange={(url) => handleChange('favicon', url)}
+              onFileSelect={setFaviconFile}
+              placeholder='Paste favicon URL here...'
+              aspectRatio='square'
+            />
           </div>
           <div>
             <FormLabel htmlFor='readme'>Readme (optional)</FormLabel>
@@ -597,56 +573,93 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               onUpdate={(content) => handleChange('readme', content)}
             />
           </div>
-        </form>
-      </div>
 
-      <Separator margin='5' />
+          <Separator margin='5' />
 
-      {projectToEdit ? (
-        <div className='flex space-x-4'>
-          <Button
-            type='destructive'
-            icon='trash'
-            onClick={confirmDelete}
-            className='w-full'
-          >
-            Delete
-          </Button>
-
-          {projectToEdit &&
-            (project.pinned ? (
+          {projectToEdit ? (
+            <div className='flex space-x-4'>
               <Button
-                icon='pushPinSlash'
-                onClick={togglePin}
+                type='destructive'
+                icon='trash'
+                onClick={(e) => {
+                  e.preventDefault();
+                  confirmDelete();
+                }}
                 className='w-full'
               >
-                <span>Unpin</span>
+                Delete
               </Button>
-            ) : (
-              <Button icon='pushPin' onClick={togglePin} className='w-full'>
-                <span>Pin</span>
-              </Button>
-            ))}
 
-          <Button
-            type='primary'
-            icon='floppyDisk'
-            onClick={handleSubmit}
-            className='w-full'
-          >
-            Save
-          </Button>
-        </div>
-      ) : (
-        <Button
-          type='primary'
-          icon='plus'
-          onClick={handleSubmit}
-          className='w-full'
-        >
-          Add
-        </Button>
-      )}
+              {project.pinned ? (
+                <Button
+                  icon='pushPinSlash'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    togglePin();
+                  }}
+                  className='w-full'
+                >
+                  <span>Unpin</span>
+                </Button>
+              ) : (
+                <Button
+                  icon='pushPin'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    togglePin();
+                  }}
+                  className='w-full'
+                >
+                  <span>Pin</span>
+                </Button>
+              )}
+
+              <Button
+                type='primary'
+                nativeType='submit'
+                icon='floppyDisk'
+                className='w-full'
+              >
+                Save
+              </Button>
+            </div>
+          ) : (
+            <div className='flex space-x-4'>
+              {project.pinned ? (
+                <Button
+                  icon='pushPinSlash'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    togglePin();
+                  }}
+                  className='w-full'
+                >
+                  <span>Unpin</span>
+                </Button>
+              ) : (
+                <Button
+                  icon='pushPin'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    togglePin();
+                  }}
+                  className='w-full'
+                >
+                  <span>Pin</span>
+                </Button>
+              )}
+              <Button
+                type='primary'
+                nativeType='submit'
+                icon='plus'
+                className='w-full'
+              >
+                Add
+              </Button>
+            </div>
+          )}
+        </form>
+      </div>
     </>
   );
 };
