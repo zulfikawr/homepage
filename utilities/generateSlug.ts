@@ -1,4 +1,4 @@
-export const generateId = (text: string): string => {
+export const generateSlug = (text: string): string => {
   return text
     .toLowerCase()
     .trim()

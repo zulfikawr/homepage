@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { Post } from '@/types/post';
 import { addPost, updatePost, deletePost } from '@/database/posts';
 import { toast } from '@/components/Toast';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import {
   Button,
   FormLabel,
@@ -116,7 +116,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
     if (!validateForm()) return;
 
-    const slug = generateId(post.title || '');
+    const slug = generateSlug(post.title || '');
     const postData = {
       ...post,
       slug,

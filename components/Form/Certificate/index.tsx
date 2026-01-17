@@ -14,7 +14,7 @@ import { modal } from '@/components/Modal';
 import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
 import { formatDate } from '@/utilities/formatDate';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import { useRouter } from 'next/navigation';
 
 interface CertificateFormProps {
@@ -23,6 +23,7 @@ interface CertificateFormProps {
 
 const initialCertificateState: Certificate = {
   id: '',
+  slug: '',
   title: '',
   issuedBy: '',
   dateIssued: '',
@@ -53,6 +54,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
   const currentPreviewCertificate: Certificate = {
     id: certificate.id || 'preview',
+    slug: certificate.slug || 'preview',
     title: certificate.title || 'Certificate Title',
     issuedBy: certificate.issuedBy || 'Issued By',
     dateIssued: certificate.dateIssued || formatDate(selectedDate),
@@ -74,6 +76,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
   const requiredCertificateFields: { key: keyof Certificate; label: string }[] =
     [
       { key: 'title', label: 'Title' },
+      { key: 'slug', label: 'Slug' },
       { key: 'link', label: 'Link' },
       { key: 'issuedBy', label: 'Issued By' },
       { key: 'dateIssued', label: 'Date Issued' },
@@ -102,7 +105,8 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
     const certificateData = {
       ...certificate,
-      id: certificateToEdit?.id || generateId(certificate.title),
+      id: certificateToEdit?.id || '', // Let PocketBase generate ID if new
+      slug: certificate.slug || generateSlug(certificate.title),
       dateIssued: formatDate(selectedDate),
     };
 
@@ -213,8 +217,30 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             <Input
               type='text'
               value={certificate.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              onChange={(e) => {
+                const newTitle = e.target.value;
+                setCertificate((prev) => ({
+                  ...prev,
+                  title: newTitle,
+                  slug:
+                    prev.slug || !certificateToEdit
+                      ? generateSlug(newTitle)
+                      : prev.slug,
+                }));
+              }}
               placeholder='Professional Web Developer'
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='slug' required>
+              Slug
+            </FormLabel>
+            <Input
+              type='text'
+              value={certificate.slug}
+              onChange={(e) => handleChange('slug', e.target.value)}
+              placeholder='professional-web-developer'
               required
             />
           </div>

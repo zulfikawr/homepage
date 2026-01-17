@@ -16,7 +16,7 @@ import {
   updateEmployment,
   deleteEmployment,
 } from '@/database/employments';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import { formatDateRange } from '@/utilities/formatDate';
 import { modal } from '@/components/Modal';
 import { Separator } from '@/components/UI/Separator';
@@ -29,6 +29,7 @@ interface EmploymentFormProps {
 
 const initialEmploymentState: Employment = {
   id: '',
+  slug: '',
   organization: '',
   organizationIndustry: '',
   jobTitle: '',
@@ -73,6 +74,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
   const currentPreviewEmployment: Employment = {
     id: employment.id || 'preview',
+    slug: employment.slug || 'preview',
     organization: employment.organization || 'Organization Name',
     organizationIndustry:
       employment.organizationIndustry || 'Organization Industry',
@@ -142,7 +144,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
     const employmentData = {
       ...employment,
-      id: employmentToEdit?.id || generateId(employment.organization),
+      id: employmentToEdit?.id || generateSlug(employment.organization),
       dateString: formatDateRange(startDate, endDate, isPresent),
     };
 

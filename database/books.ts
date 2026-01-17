@@ -1,5 +1,22 @@
 import pb from '@/lib/pocketbase';
 import { Book } from '@/types/book';
+import { RecordModel } from 'pocketbase';
+
+/**
+ * Maps a PocketBase record to a Book object.
+ */
+function mapRecordToBook(record: RecordModel): Book {
+  return {
+    id: record.id,
+    slug: record.slug,
+    type: record.type,
+    title: record.title,
+    author: record.author,
+    imageURL: record.imageURL,
+    link: record.link,
+    dateAdded: record.dateAdded,
+  };
+}
 
 /**
  * Fetches and subscribes to books data.
@@ -9,10 +26,10 @@ import { Book } from '@/types/book';
 export function booksData(callback: (data: Book[]) => void) {
   const fetchAll = async () => {
     try {
-      const data = await pb
+      const records = await pb
         .collection('books')
-        .getFullList<Book>({ sort: '-created' });
-      callback(data);
+        .getFullList<RecordModel>({ sort: '-created' });
+      callback(records.map(mapRecordToBook));
     } catch {
       callback([]);
     }
@@ -31,7 +48,10 @@ export function booksData(callback: (data: Book[]) => void) {
  */
 export async function getBooks(): Promise<Book[]> {
   try {
-    return await pb.collection('books').getFullList<Book>({ sort: '-created' });
+    const records = await pb
+      .collection('books')
+      .getFullList<RecordModel>({ sort: '-created' });
+    return records.map(mapRecordToBook);
   } catch {
     return [];
   }
@@ -46,8 +66,8 @@ export async function addBook(
   data: Omit<Book, 'id'>,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   try {
-    const record = await pb.collection('books').create<Book>(data);
-    return { success: true, book: record };
+    const record = await pb.collection('books').create<RecordModel>(data);
+    return { success: true, book: mapRecordToBook(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -67,14 +87,22 @@ export async function updateBook(
   try {
     const { id, ...rest } = data;
     let recordId = id;
-    if (id.length !== 15) {
-      const record = await pb
-        .collection('books')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+
+    if (recordId.length !== 15) {
+      try {
+        const record = await pb
+          .collection('books')
+          .getFirstListItem(`slug="${recordId}"`);
+        recordId = record.id;
+      } catch {
+        // Ignore if not found by slug
+      }
     }
-    const record = await pb.collection('books').update<Book>(recordId, rest);
-    return { success: true, book: record };
+
+    const record = await pb
+      .collection('books')
+      .update<RecordModel>(recordId, rest);
+    return { success: true, book: mapRecordToBook(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -117,9 +145,24 @@ export async function deleteBook(
 export async function getBookById(id: string): Promise<Book | null> {
   try {
     if (id.length === 15) {
-      return await pb.collection('books').getOne<Book>(id);
+      try {
+        const record = await pb.collection('books').getOne<RecordModel>(id);
+        if (record) return mapRecordToBook(record);
+      } catch {
+        // Ignored
+      }
     }
-    return await pb.collection('books').getFirstListItem<Book>(`slug="${id}"`);
+
+    const records = await pb.collection('books').getFullList<RecordModel>({
+      filter: `slug = "${id}"`,
+      requestKey: null,
+    });
+
+    if (records.length > 0) {
+      return mapRecordToBook(records[0]);
+    }
+
+    return null;
   } catch {
     return null;
   }

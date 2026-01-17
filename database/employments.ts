@@ -3,6 +3,27 @@ import { Employment } from '@/types/employment';
 import { RecordModel } from 'pocketbase';
 
 /**
+ * Maps a PocketBase record to an Employment object.
+ */
+function mapRecordToEmployment(record: RecordModel): Employment {
+  return {
+    id: record.id,
+    slug: record.slug,
+    organization: record.organization,
+    jobTitle: record.jobTitle,
+    dateString: record.dateString,
+    jobType: record.jobType,
+    orgLogoSrc: record.orgLogoSrc,
+    organizationIndustry: record.organizationIndustry,
+    organizationLocation: record.organizationLocation,
+    responsibilities:
+      typeof record.responsibilities === 'string'
+        ? JSON.parse(record.responsibilities)
+        : record.responsibilities,
+  };
+}
+
+/**
  * Fetches and subscribes to employments data.
  * @param callback Function to call when data changes.
  * @returns Unsubscribe function.
@@ -13,21 +34,7 @@ export function employmentsData(callback: (data: Employment[]) => void) {
       const records = await pb
         .collection('employments')
         .getFullList<RecordModel>({ sort: '-created' });
-      const data: Employment[] = records.map((record) => ({
-        id: record.id,
-        organization: record.organization,
-        jobTitle: record.jobTitle,
-        dateString: record.dateString,
-        jobType: record.jobType,
-        orgLogoSrc: record.orgLogoSrc,
-        organizationIndustry: record.organizationIndustry,
-        organizationLocation: record.organizationLocation,
-        responsibilities:
-          typeof record.responsibilities === 'string'
-            ? JSON.parse(record.responsibilities)
-            : record.responsibilities,
-      }));
-      callback(data);
+      callback(records.map(mapRecordToEmployment));
     } catch {
       callback([]);
     }
@@ -49,20 +56,7 @@ export async function getEmployments(): Promise<Employment[]> {
     const records = await pb
       .collection('employments')
       .getFullList<RecordModel>({ sort: '-created' });
-    return records.map((record) => ({
-      id: record.id,
-      organization: record.organization,
-      jobTitle: record.jobTitle,
-      dateString: record.dateString,
-      jobType: record.jobType,
-      orgLogoSrc: record.orgLogoSrc,
-      organizationIndustry: record.organizationIndustry,
-      organizationLocation: record.organizationLocation,
-      responsibilities:
-        typeof record.responsibilities === 'string'
-          ? JSON.parse(record.responsibilities)
-          : record.responsibilities,
-    }));
+    return records.map(mapRecordToEmployment);
   } catch {
     return [];
   }
@@ -77,8 +71,8 @@ export async function addEmployment(
   data: Omit<Employment, 'id'>,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
   try {
-    const record = await pb.collection('employments').create<Employment>(data);
-    return { success: true, employment: record };
+    const record = await pb.collection('employments').create<RecordModel>(data);
+    return { success: true, employment: mapRecordToEmployment(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -98,20 +92,22 @@ export async function updateEmployment(
   try {
     const { id, ...rest } = data;
     let recordId = id;
-    if (id.length !== 15) {
+
+    if (recordId.length !== 15) {
       try {
         const record = await pb
           .collection('employments')
-          .getFirstListItem(`slug="${id}"`);
+          .getFirstListItem(`slug="${recordId}"`);
         recordId = record.id;
       } catch {
-        // ID might be correct ID but not 15 chars (unlikely in PB)
+        // Ignore
       }
     }
+
     const record = await pb
       .collection('employments')
-      .update<Employment>(recordId, rest);
-    return { success: true, employment: record };
+      .update<RecordModel>(recordId, rest);
+    return { success: true, employment: mapRecordToEmployment(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -131,12 +127,10 @@ export async function deleteEmployment(
   try {
     let recordId = id;
     if (id.length !== 15) {
-      try {
-        const record = await pb
-          .collection('employments')
-          .getFirstListItem(`slug="${id}"`);
-        recordId = record.id;
-      } catch {}
+      const record = await pb
+        .collection('employments')
+        .getFirstListItem(`slug="${id}"`);
+      recordId = record.id;
     }
     await pb.collection('employments').delete(recordId);
     return { success: true };
@@ -157,28 +151,29 @@ export async function getEmploymentById(
   id: string,
 ): Promise<Employment | null> {
   try {
-    let record: RecordModel;
     if (id.length === 15) {
-      record = await pb.collection('employments').getOne<RecordModel>(id);
-    } else {
-      record = await pb
-        .collection('employments')
-        .getFirstListItem<RecordModel>(`slug="${id}"`);
+      try {
+        const record = await pb
+          .collection('employments')
+          .getOne<RecordModel>(id);
+        if (record) return mapRecordToEmployment(record);
+      } catch {
+        // Ignored
+      }
     }
-    return {
-      id: record.id,
-      organization: record.organization,
-      jobTitle: record.jobTitle,
-      dateString: record.dateString,
-      jobType: record.jobType,
-      orgLogoSrc: record.orgLogoSrc,
-      organizationIndustry: record.organizationIndustry,
-      organizationLocation: record.organizationLocation,
-      responsibilities:
-        typeof record.responsibilities === 'string'
-          ? JSON.parse(record.responsibilities)
-          : record.responsibilities,
-    };
+
+    const records = await pb
+      .collection('employments')
+      .getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+        requestKey: null,
+      });
+
+    if (records.length > 0) {
+      return mapRecordToEmployment(records[0]);
+    }
+
+    return null;
   } catch {
     return null;
   }

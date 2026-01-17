@@ -1,5 +1,22 @@
 import pb from '@/lib/pocketbase';
 import { Movie } from '@/types/movie';
+import { RecordModel } from 'pocketbase';
+
+/**
+ * Maps a PocketBase record to a Movie object.
+ */
+function mapRecordToMovie(record: RecordModel): Movie {
+  return {
+    id: record.id,
+    slug: record.slug,
+    title: record.title,
+    releaseDate: record.releaseDate,
+    imdbId: record.imdbId,
+    posterUrl: record.posterUrl,
+    imdbLink: record.imdbLink,
+    rating: record.rating,
+  };
+}
 
 /**
  * Fetches and subscribes to movies data.
@@ -9,10 +26,10 @@ import { Movie } from '@/types/movie';
 export function moviesData(callback: (data: Movie[]) => void) {
   const fetchAll = async () => {
     try {
-      const data = await pb
+      const records = await pb
         .collection('movies')
-        .getFullList<Movie>({ sort: '-created' });
-      callback(data);
+        .getFullList<RecordModel>({ sort: '-created' });
+      callback(records.map(mapRecordToMovie));
     } catch {
       callback([]);
     }
@@ -31,9 +48,10 @@ export function moviesData(callback: (data: Movie[]) => void) {
  */
 export async function getMovies(): Promise<Movie[]> {
   try {
-    return await pb
+    const records = await pb
       .collection('movies')
-      .getFullList<Movie>({ sort: '-created' });
+      .getFullList<RecordModel>({ sort: '-created' });
+    return records.map(mapRecordToMovie);
   } catch {
     return [];
   }
@@ -48,8 +66,8 @@ export async function addMovie(
   data: Omit<Movie, 'id'>,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
   try {
-    const record = await pb.collection('movies').create<Movie>(data);
-    return { success: true, movie: record };
+    const record = await pb.collection('movies').create<RecordModel>(data);
+    return { success: true, movie: mapRecordToMovie(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -69,14 +87,22 @@ export async function updateMovie(
   try {
     const { id, ...rest } = data;
     let recordId = id;
-    if (id.length !== 15) {
-      const record = await pb
-        .collection('movies')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+
+    if (recordId.length !== 15) {
+      try {
+        const record = await pb
+          .collection('movies')
+          .getFirstListItem(`slug="${recordId}"`);
+        recordId = record.id;
+      } catch {
+        // Ignore
+      }
     }
-    const record = await pb.collection('movies').update<Movie>(recordId, rest);
-    return { success: true, movie: record };
+
+    const record = await pb
+      .collection('movies')
+      .update<RecordModel>(recordId, rest);
+    return { success: true, movie: mapRecordToMovie(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -119,11 +145,24 @@ export async function deleteMovie(
 export async function getMovieById(id: string): Promise<Movie | null> {
   try {
     if (id.length === 15) {
-      return await pb.collection('movies').getOne<Movie>(id);
+      try {
+        const record = await pb.collection('movies').getOne<RecordModel>(id);
+        if (record) return mapRecordToMovie(record);
+      } catch {
+        // Ignored
+      }
     }
-    return await pb
-      .collection('movies')
-      .getFirstListItem<Movie>(`slug="${id}"`);
+
+    const records = await pb.collection('movies').getFullList<RecordModel>({
+      filter: `slug = "${id}"`,
+      requestKey: null,
+    });
+
+    if (records.length > 0) {
+      return mapRecordToMovie(records[0]);
+    }
+
+    return null;
   } catch {
     return null;
   }

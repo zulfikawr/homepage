@@ -13,7 +13,7 @@ import {
 import { BookCard } from '@/components/Card/Book';
 import { addBook, updateBook, deleteBook } from '@/database/books';
 import { toast } from '@/components/Toast';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import { modal } from '@/components/Modal';
 import { Separator } from '@/components/UI/Separator';
 import { formatDate } from '@/utilities/formatDate';
@@ -26,6 +26,7 @@ interface BookFormProps {
 
 const initialBookState: Book = {
   id: '',
+  slug: '',
   type: 'toRead',
   title: '',
   author: '',
@@ -48,6 +49,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
 
   const currentPreviewBook: Book = {
     id: book.id || 'preview',
+    slug: book.slug || 'preview',
     type: book.type || 'currentlyReading',
     title: book.title || 'Book Title',
     author: book.author || 'Book Author',
@@ -96,7 +98,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
 
     const bookData = {
       ...book,
-      id: bookToEdit?.id || generateId(book.title),
+      id: bookToEdit?.id || generateSlug(book.title),
       dateAdded: formatDate(selectedDate),
     };
 

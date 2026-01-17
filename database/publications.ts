@@ -3,6 +3,29 @@ import { Publication } from '@/types/publication';
 import { RecordModel } from 'pocketbase';
 
 /**
+ * Maps a PocketBase record to a Publication object.
+ */
+function mapRecordToPublication(record: RecordModel): Publication {
+  return {
+    id: record.id,
+    slug: record.slug,
+    title: record.title,
+    publisher: record.publisher,
+    link: record.link,
+    openAccess: record.openAccess,
+    excerpt: record.excerpt,
+    authors:
+      typeof record.authors === 'string'
+        ? JSON.parse(record.authors)
+        : record.authors,
+    keywords:
+      typeof record.keywords === 'string'
+        ? JSON.parse(record.keywords)
+        : record.keywords,
+  };
+}
+
+/**
  * Fetches and subscribes to publications data.
  * @param callback Function to call when data changes.
  * @returns Unsubscribe function.
@@ -13,23 +36,7 @@ export function publicationsData(callback: (data: Publication[]) => void) {
       const records = await pb
         .collection('publications')
         .getFullList<RecordModel>({ sort: '-created' });
-      const data: Publication[] = records.map((record) => ({
-        id: record.id,
-        title: record.title,
-        publisher: record.publisher,
-        link: record.link,
-        openAccess: record.openAccess,
-        excerpt: record.excerpt,
-        authors:
-          typeof record.authors === 'string'
-            ? JSON.parse(record.authors)
-            : record.authors,
-        keywords:
-          typeof record.keywords === 'string'
-            ? JSON.parse(record.keywords)
-            : record.keywords,
-      }));
-      callback(data);
+      callback(records.map(mapRecordToPublication));
     } catch {
       callback([]);
     }
@@ -49,22 +56,7 @@ export async function getPublications(): Promise<Publication[]> {
     const records = await pb
       .collection('publications')
       .getFullList<RecordModel>({ sort: '-created' });
-    return records.map((record) => ({
-      id: record.id,
-      title: record.title,
-      publisher: record.publisher,
-      link: record.link,
-      openAccess: record.openAccess,
-      excerpt: record.excerpt,
-      authors:
-        typeof record.authors === 'string'
-          ? JSON.parse(record.authors)
-          : record.authors,
-      keywords:
-        typeof record.keywords === 'string'
-          ? JSON.parse(record.keywords)
-          : record.keywords,
-    }));
+    return records.map(mapRecordToPublication);
   } catch {
     return [];
   }
@@ -81,8 +73,8 @@ export async function addPublication(
   try {
     const record = await pb
       .collection('publications')
-      .create<Publication>(data);
-    return { success: true, publication: record };
+      .create<RecordModel>(data);
+    return { success: true, publication: mapRecordToPublication(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -102,18 +94,22 @@ export async function updatePublication(
   try {
     const { id, ...rest } = data;
     let recordId = id;
-    if (id.length !== 15) {
+
+    if (recordId.length !== 15) {
       try {
         const record = await pb
           .collection('publications')
-          .getFirstListItem(`slug="${id}"`);
+          .getFirstListItem(`slug="${recordId}"`);
         recordId = record.id;
-      } catch {}
+      } catch {
+        // Ignore
+      }
     }
+
     const record = await pb
       .collection('publications')
-      .update<Publication>(recordId, rest);
-    return { success: true, publication: record };
+      .update<RecordModel>(recordId, rest);
+    return { success: true, publication: mapRecordToPublication(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -157,30 +153,29 @@ export async function getPublicationById(
   id: string,
 ): Promise<Publication | null> {
   try {
-    let record: RecordModel;
     if (id.length === 15) {
-      record = await pb.collection('publications').getOne<RecordModel>(id);
-    } else {
-      record = await pb
-        .collection('publications')
-        .getFirstListItem<RecordModel>(`slug="${id}"`);
+      try {
+        const record = await pb
+          .collection('publications')
+          .getOne<RecordModel>(id);
+        if (record) return mapRecordToPublication(record);
+      } catch {
+        // Ignored
+      }
     }
-    return {
-      id: record.id,
-      title: record.title,
-      publisher: record.publisher,
-      link: record.link,
-      openAccess: record.openAccess,
-      excerpt: record.excerpt,
-      authors:
-        typeof record.authors === 'string'
-          ? JSON.parse(record.authors)
-          : record.authors,
-      keywords:
-        typeof record.keywords === 'string'
-          ? JSON.parse(record.keywords)
-          : record.keywords,
-    };
+
+    const records = await pb
+      .collection('publications')
+      .getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+        requestKey: null,
+      });
+
+    if (records.length > 0) {
+      return mapRecordToPublication(records[0]);
+    }
+
+    return null;
   } catch {
     return null;
   }

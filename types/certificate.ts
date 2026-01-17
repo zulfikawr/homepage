@@ -1,5 +1,6 @@
 export interface Certificate {
   id: string;
+  slug: string;
   title: string;
   issuedBy: string;
   dateIssued: string;

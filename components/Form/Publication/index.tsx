@@ -11,7 +11,7 @@ import {
   deletePublication,
 } from '@/database/publications';
 import { modal } from '@/components/Modal';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import { Separator } from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
 
@@ -21,6 +21,7 @@ interface PublicationFormProps {
 
 const initialPublicationState: Publication = {
   id: '',
+  slug: '',
   title: '',
   authors: [],
   publisher: '',
@@ -42,6 +43,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
 
   const currentPreviewPublication: Publication = {
     id: publication.id || 'preview',
+    slug: publication.slug || 'preview',
     title: publication.title || 'Publication Title',
     authors: publication.authors.length ? publication.authors : ['Author Name'],
     publisher: publication.publisher || 'Publisher Name',
@@ -138,7 +140,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
 
     const newPublication = {
       ...publication,
-      id: publicationToEdit?.id || generateId(publication.title),
+      id: publicationToEdit?.id || generateSlug(publication.title),
     };
 
     try {

@@ -21,8 +21,9 @@ export default function CertificateCard({
   const handleCardClick = () => {
     if (isInForm) return;
 
+    const identifier = certificate.slug || certificate.id;
     if (openForm) {
-      router.push(`/database/certs/${certificate.id}/edit`);
+      router.push(`/database/certs/${identifier}/edit`);
     } else {
       openLink(certificate.link);
     }

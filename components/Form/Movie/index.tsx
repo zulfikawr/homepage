@@ -12,7 +12,7 @@ import { modal } from '@/components/Modal';
 import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
 import { formatDate } from '@/utilities/formatDate';
-import { generateId } from '@/utilities/generateId';
+import { generateSlug } from '@/utilities/generateSlug';
 import { Icon } from '@/components/UI/Icon';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/Card';
@@ -23,6 +23,7 @@ interface MovieFormProps {
 
 const initialMovieState: Movie = {
   id: '',
+  slug: '',
   title: '',
   releaseDate: '',
   imdbId: undefined,
@@ -45,6 +46,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
 
   const currentPreview: Movie = {
     id: movie.id || 'preview',
+    slug: movie.slug || 'preview',
     title: movie.title || 'Movie Title',
     releaseDate: movie.releaseDate || formatDate(selectedDate),
     imdbId: movie.imdbId,
@@ -150,7 +152,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
 
     const movieData = {
       ...movie,
-      id: movieToEdit?.id || generateId(movie.title),
+      id: movieToEdit?.id || generateSlug(movie.title),
       releaseDate: formatDate(selectedDate),
     } as Movie;
 

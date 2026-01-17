@@ -1,5 +1,6 @@
 export interface Employment {
   id: string;
+  slug: string;
   organization: string;
   organizationIndustry?: string;
   jobTitle: string;

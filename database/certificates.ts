@@ -49,6 +49,7 @@ function mapRecordToCertificate(record: RecordModel): Certificate {
 
   return {
     id: record.id,
+    slug: record.slug,
     title: record.title,
     issuedBy: record.issuedBy,
     dateIssued: record.dateIssued,
@@ -137,6 +138,18 @@ export async function updateCertificate(
       const { id, ...rest } = data;
       recordId = id;
 
+      // Basic slug-to-ID matching if ID is not standard
+      if (recordId.length !== 15) {
+        try {
+          const record = await pb
+            .collection('certificates')
+            .getFirstListItem(`slug="${recordId}"`);
+          recordId = record.id;
+        } catch {
+          // Ignore error if not found by slug
+        }
+      }
+
       const cleanData: Record<string, unknown> = { ...rest };
 
       // Extract filename if it's a PocketBase URL
@@ -205,15 +218,29 @@ export async function getCertificateById(
   id: string,
 ): Promise<Certificate | null> {
   try {
-    let record: RecordModel;
     if (id.length === 15) {
-      record = await pb.collection('certificates').getOne<RecordModel>(id);
-    } else {
-      record = await pb
-        .collection('certificates')
-        .getFirstListItem<RecordModel>(`slug="${id}"`);
+      try {
+        const record = await pb
+          .collection('certificates')
+          .getOne<RecordModel>(id);
+        if (record) return mapRecordToCertificate(record);
+      } catch {
+        // Ignored
+      }
     }
-    return mapRecordToCertificate(record);
+
+    const records = await pb
+      .collection('certificates')
+      .getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+        requestKey: null,
+      });
+
+    if (records.length > 0) {
+      return mapRecordToCertificate(records[0]);
+    }
+
+    return null;
   } catch {
     return null;
   }
