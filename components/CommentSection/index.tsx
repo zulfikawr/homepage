@@ -85,7 +85,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
         content,
         user?.avatar
-          ? pb.files.getUrl(
+          ? pb.files.getURL(
               user as unknown as RecordModel,
               user.avatar as string,
             )
@@ -111,7 +111,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         replyAuthor,
         replyContent,
         user?.avatar
-          ? pb.files.getUrl(
+          ? pb.files.getURL(
               user as unknown as RecordModel,
               user.avatar as string,
             )
@@ -175,7 +175,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                 <ImageWithFallback
                   src={
                     user?.avatar
-                      ? pb.files.getUrl(
+                      ? pb.files.getURL(
                           user as unknown as RecordModel,
                           user.avatar as string,
                         )

@@ -18,7 +18,7 @@ function mapRecordToProject(record: RecordModel): Project {
       // local public asset
     } else {
       // PocketBase filename
-      image = pb.files.getUrl(
+      image = pb.files.getURL(
         { collectionName: 'projects', id: record.id } as unknown as RecordModel,
         image,
       );
@@ -29,7 +29,7 @@ function mapRecordToProject(record: RecordModel): Project {
   let favicon =
     (record.favicon as string) || (record.favicon_url as string) || '';
   if (favicon && !favicon.startsWith('http') && !favicon.startsWith('/')) {
-    favicon = pb.files.getUrl(
+    favicon = pb.files.getURL(
       { collectionName: 'projects', id: record.id } as unknown as RecordModel,
       favicon,
     );

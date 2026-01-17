@@ -94,7 +94,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         return;
       }
 
-      const fullUrl = pb.files.getUrl(record, fileName);
+      const fullUrl = pb.files.getURL(record, fileName);
 
       onUploadSuccess(fullUrl);
       setSelectedFile(file);

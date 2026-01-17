@@ -33,7 +33,7 @@ function mapRecordToPersonalInfo(record: RecordModel): PersonalInfo {
     } else {
       // It's a filename from PocketBase (e.g., image_7a2b.png)
       // Force using COLLECTION name instead of record's internal collectionId
-      avatarUrl = pb.files.getUrl(
+      avatarUrl = pb.files.getURL(
         { collectionName: COLLECTION, id: record.id } as unknown as RecordModel,
         fileName,
       );

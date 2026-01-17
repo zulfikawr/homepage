@@ -15,7 +15,7 @@ function mapRecordToPost(record: RecordModel): Post {
       // local asset
     } else {
       // PocketBase filename
-      image = pb.files.getUrl(
+      image = pb.files.getURL(
         { collectionName: 'posts', id: record.id } as unknown as RecordModel,
         image,
       );
@@ -31,7 +31,7 @@ function mapRecordToPost(record: RecordModel): Post {
       // local asset
     } else {
       // PocketBase filename
-      audio = pb.files.getUrl(
+      audio = pb.files.getURL(
         { collectionName: 'posts', id: record.id } as unknown as RecordModel,
         audio,
       );

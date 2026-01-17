@@ -17,23 +17,33 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
 import { Card } from '@/components/Card';
 
-const apiCache = {
+const apiCache: {
+  currentTrack: SpotifyTrack | null;
+  isPlaying: boolean;
+  lastPlayedAt: string | null;
+  isAuthorized: boolean;
+} = {
   currentTrack: null,
-  recentlyPlayed: null,
-  lastUpdated: 0,
+  isPlaying: false,
+  lastPlayedAt: null,
+  isAuthorized: true,
 };
 
 const CurrentlyListening = () => {
-  const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
+    apiCache.currentTrack,
+  );
+  const [isPlaying, setIsPlaying] = useState(apiCache.isPlaying);
   const [error] = useState<string | null>(null);
-  const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
-  const [isAuthorized, setIsAuthorized] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(
+    apiCache.lastPlayedAt,
+  );
+  const [isAuthorized, setIsAuthorized] = useState(apiCache.isAuthorized);
+  const [isLoading, setIsLoading] = useState(!apiCache.currentTrack);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [progress, setProgress] = useState(0);
   const { isAdmin } = useAuth();
-  const prevTrackId = useRef<string | null>(null);
+  const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateTime = useRef<number>(0);
   const retryDelay = useRef(1000);
@@ -49,6 +59,14 @@ const CurrentlyListening = () => {
       }
     };
   }, []);
+
+  // Sync state changes to cache
+  useEffect(() => {
+    apiCache.currentTrack = currentTrack;
+    apiCache.isPlaying = isPlaying;
+    apiCache.lastPlayedAt = lastPlayedAt;
+    apiCache.isAuthorized = isAuthorized;
+  }, [currentTrack, isPlaying, lastPlayedAt, isAuthorized]);
 
   // Handle progress updates
   const updateProgress = (newProgress: number) => {
@@ -69,7 +87,9 @@ const CurrentlyListening = () => {
         if (Date.now() - lastUpdateTime.current > 2000) {
           setProgress((prev) => {
             const newProgress = prev + 1000;
-            return newProgress >= currentTrack.duration_ms ? 0 : newProgress;
+            return newProgress >= (currentTrack?.duration_ms || 0)
+              ? 0
+              : newProgress;
           });
         }
       }, 1000);
@@ -92,11 +112,18 @@ const CurrentlyListening = () => {
       const currentResponse = await getCurrentTrack();
 
       if (!currentResponse) {
-        setIsAuthorized(false);
+        // Only set unauthorized if we don't have a cached track,
+        // to prevent flickering during transient navigation issues
+        if (!apiCache.currentTrack) {
+          setIsAuthorized(false);
+        }
         setIsLoading(false);
         setShowSkeleton(false);
         return;
       }
+
+      // If we got a response, we are authorized
+      setIsAuthorized(true);
 
       if (currentResponse.status === 429) {
         const retryAfter = currentResponse.headers.get('Retry-After') || '1';
@@ -115,8 +142,6 @@ const CurrentlyListening = () => {
 
       if (currentResponse.status === 200) {
         const data = await currentResponse.json();
-        apiCache.currentTrack = data;
-        apiCache.lastUpdated = Date.now();
 
         if (data.is_playing && !data.item) {
           // Ad playing - we'll try recently played instead
@@ -158,10 +183,13 @@ const CurrentlyListening = () => {
             setIsPlaying(false);
             updateProgress(0);
 
-            const lastPlayedAt = formatDate(recentlyPlayed.items[0].played_at, {
-              includeDay: true,
-            });
-            setLastPlayedAt(lastPlayedAt);
+            const lastPlayedAtDate = formatDate(
+              recentlyPlayed.items[0].played_at,
+              {
+                includeDay: true,
+              },
+            );
+            setLastPlayedAt(lastPlayedAtDate);
           }
         } catch {
           // Ignored

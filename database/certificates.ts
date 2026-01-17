@@ -18,7 +18,7 @@ function mapRecordToCertificate(record: RecordModel): Certificate {
       // local public asset
     } else {
       // PocketBase filename
-      imageUrl = pb.files.getUrl(
+      imageUrl = pb.files.getURL(
         {
           collectionName: 'certificates',
           id: record.id,
@@ -38,7 +38,7 @@ function mapRecordToCertificate(record: RecordModel): Certificate {
     !organizationLogoUrl.startsWith('http') &&
     !organizationLogoUrl.startsWith('/')
   ) {
-    organizationLogoUrl = pb.files.getUrl(
+    organizationLogoUrl = pb.files.getURL(
       {
         collectionName: 'certificates',
         id: record.id,
