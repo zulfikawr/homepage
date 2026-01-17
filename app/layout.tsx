@@ -8,7 +8,6 @@ import Toast from '@/components/Toast';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import '@/styles/tailwind.css';
-import '@/styles/global.css';
 import '@/styles/atom-one-dark.css';
 import DynamicBackground from '@/components/Visual/Background';
 
@@ -72,7 +71,7 @@ export default function RootLayout({
           <DynamicBackground />
 
           {/* Content layer */}
-          <div className='relative z-10 min-h-screen bg-neutral-100/50 dark:bg-neutral-900/50'>
+          <div className='relative z-20 min-h-screen bg-neutral-100/50 dark:bg-neutral-900/50'>
             <Header />
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
               {children}

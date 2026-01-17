@@ -77,15 +77,17 @@ const Drawer = () => {
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
-      setAnimation('out');
-      setDragY(0);
-      setTimeout(() => {
-        setCurrentContent(content);
-        setAnimation('in');
-      }, 50);
+      setCurrentContent(content);
+      // Use double rAF to ensure the DOM is painted with isVisible: true
+      // before we trigger the 'in' animation class
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setAnimation('in');
+        });
+      });
     } else {
       setAnimation('out');
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setIsVisible(false);
         setCurrentContent(null);
         setDragY(0);
@@ -96,6 +98,7 @@ const Drawer = () => {
           subscribers.forEach((subscriber) => subscriber(drawerInstance));
         }
       }, 500);
+      return () => clearTimeout(timer);
     }
   }, [isOpen, content]);
 
@@ -174,10 +177,8 @@ const Drawer = () => {
     <div className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}>
       {/* Overlay */}
       <div
-        className={`absolute inset-0 bg-black transition-opacity duration-500 ${
-          animation === 'in'
-            ? 'bg-opacity-50 opacity-100'
-            : 'bg-opacity-50 opacity-0'
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-500 ${
+          animation === 'in' ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleClose}
       />

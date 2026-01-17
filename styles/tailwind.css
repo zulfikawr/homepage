@@ -1,3 +1,348 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --spacing-1: 3px;
+  --spacing-2: 6px;
+  --spacing-3: 9px;
+  --spacing-4: 12px;
+  --spacing-4\.5: 1rem;
+  --spacing-6: 18px;
+  --spacing-7: 21px;
+  --spacing-9: 27px;
+  --spacing-10: 30px;
+  --spacing-20: 60px;
+
+  --shadow-header: 0 4px 8px rgba(0, 0, 0, 0.04);
+
+  --width-1: 0.25rem;
+  --width-2: 0.5rem;
+  --width-3: 0.75rem;
+  --width-4: 1rem;
+  --width-5: 1.25rem;
+  --width-6: 1.5rem;
+  --width-7: 1.75rem;
+  --width-8: 2rem;
+  --width-9: 2.25rem;
+  --width-10: 2.5rem;
+  --width-blog: 920px;
+  --width-content: 680px;
+  --width-page: 720px;
+  --width-toc: 200px;
+
+  --height-1: 0.25rem;
+  --height-2: 0.5rem;
+  --height-3: 0.75rem;
+  --height-4: 1rem;
+  --height-5: 1.25rem;
+  --height-6: 1.5rem;
+  --height-7: 1.75rem;
+  --height-8: 2rem;
+  --height-9: 2.25rem;
+  --height-10: 2.5rem;
+
+  --min-height-main: calc(100vh - 6.65rem);
+
+  --font-size-1: 32px;
+  --font-size-2: 18px;
+  --font-size-3: 15px;
+  --font-size-4: 14px;
+  --font-size-5: 12px;
+
+  --font-sans: var(--font-eb-garamond), serif;
+  --font-serif: var(--font-eb-garamond), serif;
+}
+
+@layer base {
+  /* Global Styles */
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  html,
+  body {
+    font-optical-sizing: auto;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .background::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  .dark .background::before {
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.025) 1px,
+        transparent 1px
+      );
+  }
+}
+
+.rhap_container {
+  @apply dark:!bg-neutral-800;
+}
+
+.rhap_time {
+  @apply dark:!text-neutral-400;
+}
+
+.rhap_progress-bar-show-download {
+  @apply dark:bg-neutral-700;
+}
+
+.rhap_progress-filled {
+  @apply dark:bg-neutral-500;
+}
+
+.rhap_download-progress {
+  @apply dark:bg-neutral-400;
+}
+
+.rhap_progress-indicator {
+  @apply dark:bg-neutral-600;
+}
+
+.rhap_main-controls-button {
+  @apply dark:text-neutral-500;
+}
+
+.rhap_volume-bar {
+  @apply dark:bg-neutral-700;
+}
+
+.rhap_volume-button {
+  @apply dark:text-neutral-500;
+}
+
+.rhap_volume-indicator {
+  @apply dark:bg-neutral-600;
+}
+
+.rhap_repeat-button {
+  @apply dark:text-neutral-500;
+}
+
+.tabs-highlighter {
+  @apply rounded-md;
+  min-height: 32px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: 0.15s ease;
+  transition-property: width, height, transform, opacity;
+}
+
+.highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--highlight-top, 0);
+  height: var(--highlight-height, 0);
+  transition:
+    top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.375rem;
+}
+
+.tabs-wrapper .tabs-highlighter {
+  display: none;
+}
+
+.tabs-wrapper:hover .tabs-highlighter {
+  display: block;
+}
+
+.hovering-div {
+  will-change: transform;
+  display: inline-block;
+  transform-style: preserve-3d;
+}
+
+.overflow-wrap-breakword {
+  overflow-wrap: break-word;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 hover:bg-neutral-400;
+  border: 4px solid transparent;
+  border-radius: 8px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar {
+  @apply bg-transparent;
+  width: 16px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-neutral-600 hover:bg-neutral-500;
+}
+
+.header {
+  transform: translateY(15%);
+}
+
+::selection {
+  background-color: black;
+  color: white;
+}
+
+.dark ::selection {
+  background-color: white;
+  color: black;
+}
+
+.prose {
+  @apply prose-base dark:prose-invert tracking-wide;
+}
+
+.prose h1 {
+  @apply text-4xl font-bold my-4;
+}
+
+.prose h2 {
+  @apply text-3xl font-semibold my-3;
+}
+
+.prose h3 {
+  @apply text-2xl font-medium my-2;
+}
+
+.prose p {
+  @apply my-4 leading-relaxed text-neutral-700 dark:text-neutral-300;
+}
+
+.prose ul {
+  @apply list-disc pl-6 my-4 space-y-2 text-neutral-700 dark:text-neutral-300;
+}
+
+.prose ol {
+  @apply list-decimal pl-6 my-4 space-y-2 text-neutral-700 dark:text-neutral-300;
+}
+
+.prose a {
+  @apply text-blue-600 underline underline-offset-2 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300;
+}
+
+.prose strong {
+  @apply font-semibold text-black dark:text-white;
+}
+
+.prose em {
+  @apply italic text-neutral-600 dark:text-neutral-300;
+}
+
+.prose hr {
+  @apply my-8 border-t border-neutral-300 dark:border-neutral-600;
+}
+
+.prose img {
+  @apply mx-auto my-6 max-w-full h-auto rounded-lg border border-neutral-300 dark:border-neutral-700 shadow-md;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.prose table {
+  @apply w-full border-collapse bg-white dark:bg-neutral-800 mt-4;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border-style: hidden;
+  box-shadow: 0 0 0 0.75px var(--border-color);
+}
+
+.prose table {
+  --border-color: theme(colors.neutral.200);
+}
+
+.dark .prose table {
+  --border-color: theme(colors.neutral.700);
+}
+
+.prose thead {
+  @apply bg-neutral-100 dark:bg-neutral-900;
+}
+
+.prose tbody {
+  @apply bg-white dark:bg-neutral-800;
+}
+
+.prose tr {
+  @apply border border-neutral-200 dark:border-neutral-800;
+}
+
+.prose th {
+  @apply py-4 px-6 font-medium text-left border border-neutral-200 dark:border-neutral-700;
+}
+
+.prose td {
+  @apply py-4 px-6 border border-neutral-200 dark:border-neutral-700;
+}
+
+.prose pre {
+  @apply rounded-md overflow-hidden my-4 bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800;
+  font-family:
+    'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Menlo', 'Monaco',
+    'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  position: relative;
+}
+
+.prose pre code {
+  @apply block p-4 overflow-x-auto text-black dark:text-white;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* Inline code */
+.prose p code,
+.prose li code,
+.prose h1 code,
+.prose h2 code,
+.prose h3 code {
+  @apply text-sm px-2 py-1 rounded-md bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-200 dark:border-blue-800/50 font-medium text-blue-700 dark:text-blue-300;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.prose h1[id],
+.prose h2[id],
+.prose h3[id],
+.prose h4[id] {
+  scroll-margin-top: 120px;
+}

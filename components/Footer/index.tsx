@@ -24,7 +24,7 @@ const FooterLink = ({
 );
 
 const FooterContent = () => (
-  <div className='text-4 tracking-wide text-neutral-500 dark:text-neutral-400'>
+  <div className='text-sm tracking-wide text-neutral-500 dark:text-neutral-400'>
     <FooterLink href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>
       CC BY-NC-SA 4.0
     </FooterLink>

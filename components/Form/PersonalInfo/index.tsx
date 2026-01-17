@@ -77,11 +77,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
       <div className='space-y-6'>
         <section className='flex items-center justify-between gap-x-10 gap-y-8'>
           <div className='flex flex-col gap-y-1'>
-            <h1 className='text-1 font-medium tracking-wide text-black dark:text-white'>
+            <h1 className='text-4xl font-medium tracking-wide text-black dark:text-white'>
               <span className='mr-3 inline-block'>👋</span>
               {personalInfo.name}
             </h1>
-            <div className='flex flex-col gap-y-1.5 break-words px-1 text-4 font-light leading-relaxed text-neutral-500 dark:text-neutral-300 lg:text-2'>
+            <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-neutral-500 dark:text-neutral-300 lg:text-lg'>
               <p>{personalInfo.title}</p>
             </div>
           </div>

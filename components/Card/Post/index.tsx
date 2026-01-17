@@ -128,7 +128,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
       {renderAudio()}
 
       <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-neutral-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-neutral-700'>
-        <div className='leading-2 flex items-center justify-between whitespace-nowrap text-5 tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-4 lg:leading-8'>
+        <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-neutral-500 dark:text-neutral-400 lg:text-sm lg:leading-8'>
           <span className='flex items-center gap-x-2'>
             <span>Posted {getTimeAgo(post.dateString)}</span>
           </span>

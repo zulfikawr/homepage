@@ -47,7 +47,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   type='square'
                 />
               </div>
-              <div className='text-3 font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-800 dark:group-hover:text-neutral-200'>
+              <div className='text-base font-medium text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-800 dark:group-hover:text-neutral-200'>
                 Zulfikar
               </div>
             </div>
@@ -102,7 +102,7 @@ const HeaderTitle = () => {
   if (!headerTitle) return null;
 
   return (
-    <h3 className='w-full max-w-[calc(90vw-180px)] text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-3'>
+    <h3 className='w-full max-w-[calc(90vw-180px)] text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-base'>
       {headerTitle}
     </h3>
   );
