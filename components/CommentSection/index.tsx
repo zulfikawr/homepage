@@ -219,7 +219,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             </p>
             <Button
               onClick={handleGithubLogin}
-              icon='github'
+              icon='githubLogo'
               disabled={isAuthLoading}
             >
               {isAuthLoading ? 'Logging in...' : 'Login with GitHub'}

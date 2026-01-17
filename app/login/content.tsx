@@ -51,7 +51,7 @@ export default function LoginContent() {
           <div className='flex flex-col space-y-4'>
             <Button
               className='w-full'
-              icon='github'
+              icon='githubLogo'
               onClick={handleGithubLogin}
             >
               Sign in with GitHub

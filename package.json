@@ -9,6 +9,7 @@
     "lint": "eslint . && bunx prettier --write ."
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "markdown-it-anchor": "^9.2.0",

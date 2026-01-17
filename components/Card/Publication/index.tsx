@@ -48,7 +48,7 @@ export default function PublicationCard({
         <span>
           {publication.openAccess ? (
             <span className='flex items-center gap-2'>
-              <Icon name='unlock' className='size-4.5' />
+              <Icon name='lockOpen' className='size-4.5' />
               Open Access
             </span>
           ) : (
