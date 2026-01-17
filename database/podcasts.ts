@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase';
 import { Podcast } from '@/types/podcast';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to podcasts data.

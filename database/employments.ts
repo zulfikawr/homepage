@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase';
 import { Employment } from '@/types/employment';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to employments data.

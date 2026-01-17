@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase';
 import { Certificate } from '@/types/certificate';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to certificates data.

@@ -38,7 +38,7 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
         title: post.title,
         url: shareUrl,
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Ignored
     }
   };

@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase';
 import { Post } from '@/types/post';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to posts data.
@@ -107,7 +108,7 @@ export async function addPost(
   data: Omit<Post, 'id'>,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
   try {
-    const record = await pb.collection('posts').create<Post>(data);
+    const record = await pb.collection('posts').create<RecordModel>(data);
     return { success: true, post: record };
   } catch (error: unknown) {
     return {

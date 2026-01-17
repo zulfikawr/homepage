@@ -11,6 +11,7 @@ import {
   Icon,
   Input,
   Textarea,
+  FileUpload,
 } from '@/components/UI';
 import { Editor } from '@/components/Editor';
 import { ProjectCard } from '@/components/Card/Project';
@@ -301,13 +302,23 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <FormLabel htmlFor='imageUrl' required>
               Image URL
             </FormLabel>
-            <Input
-              type='text'
-              value={project.image}
-              onChange={(e) => handleChange('image', e.target.value)}
-              placeholder='https://project-image-url.com'
-              required
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={project.image}
+                onChange={(e) => handleChange('image', e.target.value)}
+                placeholder='https://project-image-url.com'
+                required
+              />
+              {project.id && project.id !== 'preview' && (
+                <FileUpload
+                  collectionName='projects'
+                  recordId={project.id}
+                  fieldName='image'
+                  onUploadSuccess={(url) => handleChange('image', url)}
+                />
+              )}
+            </div>
           </div>
           <div>
             <FormLabel htmlFor='description' required>

@@ -28,7 +28,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAdmin(
       !!pb.authStore.model &&
         pb.authStore.isValid &&
-        (pb.authStore.isAdmin || (pb.authStore.model as any).role === 'admin'),
+        (pb.authStore.isAdmin ||
+          (pb.authStore.model as unknown as { role?: string }).role ===
+            'admin'),
     );
     setLoading(false);
 
@@ -38,7 +40,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAdmin(
         !!model &&
           pb.authStore.isValid &&
-          (pb.authStore.isAdmin || (model as any).role === 'admin'),
+          (pb.authStore.isAdmin ||
+            (model as unknown as { role?: string }).role === 'admin'),
       );
     });
 

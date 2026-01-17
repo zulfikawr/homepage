@@ -1,6 +1,47 @@
 import pb from '@/lib/pocketbase';
 import { Project } from '@/types/project';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
+
+/**
+ * Maps a PocketBase record to a Project object with full URLs for images.
+ * @param record PocketBase record.
+ * @returns Project object.
+ */
+function mapRecordToProject(record: RecordModel): Project {
+  let image = (record.image as string) || '';
+
+  if (image) {
+    if (image.startsWith('http')) {
+      // already a full URL
+    } else if (image.startsWith('/')) {
+      // local public asset
+    } else {
+      // PocketBase filename
+      image = pb.files.getUrl(
+        { collectionName: 'projects', id: record.id } as unknown as RecordModel,
+        image,
+      );
+    }
+  }
+
+  return {
+    id: record.id,
+    name: record.name,
+    dateString: record.dateString,
+    image,
+    description: record.description,
+    tools:
+      typeof record.tools === 'string'
+        ? JSON.parse(record.tools)
+        : record.tools,
+    readme: record.readme,
+    status: record.status,
+    link: record.link,
+    favicon: record.favicon,
+    pinned: record.pinned,
+  };
+}
 
 /**
  * Fetches and subscribes to projects data.
@@ -13,22 +54,7 @@ export function projectsData(callback: (data: Project[]) => void) {
       const records = await pb
         .collection('projects')
         .getFullList<RecordModel>({ sort: '-created' });
-      const data: Project[] = records.map((record) => ({
-        id: record.id,
-        name: record.name,
-        dateString: record.dateString,
-        image: record.image,
-        description: record.description,
-        tools:
-          typeof record.tools === 'string'
-            ? JSON.parse(record.tools)
-            : record.tools,
-        readme: record.readme,
-        status: record.status,
-        link: record.link,
-        favicon: record.favicon,
-        pinned: record.pinned,
-      }));
+      const data: Project[] = records.map(mapRecordToProject);
       callback(data);
     } catch {
       callback([]);
@@ -49,22 +75,7 @@ export async function getProjects(): Promise<Project[]> {
     const records = await pb
       .collection('projects')
       .getFullList<RecordModel>({ sort: '-created' });
-    return records.map((record) => ({
-      id: record.id,
-      name: record.name,
-      dateString: record.dateString,
-      image: record.image,
-      description: record.description,
-      tools:
-        typeof record.tools === 'string'
-          ? JSON.parse(record.tools)
-          : record.tools,
-      readme: record.readme,
-      status: record.status,
-      link: record.link,
-      favicon: record.favicon,
-      pinned: record.pinned,
-    }));
+    return records.map(mapRecordToProject);
   } catch {
     return [];
   }
@@ -79,8 +90,8 @@ export async function addProject(
   data: Omit<Project, 'id'>,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {
-    const record = await pb.collection('projects').create<Project>(data);
-    return { success: true, project: record };
+    const record = await pb.collection('projects').create<RecordModel>(data);
+    return { success: true, project: mapRecordToProject(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -110,10 +121,20 @@ export async function updateProject(
         // ID might be correct ID but not 15 chars (unlikely in PB)
       }
     }
+
+    const updateData: Partial<Project> = { ...rest };
+
+    // Extract filename if it's a PocketBase URL
+    if (data.image && data.image.includes('/api/files/')) {
+      const parts = data.image.split('/');
+      const fileName = parts[parts.length - 1].split('?')[0];
+      updateData.image = fileName;
+    }
+
     const record = await pb
       .collection('projects')
-      .update<Project>(recordId, rest);
-    return { success: true, project: record };
+      .update<RecordModel>(recordId, updateData);
+    return { success: true, project: mapRecordToProject(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -163,22 +184,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
         .collection('projects')
         .getFirstListItem<RecordModel>(`slug="${id}"`);
     }
-    return {
-      id: record.id,
-      name: record.name,
-      dateString: record.dateString,
-      image: record.image,
-      description: record.description,
-      tools:
-        typeof record.tools === 'string'
-          ? JSON.parse(record.tools)
-          : record.tools,
-      readme: record.readme,
-      status: record.status,
-      link: record.link,
-      favicon: record.favicon,
-      pinned: record.pinned,
-    };
+    return mapRecordToProject(record);
   } catch {
     return null;
   }

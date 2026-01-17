@@ -1,5 +1,5 @@
-export const generateId = (title: string): string => {
-  return title
+export const generateId = (text: string): string => {
+  return text
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '')

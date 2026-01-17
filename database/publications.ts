@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase';
 import { Publication } from '@/types/publication';
 import { RecordModel } from 'pocketbase';
+import { generateId } from '@/utilities/generateId';
 
 /**
  * Fetches and subscribes to publications data.

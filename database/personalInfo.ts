@@ -90,7 +90,7 @@ export async function updatePersonalInfo(
 ): Promise<{ success: boolean; data?: PersonalInfo; error?: string }> {
   try {
     // Prepare the update data
-    const updateData: any = {
+    const updateData: Record<string, string | number | boolean | null> = {
       name: data.name,
       title: data.title,
     };

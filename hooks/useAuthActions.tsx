@@ -17,7 +17,7 @@ export function useAuthActions() {
       // Strategy: Try admin first as this is a personal site management dashboard
       try {
         await pb.admins.authWithPassword(email, password);
-      } catch (adminErr: any) {
+      } catch (adminErr: unknown) {
         // If admin fails, try regular user
         await pb.collection('users').authWithPassword(email, password);
       }
@@ -25,9 +25,11 @@ export function useAuthActions() {
       router.push('/database');
       router.refresh();
       toast.show('You are now logged in!');
-    } catch (err: any) {
-      setError(err.message || 'Failed to authenticate.');
-      toast.show(err.message || 'Failed to authenticate.', 'error');
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Failed to authenticate.';
+      setError(message);
+      toast.show(message, 'error');
     }
   };
 
@@ -36,8 +38,8 @@ export function useAuthActions() {
       await pb.collection('users').authWithOAuth2({ provider: 'github' });
       router.push('/');
       toast.show('You are now logged in with GitHub!');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
     }
   };
 

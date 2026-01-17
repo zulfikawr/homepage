@@ -15,6 +15,7 @@ import { Card } from '@/components/Card';
 import { Editor } from '@/components/Editor';
 import { useAuth } from '@/contexts/authContext';
 import pb from '@/lib/pocketbase';
+import { RecordModel } from 'pocketbase';
 import { toast } from '@/components/Toast';
 import ImageWithFallback from '../ImageWithFallback';
 import { useRealtimeData } from '@/hooks/useRealtimeData';
@@ -30,8 +31,12 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const { user, isAdmin } = useAuth();
 
-  const githubUsername =
-    (user as any)?.username || (user as any)?.name || user?.email || '';
+  const githubUsername = user
+    ? (user.username as string) ||
+      (user.name as string) ||
+      (user.email as string) ||
+      ''
+    : '';
 
   // Use the new realtime hook
   const { data: comments, loading: isLoading } = useRealtimeData<Comment[]>(
@@ -42,8 +47,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
   // Set author from user profile
   useEffect(() => {
-    if ((user as any)?.name) {
-      setAuthor((user as any).name);
+    if (user && user.name) {
+      setAuthor(user.name as string);
     }
   }, [user]);
 
@@ -77,10 +82,13 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     try {
       await addComment(
         postId,
-        githubUsername || author || (user as any)?.name || 'Anonymous',
+        githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
         content,
-        (user as any)?.avatar
-          ? pb.files.getUrl(user as any, (user as any).avatar)
+        user?.avatar
+          ? pb.files.getUrl(
+              user as unknown as RecordModel,
+              user.avatar as string,
+            )
           : undefined,
       );
       setContent('');
@@ -102,8 +110,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         postId,
         replyAuthor,
         replyContent,
-        (user as any)?.avatar
-          ? pb.files.getUrl(user as any, (user as any).avatar)
+        user?.avatar
+          ? pb.files.getUrl(
+              user as unknown as RecordModel,
+              user.avatar as string,
+            )
           : undefined,
         parentId,
       );
@@ -163,8 +174,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
               <div className='flex items-center gap-x-3'>
                 <ImageWithFallback
                   src={
-                    (user as any)?.avatar
-                      ? pb.files.getUrl(user as any, (user as any).avatar)
+                    user?.avatar
+                      ? pb.files.getUrl(
+                          user as unknown as RecordModel,
+                          user.avatar as string,
+                        )
                       : ''
                   }
                   alt={githubUsername}

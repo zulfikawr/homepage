@@ -16,7 +16,7 @@ type SubscribeFunction<T> = (
 export function useRealtimeData<T>(
   subscribeFunction: SubscribeFunction<T>,
   initialData?: T,
-  dependencies: any[] = [],
+  dependencies: unknown[] = [],
 ) {
   const [data, setData] = useState<T | null>(initialData || null);
   const [loading, setLoading] = useState(true);
