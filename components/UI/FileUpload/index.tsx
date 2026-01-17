@@ -137,21 +137,16 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         className='hidden'
         accept={accept}
       />
-      
+
       {previewUrl && (
-        <div className="relative group size-12 rounded-md overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0">
-          <Image 
-            src={previewUrl} 
-            alt="Preview" 
-            fill 
-            className="object-cover"
-          />
+        <div className='relative group size-12 rounded-md overflow-hidden border border-neutral-200 dark:border-neutral-700 flex-shrink-0'>
+          <Image src={previewUrl} alt='Preview' fill className='object-cover' />
           <button
             onClick={handleRemove}
-            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-            title="Remove file"
+            className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'
+            title='Remove file'
           >
-            <Icon name="trash" className="size-5 text-white" />
+            <Icon name='trash' className='size-5 text-white' />
           </button>
         </div>
       )}

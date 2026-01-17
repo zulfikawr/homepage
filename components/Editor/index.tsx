@@ -1,10 +1,17 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
 import { twMerge } from 'tailwind-merge';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Icon, Toggle, Tooltip } from '@/components/UI';
 import { IconName } from '@/components/UI/Icon';
+import hljs from 'highlight.js';
 
 interface EditorProps {
   content: string;
@@ -25,6 +32,7 @@ const Editor: React.FC<EditorProps> = ({
     {},
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const highlightRef = useRef<HTMLPreElement>(null);
 
   useEffect(() => {
     setMarkdown(content);
@@ -34,6 +42,13 @@ const Editor: React.FC<EditorProps> = ({
     const newContent = e.target.value;
     setMarkdown(newContent);
     onUpdate(newContent);
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    if (highlightRef.current) {
+      highlightRef.current.scrollTop = e.currentTarget.scrollTop;
+      highlightRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
   };
 
   const insertMarkdown = (prefix: string, suffix: string = '') => {
@@ -209,14 +224,33 @@ const Editor: React.FC<EditorProps> = ({
     },
   ];
 
-  const inputClassName = twMerge(
-    'h-auto min-h-[300px] md:min-h-[500px] w-full rounded-b-md border border-t-0 border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-600 dark:bg-neutral-700 dark:text-white resizable-none',
-    textareaClassName,
-  );
+  const highlightedContent = useMemo(() => {
+    try {
+      return hljs.highlight(markdown || '', { language: 'markdown' }).value;
+    } catch (e) {
+      return markdown || '';
+    }
+  }, [markdown]);
+
+  const sharedStyles: React.CSSProperties = {
+    fontFamily:
+      'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+    fontSize: '14px',
+    lineHeight: '24px',
+    padding: '16px',
+    margin: 0,
+    border: 0,
+    whiteSpace: 'pre-wrap',
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    tabSize: 4,
+    fontVariantLigatures: 'none',
+    boxSizing: 'border-box',
+  };
 
   return (
-    <div className={twMerge('', className)}>
-      <div className='flex flex-nowrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 overflow-x-auto'>
+    <div className={twMerge('flex flex-col', className)}>
+      <div className='flex flex-nowrap gap-2 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-t-md border border-b-0 border-neutral-300 dark:border-neutral-600 overflow-x-auto shrink-0'>
         {toolbarButtons.map((button, index) => (
           <Tooltip key={index} text={button.label} position='top'>
             <Toggle
@@ -238,18 +272,39 @@ const Editor: React.FC<EditorProps> = ({
       </div>
       {isViewerMode ? (
         <div
-          className='prose dark:prose-invert max-w-none p-2 border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-white dark:bg-neutral-700 min-h-[300px] md:min-h-[500px]'
+          className='prose dark:prose-invert max-w-none !p-4 border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-white dark:bg-neutral-800 h-[300px] md:h-[500px] overflow-y-auto'
           dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
         />
       ) : (
-        <textarea
-          ref={textareaRef}
-          value={markdown}
-          onChange={handleChange}
-          onSelect={updateCursorStyles}
-          className={inputClassName}
-          placeholder='Write your markdown here...'
-        />
+        <div className='relative w-full h-[300px] md:h-[500px] border border-t-0 border-neutral-300 dark:border-neutral-600 rounded-b-md bg-neutral-50 dark:bg-neutral-900 overflow-y-auto'>
+          <div className='relative w-full min-h-full'>
+            <pre
+              aria-hidden='true'
+              style={sharedStyles}
+              className={twMerge(
+                'relative w-full m-0 pointer-events-none hljs bg-transparent min-h-[300px] md:min-h-[500px]',
+                textareaClassName,
+              )}
+              dangerouslySetInnerHTML={{
+                __html:
+                  highlightedContent + (markdown.endsWith('\n') ? '\n' : ''),
+              }}
+            />
+            <textarea
+              ref={textareaRef}
+              value={markdown}
+              onChange={handleChange}
+              onSelect={updateCursorStyles}
+              style={sharedStyles}
+              className={twMerge(
+                'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-neutral-900 dark:caret-neutral-100 resize-none focus:outline-none overflow-hidden',
+                textareaClassName,
+              )}
+              placeholder='Write your markdown here...'
+              spellCheck={false}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

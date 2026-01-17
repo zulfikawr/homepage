@@ -73,35 +73,6 @@
     -moz-osx-font-smoothing: grayscale;
     @apply text-neutral-900 dark:text-neutral-100;
   }
-
-  .background::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.025) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-  }
-
-  .dark .background::before {
-    background-image:
-      linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.025) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.025) 1px,
-        transparent 1px
-      );
-  }
 }
 
 .rhap_container {
@@ -227,18 +198,6 @@ body::-webkit-scrollbar {
 
 .prose {
   @apply prose-base dark:prose-invert tracking-wide;
-}
-
-.prose h1 {
-  @apply text-4xl font-bold my-4;
-}
-
-.prose h2 {
-  @apply text-3xl font-semibold my-3;
-}
-
-.prose h3 {
-  @apply text-2xl font-medium my-2;
 }
 
 .prose p {

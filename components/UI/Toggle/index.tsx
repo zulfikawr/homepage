@@ -20,7 +20,7 @@ const Toggle: React.FC<ToggleProps> = ({
   const { radius } = useRadius();
 
   const baseClasses =
-    'flex items-center justify-center p-1 h-8 w-fit transition-colors duration-200';
+    'flex items-center justify-center p-1 h-8 w-fit cursor-pointer transition-colors duration-200';
   const activeClasses =
     'bg-blue-500 text-white dark:bg-blue-600 dark:text-neutral-100';
   const inactiveClasses =

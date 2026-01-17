@@ -32,10 +32,6 @@ export default function ProjectsContent() {
         emoji='🚀'
         title='Projects'
         subtitle='A collection of my projects, categorized by their status.'
-        badge={{
-          color: 'blue',
-          text: 'Active',
-        }}
         route='/projects'
       />
 

@@ -31,7 +31,7 @@ const initialPostState: Post = {
   excerpt: '',
   categories: [],
   dateString: '',
-  content: '<p></p>',
+  content: '',
   image: '',
   image_url: '',
   audio: '',

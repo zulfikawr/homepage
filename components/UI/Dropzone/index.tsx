@@ -92,11 +92,13 @@ export const Dropzone: React.FC<DropzoneProps> = ({
       <div
         className={twMerge(
           'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-neutral-300 bg-neutral-50 p-2 shadow-sm focus:outline-none dark:border-neutral-400 dark:bg-neutral-700',
-          aspectRatio === 'video' ? 'aspect-video' : 'aspect-square max-w-[200px]',
+          aspectRatio === 'video'
+            ? 'aspect-video'
+            : 'aspect-square max-w-[200px]',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
             : 'hover:bg-neutral-100/50 dark:hover:bg-white/20',
-          previewUrl ? 'border-solid' : 'border-dashed'
+          previewUrl ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}
         onDragOver={handleDragOver}
@@ -105,56 +107,56 @@ export const Dropzone: React.FC<DropzoneProps> = ({
         onClick={() => fileInputRef.current?.click()}
       >
         <input
-          type="file"
+          type='file'
           ref={fileInputRef}
           onChange={handleFileChange}
-          className="hidden"
-          accept="image/*"
+          className='hidden'
+          accept='image/*'
         />
 
         {previewUrl ? (
           <>
             <Image
               src={previewUrl}
-              alt="Preview"
+              alt='Preview'
               fill
-              className="object-cover transition-transform group-hover/dropzone:scale-105"
-              unoptimized={previewUrl.startsWith('blob:') || previewUrl.startsWith('http')}
+              className='object-cover transition-transform group-hover/dropzone:scale-105'
+              unoptimized={
+                previewUrl.startsWith('blob:') || previewUrl.startsWith('http')
+              }
             />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/dropzone:opacity-100 transition-opacity flex items-center justify-center gap-3">
+            <div className='absolute inset-0 bg-black/50 opacity-0 group-hover/dropzone:opacity-100 transition-opacity flex items-center justify-center gap-3'>
               <Button
-                type="destructive"
-                icon="trash"
+                type='destructive'
+                icon='trash'
                 onClick={handleRemove}
-                className="h-10 px-4"
+                className='h-10 px-4'
               >
                 Remove
               </Button>
-              <div className="bg-white/10 backdrop-blur-md text-white px-4 h-10 flex items-center rounded-md border border-white/20 text-sm font-medium">
+              <div className='bg-white/10 backdrop-blur-md text-white px-4 h-10 flex items-center rounded-md border border-white/20 text-sm font-medium'>
                 Click to replace
               </div>
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center gap-3 text-neutral-400 dark:text-neutral-500">
-            <div className="size-14 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center border border-neutral-300 dark:border-neutral-700">
-              <Icon name="plus" className="size-7" />
+          <div className='flex flex-col items-center gap-3 text-neutral-400 dark:text-neutral-500'>
+            <div className='size-14 rounded-full bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center border border-neutral-300 dark:border-neutral-700'>
+              <Icon name='plus' className='size-7' />
             </div>
-            <div className="text-center px-4">
-              <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+            <div className='text-center px-4'>
+              <p className='text-sm font-semibold text-neutral-700 dark:text-neutral-300'>
                 Click to upload or drag and drop
               </p>
-              <p className="text-xs mt-1">
-                Supports PNG, JPG, WEBP (max 10MB)
-              </p>
+              <p className='text-xs mt-1'>Supports PNG, JPG, WEBP (max 10MB)</p>
             </div>
           </div>
         )}
       </div>
 
-      <div className="relative group/input">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400">
-          <Icon name="link" className="size-4" />
+      <div className='relative group/input'>
+        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400'>
+          <Icon name='link' className='size-4' />
         </div>
         <Input
           value={inputValue}
