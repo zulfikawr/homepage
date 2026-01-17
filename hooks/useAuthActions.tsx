@@ -14,11 +14,9 @@ export function useAuthActions() {
   const handleLogin = async (email: string, password: string) => {
     setError('');
     try {
-      // Strategy: Try admin first as this is a personal site management dashboard
       try {
         await pb.admins.authWithPassword(email, password);
       } catch (adminErr: unknown) {
-        // If admin fails, try regular user
         await pb.collection('users').authWithPassword(email, password);
       }
 

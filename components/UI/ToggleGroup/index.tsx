@@ -22,10 +22,6 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 }) => {
   const { radius } = useRadius();
 
-  const roundedClass = (side: 'l' | 'r') => {
-    return `rounded-${side}-[${radius}px]`;
-  };
-
   return (
     <div
       className='inline-flex items-center overflow-hidden border border-neutral-300 dark:border-neutral-600'
@@ -33,26 +29,19 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
     >
       {options.map((option, index) => {
         const isFirst = index === 0;
-        const isLast = index === options.length - 1;
-
         const baseBorder = !isFirst
           ? 'border-l border-neutral-300 dark:border-neutral-600'
           : '';
-
-        const rounded = isFirst
-          ? roundedClass('l')
-          : isLast
-            ? roundedClass('r')
-            : '';
 
         return (
           <Toggle
             key={option.value}
             isActive={value === option.value}
             onChange={() => onChange(option.value)}
-            className={`${baseBorder} ${rounded}`}
+            className={`${baseBorder} p-0 h-9`}
+            style={{ borderRadius: 0 }}
           >
-            <div className='flex items-center gap-2 text-sm px-2 py-1.5'>
+            <div className='flex items-center gap-2 text-sm px-4 py-1.5 cursor-pointer'>
               {option.icon && <Icon name={option.icon} className='size-4.5' />}
               {option.label}
             </div>

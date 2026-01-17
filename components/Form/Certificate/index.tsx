@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { Certificate } from '@/types/certificate';
-import { Button, FormLabel, Input } from '@/components/UI';
+import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
 import CertificateCard from '@/components/Card/Certificate';
 import { toast } from '@/components/Toast';
 import {
@@ -38,6 +38,9 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
   const [certificate, setCertificate] = useState<Certificate>(
     certificateToEdit || initialCertificateState,
   );
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const initialDate = useMemo(() => {
     const date = certificateToEdit?.dateIssued
@@ -104,9 +107,29 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     };
 
     try {
-      const result = certificateToEdit
-        ? await updateCertificate(certificateData)
-        : await addCertificate(certificateData);
+      let result;
+
+      if (imageFile || logoFile) {
+        const formData = new FormData();
+        // Append all certificate fields
+        Object.entries(certificateData).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+          }
+        });
+
+        // Append files
+        if (imageFile) formData.append('image', imageFile);
+        if (logoFile) formData.append('organizationLogo', logoFile);
+
+        result = certificateToEdit
+          ? await updateCertificate(formData)
+          : await addCertificate(formData);
+      } else {
+        result = certificateToEdit
+          ? await updateCertificate(certificateData)
+          : await addCertificate(certificateData);
+      }
 
       if (result.success) {
         toast.success(
@@ -114,7 +137,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             ? 'Certificate updated successfully!'
             : 'Certificate added successfully!',
         );
-        router.push('/database/certificates');
+        router.push('/database/certs');
       }
     } catch (error) {
       toast.error(
@@ -191,6 +214,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
               type='text'
               value={certificate.title}
               onChange={(e) => handleChange('title', e.target.value)}
+              placeholder='Professional Web Developer'
               required
             />
           </div>
@@ -202,6 +226,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
               type='text'
               value={certificate.issuedBy}
               onChange={(e) => handleChange('issuedBy', e.target.value)}
+              placeholder='Google, Coursera, etc.'
               required
             />
           </div>
@@ -223,16 +248,27 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
               type='text'
               value={certificate.credentialId}
               onChange={(e) => handleChange('credentialId', e.target.value)}
+              placeholder='AB123456789'
               required
             />
           </div>
           <div>
             <FormLabel htmlFor='imageUrl'>Image URL</FormLabel>
-            <Input
-              type='text'
-              value={certificate.imageUrl}
-              onChange={(e) => handleChange('imageUrl', e.target.value)}
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={certificate.imageUrl}
+                onChange={(e) => handleChange('imageUrl', e.target.value)}
+                placeholder='https://example.com/certificate.png'
+              />
+              <FileUpload
+                collectionName='certificates'
+                recordId={certificateToEdit?.id}
+                fieldName='image'
+                onUploadSuccess={(url) => handleChange('imageUrl', url)}
+                onFileSelect={setImageFile}
+              />
+            </div>
           </div>
           <div>
             <FormLabel htmlFor='link' required>
@@ -242,6 +278,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
               type='text'
               value={certificate.link}
               onChange={(e) => handleChange('link', e.target.value)}
+              placeholder='https://example.com/verify/ABC'
               required
             />
           </div>
@@ -249,13 +286,25 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             <FormLabel htmlFor='organizationLogoUrl'>
               Organization Logo URL
             </FormLabel>
-            <Input
-              type='text'
-              value={certificate.organizationLogoUrl}
-              onChange={(e) =>
-                handleChange('organizationLogoUrl', e.target.value)
-              }
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={certificate.organizationLogoUrl || ''}
+                onChange={(e) =>
+                  handleChange('organizationLogoUrl', e.target.value)
+                }
+                placeholder='https://example.com/logo.png'
+              />
+              <FileUpload
+                collectionName='certificates'
+                recordId={certificateToEdit?.id}
+                fieldName='organizationLogo'
+                onUploadSuccess={(url) =>
+                  handleChange('organizationLogoUrl', url)
+                }
+                onFileSelect={setLogoFile}
+              />
+            </div>
           </div>
         </form>
       </div>

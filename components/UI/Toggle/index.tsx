@@ -7,6 +7,7 @@ interface ToggleProps {
   onChange?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const Toggle: React.FC<ToggleProps> = ({
@@ -14,6 +15,7 @@ const Toggle: React.FC<ToggleProps> = ({
   onChange,
   children,
   className,
+  style,
 }) => {
   const { radius } = useRadius();
 
@@ -32,7 +34,7 @@ const Toggle: React.FC<ToggleProps> = ({
         className,
       )}
       onClick={onChange}
-      style={{ borderRadius: `${radius}px` }}
+      style={{ borderRadius: `${radius}px`, ...style }}
       aria-pressed={isActive}
     >
       {children}

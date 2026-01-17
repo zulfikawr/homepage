@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
 
     // Listen to auth changes
-    const unsubscribe = pb.authStore.onChange((token, model) => {
+    const unsubscribe = pb.authStore.onChange((_token, model) => {
       setUser(model);
       setIsAdmin(
         !!model &&

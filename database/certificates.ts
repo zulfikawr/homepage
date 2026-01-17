@@ -4,26 +4,82 @@ import { RecordModel } from 'pocketbase';
 import { generateId } from '@/utilities/generateId';
 
 /**
+ * Maps a PocketBase record to a Certificate object with full URLs for images.
+ * @param record PocketBase record.
+ * @returns Certificate object.
+ */
+function mapRecordToCertificate(record: RecordModel): Certificate {
+  // Prioritize the new 'image' file field, fallback to 'imageUrl' text field
+  let imageUrl = (record.image as string) || (record.imageUrl as string) || '';
+
+  if (imageUrl) {
+    if (imageUrl.startsWith('http')) {
+      // already a full URL
+    } else if (imageUrl.startsWith('/')) {
+      // local public asset
+    } else {
+      // PocketBase filename
+      imageUrl = pb.files.getUrl(
+        {
+          collectionName: 'certificates',
+          id: record.id,
+        } as unknown as RecordModel,
+        imageUrl,
+      );
+    }
+  }
+
+  // Prioritize the new 'organizationLogo' file field, fallback to 'organizationLogoUrl' text field
+  let organizationLogoUrl =
+    (record.organizationLogo as string) ||
+    (record.organizationLogoUrl as string) ||
+    '';
+  if (
+    organizationLogoUrl &&
+    !organizationLogoUrl.startsWith('http') &&
+    !organizationLogoUrl.startsWith('/')
+  ) {
+    organizationLogoUrl = pb.files.getUrl(
+      {
+        collectionName: 'certificates',
+        id: record.id,
+      } as unknown as RecordModel,
+      organizationLogoUrl,
+    );
+  }
+
+  return {
+    id: record.id,
+    title: record.title,
+    issuedBy: record.issuedBy,
+    dateIssued: record.dateIssued,
+    credentialId: record.credentialId,
+    imageUrl,
+    organizationLogoUrl,
+    link: record.link,
+  };
+}
+
+/**
  * Fetches and subscribes to certificates data.
  * @param callback Function to call when data changes.
  * @returns Unsubscribe function.
  */
 export function certificatesData(callback: (data: Certificate[]) => void) {
-  const fetchAll = async () => {
+  const fetchAndCallback = async () => {
     try {
-      const data = await pb
+      const records = await pb
         .collection('certificates')
-        .getFullList<Certificate>({ sort: '-created' });
+        .getFullList<RecordModel>({ sort: '-created' });
+      const data: Certificate[] = records.map(mapRecordToCertificate);
       callback(data);
     } catch {
       callback([]);
     }
   };
 
-  fetchAll();
-
-  pb.collection('certificates').subscribe('*', fetchAll);
-
+  fetchAndCallback();
+  pb.collection('certificates').subscribe('*', fetchAndCallback);
   return () => pb.collection('certificates').unsubscribe();
 }
 
@@ -33,9 +89,10 @@ export function certificatesData(callback: (data: Certificate[]) => void) {
  */
 export async function getCertificates(): Promise<Certificate[]> {
   try {
-    return await pb
+    const records = await pb
       .collection('certificates')
-      .getFullList<Certificate>({ sort: '-created' });
+      .getFullList<RecordModel>({ sort: '-created' });
+    return records.map(mapRecordToCertificate);
   } catch {
     return [];
   }
@@ -43,17 +100,17 @@ export async function getCertificates(): Promise<Certificate[]> {
 
 /**
  * Adds a new certificate to the database.
- * @param data Certificate data without ID.
+ * @param data Certificate data or FormData.
  * @returns Promise with operation result.
  */
 export async function addCertificate(
-  data: Omit<Certificate, 'id'>,
+  data: Omit<Certificate, 'id'> | FormData,
 ): Promise<{ success: boolean; certificate?: Certificate; error?: string }> {
   try {
     const record = await pb
       .collection('certificates')
-      .create<Certificate>(data);
-    return { success: true, certificate: record };
+      .create<RecordModel>(data);
+    return { success: true, certificate: mapRecordToCertificate(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -64,25 +121,48 @@ export async function addCertificate(
 
 /**
  * Updates an existing certificate in the database.
- * @param data Updated certificate data.
+ * @param data Updated certificate data or FormData.
  * @returns Promise with operation result.
  */
 export async function updateCertificate(
-  data: Certificate,
+  data: Certificate | FormData,
 ): Promise<{ success: boolean; certificate?: Certificate; error?: string }> {
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
-    if (id.length !== 15) {
-      const record = await pb
-        .collection('certificates')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+    let recordId: string;
+    let updateData: any;
+
+    if (data instanceof FormData) {
+      recordId = data.get('id') as string;
+      updateData = data;
+    } else {
+      const { id, ...rest } = data;
+      recordId = id;
+
+      const cleanData: Partial<Certificate> = { ...rest };
+
+      // Extract filename if it's a PocketBase URL
+      if (data.imageUrl && data.imageUrl.includes('/api/files/')) {
+        const parts = data.imageUrl.split('/');
+        const fileName = parts[parts.length - 1].split('?')[0];
+        cleanData.image = fileName;
+      }
+
+      if (
+        data.organizationLogoUrl &&
+        data.organizationLogoUrl.includes('/api/files/')
+      ) {
+        const parts = data.organizationLogoUrl.split('/');
+        const fileName = parts[parts.length - 1].split('?')[0];
+        cleanData.organizationLogo = fileName;
+      }
+
+      updateData = cleanData;
     }
+
     const record = await pb
       .collection('certificates')
-      .update<Certificate>(recordId, rest);
-    return { success: true, certificate: record };
+      .update<RecordModel>(recordId, updateData);
+    return { success: true, certificate: mapRecordToCertificate(record) };
   } catch (error: unknown) {
     return {
       success: false,
@@ -126,12 +206,15 @@ export async function getCertificateById(
   id: string,
 ): Promise<Certificate | null> {
   try {
+    let record: RecordModel;
     if (id.length === 15) {
-      return await pb.collection('certificates').getOne<Certificate>(id);
+      record = await pb.collection('certificates').getOne<RecordModel>(id);
+    } else {
+      record = await pb
+        .collection('certificates')
+        .getFirstListItem<RecordModel>(`slug="${id}"`);
     }
-    return await pb
-      .collection('certificates')
-      .getFirstListItem<Certificate>(`slug="${id}"`);
+    return mapRecordToCertificate(record);
   } catch {
     return null;
   }
