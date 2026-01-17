@@ -22,7 +22,7 @@ import { addProject, updateProject, deleteProject } from '@/database/projects';
 import { generateId } from '@/utilities/generateId';
 import { formatDateRange } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
 import { IconName } from '@/components/UI/Icon';
 
@@ -42,6 +42,7 @@ const initialProjectState: Project = {
   readme: '',
   status: 'inProgress',
   pinned: false,
+  slug: '',
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
@@ -176,6 +177,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     readme: project.readme || '',
     status: project.status || 'inProgress',
     pinned: project.pinned || false,
+    slug: project.slug || 'preview',
   };
 
   const handleChange = (

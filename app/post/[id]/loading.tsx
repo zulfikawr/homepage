@@ -1,4 +1,4 @@
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 const LoadingSkeleton = () => (
   <article className='p-4 pt-24 lg:pt-20'>

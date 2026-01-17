@@ -4,7 +4,7 @@ import { Movie } from '@/types/movie';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@/components/UI/Icon';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 interface MovieCardProps {
   movie: Movie;

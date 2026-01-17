@@ -12,6 +12,7 @@ export { Toggle } from './Toggle';
 export { ToggleGroup } from './ToggleGroup';
 export { Tooltip } from './Tooltip';
 export { Switch } from './Switch';
+export { Separator } from './Separator';
 export { Slider } from './Slider';
 export { FileUpload } from './FileUpload';
 export { Dropzone } from './Dropzone';

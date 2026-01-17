@@ -2,7 +2,7 @@ interface SeparatorProps {
   margin?: string;
 }
 
-export default function Separator({ margin }: SeparatorProps) {
+const Separator: React.FC<SeparatorProps> = ({ margin }) => {
   const marginValue = margin ? `${parseInt(margin) * 0.25}rem` : '1.5rem';
 
   return (
@@ -10,4 +10,8 @@ export default function Separator({ margin }: SeparatorProps) {
       <hr className='border-t border-neutral-300 dark:border-neutral-700' />
     </div>
   );
-}
+};
+
+Separator.displayName = 'Separator';
+
+export { Separator };

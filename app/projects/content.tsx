@@ -5,7 +5,7 @@ import { projectsData } from '@/database/projects';
 import { sortByDate } from '@/utilities/sortByDate';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

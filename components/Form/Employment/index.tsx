@@ -19,7 +19,7 @@ import {
 import { generateId } from '@/utilities/generateId';
 import { formatDateRange } from '@/utilities/formatDate';
 import { modal } from '@/components/Modal';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
 import { useRouter } from 'next/navigation';
 

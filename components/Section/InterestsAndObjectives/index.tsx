@@ -2,7 +2,7 @@ import { interestsAndObjectivesData } from '@/database/interestsAndObjectives';
 import { useRealtimeData } from '@/hooks';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 const InterestsAndObjectivesSection = () => {
   const {

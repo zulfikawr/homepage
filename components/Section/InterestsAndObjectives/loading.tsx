@@ -1,4 +1,4 @@
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 const Loading = () => {
   return (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { Card } from '@/components/Card';

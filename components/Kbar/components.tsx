@@ -9,7 +9,7 @@ import { useAuthActions } from '@/hooks/useAuthActions';
 import { Button, Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { IconName } from '@/components/UI/Icon';
 import NavigationCard from '@/components/Card/Navigation';
 

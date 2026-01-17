@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Badge } from '@/components/UI';
 import { Project } from '@/types/project';
 import { drawer } from '@/components/Drawer';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 

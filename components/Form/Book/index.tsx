@@ -15,7 +15,7 @@ import { addBook, updateBook, deleteBook } from '@/database/books';
 import { toast } from '@/components/Toast';
 import { generateId } from '@/utilities/generateId';
 import { modal } from '@/components/Modal';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
 import { useRouter } from 'next/navigation';

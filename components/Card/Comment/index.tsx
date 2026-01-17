@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { getTimeAgo } from '@/utilities/timeAgo';
 import { Button, Icon } from '@/components/UI';
 import { Card } from '@/components/Card';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Editor } from '@/components/Editor';
 import { renderMarkdown } from '@/utilities/renderMarkdown';

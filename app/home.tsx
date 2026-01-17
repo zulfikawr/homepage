@@ -18,7 +18,7 @@ export default function Home() {
     incrementPageViews('/root');
   }, []);
 
-  const { data: sections, loading } = useRealtimeData(sectionsData);
+  const { data: sections } = useRealtimeData(sectionsData);
 
   const sectionMap: Record<string, React.ReactNode> = {
     'personal-info': <PersonalInfoSection />,
@@ -45,16 +45,6 @@ export default function Home() {
     'employment',
     'posts',
   ];
-
-  if (loading) {
-    return (
-      <section className='mt-0 pt-24 lg:pt-12 space-y-14 animate-pulse'>
-        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
-        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
-        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
-      </section>
-    );
-  }
 
   const activeSections =
     sections && sections.length > 0

@@ -11,7 +11,7 @@ import {
   deleteCertificate,
 } from '@/database/certificates';
 import { modal } from '@/components/Modal';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
 import { formatDate } from '@/utilities/formatDate';
 import { generateId } from '@/utilities/generateId';

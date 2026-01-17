@@ -2,10 +2,9 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Icon, Label } from '@/components/UI';
+import { Icon, Label, Button, Separator } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { incrementPageViews } from '@/database/analytics';
-import Separator from '../UI/Separator';
 import Link from 'next/link';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Hover } from '@/components/Visual';
@@ -115,15 +114,12 @@ const PageTitle = ({
           {!isPostTitle && (
             <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
               <div className='flex-1 pl-5 pr-3'>
-                <button
-                  onClick={() => router.back()}
-                  className='flex items-center text-sm lg:text-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300'
-                >
+                <Button type='ghost' onClick={() => router.back()}>
                   <span className='mr-2 h-5 w-5'>
                     <Icon name='arrowLeft' />
                   </span>
                   Back
-                </button>
+                </Button>
               </div>
             </div>
           )}

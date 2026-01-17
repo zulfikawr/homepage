@@ -12,7 +12,7 @@ import {
 } from '@/database/publications';
 import { modal } from '@/components/Modal';
 import { generateId } from '@/utilities/generateId';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
 
 interface PublicationFormProps {

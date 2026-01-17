@@ -1,4 +1,4 @@
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
   <div className='relative flex w-full flex-col rounded-md border bg-white shadow-sm dark:border-neutral-700 dark:bg-neutral-800'>

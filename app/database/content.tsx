@@ -82,7 +82,7 @@ export default function DatabaseContent() {
     {
       title: 'Sections',
       desc: 'Manage homepage sections',
-      icon: 'squaresFour',
+      icon: 'bookOpen',
       href: '/database/sections',
     },
   ];

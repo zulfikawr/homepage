@@ -5,7 +5,7 @@ import { BookCard } from '@/components/Card/Book';
 import { booksData } from '@/database/books';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useRealtimeData } from '@/hooks';

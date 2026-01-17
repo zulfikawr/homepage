@@ -155,7 +155,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         type='default'
         onClick={handleButtonClick}
         disabled={isUploading}
-        icon={isUploading ? undefined : previewUrl ? 'pencilSimple' : 'plus'}
+        icon={
+          isUploading ? undefined : previewUrl ? 'pencilSimpleLine' : 'plus'
+        }
         className={twMerge('h-9', isUploading && 'opacity-70')}
       >
         {isUploading ? '...' : previewUrl ? 'Replace' : 'Upload'}

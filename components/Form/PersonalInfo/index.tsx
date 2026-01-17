@@ -11,7 +11,7 @@ import {
 import { toast } from '@/components/Toast';
 import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import pb from '@/lib/pocketbase';
 import { useRouter } from 'next/navigation';
 

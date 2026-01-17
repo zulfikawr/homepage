@@ -15,7 +15,7 @@ import { drawer } from '@/components/Drawer';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
 import PageTitle from '@/components/PageTitle';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 
 export default function UIComponentsContent() {
   const openDrawer = () => {

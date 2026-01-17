@@ -17,7 +17,7 @@ import PostCard from '@/components/Card/Post';
 import { Editor } from '@/components/Editor';
 import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
 
 interface PostFormProps {

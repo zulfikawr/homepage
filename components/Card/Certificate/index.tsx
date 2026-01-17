@@ -1,7 +1,7 @@
 import { Card } from '@/components/Card';
 import openLink from '@/utilities/externalLink';
 import { Certificate } from '@/types/certificate';
-import Separator from '@/components/UI/Separator';
+import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
 
