@@ -48,11 +48,9 @@ export default function FeedbackContent() {
 
       await pb.collection('feedback').create(feedbackData);
 
-      setFeedback('');
       setContact('');
       toast.success('Thank you for your feedback!');
     } catch (error) {
-      console.error('Error submitting feedback:', error);
       toast.error('Failed to submit feedback. Please try again.');
     } finally {
       setIsSubmitting(false);

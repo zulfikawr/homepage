@@ -15,7 +15,6 @@ export const useFetchData = <T>(fetchFunction: () => Promise<T>) => {
       setData(fetchedData);
     } catch (err) {
       setError('Failed to load data');
-      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }

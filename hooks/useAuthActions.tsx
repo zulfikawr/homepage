@@ -16,24 +16,16 @@ export function useAuthActions() {
     try {
       // Strategy: Try admin first as this is a personal site management dashboard
       try {
-        console.log('Attempting admin login...');
         await pb.admins.authWithPassword(email, password);
-        console.log('Admin login successful');
       } catch (adminErr: any) {
-        console.log(
-          'Admin login failed, trying user login...',
-          adminErr.message,
-        );
         // If admin fails, try regular user
         await pb.collection('users').authWithPassword(email, password);
-        console.log('User login successful');
       }
 
       router.push('/database');
       router.refresh();
       toast.show('You are now logged in!');
     } catch (err: any) {
-      console.error('Login error:', err);
       setError(err.message || 'Failed to authenticate.');
       toast.show(err.message || 'Failed to authenticate.', 'error');
     }

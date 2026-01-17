@@ -28,7 +28,6 @@ export async function generateStaticParams() {
       category: category.toString(),
     }));
   } catch (error) {
-    console.error('Error generating category paths:', error);
     return [];
   }
 }
@@ -38,7 +37,6 @@ async function getCategoryPosts(category: string): Promise<Post[]> {
     const allPosts = await getPosts();
     return allPosts.filter((post: Post) => post.categories?.includes(category));
   } catch (error) {
-    console.error('Error fetching category posts:', error);
     return [];
   }
 }

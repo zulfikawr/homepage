@@ -138,8 +138,6 @@ const CurrentlyListening = () => {
 
       // If we don't have a current track playing, ALWAYS check recently played
       if (!foundCurrentTrack) {
-        console.log('No current track playing, fetching recently played');
-
         try {
           const recentlyPlayed = await getRecentlyPlayed();
 
@@ -149,10 +147,6 @@ const CurrentlyListening = () => {
             recentlyPlayed.items &&
             recentlyPlayed.items.length > 0
           ) {
-            console.log(
-              'Found recently played track:',
-              recentlyPlayed.items[0].track.name,
-            );
             const newTrack = recentlyPlayed.items[0].track;
 
             setCurrentTrack(newTrack);
@@ -164,19 +158,15 @@ const CurrentlyListening = () => {
               includeDay: true,
             });
             setLastPlayedAt(lastPlayedAt);
-          } else {
-            console.log('No recently played tracks found or response invalid');
           }
         } catch (recentError) {
-          console.error('Error fetching recently played tracks:', recentError);
+          // Ignored
         }
 
         setIsLoading(false);
         setShowSkeleton(false);
       }
     } catch (err) {
-      console.error('Error fetching tracks:', err);
-
       // Set a retry with backoff
       setTimeout(fetchTracks, retryDelay.current);
       retryDelay.current = Math.min(retryDelay.current * 2, 60000);

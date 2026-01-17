@@ -53,7 +53,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       await pb.collection('users').authWithOAuth2({ provider: 'github' });
       toast.show('Logged in with GitHub!');
     } catch (error) {
-      console.error('GitHub login error:', error);
       toast.show('Failed to login with GitHub', 'error');
     } finally {
       setIsAuthLoading(false);
@@ -67,7 +66,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       setContent('');
       toast.show('Logged out successfully!');
     } catch (error) {
-      console.error('Logout error:', error);
       toast.show('Failed to logout', 'error');
     }
   };
@@ -88,7 +86,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       setContent('');
       toast.show('Comment posted successfully!');
     } catch (error) {
-      console.error('Error submitting comment:', error);
       toast.show('Failed to submit comment', 'error');
     } finally {
       setIsSubmitting(false);
@@ -112,7 +109,6 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       );
       toast.show('Reply posted successfully!');
     } catch (error) {
-      console.error('Error submitting reply:', error);
       toast.show('Failed to submit reply', 'error');
       throw error;
     }
@@ -126,7 +122,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     try {
       await likeComment(commentId, user.id);
     } catch (error) {
-      console.error('Error liking comment:', error);
+      // Ignored
     }
   };
 
@@ -135,7 +131,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       await deleteComment(commentId);
       toast.show('Comment deleted');
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      // Ignored
     }
   };
 
@@ -144,7 +140,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       await updateComment(commentId, newContent);
       toast.show('Comment updated');
     } catch (error) {
-      console.error('Error updating comment:', error);
+      // Ignored
     }
   };
 

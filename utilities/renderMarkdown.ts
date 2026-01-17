@@ -9,12 +9,14 @@ const md = new MarkdownIt({
   highlight: (code, lang) => {
     try {
       if (lang && hljs.getLanguage(lang)) {
-        return `<pre class="hljs"><code>${hljs.highlight(code, { language: lang, ignoreIllegals: true }).value}</code></pre>`;
+        return `<pre class="hljs"><code>${
+          hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
+        }</code></pre>`;
       }
     } catch (e) {
-      console.error('Highlight.js error:', e);
+      // Ignored
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(code)}</code></pre>`;
+    return '';
   },
 });
 
@@ -30,7 +32,6 @@ export function renderMarkdown(text: unknown): string {
     if (!safeText) return '';
     return md.render(safeText);
   } catch (err) {
-    console.error('Markdown rendering failed:', err);
     return '';
   }
 }

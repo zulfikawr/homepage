@@ -33,12 +33,13 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
     if (isInForm) return;
     e.stopPropagation();
     try {
+      const shareUrl = `${window.location.origin}/post/${post.id}`;
       await navigator.share({
         title: post.title,
-        url: `${window.location.origin}/post/${post.id}`,
+        url: shareUrl,
       });
-    } catch (err) {
-      console.error('Failed to share:', err.message);
+    } catch (err: any) {
+      // Ignored
     }
   };
 

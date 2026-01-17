@@ -31,22 +31,20 @@ export function useRealtimeData<T>(
 
     const setupListener = async () => {
       try {
-        const result = subscribeFunction((newData) => {
+        const result = await subscribeFunction((newData) => {
           if (isMounted) {
             setData(newData);
             setLoading(false);
           }
         });
-
-        if (result instanceof Promise) {
-          unsubscribe = await result;
-        } else {
+        if (isMounted) {
           unsubscribe = result;
+        } else if (result && typeof result === 'function') {
+          result();
         }
       } catch (err) {
-        console.error('Error setting up realtime listener:', err);
         if (isMounted) {
-          setError('Failed to connect to database');
+          setError('Realtime connection failed');
           setLoading(false);
         }
       }

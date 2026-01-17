@@ -20,7 +20,6 @@ export const parseDate = (dateString: string): Date => {
 
     return new Date(`${dateString} 1`);
   } catch (error) {
-    console.error('Error parsing date:', dateString, error);
     return new Date(0);
   }
 };

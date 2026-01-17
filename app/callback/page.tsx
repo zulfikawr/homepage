@@ -1,26 +1,80 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 
 export default function CallbackPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isProcessing = useRef(false);
 
   useEffect(() => {
-    // PocketBase OAuth callback handling
-    const params = new URL(window.location.href).searchParams;
-    if (params.has('code')) {
-      // In a real PocketBase setup, the authWithOAuth2 handles this,
-      // but you might need to handle the return if you use manual flow.
-      router.push('/');
+    const code = searchParams.get('code');
+
+    if (code && !isProcessing.current) {
+      isProcessing.current = true;
+
+      const exchangeToken = async () => {
+        try {
+          const origin =
+            typeof window !== 'undefined'
+              ? window.location.origin
+              : 'https://dev.zulfikar.site';
+          const redirectUri = `${origin}/callback/`;
+
+          const response = await fetch(
+            'https://accounts.spotify.com/api/token',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Basic ${btoa(
+                  `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
+                )}`,
+              },
+              body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                code,
+                redirect_uri: redirectUri,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.error_description || data.error);
+          }
+
+          // Save to PocketBase
+          await pb.collection('spotify_tokens').update('spotify', {
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            timestamp: Date.now(),
+          });
+
+          toast.success('Spotify connected successfully!');
+          router.push('/');
+        } catch (error) {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : 'Failed to connect Spotify',
+          );
+          router.push('/');
+        }
+      };
+
+      exchangeToken();
     }
-  }, [router]);
+  }, [router, searchParams]);
 
   return (
-    <div className='flex items-center justify-center min-h-screen'>
-      <p>Processing login...</p>
+    <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
+      <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500'></div>
+      <p className='text-lg font-medium'>Connecting to Spotify...</p>
     </div>
   );
 }

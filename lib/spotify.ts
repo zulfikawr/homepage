@@ -1,7 +1,6 @@
 import pb from './pocketbase';
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
-const REDIRECT_URI = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
 const SCOPES = [
   'user-read-currently-playing',
   'user-read-recently-played',
@@ -10,10 +9,17 @@ const SCOPES = [
 ].join(' ');
 
 export const getSpotifyAuthUrl = () => {
+  // Use the current origin dynamically to avoid cached 'localhost' from ENV
+  const origin =
+    typeof window !== 'undefined'
+      ? window.location.origin
+      : 'https://dev.zulfikar.site';
+  const redirectUri = `${origin}/callback/`;
+
   const params = new URLSearchParams({
     client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!,
     response_type: 'code',
-    redirect_uri: REDIRECT_URI!,
+    redirect_uri: redirectUri,
     scope: SCOPES,
   });
 
@@ -24,7 +30,7 @@ export const getAccessToken = async () => {
   try {
     const tokens = await pb
       .collection('spotify_tokens')
-      .getOne('mainxxxxxxxxxxx');
+      .getOne('spotify', { requestKey: null });
 
     if (!tokens) {
       throw new Error('No tokens found');
@@ -52,7 +58,7 @@ export const getAccessToken = async () => {
       const data = await response.json();
 
       // Update token in PocketBase
-      await pb.collection('spotify_tokens').update('mainxxxxxxxxxxx', {
+      await pb.collection('spotify_tokens').update('spotify', {
         access_token: data.access_token,
         refresh_token: tokens.refresh_token,
         timestamp: Date.now(),
@@ -63,7 +69,6 @@ export const getAccessToken = async () => {
 
     return tokens.access_token;
   } catch (error) {
-    console.error('Error getting access token:', error);
     return null;
   }
 };

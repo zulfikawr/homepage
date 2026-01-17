@@ -29,7 +29,6 @@ async function getCategories() {
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
   } catch (error) {
-    console.error('Error fetching categories:', error);
     return [];
   }
 }

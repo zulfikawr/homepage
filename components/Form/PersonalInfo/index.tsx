@@ -2,12 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { PersonalInfo } from '@/types/personalInfo';
-import { Button, FormLabel, Input } from '@/components/UI';
-import { updatePersonalInfo } from '@/database/personalInfo';
+import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
+import {
+  updatePersonalInfo,
+  COLLECTION,
+  RECORD_ID,
+} from '@/database/personalInfo';
 import { toast } from '@/components/Toast';
 import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import Separator from '@/components/UI/Separator';
+import pb from '@/lib/pocketbase';
 
 interface PersonalInfoFormProps {
   data?: PersonalInfo;
@@ -108,11 +113,19 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
             <FormLabel htmlFor='avatarUrl' required>
               Avatar URL
             </FormLabel>
-            <Input
-              value={personalInfo.avatarUrl}
-              onChange={(e) => handleChange('avatarUrl', e.target.value)}
-              required
-            />
+            <div className='flex gap-2'>
+              <Input
+                value={personalInfo.avatarUrl}
+                onChange={(e) => handleChange('avatarUrl', e.target.value)}
+                required
+              />
+              <FileUpload
+                collectionName={COLLECTION}
+                recordId={RECORD_ID}
+                fieldName='avatar'
+                onUploadSuccess={(url) => handleChange('avatarUrl', url)}
+              />
+            </div>
           </div>
         </form>
       </div>
