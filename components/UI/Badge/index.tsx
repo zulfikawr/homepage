@@ -1,6 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Icon } from '../Icon';
+import { Icon, iconMap } from '../Icon';
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 
@@ -51,18 +51,21 @@ const Badge = ({
     iconName = getIconName(children);
   }
 
+  // Check if the icon actually exists in our mapping
+  const hasValidIcon = iconName && iconName in iconMap;
+
   return (
     <span
       className={twMerge(
         'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm',
-        iconName && 'gap-1.5',
+        hasValidIcon && 'gap-1.5',
         getBadgeClasses(),
         className,
       )}
       style={{ borderRadius: `${radius}px` }}
       {...rest}
     >
-      {iconName && (
+      {hasValidIcon && (
         <span className='size-[12px] flex-shrink-0'>
           <Icon name={iconName!} />
         </span>

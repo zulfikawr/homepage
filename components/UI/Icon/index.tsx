@@ -1,9 +1,11 @@
 'use client';
 
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 import * as PhosphorIcons from '@phosphor-icons/react';
+import * as DevIcons from 'developer-icons';
 
-const iconMap = {
+export const iconMap = {
   addressBook: PhosphorIcons.AddressBookIcon,
   arrowLeft: PhosphorIcons.ArrowLeftIcon,
   arrowRight: PhosphorIcons.ArrowRightIcon,
@@ -100,20 +102,29 @@ const iconMap = {
   waves: PhosphorIcons.WavesIcon,
   whatsappLogo: PhosphorIcons.WhatsappLogoIcon,
   x: PhosphorIcons.XIcon,
-  // Tech replacements
-  cloudflare: PhosphorIcons.CloudIcon,
-  d3js: PhosphorIcons.GraphIcon,
-  firebase: PhosphorIcons.FlameIcon,
-  gemini: PhosphorIcons.SparkleIcon,
-  go: PhosphorIcons.FileCodeIcon,
-  neon: PhosphorIcons.LightningIcon,
-  nextjs: PhosphorIcons.CaretDoubleUpIcon,
-  prisma: PhosphorIcons.TriangleIcon,
-  resend: PhosphorIcons.PaperPlaneIcon,
-  rstudio: PhosphorIcons.ChartBarIcon,
-  tetrio: PhosphorIcons.GameControllerIcon,
-  vercel: PhosphorIcons.TriangleIcon,
-  vite: PhosphorIcons.LightningIcon,
+  // Tech replacements from developer-icons
+  bun: DevIcons.BunJs,
+  cloudflare: DevIcons.Cloudflare,
+  css: DevIcons.CSS3,
+  d3js: PhosphorIcons.GraphIcon, // D3 not in dev-icons
+  firebase: DevIcons.Firebase,
+  gemini: PhosphorIcons.SparkleIcon, // Gemini not in dev-icons
+  git: DevIcons.Git,
+  go: DevIcons.Go,
+  html: DevIcons.HTML5,
+  javascript: DevIcons.JavaScript,
+  neon: PhosphorIcons.LightningIcon, // Neon not in dev-icons
+  nextjs: DevIcons.NextJs,
+  nodejs: DevIcons.NodeJs,
+  prisma: DevIcons.Prisma,
+  react: DevIcons.React,
+  resend: DevIcons.ReSend,
+  rstudio: DevIcons.R,
+  tailwindcss: DevIcons.TailwindCSS,
+  typescript: DevIcons.TypeScript,
+  vercel: DevIcons.VercelDark,
+  vite: DevIcons.ViteJS,
+  vue: DevIcons.VueJs,
 };
 
 export type IconName = keyof typeof iconMap;
@@ -124,10 +135,24 @@ interface IconProps extends PhosphorIcons.IconProps {
 }
 
 const Icon = ({ name, className, ...props }: IconProps) => {
-  const PhosphorIcon = iconMap[name];
+  const IconComponent = iconMap[name];
+
+  if (!IconComponent) {
+    console.warn(`Icon with name "${name}" not found`);
+    return null;
+  }
+
+  // developer-icons expects size as a number, while PhosphorIcons handles string/number
+  // Standardizing to ensure compatibility
+  const iconSize =
+    typeof props.size === 'string' ? parseInt(props.size) : props.size;
 
   return (
-    <PhosphorIcon className={twMerge('w-full h-full', className)} {...props} />
+    <IconComponent
+      className={twMerge('w-full h-full', className)}
+      {...props}
+      size={iconSize}
+    />
   );
 };
 
