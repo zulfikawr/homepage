@@ -4,12 +4,10 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/authContext';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { drawer } from '@/components/Drawer';
-import { useRouteInfo } from '@/hooks/useRouteInfo';
-import { useAuthActions } from '@/hooks/useAuthActions';
+import { useRouteInfo, useAuthActions } from '@/hooks';
 import { Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
-import { Separator } from '@/components/UI/Separator';
 import { IconName } from '@/components/UI/Icon';
 import NavigationCard from '@/components/Card/Navigation';
 
@@ -158,7 +156,7 @@ export function KbarContent() {
             label: 'GitHub',
             desc: 'View my GitHub profile',
             action: () => window.open('https://github.com/zulfikawr', '_blank'),
-            icon: 'github',
+            icon: 'githubLogo',
           },
           {
             key: 'linkedin',
@@ -169,14 +167,14 @@ export function KbarContent() {
                 'https://www.linkedin.com/in/zulfikar-muhammad',
                 '_blank',
               ),
-            icon: 'linkedin',
+            icon: 'linkedinLogo',
           },
           {
             key: 'whatsapp',
             label: 'WhatsApp',
             desc: 'Text me on WhatsApp',
             action: () => window.open('https://wa.me/+6285156453730', '_blank'),
-            icon: 'whatsapp',
+            icon: 'whatsappLogo',
           },
         ],
       },
@@ -252,18 +250,7 @@ export function KbarContent() {
 
   return (
     <div className='flex h-full flex-col'>
-      <div className='flex-shrink-0 px-4 pt-2 pb-4 sm:px-8 sm:pt-4 sm:pb-6'>
-        <div className='flex flex-row justify-between items-center'>
-          <div className='flex items-center space-x-4'>
-            <Icon name='list' className='size-[28px] md:size-[32px]' />
-            <h1 className='text-xl md:text-2xl font-semibold'>Navigation</h1>
-          </div>
-        </div>
-      </div>
-
-      <Separator margin='0' />
-
-      <div className='hidden md:block px-8 pt-8 pb-0'>
+      <div className='px-4 pt-4 pb-0 sm:px-8 sm:pt-6 sm:pb-0'>
         <div className='relative'>
           <Icon
             name='magnifyingGlass'

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/authContext';
 import { Button, FormLabel, Input } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
-import { useAuthActions } from '@/hooks/useAuthActions';
+import { useAuthActions } from '@/hooks';
 import { useRouter } from 'next/navigation';
 
 export default function LoginContent() {

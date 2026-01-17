@@ -8,7 +8,7 @@ import ScrollWrapper from '@/components/Motion/scroll';
 import { useTitle } from '@/contexts/titleContext';
 import { Kbar } from '@/components/Kbar';
 import { KbarContent } from '@/components/Kbar/components';
-import { useRouteInfo } from '@/hooks/useRouteInfo';
+import { useRouteInfo } from '@/hooks';
 import { Button } from '@/components/UI/Button';
 import ImageWithFallback from '../ImageWithFallback';
 

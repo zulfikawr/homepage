@@ -18,7 +18,7 @@ import pb from '@/lib/pocketbase';
 import { RecordModel } from 'pocketbase';
 import { toast } from '@/components/Toast';
 import ImageWithFallback from '../ImageWithFallback';
-import { useRealtimeData } from '@/hooks/useRealtimeData';
+import { useRealtimeData } from '@/hooks';
 
 interface CommentSectionProps {
   postId: string;

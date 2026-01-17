@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { modal } from '@/components/Modal';
-import { Button } from '@/components/UI';
+import { LogoutConfirm } from '@/components/Modal/LogoutConfirm';
 
 export function useAuthActions() {
   const [error, setError] = useState<string>('');
@@ -43,25 +43,14 @@ export function useAuthActions() {
 
   const confirmLogout = () => {
     modal.open(
-      <div className='p-6'>
-        <h2 className='text-xl font-semibold mb-4'>Confirm Logout</h2>
-        <p className='mb-6'>Are you sure you want to logout?</p>
-        <div className='flex justify-end space-x-4'>
-          <Button onClick={() => modal.close()}>Cancel</Button>
-          <Button
-            type='destructive'
-            onClick={() => {
-              pb.authStore.clear();
-              modal.close();
-              router.push('/');
-              router.refresh();
-              toast.show('Logged out successfully!');
-            }}
-          >
-            Logout
-          </Button>
-        </div>
-      </div>,
+      React.createElement(LogoutConfirm, {
+        onConfirm: () => {
+          pb.authStore.clear();
+          router.push('/');
+          router.refresh();
+          toast.show('Logged out successfully!');
+        },
+      }),
     );
   };
 

@@ -2,9 +2,9 @@
 
 import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
-import { Button } from './UI';
+import { Button } from '../UI';
 
-export default function AdminGuard({
+export default function AdminProtected({
   children,
 }: {
   children: React.ReactNode;

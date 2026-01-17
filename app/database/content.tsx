@@ -3,7 +3,7 @@
 import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
 import { IconName } from '@/components/UI/Icon';
-import AdminGuard from '@/components/AdminGuard';
+import AdminProtected from '@/components/AdminProtected';
 
 export default function DatabaseContent() {
   const databaseCategories: {
@@ -110,7 +110,7 @@ export default function DatabaseContent() {
         route='/database'
       />
 
-      <AdminGuard>
+      <AdminProtected>
         <div className='grid grid-cols-2 gap-4'>
           {databaseCategories.map((category, index) => {
             // Use a deterministic "shuffle" based on index
@@ -127,7 +127,7 @@ export default function DatabaseContent() {
             );
           })}
         </div>
-      </AdminGuard>
+      </AdminProtected>
     </div>
   );
 }

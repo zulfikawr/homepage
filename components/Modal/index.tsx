@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useBodyScroll } from 'hooks';
+import { useBodyScroll } from '@/hooks';
 
 type ModalInstance = {
   isOpen: boolean;
@@ -105,10 +105,8 @@ const Modal = () => {
   return (
     <div className={`fixed inset-0 z-[9999] ${isVisible ? 'block' : 'hidden'}`}>
       <div
-        className={`absolute inset-0 bg-black transition-opacity duration-400 ${
-          animation === 'in'
-            ? 'bg-opacity-50 opacity-100'
-            : 'bg-opacity-50 opacity-0'
+        className={`absolute inset-0 bg-black/50 transition-opacity duration-500 ${
+          animation === 'in' ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleClose}
       />

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useBodyScroll } from 'hooks';
+import { useBodyScroll } from '@/hooks';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 
