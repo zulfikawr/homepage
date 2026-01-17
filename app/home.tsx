@@ -10,16 +10,19 @@ import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
 import CurrentlyListening from '@/components/Banners/CurrentlyListening';
 import LocationAndTime from '@/components/Banners/LocationAndTime';
+import { useRealtimeData } from '@/hooks';
+import { sectionsData } from '@/database/sections';
 
 export default function Home() {
   useEffect(() => {
     incrementPageViews('/root');
   }, []);
 
-  return (
-    <section className='mt-0 pt-24 lg:pt-12 space-y-14'>
-      <PersonalInfoSection />
+  const { data: sections, loading } = useRealtimeData(sectionsData);
 
+  const sectionMap: Record<string, React.ReactNode> = {
+    'personal-info': <PersonalInfoSection />,
+    highlights: (
       <div className='space-y-6'>
         <PagesAndLinks />
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
@@ -27,14 +30,48 @@ export default function Home() {
           <LocationAndTime />
         </div>
       </div>
+    ),
+    interests: <InterestsAndObjectivesSection />,
+    projects: <ProjectSection />,
+    employment: <EmploymentSection />,
+    posts: <PostSection />,
+  };
 
-      <InterestsAndObjectivesSection />
+  const defaultOrder = [
+    'personal-info',
+    'highlights',
+    'interests',
+    'projects',
+    'employment',
+    'posts',
+  ];
 
-      <ProjectSection />
+  if (loading) {
+    return (
+      <section className='mt-0 pt-24 lg:pt-12 space-y-14 animate-pulse'>
+        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
+        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
+        <div className='h-40 w-full bg-neutral-100 dark:bg-neutral-800 rounded-md' />
+      </section>
+    );
+  }
 
-      <EmploymentSection />
+  const activeSections =
+    sections && sections.length > 0
+      ? sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order)
+      : defaultOrder.map((name, index) => ({
+          name,
+          enabled: true,
+          order: index,
+        }));
 
-      <PostSection />
+  return (
+    <section className='mt-0 pt-24 lg:pt-12 space-y-14'>
+      {activeSections.map((section) => (
+        <React.Fragment key={section.name}>
+          {sectionMap[section.name]}
+        </React.Fragment>
+      ))}
     </section>
   );
 }

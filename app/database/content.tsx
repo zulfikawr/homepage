@@ -79,6 +79,12 @@ export default function DatabaseContent() {
       icon: 'bookOpen',
       href: '/database/reading-list',
     },
+    {
+      title: 'Sections',
+      desc: 'Manage homepage sections',
+      icon: 'squaresFour',
+      href: '/database/sections',
+    },
   ];
 
   const colors = [
@@ -93,6 +99,7 @@ export default function DatabaseContent() {
     'text-pink-500',
     'text-neutral-500',
     'text-violet-500',
+    'text-rose-500',
   ];
 
   const shuffledColors = [...colors].sort(() => Math.random() - 0.5);
