@@ -9,6 +9,7 @@ export interface CardProps {
   openForm?: boolean;
   isInForm?: boolean;
   isPreview?: boolean;
+  isActive?: boolean;
   className?: string;
   children?: React.ReactNode;
 }
@@ -19,6 +20,7 @@ const Card: React.FC<CardProps> = ({
   openForm,
   isInForm,
   isPreview,
+  isActive,
   className = '',
   children,
 }) => {
@@ -30,13 +32,17 @@ const Card: React.FC<CardProps> = ({
   } border shadow-md select-none ${className}`;
 
   const effectStyles = effectEnabled
-    ? 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
-    : 'bg-card border-border backdrop-blur-none';
+    ? isActive
+      ? 'bg-primary/20 dark:bg-primary/30 border-primary/50 dark:border-primary/50 backdrop-blur-md'
+      : 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
+    : isActive
+      ? 'bg-primary/10 border-primary dark:border-primary'
+      : 'bg-card border-border backdrop-blur-none';
 
   const interactiveStyles =
     isInForm || isPreview
       ? ''
-      : 'cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl';
+      : `cursor-pointer transition-all duration-300 ${!isActive ? 'hover:-translate-y-0.5 hover:shadow-xl' : ''}`;
 
   return (
     <div

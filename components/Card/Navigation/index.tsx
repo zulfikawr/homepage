@@ -12,6 +12,7 @@ interface Props {
   icon?: IconName;
   className?: string;
   href?: string;
+  isActive?: boolean;
   action?: () => void;
 }
 
@@ -21,6 +22,7 @@ export default function NavigationCard({
   icon,
   className,
   href,
+  isActive,
   action,
 }: Props) {
   const router = useRouter();
@@ -38,7 +40,11 @@ export default function NavigationCard({
   };
 
   return (
-    <Card className='relative px-2 md:px-4 pb-4 pt-3' onClick={handleClick}>
+    <Card
+      className='relative px-2 md:px-4 pb-4 pt-3'
+      onClick={handleClick}
+      isActive={isActive}
+    >
       <div className='relative z-10 flex items-center overflow-hidden'>
         {icon && (
           <div

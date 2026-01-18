@@ -75,33 +75,41 @@ const Drawer = () => {
   }, []);
 
   useEffect(() => {
+    let openTimer: NodeJS.Timeout;
+    let animTimer: NodeJS.Timeout;
+
     if (isOpen) {
-      // Use requestAnimationFrame to ensure the DOM is painted with isVisible: true
-      // before we trigger the 'in' animation class
-      requestAnimationFrame(() => {
+      // Wrap in setTimeout to make it asynchronous and avoid cascading render lint errors
+      openTimer = setTimeout(() => {
         setIsVisible(true);
         setCurrentContent(content);
-        requestAnimationFrame(() => {
-          setAnimation('in');
-        });
-      });
-    } else {
-      requestAnimationFrame(() => {
-        setAnimation('out');
-      });
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-        setCurrentContent(null);
-        setDragY(0);
 
-        if (pendingContent) {
-          drawerInstance = { isOpen: true, content: pendingContent };
-          pendingContent = null;
-          subscribers.forEach((subscriber) => subscriber(drawerInstance));
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+        animTimer = setTimeout(() => {
+          setAnimation('in');
+        }, 50);
+      }, 0);
+    } else {
+      openTimer = setTimeout(() => {
+        setAnimation('out');
+
+        setTimeout(() => {
+          setIsVisible(false);
+          setCurrentContent(null);
+          setDragY(0);
+
+          if (pendingContent) {
+            drawerInstance = { isOpen: true, content: pendingContent };
+            pendingContent = null;
+            subscribers.forEach((subscriber) => subscriber(drawerInstance));
+          }
+        }, 500);
+      }, 0);
     }
+
+    return () => {
+      clearTimeout(openTimer);
+      clearTimeout(animTimer);
+    };
   }, [isOpen, content]);
 
   useEffect(() => {

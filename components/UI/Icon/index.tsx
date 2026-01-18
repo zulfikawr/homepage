@@ -24,6 +24,7 @@ export const iconMap = {
   chatCenteredText: PhosphorIcons.ChatCenteredTextIcon,
   checkCircle: PhosphorIcons.CheckCircleIcon,
   checks: PhosphorIcons.ChecksIcon,
+  circleNotch: PhosphorIcons.CircleNotchIcon,
   clock: PhosphorIcons.ClockIcon,
   clockCounterClockwise: PhosphorIcons.ClockCounterClockwiseIcon,
   cloudMoon: PhosphorIcons.CloudMoonIcon,
