@@ -8,9 +8,15 @@ interface BookCardProps {
   book: Book;
   openForm?: boolean;
   isInForm?: boolean;
+  isActive?: boolean;
 }
 
-export default function BookCard({ book, openForm, isInForm }: BookCardProps) {
+export default function BookCard({
+  book,
+  openForm,
+  isInForm,
+  isActive,
+}: BookCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -28,6 +34,7 @@ export default function BookCard({ book, openForm, isInForm }: BookCardProps) {
       onClick={handleCardClick}
       openForm={openForm}
       isInForm={isInForm}
+      isActive={isActive}
       className={`${openForm ? 'w-full' : ''}`}
     >
       <div className='flex flex-1 items-center'>

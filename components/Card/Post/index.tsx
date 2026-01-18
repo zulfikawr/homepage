@@ -15,9 +15,15 @@ interface PostCardProps {
   post: Post;
   openForm?: boolean;
   isInForm?: boolean;
+  isActive?: boolean;
 }
 
-export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
+export default function PostCard({
+  post,
+  openForm,
+  isInForm,
+  isActive,
+}: PostCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
@@ -86,7 +92,12 @@ export default function PostCard({ post, openForm, isInForm }: PostCardProps) {
   };
 
   return (
-    <Card onClick={handleCardClick} openForm={openForm} isInForm={isInForm}>
+    <Card
+      onClick={handleCardClick}
+      openForm={openForm}
+      isInForm={isInForm}
+      isActive={isActive}
+    >
       <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
         {renderMedia()}
 

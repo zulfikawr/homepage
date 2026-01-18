@@ -11,12 +11,14 @@ interface ProjectCardProps {
   project: Project;
   openForm?: boolean;
   isInForm?: boolean;
+  isActive?: boolean;
 }
 
 export default function ProjectCard({
   project,
   openForm,
   isInForm,
+  isActive,
 }: ProjectCardProps) {
   const router = useRouter();
 
@@ -32,7 +34,12 @@ export default function ProjectCard({
   };
 
   return (
-    <Card onClick={handleCardClick} isInDrawer={openForm} isInForm={isInForm}>
+    <Card
+      onClick={handleCardClick}
+      isInDrawer={openForm}
+      isInForm={isInForm}
+      isActive={isActive}
+    >
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
         <Hover perspective={1000} max={25} scale={1.01}>
           <ImageWithFallback

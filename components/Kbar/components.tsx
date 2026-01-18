@@ -10,7 +10,40 @@ import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
 import { IconName } from '@/components/UI/Icon';
 import NavigationCard from '@/components/Card/Navigation';
+import PostCard from '@/components/Card/Post';
+import ProjectCard from '@/components/Card/Project';
+import BookCard from '@/components/Card/Book';
+import PublicationCard from '@/components/Card/Publication';
 import { searchDatabase, SearchResult } from '@/database/search';
+import { Post } from '@/types/post';
+import { Project } from '@/types/project';
+import { Book } from '@/types/book';
+import { Publication } from '@/types/publication';
+
+type StaticKbarItem = {
+  key: string;
+  label: string;
+  desc: string;
+  action: () => void;
+  icon: IconName;
+  hidden?: boolean;
+};
+
+type DbKbarItem = {
+  key: string;
+  type: 'post' | 'project' | 'book' | 'publication';
+  data: Post | Project | Book | Publication;
+  action: () => void;
+};
+
+type KbarItem = StaticKbarItem | DbKbarItem;
+
+type KbarSection = {
+  label: string;
+  icon: IconName;
+  isDb?: boolean;
+  items: KbarItem[];
+};
 
 export function KbarContent() {
   const router = useRouter();
@@ -48,14 +81,7 @@ export function KbarContent() {
   const allItems: {
     label: string;
     icon: IconName;
-    items: {
-      key: string;
-      label: string;
-      desc: string;
-      action: () => void;
-      icon: IconName;
-      hidden?: boolean;
-    }[];
+    items: StaticKbarItem[];
   }[] = useMemo(
     () => [
       {
@@ -232,8 +258,8 @@ export function KbarContent() {
     [isAdmin, user, router, confirmLogout],
   );
 
-  const filteredSections = useMemo(() => {
-    const staticSections = allItems
+  const filteredSections = useMemo((): KbarSection[] => {
+    const staticSections: KbarSection[] = allItems
       .map((section) => ({
         ...section,
         items: section.items.filter(
@@ -245,28 +271,25 @@ export function KbarContent() {
       .filter((section) => section.items.length > 0);
 
     if (dbResults.length > 0) {
-      const dbSection = {
+      const dbSection: KbarSection = {
         label: 'Database Results',
         icon: 'database' as IconName,
+        isDb: true,
         items: dbResults.map((res) => ({
-          key: `db-${res.type}-${res.id}`,
-          label: res.title,
-          desc: res.description,
-          action: () => router.push(res.url),
-          icon: (res.type === 'post'
-            ? 'note'
-            : res.type === 'project'
-              ? 'package'
-              : res.type === 'book'
-                ? 'bookOpen'
-                : 'newspaper') as IconName,
+          key: `db-${res.type}-${res.data.id}`,
+          type: res.type,
+          data: res.data,
+          action: () => {
+            // This is just for flattenedItems compatibility
+            // The cards themselves handle clicks
+          },
         })),
       };
       return [dbSection, ...staticSections];
     }
 
     return staticSections;
-  }, [allItems, search, dbResults, router]);
+  }, [allItems, search, dbResults]);
 
   const flattenedItems = useMemo(
     () => filteredSections.flatMap((section) => section.items),
@@ -301,7 +324,23 @@ export function KbarContent() {
       e.preventDefault();
       const selectedItem = flattenedItems[selectedIndex];
       if (selectedItem) {
-        handleAction(selectedItem.action);
+        if ('type' in selectedItem) {
+          const res = selectedItem as DbKbarItem;
+          if (res.type === 'post') {
+            router.push(`/post/${res.data.slug || res.data.id}`);
+            drawer.close();
+          } else if (res.type === 'project') {
+            router.push(`/projects`);
+            drawer.close();
+          } else if (res.type === 'book' || res.type === 'publication') {
+            if ('link' in res.data) {
+              window.open(res.data.link, '_blank');
+              drawer.close();
+            }
+          }
+        } else {
+          handleAction((selectedItem as StaticKbarItem).action);
+        }
       }
     }
   };
@@ -362,18 +401,55 @@ export function KbarContent() {
             return (
               <div key={section.label} className='mb-8'>
                 <SectionTitle icon={section.icon} title={section.label} />
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+                <div
+                  className={`grid gap-3 ${section.isDb ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+                >
                   {section.items.map((item, index) => {
                     const isSelected = itemOffset + index === selectedIndex;
                     return (
-                      <div key={item.key} data-selected={isSelected}>
-                        <NavigationCard
-                          title={item.label}
-                          desc={item.desc}
-                          icon={item.icon}
-                          isActive={isSelected}
-                          action={() => handleAction(item.action)}
-                        />
+                      <div
+                        key={item.key}
+                        data-selected={isSelected}
+                        className='scroll-mt-4'
+                      >
+                        {'type' in item ? (
+                          <>
+                            {item.type === 'post' && (
+                              <PostCard
+                                post={item.data as Post}
+                                isActive={isSelected}
+                              />
+                            )}
+                            {item.type === 'project' && (
+                              <ProjectCard
+                                project={item.data as Project}
+                                isActive={isSelected}
+                              />
+                            )}
+                            {item.type === 'book' && (
+                              <BookCard
+                                book={item.data as Book}
+                                isActive={isSelected}
+                              />
+                            )}
+                            {item.type === 'publication' && (
+                              <PublicationCard
+                                publication={item.data as Publication}
+                                isActive={isSelected}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <NavigationCard
+                            title={(item as StaticKbarItem).label}
+                            desc={(item as StaticKbarItem).desc}
+                            icon={(item as StaticKbarItem).icon}
+                            isActive={isSelected}
+                            action={() =>
+                              handleAction((item as StaticKbarItem).action)
+                            }
+                          />
+                        )}
                       </div>
                     );
                   })}

@@ -8,12 +8,14 @@ interface PublicationCardProps {
   publication: Publication;
   openForm?: boolean;
   isInForm?: boolean;
+  isActive?: boolean;
 }
 
 export default function PublicationCard({
   publication,
   openForm,
   isInForm,
+  isActive,
 }: PublicationCardProps) {
   const router = useRouter();
 
@@ -28,7 +30,12 @@ export default function PublicationCard({
   };
 
   return (
-    <Card onClick={handleCardClick} openForm={openForm} isInForm={isInForm}>
+    <Card
+      onClick={handleCardClick}
+      openForm={openForm}
+      isInForm={isInForm}
+      isActive={isActive}
+    >
       <div className='p-4 space-y-2'>
         <p className='text-lg line-clamp-2 text-ellipsis font-medium leading-tight dark:text-white'>
           {publication.title}
