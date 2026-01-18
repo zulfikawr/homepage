@@ -37,9 +37,7 @@ export default function MovieCard({
         className={`p-0.5 ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-muted-foreground'}`}
         aria-hidden
       >
-        <div className='w-2.5 h-2.5 md:w-3 md:h-3'>
-          <Icon name='star' />
-        </div>
+        <Icon name='star' className='size-[12px] md:size-4.5' />
       </div>
     );
   };

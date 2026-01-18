@@ -1,27 +1,39 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 const EffectContext = createContext({
   effectEnabled: false,
   toggleEffect: () => {},
 });
 
+const subscribe = (callback: () => void) => {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+};
+
 export const EffectProvider = ({ children }: { children: React.ReactNode }) => {
-  const [effectEnabled, setEffectEnabled] = useState(() => {
-    if (typeof window !== 'undefined') {
+  const [internalEffectEnabled, setInternalEffectEnabled] = useState(false);
+
+  const effectEnabled = useSyncExternalStore(
+    subscribe,
+    () => {
       const stored = localStorage.getItem('effectEnabled');
-      return stored !== null ? stored === 'true' : false;
-    }
-    return false;
-  });
+      return stored !== null ? stored === 'true' : internalEffectEnabled;
+    },
+    () => false,
+  );
 
   const toggleEffect = () => {
-    setEffectEnabled((prev) => {
-      const updated = !prev;
-      localStorage.setItem('effectEnabled', String(updated));
-      return updated;
-    });
+    const newValue = !effectEnabled;
+    localStorage.setItem('effectEnabled', String(newValue));
+    setInternalEffectEnabled(newValue);
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

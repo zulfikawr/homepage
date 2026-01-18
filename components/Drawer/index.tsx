@@ -113,7 +113,7 @@ const Drawer = () => {
     () => {
       handleClose();
     },
-    { enabled: isVisible, enableOnTags: ['INPUT'] },
+    { enabled: isVisible },
   );
 
   // Drag Handlers

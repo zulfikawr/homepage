@@ -1,6 +1,11 @@
 'use client';
 
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 interface RadiusContextType {
   radius: number;
@@ -12,18 +17,27 @@ const RadiusContext = createContext<RadiusContextType>({
   setRadius: () => {},
 });
 
+const subscribe = (callback: () => void) => {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+};
+
 export const RadiusProvider = ({ children }: { children: React.ReactNode }) => {
-  const [radius, setRadiusState] = useState(() => {
-    if (typeof window !== 'undefined') {
+  const [internalRadius, setInternalRadius] = useState(8);
+
+  const radius = useSyncExternalStore(
+    subscribe,
+    () => {
       const stored = localStorage.getItem('borderRadius');
-      return stored !== null ? parseInt(stored) : 8;
-    }
-    return 8;
-  });
+      return stored !== null ? parseInt(stored) : internalRadius;
+    },
+    () => 8,
+  );
 
   const setRadius = (val: number) => {
     localStorage.setItem('borderRadius', String(val));
-    setRadiusState(val);
+    setInternalRadius(val);
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

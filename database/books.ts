@@ -27,7 +27,7 @@ export function booksData(callback: (data: Book[]) => void) {
   const fetchAll = async () => {
     try {
       const records = await pb
-        .collection('books')
+        .collection('reading_list')
         .getFullList<RecordModel>({ sort: '-created' });
       callback(records.map(mapRecordToBook));
     } catch {
@@ -37,9 +37,9 @@ export function booksData(callback: (data: Book[]) => void) {
 
   fetchAll();
 
-  pb.collection('books').subscribe('*', fetchAll);
+  pb.collection('reading_list').subscribe('*', fetchAll);
 
-  return () => pb.collection('books').unsubscribe();
+  return () => pb.collection('reading_list').unsubscribe();
 }
 
 /**
@@ -49,7 +49,7 @@ export function booksData(callback: (data: Book[]) => void) {
 export async function getBooks(): Promise<Book[]> {
   try {
     const records = await pb
-      .collection('books')
+      .collection('reading_list')
       .getFullList<RecordModel>({ sort: '-created' });
     return records.map(mapRecordToBook);
   } catch {
@@ -66,7 +66,9 @@ export async function addBook(
   data: Omit<Book, 'id'>,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   try {
-    const record = await pb.collection('books').create<RecordModel>(data);
+    const record = await pb
+      .collection('reading_list')
+      .create<RecordModel>(data);
     return { success: true, book: mapRecordToBook(record) };
   } catch (error: unknown) {
     return {
@@ -91,7 +93,7 @@ export async function updateBook(
     if (recordId.length !== 15) {
       try {
         const record = await pb
-          .collection('books')
+          .collection('reading_list')
           .getFirstListItem(`slug="${recordId}"`);
         recordId = record.id;
       } catch {
@@ -100,7 +102,7 @@ export async function updateBook(
     }
 
     const record = await pb
-      .collection('books')
+      .collection('reading_list')
       .update<RecordModel>(recordId, rest);
     return { success: true, book: mapRecordToBook(record) };
   } catch (error: unknown) {
@@ -123,11 +125,11 @@ export async function deleteBook(
     let recordId = id;
     if (id.length !== 15) {
       const record = await pb
-        .collection('books')
+        .collection('reading_list')
         .getFirstListItem(`slug="${id}"`);
       recordId = record.id;
     }
-    await pb.collection('books').delete(recordId);
+    await pb.collection('reading_list').delete(recordId);
     return { success: true };
   } catch (error: unknown) {
     return {
@@ -146,17 +148,21 @@ export async function getBookById(id: string): Promise<Book | null> {
   try {
     if (id.length === 15) {
       try {
-        const record = await pb.collection('books').getOne<RecordModel>(id);
+        const record = await pb
+          .collection('reading_list')
+          .getOne<RecordModel>(id);
         if (record) return mapRecordToBook(record);
       } catch {
         // Ignored
       }
     }
 
-    const records = await pb.collection('books').getFullList<RecordModel>({
-      filter: `slug = "${id}"`,
-      requestKey: null,
-    });
+    const records = await pb
+      .collection('reading_list')
+      .getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+        requestKey: null,
+      });
 
     if (records.length > 0) {
       return mapRecordToBook(records[0]);

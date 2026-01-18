@@ -1,6 +1,11 @@
 'use client';
 
-import { createContext, useContext, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 
 const BackgroundContext = createContext<{
   background: string;
@@ -10,22 +15,29 @@ const BackgroundContext = createContext<{
   setBackground: () => {},
 });
 
+const subscribe = (callback: () => void) => {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+};
+
 export const BackgroundProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [background, setBackgroundState] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('background');
-      return stored || 'clouds';
-    }
-    return 'clouds';
-  });
+  const [internalBackground, setInternalBackground] = useState('clouds');
+
+  const background = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem('background') || internalBackground,
+    () => 'clouds',
+  );
 
   const setBackground = (bg: string) => {
-    setBackgroundState(bg);
+    setInternalBackground(bg);
     localStorage.setItem('background', bg);
+    // Dispatch storage event to update other tabs/components
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

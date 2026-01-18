@@ -95,7 +95,7 @@ const Modal = () => {
     () => {
       handleClose();
     },
-    { enabled: isVisible, enableOnTags: ['INPUT'] },
+    { enabled: isVisible },
   );
 
   if (!isVisible && !isOpen) {

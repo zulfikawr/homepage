@@ -113,7 +113,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
             ? 'Book updated successfully!'
             : 'Book added successfully!',
         );
-        router.push('/database/books');
+        router.push('/database/reading-list');
       }
     } catch (error) {
       toast.error(
@@ -132,7 +132,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
 
       if (result.success) {
         toast.success('Book deleted successfully!');
-        router.push('/database/books');
+        router.push('/database/reading-list');
       }
     } catch (error) {
       toast.error(

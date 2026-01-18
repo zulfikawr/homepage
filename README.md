@@ -4,20 +4,9 @@
     A personal website where I list my projects, work history, blog posts, and more.
 </p>
 
-<br>
-
-![Screenshot](/public/screenshot.png)
-
-## 🌟 Features
-
-- **Project Showcase** – A collection of my personal and professional projects.
-- **Work Experience** – Highlights of my employment and internships.
-- **Blog Posts** – Articles about topics I’m interested in.
-- **Spotify Integration** – Displays the currently playing and recently played songs using Spotify API.
-
 ## 🛠️ Technologies Used
 
-- **Next.js 15** – React-based framework for fast and scalable web apps.
+- **Next.js 16** – React-based framework for fast and scalable web apps.
 - **PocketBase** – Open source backend for real-time database and auth.
 - **Spotify API** – Fetches the currently playing track and listening history.
 - **Tailwind CSS** – Utility-first CSS framework for styling.
@@ -36,7 +25,7 @@ cd homepage
 ### 2️⃣ Install dependencies:
 
 ```sh
-npm install
+bun install
 ```
 
 ### 3️⃣ Set up environment variables:
@@ -44,22 +33,19 @@ npm install
 Create a `.env` file in the root directory and add:
 
 ```sh
-NEXT_PUBLIC_SPOTIFY_CLIENT_ID=your_spotify_client_id
-NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
+NEXT_PUBLIC_POCKETBASE_URL=
+NEXT_PUBLIC_SPOTIFY_CLIENT_ID=
+NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=
+NEXT_PUBLIC_SPOTIFY_REFRESH_TOKEN=
 ```
 
 ### 4️⃣ Run the project:
 
 ```sh
-npm run dev
+bun run dev
 ```
 
 The site will be available at `http://localhost:3000`
-
-## 🌐 Deployment
-
-This project is deployed on **Firebase Hosting**:
-👉 [zulf1kar.web.app](https://zulf1kar.web.app)
 
 ## 📌 Acknowledgments
 

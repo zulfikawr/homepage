@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/authContext';
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { drawer } from '@/components/Drawer';
-import { useRouteInfo, useAuthActions } from '@/hooks';
+import { useAuthActions } from '@/hooks';
 import { Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
 import SectionTitle from '@/components/SectionTitle';
@@ -18,7 +18,6 @@ export function KbarContent() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { confirmLogout } = useAuthActions();
-  const { isHomePage } = useRouteInfo();
 
   const allItems: {
     label: string;
@@ -37,21 +36,6 @@ export function KbarContent() {
         label: 'Pages',
         icon: 'folder',
         items: [
-          !isHomePage
-            ? {
-                key: 'back',
-                label: 'Go Back',
-                desc: 'Return to previous page',
-                action: () => router.back(),
-                icon: 'arrowLeft',
-              }
-            : {
-                key: 'home',
-                label: 'Home',
-                desc: 'Return to homepage',
-                action: () => router.push('/'),
-                icon: 'houseLine',
-              },
           {
             key: 'analytics',
             label: 'Analytics',
@@ -219,7 +203,7 @@ export function KbarContent() {
               ],
       },
     ],
-    [isAdmin, user, isHomePage, router, confirmLogout],
+    [isAdmin, user, router, confirmLogout],
   );
 
   const filteredSections = useMemo(
