@@ -3,7 +3,6 @@
 import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
 import { IconName } from '@/components/UI/Icon';
-import AdminProtected from '@/components/AdminProtected';
 
 export default function DatabaseContent() {
   const databaseCategories: {
@@ -102,24 +101,22 @@ export default function DatabaseContent() {
         subtitle='Manage all database-related content on the website'
       />
 
-      <AdminProtected>
-        <div className='grid grid-cols-2 gap-4'>
-          {databaseCategories.map((category, index) => {
-            // Use a deterministic "shuffle" based on index
-            const colorIndex = (index * 7) % colors.length;
-            return (
-              <NavigationCard
-                key={index}
-                title={category.title}
-                desc={category.desc}
-                icon={category.icon}
-                className={colors[colorIndex]}
-                href={category.href}
-              />
-            );
-          })}
-        </div>
-      </AdminProtected>
+      <div className='grid grid-cols-2 gap-4'>
+        {databaseCategories.map((category, index) => {
+          // Use a deterministic "shuffle" based on index
+          const colorIndex = (index * 7) % colors.length;
+          return (
+            <NavigationCard
+              key={index}
+              title={category.title}
+              desc={category.desc}
+              icon={category.icon}
+              className={colors[colorIndex]}
+              href={category.href}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

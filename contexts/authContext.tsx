@@ -32,6 +32,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           (pb.authStore.isSuperuser ||
             (record as unknown as { role?: string }).role === 'admin'),
       );
+      // Sync to cookie for middleware
+      document.cookie = pb.authStore.exportToCookie({
+        httpOnly: false,
+        path: '/',
+      });
       setLoading(false);
     };
 
@@ -40,6 +45,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen to auth changes
     const unsubscribe = pb.authStore.onChange(() => {
       syncAuth();
+      // Sync to cookie for middleware
+      document.cookie = pb.authStore.exportToCookie({
+        httpOnly: false,
+        path: '/',
+      });
     });
 
     return () => unsubscribe();

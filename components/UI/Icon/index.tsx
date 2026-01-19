@@ -192,7 +192,7 @@ export type IconName = keyof typeof iconMap | keyof typeof iconifyMap;
 
 interface IconProps extends Omit<
   React.SVGProps<SVGSVGElement>,
-  'name' | 'size'
+  'name' | 'size' | 'mode' | 'onLoad' | 'rotate'
 > {
   name: IconName;
   className?: string;
@@ -200,14 +200,13 @@ interface IconProps extends Omit<
   color?: string;
   weight?: 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
   mirrored?: boolean;
+  rotate?: number;
 }
 
 const Icon = ({ name, className, size = 20, ...props }: IconProps) => {
-  // Check if it's an Iconify icon
   if (name in iconifyMap) {
-    // Iconify uses width/height instead of size
-    // We omit 'weight' and 'mirrored' as they are Phosphor-specific
-    const { weight: _weight, mirrored: _mirrored, ...iconifyProps } = props;
+    const { weight: _w, mirrored: _m, ...iconifyProps } = props;
+
     return (
       <Iconify
         icon={iconifyMap[name as keyof typeof iconifyMap]}
@@ -218,7 +217,6 @@ const Icon = ({ name, className, size = 20, ...props }: IconProps) => {
       />
     );
   }
-
   // Fallback to PhosphorIcons
   const IconComponent = iconMap[name as keyof typeof iconMap];
 
