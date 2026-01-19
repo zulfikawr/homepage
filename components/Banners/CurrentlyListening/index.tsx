@@ -42,7 +42,7 @@ const CurrentlyListening = () => {
   const [isLoading, setIsLoading] = useState(!apiCache.currentTrack);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [progress, setProgress] = useState(0);
-  const { isAdmin } = useAuth();
+  const { isAdmin, loading: authLoading } = useAuth();
   const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const lastUpdateTime = useRef<number>(0);
@@ -245,6 +245,8 @@ const CurrentlyListening = () => {
   }
 
   if (!isAuthorized) {
+    if (authLoading) return <LoadingSkeleton />;
+
     return (
       <Card isPreview>
         <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
@@ -268,7 +270,7 @@ const CurrentlyListening = () => {
               </button>
             </div>
           ) : (
-            <div className='text-sm text-muted-foreground'>
+            <div className='text-sm text-muted-foreground text-center'>
               Spotify integration is private.
             </div>
           )}

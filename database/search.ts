@@ -138,21 +138,17 @@ export async function searchDatabase(query: string): Promise<SearchResult[]> {
       pb
         .collection('posts')
         .getList<RecordModel>(1, 3, { filter, sort: '-created' }),
-      pb
-        .collection('projects')
-        .getList<RecordModel>(1, 3, {
-          filter: projectFilter,
-          sort: '-created',
-        }),
+      pb.collection('projects').getList<RecordModel>(1, 3, {
+        filter: projectFilter,
+        sort: '-created',
+      }),
       pb
         .collection('reading_list')
         .getList<RecordModel>(1, 3, { filter: bookFilter, sort: '-created' }),
-      pb
-        .collection('publications')
-        .getList<RecordModel>(1, 3, {
-          filter: publicationFilter,
-          sort: '-created',
-        }),
+      pb.collection('publications').getList<RecordModel>(1, 3, {
+        filter: publicationFilter,
+        sort: '-created',
+      }),
     ]);
 
     const results: SearchResult[] = [

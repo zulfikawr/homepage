@@ -13,12 +13,6 @@ export default function DatabaseContent() {
     href: string;
   }[] = [
     {
-      title: 'Analytics',
-      desc: 'Page views and analytics',
-      icon: 'chartLine',
-      href: '/analytics',
-    },
-    {
       title: 'Certifications',
       desc: 'Manage your licenses and certifications',
       icon: 'certificate',
@@ -81,13 +75,12 @@ export default function DatabaseContent() {
     {
       title: 'Sections',
       desc: 'Manage homepage sections',
-      icon: 'bookOpen',
+      icon: 'rows',
       href: '/database/sections',
     },
   ];
 
   const colors = [
-    'text-red-500',
     'text-orange-500',
     'text-yellow-500',
     'text-green-500',

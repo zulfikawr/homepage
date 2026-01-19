@@ -10,6 +10,7 @@ const NextConfigs = {
     ],
   },
   trailingSlash: true,
+  allowedDevOrigins: ['dev.zulfikar.site'],
 };
 
 module.exports = NextConfigs;

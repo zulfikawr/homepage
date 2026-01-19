@@ -81,6 +81,7 @@ export const iconMap = {
   pushPinSlash: PhosphorIcons.PushPinSlashIcon,
   quotes: PhosphorIcons.QuotesIcon,
   rocketLaunch: PhosphorIcons.RocketLaunchIcon,
+  rows: PhosphorIcons.RowsIcon,
   share: PhosphorIcons.ShareIcon,
   shareNetwork: PhosphorIcons.ShareNetworkIcon,
   signIn: PhosphorIcons.SignInIcon,

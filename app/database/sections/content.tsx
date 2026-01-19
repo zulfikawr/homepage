@@ -11,27 +11,17 @@ import { drawer } from '@/components/Drawer';
 import CardEmpty from '@/components/Card/Empty';
 
 // Preview Components
-import PagesAndLinks from '@/components/Banners/PagesAndLinks';
 import EmploymentSection from '@/components/Section/Employment';
 import ProjectSection from '@/components/Section/Project';
 import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
 import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
-import CurrentlyListening from '@/components/Banners/CurrentlyListening';
-import LocationAndTime from '@/components/Banners/LocationAndTime';
+import Banners from '@/components/Section/Banners';
 
 const SectionPreview = ({ sections }: { sections: Section[] }) => {
   const sectionMap: Record<string, React.ReactNode> = {
     'personal-info': <PersonalInfoSection />,
-    highlights: (
-      <div className='space-y-6'>
-        <PagesAndLinks />
-        <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
-          <CurrentlyListening />
-          <LocationAndTime />
-        </div>
-      </div>
-    ),
+    banners: <Banners />,
     interests: <InterestsAndObjectivesSection />,
     projects: <ProjectSection />,
     employment: <EmploymentSection />,
