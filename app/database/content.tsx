@@ -100,7 +100,6 @@ export default function DatabaseContent() {
         emoji='🗃️'
         title='Database'
         subtitle='Manage all database-related content on the website'
-        route='/database'
       />
 
       <AdminProtected>

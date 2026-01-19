@@ -64,7 +64,6 @@ export default function FeedbackContent() {
         emoji='📑'
         title='Feedback'
         subtitle="I appreciate thoughtful feedback and believe that we don't get enough of them these days."
-        route='/feedback'
       />
 
       <Card isPreview className='p-6'>

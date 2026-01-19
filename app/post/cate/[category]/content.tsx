@@ -20,7 +20,6 @@ export default function CategoryContent({
         emoji='📁'
         title={`${category}`}
         subtitle='Posts organized by category'
-        route={`/post/cate/${category}`}
       />
 
       {posts.length === 0 ? (

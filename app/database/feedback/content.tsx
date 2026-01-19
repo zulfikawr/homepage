@@ -106,7 +106,6 @@ export default function FeedbackResponsesContent() {
         emoji='📬'
         title='Feedback Responses'
         subtitle='All feedback submitted by users.'
-        route='/feedback/responses'
       />
 
       {loading ? (

@@ -50,7 +50,6 @@ export default function ContactsContent() {
         emoji='📞'
         title='Contacts'
         subtitle="Let's connect! Here are the best ways to reach me."
-        route='/contacts'
       />
 
       <div className='flex flex-col gap-8'>

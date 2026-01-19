@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { incrementPageViews } from '@/database/analytics';
+import React from 'react';
 import EmploymentSection from '@/components/Section/Employment';
 import ProjectSection from '@/components/Section/Project';
 import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
@@ -12,10 +11,6 @@ import { useRealtimeData } from '@/hooks';
 import { sectionsData } from '@/database/sections';
 
 export default function Home() {
-  useEffect(() => {
-    incrementPageViews('/root');
-  }, []);
-
   const { data: sections } = useRealtimeData(sectionsData);
 
   const sectionMap: Record<string, React.ReactNode> = {

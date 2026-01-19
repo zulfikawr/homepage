@@ -32,7 +32,6 @@ export default function ProjectsContent() {
         emoji='🚀'
         title='Projects'
         subtitle='A collection of my projects, categorized by their status.'
-        route='/projects'
       />
 
       {/* Work in Progress Section */}

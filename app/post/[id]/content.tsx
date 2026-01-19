@@ -13,7 +13,6 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
       <PageTitle
         title={post.title}
         subtitle={post.excerpt}
-        route={`/post/${post.id}`}
         category={post.categories[0]}
         image={post.image}
         isPostTitle

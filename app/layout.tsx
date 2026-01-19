@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { EB_Garamond } from 'next/font/google';
-import Script from 'next/script';
 import Providers from './providers';
 import Drawer from '@/components/Drawer';
 import Modal from '@/components/Modal';
@@ -83,12 +82,6 @@ export default function RootLayout({
           <Modal />
           <Toast />
         </Providers>
-        {/* Cloudflare Web Analytics */}
-        <Script
-          defer
-          src='https://static.cloudflareinsights.com/beacon.min.js'
-          data-cf-beacon='{"token": "1eba07f9cc5547d696b384c99c479a21"}'
-        />
       </body>
     </html>
   );

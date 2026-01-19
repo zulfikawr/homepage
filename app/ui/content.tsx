@@ -87,7 +87,6 @@ export default function UIComponentsContent() {
         emoji='🎨'
         title='UI Components'
         subtitle='Explore all available UI components used in this website, in an interactive way.'
-        route='/ui'
       />
 
       <div className='space-y-6'>

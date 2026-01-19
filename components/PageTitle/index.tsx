@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon, Label, Button, Separator } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
-import { incrementPageViews } from '@/database/analytics';
 import Link from 'next/link';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { Hover } from '@/components/Visual';
@@ -18,7 +17,6 @@ interface PageTitleProps {
     color: 'red' | 'yellow' | 'green' | 'blue';
     text: string;
   };
-  route?: string;
   isPostTitle?: boolean;
   category?: string;
   image?: string;
@@ -29,7 +27,6 @@ const PageTitle = ({
   title,
   subtitle,
   badge,
-  route,
   isPostTitle,
   category,
   image,
@@ -39,8 +36,7 @@ const PageTitle = ({
 
   useEffect(() => {
     setHeaderTitle(`${emoji ?? ''} ${title}`);
-    if (route) incrementPageViews(route);
-  }, [emoji, title, setHeaderTitle, route]);
+  }, [emoji, title, setHeaderTitle]);
 
   const badgeStyles = {
     red: 'rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-500 dark:border-red-700 dark:bg-red-800 dark:text-red-400',

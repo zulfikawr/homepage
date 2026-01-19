@@ -53,7 +53,6 @@ export default function PostsContent() {
         emoji='📰'
         title='Posts'
         subtitle='Browse all posts written by me'
-        route='/post'
       />
 
       <div className='flex flex-wrap gap-2 mb-6'>

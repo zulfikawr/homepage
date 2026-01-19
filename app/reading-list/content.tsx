@@ -26,7 +26,6 @@ export default function ReadingListContent() {
           color: 'yellow',
           text: '2025',
         }}
-        route='/reading-list'
       />
 
       {/* Currently Reading Section */}

@@ -165,7 +165,6 @@ export default function SpotifyMusicContent() {
         emoji='🎧'
         title='Music Stats'
         subtitle='My Spotify listening statistics'
-        route='/music'
       />
 
       {/* Currently Playing Section */}

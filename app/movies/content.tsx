@@ -14,12 +14,7 @@ export default function MoviesContent() {
 
   return (
     <div>
-      <PageTitle
-        emoji='🎬'
-        title='Movies'
-        subtitle='My movie list'
-        route='/movies'
-      />
+      <PageTitle emoji='🎬' title='Movies' subtitle='My movie list' />
 
       <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {loading ? (

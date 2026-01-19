@@ -21,7 +21,6 @@ export default function LoginContent() {
         emoji='🔑'
         title='Login'
         subtitle='Admin login to manage database.'
-        route='/login'
       />
 
       {loading ? (

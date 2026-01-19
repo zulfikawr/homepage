@@ -20,7 +20,6 @@ export default function CategoriesContent({ categories }: Props) {
         emoji='📁'
         title='Categories'
         subtitle='Posts organized by category'
-        route='/post/cate'
       />
 
       <div className='bg-white p-5 dark:border-border dark:bg-card lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>

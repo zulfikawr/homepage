@@ -22,7 +22,6 @@ export default function PublicationsContent() {
         emoji='📚'
         title='Publications'
         subtitle='My academic and professional publications'
-        route='/publications'
       />
 
       <div className='grid grid-cols-1 gap-4'>

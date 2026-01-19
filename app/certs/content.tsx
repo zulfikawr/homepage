@@ -22,7 +22,6 @@ export default function CertsContent() {
         emoji='🎓'
         title='Certificates'
         subtitle='My licenses and certifications'
-        route='/certs'
       />
 
       <div className='grid grid-cols-1 gap-4'>
