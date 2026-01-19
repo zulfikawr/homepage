@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, IconName, iconMap } from '@/components/UI/Icon';
+import { Icon, IconName, iconMap, iconifyMap } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 import { twMerge } from 'tailwind-merge';
 
@@ -26,8 +26,9 @@ const Label = ({
 }: LabelProps) => {
   const { radius } = useRadius();
 
-  // Explicitly check if the icon exists in our map
-  const validIconName = icon && icon in iconMap ? icon : null;
+  // Explicitly check if the icon exists in our maps
+  const validIconName =
+    icon && (icon in iconMap || icon in iconifyMap) ? icon : null;
 
   const baseClassName =
     'cursor-pointer justify-center font-medium items-center inline-flex w-auto lg:px-4 lg:py-1 px-2 py-1 text-center text-sm align-middle effect-pressing';

@@ -1,7 +1,7 @@
 'use client';
 
 import * as PhosphorIcons from '@phosphor-icons/react';
-import * as DevIcons from 'developer-icons';
+import { Icon as Iconify } from '@iconify/react';
 
 export const iconMap = {
   addressBook: PhosphorIcons.AddressBookIcon,
@@ -104,51 +104,136 @@ export const iconMap = {
   waves: PhosphorIcons.WavesIcon,
   whatsappLogo: PhosphorIcons.WhatsappLogoIcon,
   x: PhosphorIcons.XIcon,
-  // Tech replacements from developer-icons
-  bun: DevIcons.BunJs,
-  cloudflare: DevIcons.Cloudflare,
-  css: DevIcons.CSS3,
-  d3js: PhosphorIcons.GraphIcon, // D3 not in dev-icons
-  firebase: DevIcons.Firebase,
-  gemini: PhosphorIcons.SparkleIcon, // Gemini not in dev-icons
-  git: DevIcons.Git,
-  go: DevIcons.Go,
-  html: DevIcons.HTML5,
-  javascript: DevIcons.JavaScript,
-  neon: PhosphorIcons.LightningIcon, // Neon not in dev-icons
-  nextjs: DevIcons.NextJs,
-  nodejs: DevIcons.NodeJs,
-  prisma: DevIcons.Prisma,
-  react: DevIcons.React,
-  resend: DevIcons.ReSend,
-  rstudio: DevIcons.R,
-  tailwindcss: DevIcons.TailwindCSS,
-  typescript: DevIcons.TypeScript,
-  vercel: DevIcons.VercelDark,
-  vite: DevIcons.ViteJS,
-  vue: DevIcons.VueJs,
 };
 
-export type IconName = keyof typeof iconMap;
+// Map tech icons to Iconify string names
+export const iconifyMap: Record<string, string> = {
+  // Languages
+  javascript: 'vscode-icons:file-type-js-official',
+  typescript: 'vscode-icons:file-type-typescript-official',
+  python: 'vscode-icons:file-type-python',
+  go: 'vscode-icons:file-type-go',
+  rust: 'vscode-icons:file-type-rust',
+  java: 'vscode-icons:file-type-java',
+  php: 'vscode-icons:file-type-php',
+  ruby: 'vscode-icons:file-type-ruby',
+  swift: 'vscode-icons:file-type-swift',
+  kotlin: 'vscode-icons:file-type-kotlin',
+  cpp: 'vscode-icons:file-type-cpp',
+  csharp: 'vscode-icons:file-type-csharp',
+  dart: 'vscode-icons:file-type-dart',
+  r: 'vscode-icons:file-type-r',
+  rstudio: 'vscode-icons:file-type-r',
 
-interface IconProps extends PhosphorIcons.IconProps {
+  // Frontend
+  html: 'vscode-icons:file-type-html',
+  css: 'vscode-icons:file-type-css',
+  react: 'vscode-icons:file-type-reactjs',
+  nextjs: 'vscode-icons:file-type-next',
+  vue: 'vscode-icons:file-type-vue',
+  angular: 'vscode-icons:file-type-angular',
+  svelte: 'vscode-icons:file-type-svelte',
+  tailwindcss: 'vscode-icons:file-type-tailwind',
+  sass: 'vscode-icons:file-type-sass',
+  less: 'vscode-icons:file-type-less',
+
+  // Backend & Frameworks
+  nodejs: 'vscode-icons:file-type-node',
+  bun: 'vscode-icons:file-type-bun',
+  nestjs: 'logos:nestjs',
+  django: 'vscode-icons:file-type-django',
+  flask: 'vscode-icons:file-type-flask',
+  laravel: 'vscode-icons:file-type-laravel',
+  rails: 'vscode-icons:file-type-rails',
+  spring: 'vscode-icons:file-type-spring',
+
+  // Databases
+  postgresql: 'vscode-icons:file-type-pgsql',
+  mysql: 'vscode-icons:file-type-mysql',
+  mongodb: 'vscode-icons:file-type-mongo',
+  redis: 'vscode-icons:file-type-redis',
+  sqlite: 'vscode-icons:file-type-sqlite',
+  firebase: 'vscode-icons:file-type-firebase',
+  supabase: 'logos:supabase-icon',
+  pocketbase: 'logos:pocketbase-icon',
+  prisma: 'vscode-icons:file-type-prisma',
+
+  // Cloud & DevOps
+  docker: 'vscode-icons:file-type-docker',
+  kubernetes: 'vscode-icons:file-type-kubernetes',
+  aws: 'vscode-icons:file-type-aws',
+  azure: 'vscode-icons:file-type-azure',
+  gcp: 'logos:google-cloud',
+  vercel: 'vscode-icons:file-type-vercel',
+  netlify: 'vscode-icons:file-type-netlify',
+  cloudflare: 'vscode-icons:file-type-cloudflare',
+  git: 'vscode-icons:file-type-git',
+  github: 'vscode-icons:file-type-github',
+
+  // Tools & Others
+  figma: 'vscode-icons:file-type-figma',
+  gemini: 'vscode-icons:file-type-gemini',
+  vitest: 'vscode-icons:file-type-vitest',
+  jest: 'vscode-icons:file-type-jest',
+  cypress: 'vscode-icons:file-type-cypress',
+  graphql: 'vscode-icons:file-type-graphql',
+  npm: 'vscode-icons:file-type-npm',
+  pnpm: 'vscode-icons:file-type-pnpm',
+  yarn: 'vscode-icons:file-type-yarn',
+  vite: 'vscode-icons:file-type-vite',
+  webpack: 'vscode-icons:file-type-webpack',
+  flutter: 'vscode-icons:file-type-flutter',
+  neon: 'logos:neon-icon',
+  resend: 'logos:resend-icon',
+  d3js: 'vscode-icons:file-type-d3',
+};
+
+export type IconName = keyof typeof iconMap | keyof typeof iconifyMap;
+
+interface IconProps extends Omit<
+  React.SVGProps<SVGSVGElement>,
+  'name' | 'size'
+> {
   name: IconName;
   className?: string;
+  size?: number | string;
+  color?: string;
+  weight?: 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
+  mirrored?: boolean;
 }
 
 const Icon = ({ name, className, size = 20, ...props }: IconProps) => {
-  const IconComponent = iconMap[name];
+  // Check if it's an Iconify icon
+  if (name in iconifyMap) {
+    // Iconify uses width/height instead of size
+    // We omit 'weight' and 'mirrored' as they are Phosphor-specific
+    const { weight: _weight, mirrored: _mirrored, ...iconifyProps } = props;
+    return (
+      <Iconify
+        icon={iconifyMap[name as keyof typeof iconifyMap]}
+        className={className}
+        width={size}
+        height={size}
+        {...iconifyProps}
+      />
+    );
+  }
+
+  // Fallback to PhosphorIcons
+  const IconComponent = iconMap[name as keyof typeof iconMap];
 
   if (!IconComponent) {
     console.warn(`Icon with name "${name}" not found`);
     return null;
   }
 
-  // developer-icons expects size as a number, while PhosphorIcons handles string/number
-  // Standardizing to ensure compatibility
-  const iconSize = typeof size === 'string' ? parseInt(size) : size;
-
-  return <IconComponent className={className} {...props} size={iconSize} />;
+  return (
+    <IconComponent
+      className={className}
+      size={size}
+      {...(props as PhosphorIcons.IconProps)}
+    />
+  );
 };
 
 Icon.displayName = 'Icon';

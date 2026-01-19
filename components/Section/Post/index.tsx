@@ -16,8 +16,9 @@ const PostSection = () => {
   return (
     <section>
       <SectionTitle
-        icon='package'
+        icon='notePencil'
         title='Latest Posts'
+        loading={loading}
         link={{
           href: '/post',
           label: 'All Posts',

@@ -31,6 +31,7 @@ const ProjectSection = () => {
       <SectionTitle
         icon='package'
         title='Pinned Projects'
+        loading={loading}
         link={{
           href: '/projects',
           label: 'All Projects',

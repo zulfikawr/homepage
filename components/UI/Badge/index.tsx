@@ -1,6 +1,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Icon, iconMap } from '../Icon';
+import { Icon, iconMap, iconifyMap } from '../Icon';
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 
@@ -52,7 +52,8 @@ const Badge = ({
   }
 
   // Check if the icon actually exists in our mapping
-  const hasValidIcon = iconName && iconName in iconMap;
+  const hasValidIcon =
+    iconName && (iconName in iconMap || iconName in iconifyMap);
 
   return (
     <span

@@ -37,6 +37,7 @@ const EmploymentSection = () => {
       <SectionTitle
         icon='briefcase'
         title='Employments'
+        loading={loading}
         link={{
           href: 'https://www.linkedin.com/in/zulfikar-muhammad',
           label: 'LinkedIn',

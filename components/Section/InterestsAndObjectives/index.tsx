@@ -15,7 +15,11 @@ const InterestsAndObjectivesSection = () => {
 
   return (
     <section>
-      <SectionTitle icon='microscope' title='Interests & Objectives' />
+      <SectionTitle
+        icon='microscope'
+        title='Interests & Objectives'
+        loading={loading}
+      />
 
       {loading ? (
         <Loading />
