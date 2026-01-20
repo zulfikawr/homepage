@@ -302,7 +302,11 @@ export function KbarContent() {
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.focus();
+      // Only focus on non-mobile devices to prevent automatic keyboard popup
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (!isMobile) {
+        inputRef.current.focus();
+      }
     }
   }, []);
 
