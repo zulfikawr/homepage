@@ -1,4 +1,4 @@
-import { getPublicationById, getPublications } from '@/database/publications';
+import { getPublicationById } from '@/database/publications';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditPublicationPage from './content';
@@ -17,17 +17,6 @@ async function PublicationLoader({ params }: Props) {
   if (!publication) return notFound();
 
   return <EditPublicationPage publication={publication} />;
-}
-
-export async function generateStaticParams() {
-  try {
-    const publications = await getPublications();
-    return publications.map((publication) => ({
-      id: publication.id,
-    }));
-  } catch {
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

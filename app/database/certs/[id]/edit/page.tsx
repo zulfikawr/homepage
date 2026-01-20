@@ -1,4 +1,4 @@
-import { getCertificateById, getCertificates } from '@/database/certificates';
+import { getCertificateById } from '@/database/certificates';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditCertificatePage from './content';
@@ -17,17 +17,6 @@ async function CertificateLoader({ params }: Props) {
   if (!cert) return notFound();
 
   return <EditCertificatePage certificate={cert} />;
-}
-
-export async function generateStaticParams() {
-  try {
-    const certs = await getCertificates();
-    return certs.map((cert) => ({
-      id: cert.id,
-    }));
-  } catch {
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

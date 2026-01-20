@@ -1,4 +1,4 @@
-import { getEmploymentById, getEmployments } from '@/database/employments';
+import { getEmploymentById } from '@/database/employments';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditEmploymentPage from './content';
@@ -17,17 +17,6 @@ async function EmploymentLoader({ params }: Props) {
   if (!employment) return notFound();
 
   return <EditEmploymentPage employment={employment} />;
-}
-
-export async function generateStaticParams() {
-  try {
-    const employments = await getEmployments();
-    return employments.map((employment) => ({
-      id: employment.id,
-    }));
-  } catch {
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

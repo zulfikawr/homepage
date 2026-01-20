@@ -1,4 +1,4 @@
-import { getMovieById, getMovies } from '@/database/movies';
+import { getMovieById } from '@/database/movies';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditMoviePage from './content';
@@ -17,15 +17,6 @@ async function MovieLoader({ params }: Props) {
   if (!movie) return notFound();
 
   return <EditMoviePage movie={movie} />;
-}
-
-export async function generateStaticParams() {
-  try {
-    const movies = await getMovies();
-    return movies.map((m) => ({ id: m.id }));
-  } catch {
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

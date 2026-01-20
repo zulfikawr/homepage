@@ -17,21 +17,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  try {
-    const posts = await getPosts();
-    const categories = [
-      ...new Set(posts.flatMap((post: Post) => post.categories || [])),
-    ];
-
-    return categories.map((category) => ({
-      category: category.toString(),
-    }));
-  } catch {
-    return [];
-  }
-}
-
 async function getCategoryPosts(category: string): Promise<Post[]> {
   try {
     const allPosts = await getPosts();

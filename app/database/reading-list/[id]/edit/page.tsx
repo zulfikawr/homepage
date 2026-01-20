@@ -1,4 +1,4 @@
-import { getBookById, getBooks } from '@/database/books';
+import { getBookById } from '@/database/books';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditBookPage from './content';
@@ -17,17 +17,6 @@ async function BookLoader({ params }: Props) {
   if (!book) return notFound();
 
   return <EditBookPage book={book} />;
-}
-
-export async function generateStaticParams() {
-  try {
-    const books = await getBooks();
-    return books.map((book) => ({
-      id: book.id,
-    }));
-  } catch {
-    return [];
-  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
