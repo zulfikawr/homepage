@@ -9,9 +9,8 @@ interface NextRequestWithGeo extends NextRequest {
   ip?: string;
 }
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const req = request as NextRequestWithGeo;
-  // Use production URL as default for consistency
   const pb = new PocketBase('https://database.zulfikar.site');
 
   // Load the auth store from the cookie header
@@ -43,50 +42,52 @@ export async function proxy(request: NextRequest) {
       req.ip ||
       'Unknown';
 
-    let country =
+    const country =
       req.headers.get('cf-ipcountry') ||
       req.headers.get('x-vercel-ip-country') ||
       req.geo?.country ||
       'Unknown';
 
-    // Fallback for self-hosted or local testing (only if not on Vercel/Cloudflare)
-    if (
-      country === 'Unknown' &&
-      ip !== 'Unknown' &&
-      ip !== '127.0.0.1' &&
-      ip !== '::1'
-    ) {
-      try {
-        const res = await fetch(`https://ipapi.co/${ip}/country_code/`, {
-          next: { revalidate: 86400 }, // Cache for 24 hours if possible
-        });
-        if (res.ok) {
-          const code = await res.text();
-          if (code && code.length === 2) {
-            country = code.toUpperCase();
+    // Non-blocking geolocation and analytics
+    (async () => {
+      let finalCountry = country;
+      if (
+        finalCountry === 'Unknown' &&
+        ip !== 'Unknown' &&
+        ip !== '127.0.0.1' &&
+        ip !== '::1'
+      ) {
+        try {
+          const res = await fetch(`https://ipapi.co/${ip}/country_code/`, {
+            next: { revalidate: 86400 },
+          });
+          if (res.ok) {
+            const code = await res.text();
+            if (code && code.length === 2) {
+              finalCountry = code.toUpperCase();
+            }
           }
+        } catch {
+          // silent fail
         }
+      }
+
+      try {
+        await pb.collection('analytics_events').create({
+          path: req.nextUrl.pathname,
+          country: finalCountry,
+          referrer: req.headers.get('referer') || 'Direct',
+          user_agent: req.headers.get('user-agent') || 'Unknown',
+          is_bot: /bot|crawler|spider|crawling/i.test(
+            req.headers.get('user-agent') || '',
+          ),
+        });
       } catch {
         // silent fail
       }
-    }
+    })();
 
-    console.log(`Visitor: ${ip} [${country}] -> ${req.nextUrl.pathname}`);
-
-    // Await logging to ensure it completes
-    try {
-      await pb.collection('analytics_events').create({
-        path: req.nextUrl.pathname,
-        country,
-        referrer: req.headers.get('referer') || 'Direct',
-        user_agent: req.headers.get('user-agent') || 'Unknown',
-        is_bot: /bot|crawler|spider|crawling/i.test(
-          req.headers.get('user-agent') || '',
-        ),
-      });
-    } catch {
-      // silent fail
-    }
+    console.log(`Visitor Request: ${ip} -> ${req.nextUrl.pathname}`);
   }
 
   if (isDatabaseRoute && !isAdmin) {

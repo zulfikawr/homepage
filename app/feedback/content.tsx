@@ -8,10 +8,18 @@ import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
 import { Card } from '@/components/Card';
 import { escapeHtml } from '@/utilities/escapeHtml';
+import { useSyncExternalStore } from 'react';
 
 const MAX_CHARS = 5000;
 
+const emptySubscribe = () => () => {};
+
 export default function FeedbackContent() {
+  const isMounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const [feedback, setFeedback] = useState('');
   const [contact, setContact] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +51,9 @@ export default function FeedbackContent() {
       const feedbackData = {
         feedback: safeFeedback,
         contact: safeContact || 'Anonymous',
-        timestamp: new Date().toISOString(),
+        timestamp: isMounted
+          ? new Date().toISOString()
+          : '2025-01-01T00:00:00Z',
       };
 
       await pb.collection('feedback').create(feedbackData);

@@ -1,7 +1,7 @@
 'use client';
 
-import EmploymentCard from '@/components/Card/Employment';
-import { employmentsData } from '@/database/employments';
+import { EmploymentCard } from '@/components/Card/Employment';
+import { employmentsData } from '@/database/employments.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

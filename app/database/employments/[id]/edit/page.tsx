@@ -2,6 +2,7 @@ import { getEmploymentById, getEmployments } from '@/database/employments';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditEmploymentPage from './content';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{
@@ -39,5 +40,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function EmploymentEditPage({ params }: Props) {
-  return <EmploymentLoader params={params} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmploymentLoader params={params} />
+    </Suspense>
+  );
 }

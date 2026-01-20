@@ -2,6 +2,7 @@ import { getMovieById, getMovies } from '@/database/movies';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditMoviePage from './content';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{
@@ -37,5 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function MovieEditPage({ params }: Props) {
-  return <MovieLoader params={params} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MovieLoader params={params} />
+    </Suspense>
+  );
 }

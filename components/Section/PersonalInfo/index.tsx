@@ -1,18 +1,23 @@
-import { personalInfoData } from '@/database/personalInfo';
+import { personalInfoData } from '@/database/personalInfo.client';
 import Loading from './loading';
 import { Hover } from '@/components/Visual';
 import { useRealtimeData } from '@/hooks';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { PersonalInfo } from '@/types/personalInfo';
 
-const PersonalInfoSection = () => {
+interface PersonalInfoSectionProps {
+  initialData?: PersonalInfo;
+}
+
+const PersonalInfoSection = ({ initialData }: PersonalInfoSectionProps) => {
   const {
     data: personalInfo,
     loading,
     error,
-  } = useRealtimeData(personalInfoData);
+  } = useRealtimeData(personalInfoData, initialData);
 
   if (error) return <div>Failed to load personal info</div>;
-  if (loading) return <Loading />;
+  if (loading || !personalInfo) return <Loading />;
 
   return (
     <section className='flex items-center justify-between gap-x-10 gap-y-8'>

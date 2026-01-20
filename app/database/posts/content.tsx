@@ -1,7 +1,7 @@
 'use client';
 
 import PostCard from '@/components/Card/Post';
-import { postsData } from '@/database/posts';
+import { postsData } from '@/database/posts.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

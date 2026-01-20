@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Certificate } from '@/types/certificate';
 import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
 import CertificateCard from '@/components/Card/Certificate';
@@ -16,6 +16,7 @@ import DateSelect from '@/components/DateSelect';
 import { formatDate } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
 import { useRouter } from 'next/navigation';
+import { useSyncExternalStore } from 'react';
 
 interface CertificateFormProps {
   certificateToEdit?: Certificate;
@@ -33,6 +34,8 @@ const initialCertificateState: Certificate = {
   link: '',
 };
 
+const emptySubscribe = () => () => {};
+
 const CertificateForm: React.FC<CertificateFormProps> = ({
   certificateToEdit,
 }) => {
@@ -43,14 +46,25 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
 
+  const now = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date(),
+    () => new Date('2025-01-01'),
+  );
+
   const initialDate = useMemo(() => {
     const date = certificateToEdit?.dateIssued
       ? new Date(certificateToEdit.dateIssued)
-      : new Date();
+      : now;
     return date;
-  }, [certificateToEdit]);
+  }, [certificateToEdit, now]);
 
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+
+  // Sync state if initialDate change
+  useEffect(() => {
+    setSelectedDate(initialDate);
+  }, [initialDate]);
 
   const currentPreviewCertificate: Certificate = {
     id: certificate.id || 'preview',

@@ -1,3 +1,7 @@
+'use client';
+
+'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Icon, Input, Button } from '@/components/UI';
 import { twMerge } from 'tailwind-merge';

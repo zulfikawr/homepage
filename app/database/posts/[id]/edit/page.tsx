@@ -2,6 +2,7 @@ import { getPostById } from '@/database/posts';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditPostPage from './content';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{
@@ -28,5 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function PostEditPage({ params }: Props) {
-  return <PostLoader params={params} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PostLoader params={params} />
+    </Suspense>
+  );
 }

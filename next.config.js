@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
+  cacheComponents: true,
+  reactCompiler: true,
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
   images: {
-    formats: ['image/webp'],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 14400,
+    qualities: [75],
     remotePatterns: [
       {
         protocol: 'https',

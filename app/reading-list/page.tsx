@@ -1,12 +1,13 @@
 import { Metadata } from 'next';
 import ReadingListContent from './content';
+import { getBooks } from '@/database/books';
 
 export const metadata: Metadata = {
   title: 'Reading List - Zulfikar',
-  description:
-    "I'm reading or re-reading (on average) one book every month in 2024",
+  description: 'Books and articles I am currently reading or have read',
 };
 
 export default async function ReadingListPage() {
-  return <ReadingListContent />;
+  const books = await getBooks();
+  return <ReadingListContent initialData={books} />;
 }

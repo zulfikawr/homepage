@@ -2,6 +2,7 @@ import { getProjectById } from '@/database/projects';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditProjectPage from './content';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{
@@ -28,5 +29,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function ProjectEditPage({ params }: Props) {
-  return <ProjectLoader params={params} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProjectLoader params={params} />
+    </Suspense>
+  );
 }

@@ -2,6 +2,7 @@ import { getBookById, getBooks } from '@/database/books';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditBookPage from './content';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{
@@ -39,5 +40,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function BookEditPage({ params }: Props) {
-  return <BookLoader params={params} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookLoader params={params} />
+    </Suspense>
+  );
 }

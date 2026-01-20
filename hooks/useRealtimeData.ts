@@ -19,11 +19,16 @@ export function useRealtimeData<T>(
   dependencies: unknown[] = [],
 ) {
   const [data, setData] = useState<T | null>(initialData || null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(
+    initialData === undefined || initialData === null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading((prev) => (prev === true ? prev : true));
+    // Only set loading to true if we don't have data yet
+    if (data === null) {
+      setLoading(true);
+    }
     setError((prev) => (prev === null ? prev : null));
 
     let isMounted = true;

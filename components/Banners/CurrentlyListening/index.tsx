@@ -10,12 +10,12 @@ import {
 } from '@/lib/spotify';
 import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
-import { getTimeAgo } from '@/utilities/timeAgo';
 import LoadingSkeleton from './loading';
 import { formatDate } from '@/utilities/formatDate';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
 import { Card } from '@/components/Card';
+import { TimeAgo } from '@/components/UI';
 
 const apiCache: {
   currentTrack: SpotifyTrack | null;
@@ -349,9 +349,11 @@ const CurrentlyListening = () => {
                 <span className='truncate'>Playing now</span>
               </span>
             ) : lastPlayedAt ? (
-              <span className='text-xs text-muted-foreground flex-shrink-0'>
-                Played {getTimeAgo(lastPlayedAt)}
-              </span>
+              <TimeAgo
+                date={lastPlayedAt}
+                prefix='Played'
+                className='text-xs text-muted-foreground flex-shrink-0'
+              />
             ) : (
               <span className='text-xs text-muted-foreground flex-shrink-0'>
                 Played just now

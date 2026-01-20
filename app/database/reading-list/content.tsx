@@ -1,7 +1,7 @@
 'use client';
 
 import BookCard from '@/components/Card/Book';
-import { booksData } from '@/database/books';
+import { booksData } from '@/database/books.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

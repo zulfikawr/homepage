@@ -1,13 +1,19 @@
 'use client';
 
 import { useBackground } from '@/contexts/backgroundContext';
-import CloudAndStarsBackground from './CloudsAndStars';
-import WavesBackground from './Waves';
-import TetrisBackground from './Tetris';
-import StarsBackground from './Stars';
-import DigitalRainBackground from './Matrix';
-import ParticleNetworkBackground from './Matrix';
+import dynamic from 'next/dynamic';
 import { useSyncExternalStore } from 'react';
+
+const CloudAndStarsBackground = dynamic(() => import('./CloudsAndStars'), {
+  ssr: false,
+});
+const WavesBackground = dynamic(() => import('./Waves'), { ssr: false });
+const TetrisBackground = dynamic(() => import('./Tetris'), { ssr: false });
+const StarsBackground = dynamic(() => import('./Stars'), { ssr: false });
+const DigitalRainBackground = dynamic(() => import('./Matrix'), { ssr: false });
+const ParticleNetworkBackground = dynamic(() => import('./ParticleNetwork'), {
+  ssr: false,
+});
 
 const emptySubscribe = () => () => {};
 

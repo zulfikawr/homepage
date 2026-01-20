@@ -1,52 +1,17 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { Movie } from '@/types/movie';
 import { RecordModel } from 'pocketbase';
-
-/**
- * Maps a PocketBase record to a Movie object.
- */
-function mapRecordToMovie(record: RecordModel): Movie {
-  return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    releaseDate: record.releaseDate,
-    imdbId: record.imdbId,
-    posterUrl: record.posterUrl,
-    imdbLink: record.imdbLink,
-    rating: record.rating,
-  };
-}
-
-/**
- * Fetches and subscribes to movies data.
- * @param callback Function to call when data changes.
- * @returns Unsubscribe function.
- */
-export function moviesData(callback: (data: Movie[]) => void) {
-  const fetchAll = async () => {
-    try {
-      const records = await pb
-        .collection('movies')
-        .getFullList<RecordModel>({ sort: '-created' });
-      callback(records.map(mapRecordToMovie));
-    } catch {
-      callback([]);
-    }
-  };
-
-  fetchAll();
-
-  pb.collection('movies').subscribe('*', fetchAll);
-
-  return () => pb.collection('movies').unsubscribe();
-}
+import { revalidateTag } from 'next/cache';
+import { mapRecordToMovie } from './movies.client';
 
 /**
  * Fetches all movies from the database.
  * @returns Promise with array of movies.
  */
 export async function getMovies(): Promise<Movie[]> {
+  'use cache';
   try {
     const records = await pb
       .collection('movies')
@@ -67,7 +32,13 @@ export async function addMovie(
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
   try {
     const record = await pb.collection('movies').create<RecordModel>(data);
-    return { success: true, movie: mapRecordToMovie(record) };
+    const movie = mapRecordToMovie(record);
+    try {
+      revalidateTag('movies', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, movie };
   } catch (error: unknown) {
     return {
       success: false,
@@ -102,7 +73,13 @@ export async function updateMovie(
     const record = await pb
       .collection('movies')
       .update<RecordModel>(recordId, rest);
-    return { success: true, movie: mapRecordToMovie(record) };
+    const movie = mapRecordToMovie(record);
+    try {
+      revalidateTag('movies', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, movie };
   } catch (error: unknown) {
     return {
       success: false,
@@ -128,6 +105,11 @@ export async function deleteMovie(
       recordId = record.id;
     }
     await pb.collection('movies').delete(recordId);
+    try {
+      revalidateTag('movies', 'max');
+    } catch {
+      // Ignore
+    }
     return { success: true };
   } catch (error: unknown) {
     return {
@@ -139,10 +121,9 @@ export async function deleteMovie(
 
 /**
  * Fetches a single movie by ID or slug.
- * @param id ID or slug of the movie.
- * @returns Promise with the movie data or null.
  */
 export async function getMovieById(id: string): Promise<Movie | null> {
+  'use cache';
   try {
     if (id.length === 15) {
       try {

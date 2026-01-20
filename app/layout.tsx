@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import '@/styles/tailwind.css';
 import '@/styles/atom-one-dark.css';
 import DynamicBackground from '@/components/Visual/Background';
+import { Suspense } from 'react';
 
 const ebGaramond = EB_Garamond({
   subsets: ['latin'],
@@ -71,9 +72,11 @@ export default function RootLayout({
 
           {/* Content layer */}
           <div className='relative z-20 min-h-screen bg-background/50'>
-            <Header />
+            <Suspense fallback={null}>
+              <Header />
+            </Suspense>
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
-              {children}
+              <Suspense fallback={null}>{children}</Suspense>
             </main>
             <Footer />
           </div>

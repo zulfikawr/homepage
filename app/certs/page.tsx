@@ -1,11 +1,13 @@
 import { Metadata } from 'next';
-import CertsContent from './content';
+import CertificatesContent from './content';
+import { getCertificates } from '@/database/certificates';
 
 export const metadata: Metadata = {
   title: 'Certificates - Zulfikar',
-  description: 'My licenses and certifications',
+  description: 'My certifications and achievements',
 };
 
-export default async function CertsPage() {
-  return <CertsContent />;
+export default async function CertificatesPage() {
+  const certs = await getCertificates();
+  return <CertificatesContent initialData={certs} />;
 }

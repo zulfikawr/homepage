@@ -1,93 +1,17 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { Certificate } from '@/types/certificate';
 import { RecordModel } from 'pocketbase';
-
-/**
- * Maps a PocketBase record to a Certificate object with full URLs for images.
- * @param record PocketBase record.
- * @returns Certificate object.
- */
-function mapRecordToCertificate(record: RecordModel): Certificate {
-  // Prioritize the new 'image' file field, fallback to 'imageUrl' text field
-  let imageUrl = (record.image as string) || (record.imageUrl as string) || '';
-
-  if (imageUrl) {
-    if (imageUrl.startsWith('http')) {
-      // already a full URL
-    } else if (imageUrl.startsWith('/')) {
-      // local public asset
-    } else {
-      // PocketBase filename
-      imageUrl = pb.files.getURL(
-        {
-          collectionName: 'certificates',
-          id: record.id,
-        } as unknown as RecordModel,
-        imageUrl,
-      );
-    }
-  }
-
-  // Prioritize the new 'organizationLogo' file field, fallback to 'organizationLogoUrl' text field
-  let organizationLogoUrl =
-    (record.organizationLogo as string) ||
-    (record.organizationLogoUrl as string) ||
-    '';
-  if (
-    organizationLogoUrl &&
-    !organizationLogoUrl.startsWith('http') &&
-    !organizationLogoUrl.startsWith('/')
-  ) {
-    organizationLogoUrl = pb.files.getURL(
-      {
-        collectionName: 'certificates',
-        id: record.id,
-      } as unknown as RecordModel,
-      organizationLogoUrl,
-    );
-  }
-
-  return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    issuedBy: record.issuedBy,
-    dateIssued: record.dateIssued,
-    credentialId: record.credentialId,
-    imageUrl,
-    organizationLogoUrl,
-    link: record.link,
-  };
-}
-
-/**
- * Fetches and subscribes to certificates data.
- * @param callback Function to call when data changes.
- * @returns Unsubscribe function.
- */
-export function certificatesData(callback: (data: Certificate[]) => void) {
-  const fetchAndCallback = async () => {
-    try {
-      const records = await pb
-        .collection('certificates')
-        .getFullList<RecordModel>({ sort: '-created' });
-      const data: Certificate[] = records.map(mapRecordToCertificate);
-      callback(data);
-    } catch {
-      callback([]);
-    }
-  };
-
-  fetchAndCallback();
-  pb.collection('certificates').subscribe('*', fetchAndCallback);
-  return () => pb.collection('certificates').unsubscribe();
-}
+import { revalidateTag } from 'next/cache';
+import { mapRecordToCertificate } from './certificates.client';
 
 /**
  * Fetches all certificates from the database.
  * @returns Promise with array of certificates.
  */
 export async function getCertificates(): Promise<Certificate[]> {
+  'use cache';
   try {
     const records = await pb
       .collection('certificates')
@@ -110,7 +34,13 @@ export async function addCertificate(
     const record = await pb
       .collection('certificates')
       .create<RecordModel>(data);
-    return { success: true, certificate: mapRecordToCertificate(record) };
+    const certificate = mapRecordToCertificate(record);
+    try {
+      revalidateTag('certificates', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, certificate };
   } catch (error: unknown) {
     return {
       success: false,
@@ -174,7 +104,13 @@ export async function updateCertificate(
     const record = await pb
       .collection('certificates')
       .update<RecordModel>(recordId, updateData);
-    return { success: true, certificate: mapRecordToCertificate(record) };
+    const certificate = mapRecordToCertificate(record);
+    try {
+      revalidateTag('certificates', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, certificate };
   } catch (error: unknown) {
     return {
       success: false,
@@ -200,6 +136,11 @@ export async function deleteCertificate(
       recordId = record.id;
     }
     await pb.collection('certificates').delete(recordId);
+    try {
+      revalidateTag('certificates', 'max');
+    } catch {
+      // Ignore
+    }
     return { success: true };
   } catch (error: unknown) {
     return {
@@ -217,6 +158,7 @@ export async function deleteCertificate(
 export async function getCertificateById(
   id: string,
 ): Promise<Certificate | null> {
+  'use cache';
   try {
     if (id.length === 15) {
       try {

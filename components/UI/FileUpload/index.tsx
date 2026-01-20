@@ -1,3 +1,7 @@
+'use client';
+
+'use client';
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Icon } from '@/components/UI';
 import pb from '@/lib/pocketbase';

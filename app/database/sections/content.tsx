@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import PageTitle from '@/components/PageTitle';
-import { sectionsData, updateSection } from '@/database/sections';
+import { sectionsData } from '@/database/sections.client';
+import { updateSection } from '@/database/sections';
 import { useRealtimeData } from '@/hooks';
 import { Switch, Icon, Button } from '@/components/UI';
 import { toast } from '@/components/Toast';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useSyncExternalStore } from 'react';
 import { Button, Dropdown, DropdownItem, Icon } from '@/components/UI';
 
 interface DateSelectProps {
@@ -26,6 +26,8 @@ const monthNames = [
   'December',
 ];
 
+const emptySubscribe = () => () => {};
+
 const DateSelect: React.FC<DateSelectProps> = ({
   value,
   onChange,
@@ -33,7 +35,11 @@ const DateSelect: React.FC<DateSelectProps> = ({
   className = '',
   disabled = false,
 }) => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date().getFullYear(),
+    () => 2025, // Fixed year for SSR/Prerender
+  );
 
   const days = useMemo(() => Array.from({ length: 31 }, (_, i) => i + 1), []);
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);

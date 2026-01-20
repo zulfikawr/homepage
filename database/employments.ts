@@ -1,57 +1,17 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { Employment } from '@/types/employment';
 import { RecordModel } from 'pocketbase';
-
-/**
- * Maps a PocketBase record to an Employment object.
- */
-function mapRecordToEmployment(record: RecordModel): Employment {
-  return {
-    id: record.id,
-    slug: record.slug,
-    organization: record.organization,
-    jobTitle: record.jobTitle,
-    dateString: record.dateString,
-    jobType: record.jobType,
-    orgLogoSrc: record.orgLogoSrc,
-    organizationIndustry: record.organizationIndustry,
-    organizationLocation: record.organizationLocation,
-    responsibilities:
-      typeof record.responsibilities === 'string'
-        ? JSON.parse(record.responsibilities)
-        : record.responsibilities,
-  };
-}
-
-/**
- * Fetches and subscribes to employments data.
- * @param callback Function to call when data changes.
- * @returns Unsubscribe function.
- */
-export function employmentsData(callback: (data: Employment[]) => void) {
-  const fetchAndCallback = async () => {
-    try {
-      const records = await pb
-        .collection('employments')
-        .getFullList<RecordModel>({ sort: '-created' });
-      callback(records.map(mapRecordToEmployment));
-    } catch {
-      callback([]);
-    }
-  };
-
-  fetchAndCallback();
-
-  pb.collection('employments').subscribe('*', fetchAndCallback);
-
-  return () => pb.collection('employments').unsubscribe();
-}
+import { revalidateTag } from 'next/cache';
+import { mapRecordToEmployment } from './employments.client';
 
 /**
  * Fetches all employment records.
  * @returns Promise with array of employments.
  */
 export async function getEmployments(): Promise<Employment[]> {
+  'use cache';
   try {
     const records = await pb
       .collection('employments')
@@ -72,7 +32,13 @@ export async function addEmployment(
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
   try {
     const record = await pb.collection('employments').create<RecordModel>(data);
-    return { success: true, employment: mapRecordToEmployment(record) };
+    const employment = mapRecordToEmployment(record);
+    try {
+      revalidateTag('employments', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, employment };
   } catch (error: unknown) {
     return {
       success: false,
@@ -107,7 +73,13 @@ export async function updateEmployment(
     const record = await pb
       .collection('employments')
       .update<RecordModel>(recordId, rest);
-    return { success: true, employment: mapRecordToEmployment(record) };
+    const employment = mapRecordToEmployment(record);
+    try {
+      revalidateTag('employments', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, employment };
   } catch (error: unknown) {
     return {
       success: false,
@@ -133,6 +105,11 @@ export async function deleteEmployment(
       recordId = record.id;
     }
     await pb.collection('employments').delete(recordId);
+    try {
+      revalidateTag('employments', 'max');
+    } catch {
+      // Ignore
+    }
     return { success: true };
   } catch (error: unknown) {
     return {
@@ -150,6 +127,7 @@ export async function deleteEmployment(
 export async function getEmploymentById(
   id: string,
 ): Promise<Employment | null> {
+  'use cache';
   try {
     if (id.length === 15) {
       try {

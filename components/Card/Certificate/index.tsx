@@ -1,3 +1,5 @@
+'use client';
+
 import { Card } from '@/components/Card';
 import openLink from '@/utilities/externalLink';
 import { Certificate } from '@/types/certificate';

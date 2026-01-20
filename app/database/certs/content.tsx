@@ -1,7 +1,7 @@
 'use client';
 
 import CertificateCard from '@/components/Card/Certificate';
-import { certificatesData } from '@/database/certificates';
+import { certificatesData } from '@/database/certificates.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

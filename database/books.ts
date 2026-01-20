@@ -1,52 +1,16 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { Book } from '@/types/book';
 import { RecordModel } from 'pocketbase';
-
-/**
- * Maps a PocketBase record to a Book object.
- */
-function mapRecordToBook(record: RecordModel): Book {
-  return {
-    id: record.id,
-    slug: record.slug,
-    type: record.type,
-    title: record.title,
-    author: record.author,
-    imageURL: record.imageURL,
-    link: record.link,
-    dateAdded: record.dateAdded,
-  };
-}
-
-/**
- * Fetches and subscribes to books data.
- * @param callback Function to call when data changes.
- * @returns Unsubscribe function.
- */
-export function booksData(callback: (data: Book[]) => void) {
-  const fetchAll = async () => {
-    try {
-      const records = await pb
-        .collection('reading_list')
-        .getFullList<RecordModel>({ sort: '-created' });
-      callback(records.map(mapRecordToBook));
-    } catch {
-      callback([]);
-    }
-  };
-
-  fetchAll();
-
-  pb.collection('reading_list').subscribe('*', fetchAll);
-
-  return () => pb.collection('reading_list').unsubscribe();
-}
+import { revalidateTag } from 'next/cache';
+import { mapRecordToBook } from './books.client';
 
 /**
  * Fetches all books from the database.
- * @returns Promise with array of books.
  */
 export async function getBooks(): Promise<Book[]> {
+  'use cache';
   try {
     const records = await pb
       .collection('reading_list')
@@ -59,8 +23,6 @@ export async function getBooks(): Promise<Book[]> {
 
 /**
  * Adds a new book to the database.
- * @param data Book data without ID.
- * @returns Promise with operation result.
  */
 export async function addBook(
   data: Omit<Book, 'id'>,
@@ -69,7 +31,13 @@ export async function addBook(
     const record = await pb
       .collection('reading_list')
       .create<RecordModel>(data);
-    return { success: true, book: mapRecordToBook(record) };
+    const book = mapRecordToBook(record);
+    try {
+      revalidateTag('reading_list', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, book };
   } catch (error: unknown) {
     return {
       success: false,
@@ -80,8 +48,6 @@ export async function addBook(
 
 /**
  * Updates an existing book in the database.
- * @param data Updated book data.
- * @returns Promise with operation result.
  */
 export async function updateBook(
   data: Book,
@@ -104,7 +70,13 @@ export async function updateBook(
     const record = await pb
       .collection('reading_list')
       .update<RecordModel>(recordId, rest);
-    return { success: true, book: mapRecordToBook(record) };
+    const book = mapRecordToBook(record);
+    try {
+      revalidateTag('reading_list', 'max');
+    } catch {
+      // Ignore
+    }
+    return { success: true, book };
   } catch (error: unknown) {
     return {
       success: false,
@@ -115,8 +87,6 @@ export async function updateBook(
 
 /**
  * Deletes a book from the database.
- * @param id ID or slug of the book.
- * @returns Promise with operation result.
  */
 export async function deleteBook(
   id: string,
@@ -130,6 +100,11 @@ export async function deleteBook(
       recordId = record.id;
     }
     await pb.collection('reading_list').delete(recordId);
+    try {
+      revalidateTag('reading_list', 'max');
+    } catch {
+      // Ignore
+    }
     return { success: true };
   } catch (error: unknown) {
     return {
@@ -141,10 +116,9 @@ export async function deleteBook(
 
 /**
  * Fetches a single book by ID or slug.
- * @param id ID or slug of the book.
- * @returns Promise with the book data or null.
  */
 export async function getBookById(id: string): Promise<Book | null> {
+  'use cache';
   try {
     if (id.length === 15) {
       try {

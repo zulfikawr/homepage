@@ -1,7 +1,7 @@
 'use client';
 
 import MovieCard from '@/components/Card/Movie';
-import { moviesData } from '@/database/movies';
+import { moviesData } from '@/database/movies.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

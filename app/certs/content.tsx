@@ -1,18 +1,25 @@
 'use client';
 
-import CertificateCard from '@/components/Card/Certificate';
-import { certificatesData } from '@/database/certificates';
+import { certificatesData } from '@/database/certificates.client';
 import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import CertificateCard from '@/components/Card/Certificate';
+import { useRealtimeData } from '@/hooks';
+import { Certificate } from '@/types/certificate';
 
-export default function CertsContent() {
+interface CertificatesContentProps {
+  initialData?: Certificate[];
+}
+
+export default function CertificatesContent({
+  initialData,
+}: CertificatesContentProps) {
   const {
     data: certificates,
     loading,
     error,
-  } = useRealtimeData(certificatesData);
+  } = useRealtimeData(certificatesData, initialData);
 
   if (error) return <CardEmpty message='Failed to load certificates' />;
 

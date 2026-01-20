@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import anchor from 'markdown-it-anchor';
-import hljs from 'highlight.js';
+import hljs from 'highlight.js/lib/core';
 
 const md = new MarkdownIt({
   html: true,

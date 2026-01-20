@@ -1,4 +1,7 @@
-export const getTimeAgo = (date: string | number | Date): string => {
+export const getTimeAgo = (
+  date: string | number | Date,
+  now?: Date,
+): string => {
   // Handle "Present" case from formatDateRange
   if (date === 'Present') {
     return 'Present';
@@ -43,14 +46,23 @@ export const getTimeAgo = (date: string | number | Date): string => {
       return 'Invalid date';
     }
 
-    return calculateTimeDifference(parsedDate);
+    return calculateTimeDifference(parsedDate, now);
   } catch {
     return 'Invalid date';
   }
 };
 
-const calculateTimeDifference = (postedDate: Date): string => {
-  const currentDate = new Date();
+const calculateTimeDifference = (postedDate: Date, now?: Date): string => {
+  let currentDate = now;
+
+  if (!currentDate) {
+    if (typeof window === 'undefined') {
+      // Fixed date for server-side/prerendering
+      currentDate = new Date('2025-01-01');
+    } else {
+      currentDate = new Date();
+    }
+  }
 
   // Handle future dates
   if (postedDate > currentDate) {

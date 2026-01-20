@@ -1,6 +1,11 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useSyncExternalStore,
+} from 'react';
 import { Project } from '@/types/project';
 import { modal } from '@/components/Modal';
 import {
@@ -44,6 +49,8 @@ const initialProjectState: Project = {
   slug: '',
 };
 
+const emptySubscribe = () => () => {};
+
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [project, setProject] = useState<Project>(
     projectToEdit || initialProjectState,
@@ -65,26 +72,38 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     return () => clearTimeout(timer);
   }, [project.image]);
 
+  const now = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date(),
+    () => new Date('2025-01-01'),
+  );
+
   const initialDates = useMemo(() => {
     if (!projectToEdit?.dateString) {
       return {
-        start: new Date(),
-        end: new Date(),
+        start: now,
+        end: now,
       };
     }
 
     const [startStr, endStr] = projectToEdit.dateString.split(' - ');
     const start = new Date(startStr);
-    const end = endStr === 'Present' ? new Date() : new Date(endStr);
+    const end = endStr === 'Present' ? now : new Date(endStr);
 
     return {
       start,
       end,
     };
-  }, [projectToEdit]);
+  }, [projectToEdit, now]);
 
   const [startDate, setStartDate] = useState(initialDates.start);
   const [endDate, setEndDate] = useState(initialDates.end);
+
+  // Sync state if initialDates change (important for hydration)
+  useEffect(() => {
+    setStartDate(initialDates.start);
+    setEndDate(initialDates.end);
+  }, [initialDates]);
 
   // GitHub fetch states
   const [githubUrl, setGithubUrl] = useState('');

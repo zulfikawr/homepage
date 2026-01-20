@@ -1,7 +1,7 @@
 'use client';
 
 import ProjectCard from '@/components/Card/Project';
-import { projectsData } from '@/database/projects';
+import { projectsData } from '@/database/projects.client';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';

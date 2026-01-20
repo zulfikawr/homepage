@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import NewCertificateContent from './content';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Add Certificate - Zulfikar',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function NewCertificatePage() {
-  return <NewCertificateContent />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewCertificateContent />
+    </Suspense>
+  );
 }

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import NewBookContent from './content';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Add Book - Zulfikar',
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function NewEmploymentPage() {
-  return <NewBookContent />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewBookContent />
+    </Suspense>
+  );
 }

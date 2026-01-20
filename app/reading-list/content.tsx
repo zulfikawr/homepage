@@ -1,18 +1,29 @@
 'use client';
 
-import { BookCard } from '@/components/Card/Book';
-import { booksData } from '@/database/books';
+import { booksData } from '@/database/books.client';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
-import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import BookCard from '@/components/Card/Book';
 import { useRealtimeData } from '@/hooks';
+import { Book } from '@/types/book';
 
-export default function ReadingListContent() {
-  const { data: books, loading, error } = useRealtimeData(booksData);
+interface ReadingListContentProps {
+  initialData?: Book[];
+}
 
-  const booksArray = Array.isArray(books) ? books : [];
+export default function ReadingListContent({
+  initialData,
+}: ReadingListContentProps) {
+  const {
+    data: books,
+    loading,
+    error,
+  } = useRealtimeData(booksData, initialData);
+
+  const booksArray = books || [];
 
   if (error) return <CardEmpty message='Failed to load reading list' />;
 

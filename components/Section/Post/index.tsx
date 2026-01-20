@@ -1,13 +1,22 @@
-import { postsData } from '@/database/posts';
+import { postsData } from '@/database/posts.client';
 import PostCard from '@/components/Card/Post';
 import CardEmpty from '@/components/Card/Empty';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useRealtimeData } from '@/hooks';
+import { Post } from '@/types/post';
 
-const PostSection = () => {
-  const { data: posts, loading, error } = useRealtimeData(postsData);
+interface PostSectionProps {
+  initialData?: Post[];
+}
+
+const PostSection = ({ initialData }: PostSectionProps) => {
+  const {
+    data: posts,
+    loading,
+    error,
+  } = useRealtimeData(postsData, initialData);
 
   const sortedPosts = posts ? sortByDate(posts) : [];
 
@@ -24,7 +33,7 @@ const PostSection = () => {
           label: 'All Posts',
         }}
       />
-      {loading ? (
+      {loading || !posts ? (
         <div className='flex flex-col gap-y-4'>
           {Array(4)
             .fill(0)

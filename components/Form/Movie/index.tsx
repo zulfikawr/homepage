@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useCallback } from 'react';
 import { Movie } from '@/types/movie';
 import { Button, FormLabel, Input } from '@/components/UI';
@@ -16,6 +16,7 @@ import { generateSlug } from '@/utilities/generateSlug';
 import { Icon } from '@/components/UI/Icon';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/Card';
+import { useSyncExternalStore } from 'react';
 
 interface MovieFormProps {
   movieToEdit?: Movie;
@@ -32,17 +33,30 @@ const initialMovieState: Movie = {
   rating: undefined,
 };
 
+const emptySubscribe = () => () => {};
+
 const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
   const [movie, setMovie] = useState<Movie>(movieToEdit || initialMovieState);
+
+  const now = useSyncExternalStore(
+    emptySubscribe,
+    () => new Date(),
+    () => new Date('2025-01-01'),
+  );
 
   const initialDate = useMemo(() => {
     const date = movieToEdit?.releaseDate
       ? new Date(movieToEdit.releaseDate)
-      : new Date();
+      : now;
     return date;
-  }, [movieToEdit]);
+  }, [movieToEdit, now]);
 
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+
+  // Sync state if initialDate change
+  useEffect(() => {
+    setSelectedDate(initialDate);
+  }, [initialDate]);
 
   const currentPreview: Movie = {
     id: movie.id || 'preview',

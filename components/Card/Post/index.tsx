@@ -6,10 +6,10 @@ import 'react-h5-audio-player/lib/styles.css';
 import { trimStr } from 'utilities/string';
 import { Post } from 'types/post';
 import { Card } from 'components/Card';
-import { getTimeAgo } from '@/utilities/timeAgo';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
+import { TimeAgo } from '@/components/UI';
 
 interface PostCardProps {
   post: Post;
@@ -144,7 +144,7 @@ export default function PostCard({
       <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-neutral-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
         <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
           <span className='flex items-center gap-x-2'>
-            <span>Posted {getTimeAgo(post.dateString)}</span>
+            <TimeAgo date={post.dateString} prefix='Posted' />
           </span>
           <span className='flex items-center'>
             <button

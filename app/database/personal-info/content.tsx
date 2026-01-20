@@ -2,7 +2,7 @@
 
 import PersonalInfoForm from '@/components/Form/PersonalInfo';
 import PageTitle from '@/components/PageTitle';
-import { personalInfoData } from '@/database/personalInfo';
+import { personalInfoData } from '@/database/personalInfo.client';
 import { useRealtimeData } from '@/hooks';
 
 export default function PersonalInfoContent() {

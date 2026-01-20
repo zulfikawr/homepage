@@ -2,19 +2,24 @@
 
 import { useRef } from 'react';
 import { EmploymentCard } from '@/components/Card/Employment';
-import { employmentsData } from '@/database/employments';
+import { employmentsData } from '@/database/employments.client';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useRealtimeData } from '@/hooks';
+import { Employment } from '@/types/employment';
 
-const EmploymentSection = () => {
+interface EmploymentSectionProps {
+  initialData?: Employment[];
+}
+
+const EmploymentSection = ({ initialData }: EmploymentSectionProps) => {
   const {
     data: employments,
     loading,
     error,
-  } = useRealtimeData(employmentsData);
+  } = useRealtimeData(employmentsData, initialData);
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);
