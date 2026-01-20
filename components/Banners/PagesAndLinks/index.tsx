@@ -1,8 +1,14 @@
+'use client';
+
 import { Card } from '@/components/Card';
 import { Button, Icon, Tooltip } from '@/components/UI';
 import Link from 'next/link';
+import { useRealtimeData } from '@/hooks';
+import { resumeData } from '@/database/resume.client';
 
 const PagesAndLinks = () => {
+  const { data: resume } = useRealtimeData(resumeData);
+
   return (
     <Card isPreview>
       <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
@@ -45,12 +51,12 @@ const PagesAndLinks = () => {
           </Link>
 
           <Link
-            href='/documents/resume.pdf'
+            href={resume?.fileUrl || '#'}
             target='_blank'
             rel='noopener noreferrer'
           >
             <Button
-              icon='file'
+              icon='filePdf'
               className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
             >
               Résumé

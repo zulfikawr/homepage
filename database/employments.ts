@@ -139,7 +139,7 @@ export async function updateEmployment(
     } else {
       try {
         await pb.collection('employments').getOne(recordId);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('employments')
           .getFullList<RecordModel>({
@@ -193,7 +193,7 @@ export async function deleteEmployment(
     } else {
       try {
         await pb.collection('employments').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('employments')
           .getFullList<RecordModel>({

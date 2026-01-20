@@ -48,6 +48,12 @@ export default function DatabaseContent() {
       href: '/database/personal-info',
     },
     {
+      title: 'Resume',
+      desc: 'Update your resume',
+      icon: 'filePdf',
+      href: '/database/resume',
+    },
+    {
       title: 'Posts',
       desc: 'Manage your posts',
       icon: 'note',

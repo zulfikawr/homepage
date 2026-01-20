@@ -13,8 +13,10 @@ import NavigationCard from '@/components/Card/Navigation';
 import PostCard from '@/components/Card/Post';
 import ProjectCard from '@/components/Card/Project';
 import BookCard from '@/components/Card/Book';
-import PublicationCard from '@/components/Card/Publication';
+import { PublicationCard } from '@/components/Card/Publication';
 import { searchDatabase, SearchResult } from '@/database/search';
+import { useRealtimeData } from '@/hooks';
+import { resumeData } from '@/database/resume.client';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Book } from '@/types/book';
@@ -48,6 +50,7 @@ type KbarSection = {
 export function KbarContent() {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
+  const { data: resume } = useRealtimeData(resumeData);
   const [search, setSearch] = useState('');
   const [dbResults, setDbResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -162,8 +165,12 @@ export function KbarContent() {
             key: 'resume',
             label: 'Resume',
             desc: 'Download my resume',
-            action: () => router.push('/documents/resume.pdf'),
-            icon: 'file',
+            action: () => {
+              if (resume?.fileUrl) {
+                window.open(resume.fileUrl, '_blank');
+              }
+            },
+            icon: 'filePdf',
           },
           {
             key: 'ui',
@@ -255,7 +262,7 @@ export function KbarContent() {
               ],
       },
     ],
-    [isAdmin, user, router, confirmLogout],
+    [isAdmin, user, router, confirmLogout, resume],
   );
 
   const filteredSections = useMemo((): KbarSection[] => {

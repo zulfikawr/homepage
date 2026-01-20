@@ -42,6 +42,7 @@ export const iconMap = {
   envelope: PhosphorIcons.EnvelopeIcon,
   eye: PhosphorIcons.EyeIcon,
   file: PhosphorIcons.FileIcon,
+  filePdf: PhosphorIcons.FilePdfIcon,
   floppyDisk: PhosphorIcons.FloppyDiskIcon,
   folder: PhosphorIcons.FolderIcon,
   gear: PhosphorIcons.GearIcon,

@@ -3,8 +3,12 @@
 import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
 import { IconName } from '@/components/UI/Icon';
+import { useRealtimeData } from '@/hooks';
+import { resumeData } from '@/database/resume.client';
 
 export default function PagesContent() {
+  const { data: resume } = useRealtimeData(resumeData);
+
   const pages: { title: string; desc: string; icon: IconName; href: string }[] =
     [
       {
@@ -70,8 +74,8 @@ export default function PagesContent() {
       {
         title: 'Resume',
         desc: 'View my CV',
-        icon: 'file',
-        href: '/documents/resume.pdf',
+        icon: 'filePdf',
+        href: resume?.fileUrl || '#',
       },
       {
         title: 'UI',

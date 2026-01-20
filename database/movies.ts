@@ -83,7 +83,7 @@ export async function updateMovie(
     } else {
       try {
         await pb.collection('movies').getOne(recordId);
-      } catch (_) {
+      } catch {
         const records = await pb.collection('movies').getFullList<RecordModel>({
           filter: `slug = "${recordId}"`,
         });
@@ -128,7 +128,7 @@ export async function deleteMovie(
     } else {
       try {
         await pb.collection('movies').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb.collection('movies').getFullList<RecordModel>({
           filter: `slug = "${id}"`,
         });

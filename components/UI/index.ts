@@ -16,4 +16,5 @@ export { Separator } from './Separator';
 export { Slider } from './Slider';
 export { FileUpload } from './FileUpload';
 export { Dropzone } from './Dropzone';
+export { FileDropzone } from './FileDropzone';
 export { TimeAgo } from './TimeAgo';

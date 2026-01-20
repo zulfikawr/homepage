@@ -158,7 +158,7 @@ export async function updateProject(
       // Even if 15 chars, check if it's a valid ID or if it's actually a slug
       try {
         await pb.collection('projects').getOne(recordId);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('projects')
           .getFullList<RecordModel>({

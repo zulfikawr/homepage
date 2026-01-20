@@ -107,7 +107,7 @@ export async function updatePost(
     } else {
       try {
         await pb.collection('posts').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb.collection('posts').getFullList<RecordModel>({
           filter: `slug = "${id}"`,
         });
@@ -150,7 +150,7 @@ export async function deletePost(
     } else {
       try {
         await pb.collection('posts').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb.collection('posts').getFullList<RecordModel>({
           filter: `slug = "${id}"`,
         });

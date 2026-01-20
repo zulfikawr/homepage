@@ -82,7 +82,7 @@ export async function updateBook(
     } else {
       try {
         await pb.collection('reading_list').getOne(recordId);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('reading_list')
           .getFullList<RecordModel>({
@@ -129,7 +129,7 @@ export async function deleteBook(
     } else {
       try {
         await pb.collection('reading_list').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('reading_list')
           .getFullList<RecordModel>({

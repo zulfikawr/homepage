@@ -82,7 +82,7 @@ export async function updatePersonalInfo(
     revalidateTag('profile', 'max');
 
     return { success: true, data: mapRecordToPersonalInfo(record) };
-  } catch (error: unknown) {
+  } catch {
     // Try to create if it doesn't exist
     try {
       const record = await pb

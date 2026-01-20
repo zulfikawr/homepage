@@ -94,7 +94,7 @@ export async function updateCertificate(
       } else {
         try {
           await pb.collection('certificates').getOne(recordId);
-        } catch (_) {
+        } catch {
           const records = await pb
             .collection('certificates')
             .getFullList<RecordModel>({
@@ -164,7 +164,7 @@ export async function deleteCertificate(
     } else {
       try {
         await pb.collection('certificates').getOne(id);
-      } catch (_) {
+      } catch {
         const records = await pb
           .collection('certificates')
           .getFullList<RecordModel>({
