@@ -8,6 +8,7 @@ import {
   FormLabel,
   Icon,
   Input,
+  FileUpload,
 } from '@/components/UI';
 import { EmploymentCard } from '@/components/Card/Employment';
 import { toast } from '@/components/Toast';
@@ -36,7 +37,7 @@ const initialEmploymentState: Employment = {
   jobType: 'fullTime',
   responsibilities: [],
   dateString: '',
-  orgLogoSrc: '',
+  orgLogoUrl: '',
   organizationLocation: '',
 };
 
@@ -50,6 +51,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     employmentToEdit?.dateString?.includes('Present') || false,
   );
   const [newResponsibility, setNewResponsibility] = useState('');
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const [startDate, setStartDate] = useState<Date>(() => {
     if (employmentToEdit?.dateString) {
@@ -94,7 +96,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       'Responsibility 2',
     ],
     dateString: employment.dateString || formatDateRange(startDate, endDate),
-    orgLogoSrc: employment.orgLogoSrc || '/images/placeholder-square.png',
+    orgLogoUrl: employment.orgLogoUrl || '/images/placeholder-square.png',
     organizationLocation:
       employment.organizationLocation || 'Organization Location',
   };
@@ -109,7 +111,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     check?: (value: (typeof employment)[keyof typeof employment]) => boolean;
   }[] = [
     { key: 'organization', label: 'Organization name' },
-    { key: 'orgLogoSrc', label: 'Organization logo' },
     { key: 'jobTitle', label: 'Job title' },
     { key: 'jobType', label: 'Job type' },
     {
@@ -153,14 +154,33 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
     const employmentData = {
       ...employment,
-      id: employmentToEdit?.id || generateSlug(employment.organization),
+      id: employmentToEdit?.id || '', // Let PocketBase handle ID for new records
+      slug: employment.slug || generateSlug(employment.organization),
       dateString: formatDateRange(startDate, endDate, isPresent),
     };
 
     try {
-      const result = employmentToEdit
-        ? await updateEmployment(employmentData)
-        : await addEmployment(employmentData);
+      let result;
+
+      if (logoFile) {
+        const formData = new FormData();
+        Object.entries(employmentData).forEach(([key, value]) => {
+          if (key === 'responsibilities' && Array.isArray(value)) {
+            formData.append(key, JSON.stringify(value));
+          } else if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+          }
+        });
+        formData.append('orgLogo', logoFile);
+
+        result = employmentToEdit
+          ? await updateEmployment(formData)
+          : await addEmployment(formData);
+      } else {
+        result = employmentToEdit
+          ? await updateEmployment(employmentData)
+          : await addEmployment(employmentData);
+      }
 
       if (result.success) {
         toast.success(
@@ -392,10 +412,52 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             <Input
               type='text'
               value={employment.organization}
-              onChange={(e) => handleChange('organization', e.target.value)}
+              onChange={(e) => {
+                const newOrg = e.target.value;
+                setEmployment((prev) => ({
+                  ...prev,
+                  organization: newOrg,
+                  slug:
+                    prev.slug || !employmentToEdit
+                      ? generateSlug(newOrg)
+                      : prev.slug,
+                }));
+              }}
               placeholder='Organization name'
               required
             />
+          </div>
+          <div>
+            <FormLabel htmlFor='slug' required>
+              Slug
+            </FormLabel>
+            <Input
+              type='text'
+              value={employment.slug}
+              onChange={(e) => handleChange('slug', e.target.value)}
+              placeholder='organization-name'
+              required
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='organizationLogoUrl' required>
+              Organization Logo
+            </FormLabel>
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={employment.orgLogoUrl}
+                onChange={(e) => handleChange('orgLogoUrl', e.target.value)}
+                placeholder='https://organization-logo.com'
+              />
+              <FileUpload
+                collectionName='employments'
+                recordId={employmentToEdit?.id}
+                fieldName='orgLogo'
+                onUploadSuccess={(url) => handleChange('orgLogoUrl', url)}
+                onFileSelect={setLogoFile}
+              />
+            </div>
           </div>
           <div>
             <FormLabel htmlFor='organizationIndustry'>
@@ -421,18 +483,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 handleChange('organizationLocation', e.target.value)
               }
               placeholder='Organization location'
-            />
-          </div>
-          <div>
-            <FormLabel htmlFor='organizationLogoUrl' required>
-              Organization Logo URL
-            </FormLabel>
-            <Input
-              type='text'
-              value={employment.orgLogoSrc}
-              onChange={(e) => handleChange('orgLogoSrc', e.target.value)}
-              placeholder='https://organization-logo.com'
-              required
             />
           </div>
         </form>

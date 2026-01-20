@@ -57,9 +57,9 @@ export default function EmploymentCard({
     >
       <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-neutral-700 dark:border-border dark:text-white'>
         <div className='flex items-center gap-x-2'>
-          {employment.orgLogoSrc && (
+          {employment.orgLogoUrl && (
             <ImageWithFallback
-              src={employment.orgLogoSrc}
+              src={employment.orgLogoUrl}
               height={24}
               width={24}
               alt={`${employment.organization} logo`}

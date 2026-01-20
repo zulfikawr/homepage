@@ -7,6 +7,7 @@ export interface Employment {
   jobType: 'fullTime' | 'partTime' | 'contract' | 'freelance' | 'internship';
   responsibilities: string[];
   dateString: string;
-  orgLogoSrc?: string;
+  orgLogoUrl?: string;
+  orgLogo?: string;
   organizationLocation?: string;
 }

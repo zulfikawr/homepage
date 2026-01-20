@@ -8,6 +8,41 @@ import { cookies } from 'next/headers';
 import { mapRecordToEmployment } from './employments.client';
 
 /**
+ * Helper to clean employment data before sending to PocketBase.
+ */
+function cleanEmploymentData(
+  data: Omit<Employment, 'id'> | Employment,
+): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Handle logo field (file field vs orgLogoUrl text field)
+  if (typeof clean.orgLogoUrl === 'string') {
+    if (clean.orgLogoUrl.includes('/api/files/')) {
+      const parts = clean.orgLogoUrl.split('/');
+      clean.orgLogo = parts[parts.length - 1].split('?')[0];
+    } else if (
+      clean.orgLogoUrl.startsWith('http') ||
+      clean.orgLogoUrl.startsWith('/')
+    ) {
+      // External or local URL -> move to orgLogoUrl and clear orgLogo (file field)
+      clean.orgLogo = null;
+    }
+  }
+
+  // Ensure responsibilities is stringified if it's an array
+  if (Array.isArray(clean.responsibilities)) {
+    clean.responsibilities = JSON.stringify(clean.responsibilities);
+  }
+
+  // Remove the ID from the body as it's passed in the URL
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Ensures the PocketBase client is authenticated for server-side operations
  * by loading the auth state from the request cookies.
  */
@@ -22,7 +57,6 @@ async function ensureAuth() {
 
 /**
  * Fetches all employment records.
- * @returns Promise with array of employments.
  */
 export async function getEmployments(): Promise<Employment[]> {
   'use cache';
@@ -38,15 +72,19 @@ export async function getEmployments(): Promise<Employment[]> {
 
 /**
  * Adds a new employment record.
- * @param data Employment data without ID.
- * @returns Promise with operation result.
  */
 export async function addEmployment(
-  data: Omit<Employment, 'id'>,
+  data: Omit<Employment, 'id'> | FormData,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
   await ensureAuth();
   try {
-    const record = await pb.collection('employments').create<RecordModel>(data);
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanEmploymentData(data) as Record<string, unknown>);
+    const record = await pb
+      .collection('employments')
+      .create<RecordModel>(payload);
     const employment = mapRecordToEmployment(record);
 
     revalidatePath('/employments');
@@ -55,33 +93,49 @@ export async function addEmployment(
 
     return { success: true, employment };
   } catch (error: unknown) {
+    const pbError = error as { data?: unknown; message?: string };
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }
 
 /**
  * Updates an existing employment record.
- * @param data Updated employment data.
- * @returns Promise with operation result.
  */
 export async function updateEmployment(
-  data: Employment,
+  data: Employment | FormData,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
   await ensureAuth();
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
+    let recordId: string;
+    let updateData: Record<string, unknown> | FormData;
 
+    if (data instanceof FormData) {
+      recordId = data.get('id') as string;
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id;
+      updateData = cleanEmploymentData(data);
+    }
+
+    // Resolve slug to ID if necessary
     if (recordId.length !== 15) {
       const records = await pb
         .collection('employments')
         .getFullList<RecordModel>({
           filter: `slug = "${recordId}"`,
         });
-      if (records.length > 0) recordId = records[0].id;
+      if (records.length > 0) {
+        recordId = records[0].id;
+      }
     } else {
       try {
         await pb.collection('employments').getOne(recordId);
@@ -91,13 +145,15 @@ export async function updateEmployment(
           .getFullList<RecordModel>({
             filter: `slug = "${recordId}"`,
           });
-        if (records.length > 0) recordId = records[0].id;
+        if (records.length > 0) {
+          recordId = records[0].id;
+        }
       }
     }
 
     const record = await pb
       .collection('employments')
-      .update<RecordModel>(recordId, rest);
+      .update<RecordModel>(recordId, updateData);
     const employment = mapRecordToEmployment(record);
 
     revalidatePath('/employments');
@@ -106,17 +162,20 @@ export async function updateEmployment(
 
     return { success: true, employment };
   } catch (error: unknown) {
+    const pbError = error as {
+      data?: unknown;
+      message?: string;
+      status?: number;
+    };
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }
 
 /**
  * Deletes an employment record.
- * @param id ID or slug of the record.
- * @returns Promise with operation result.
  */
 export async function deleteEmployment(
   id: string,
@@ -160,8 +219,6 @@ export async function deleteEmployment(
 
 /**
  * Fetches a single employment record by ID or slug.
- * @param id ID or slug of the record.
- * @returns Promise with the record or null.
  */
 export async function getEmploymentById(
   id: string,
