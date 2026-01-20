@@ -9,7 +9,7 @@ interface NextRequestWithGeo extends NextRequest {
   ip?: string;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const req = request as NextRequestWithGeo;
   // Use production URL as default for consistency
   const pb = new PocketBase('https://database.zulfikar.site');
