@@ -2,11 +2,20 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import PocketBase from 'pocketbase';
 
+interface NextRequestWithGeo extends NextRequest {
+  geo?: {
+    country?: string;
+  };
+  ip?: string;
+}
+
 export async function middleware(request: NextRequest) {
+  const req = request as NextRequestWithGeo;
+  // Use production URL as default for consistency
   const pb = new PocketBase('https://database.zulfikar.site');
 
   // Load the auth store from the cookie header
-  const cookieHeader = request.headers.get('cookie') || '';
+  const cookieHeader = req.headers.get('cookie') || '';
   pb.authStore.loadFromCookie(cookieHeader);
 
   const record = pb.authStore.record as {
@@ -18,15 +27,67 @@ export async function middleware(request: NextRequest) {
     pb.authStore.isValid &&
     (!!record?.role || record?.email?.includes('zulfikawr'));
 
-  console.log('Middleware Debug:', {
-    path: request.nextUrl.pathname,
-    isValid: pb.authStore.isValid,
-    record: record ? { email: record.email, role: record.role } : null,
-    isAdmin,
-  });
+  const isDatabaseRoute = req.nextUrl.pathname.startsWith('/database');
+  const isLoginRoute = req.nextUrl.pathname === '/login';
+  const isApiRoute = req.nextUrl.pathname.startsWith('/api');
+  const isStaticRoute =
+    req.nextUrl.pathname.startsWith('/_next') ||
+    req.nextUrl.pathname.startsWith('/favicon') ||
+    req.nextUrl.pathname.includes('.');
 
-  const isDatabaseRoute = request.nextUrl.pathname.startsWith('/database');
-  const isLoginRoute = request.nextUrl.pathname === '/login';
+  // Log analytics for public, non-static routes
+  if (!isDatabaseRoute && !isLoginRoute && !isApiRoute && !isStaticRoute) {
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ||
+      req.headers.get('x-real-ip') ||
+      req.ip ||
+      'Unknown';
+
+    let country =
+      req.headers.get('cf-ipcountry') ||
+      req.headers.get('x-vercel-ip-country') ||
+      req.geo?.country ||
+      'Unknown';
+
+    // Fallback for self-hosted or local testing (only if not on Vercel/Cloudflare)
+    if (
+      country === 'Unknown' &&
+      ip !== 'Unknown' &&
+      ip !== '127.0.0.1' &&
+      ip !== '::1'
+    ) {
+      try {
+        const res = await fetch(`https://ipapi.co/${ip}/country_code/`, {
+          next: { revalidate: 86400 }, // Cache for 24 hours if possible
+        });
+        if (res.ok) {
+          const code = await res.text();
+          if (code && code.length === 2) {
+            country = code.toUpperCase();
+          }
+        }
+      } catch {
+        // silent fail
+      }
+    }
+
+    console.log(`Visitor: ${ip} [${country}] -> ${req.nextUrl.pathname}`);
+
+    // Await logging to ensure it completes
+    try {
+      await pb.collection('analytics_events').create({
+        path: req.nextUrl.pathname,
+        country,
+        referrer: req.headers.get('referer') || 'Direct',
+        user_agent: req.headers.get('user-agent') || 'Unknown',
+        is_bot: /bot|crawler|spider|crawling/i.test(
+          req.headers.get('user-agent') || '',
+        ),
+      });
+    } catch {
+      // silent fail
+    }
+  }
 
   if (isDatabaseRoute && !isAdmin) {
     // Redirect unauthorized users to login
@@ -45,5 +106,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/database/:path*', '/login'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)'],
 };

@@ -8,6 +8,8 @@ export const iconMap = {
   arrowLeft: PhosphorIcons.ArrowLeftIcon,
   arrowRight: PhosphorIcons.ArrowRightIcon,
   arrowSquareOut: PhosphorIcons.ArrowSquareOutIcon,
+  arrowUDownLeft: PhosphorIcons.ArrowUDownLeftIcon,
+  article: PhosphorIcons.ArticleIcon,
   asterisk: PhosphorIcons.AsteriskIcon,
   bookOpen: PhosphorIcons.BookOpenIcon,
   bookmarks: PhosphorIcons.BookmarksIcon,
@@ -33,6 +35,8 @@ export const iconMap = {
   cube: PhosphorIcons.CubeIcon,
   database: PhosphorIcons.DatabaseIcon,
   desktop: PhosphorIcons.DesktopIcon,
+  deviceMobile: PhosphorIcons.DeviceMobileIcon,
+  deviceTablet: PhosphorIcons.DeviceTabletIcon,
   dotsSixVertical: PhosphorIcons.DotsSixVerticalIcon,
   dotsThree: PhosphorIcons.DotsThreeIcon,
   envelope: PhosphorIcons.EnvelopeIcon,
@@ -43,6 +47,7 @@ export const iconMap = {
   gear: PhosphorIcons.GearIcon,
   ghost: PhosphorIcons.GhostIcon,
   githubLogo: PhosphorIcons.GithubLogoIcon,
+  globe: PhosphorIcons.GlobeIcon,
   hammer: PhosphorIcons.HammerIcon,
   hash: PhosphorIcons.HashIcon,
   heart: PhosphorIcons.HeartIcon,
@@ -63,6 +68,7 @@ export const iconMap = {
   microphone: PhosphorIcons.MicrophoneIcon,
   microscope: PhosphorIcons.MicroscopeIcon,
   minus: PhosphorIcons.MinusIcon,
+  monitor: PhosphorIcons.MonitorIcon,
   moon: PhosphorIcons.MoonIcon,
   musicNotes: PhosphorIcons.MusicNotesIcon,
   network: PhosphorIcons.NetworkIcon,
@@ -99,6 +105,7 @@ export const iconMap = {
   trash: PhosphorIcons.TrashIcon,
   trashSimple: PhosphorIcons.TrashSimpleIcon,
   userCircle: PhosphorIcons.UserCircleIcon,
+  users: PhosphorIcons.UsersIcon,
   wall: PhosphorIcons.WallIcon,
   warning: PhosphorIcons.WarningIcon,
   waves: PhosphorIcons.WavesIcon,
@@ -205,7 +212,7 @@ interface IconProps extends Omit<
 
 const Icon = ({ name, className, size = 20, ...props }: IconProps) => {
   if (name in iconifyMap) {
-    const { weight: _w, mirrored: _m, ...iconifyProps } = props;
+    const { ...iconifyProps } = props;
 
     return (
       <Iconify

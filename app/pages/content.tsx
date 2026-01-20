@@ -8,6 +8,12 @@ export default function PagesContent() {
   const pages: { title: string; desc: string; icon: IconName; href: string }[] =
     [
       {
+        title: 'Analytics',
+        desc: 'Page views and analytics',
+        icon: 'chartLine',
+        href: '/analytics',
+      },
+      {
         title: 'Certifications',
         desc: 'Certs and licences',
         icon: 'certificate',

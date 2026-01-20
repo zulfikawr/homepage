@@ -89,6 +89,13 @@ export function KbarContent() {
         icon: 'folder',
         items: [
           {
+            key: 'analytics',
+            label: 'Analytics',
+            desc: 'Page views and analytics',
+            action: () => router.push('/analytics'),
+            icon: 'chartLine',
+          },
+          {
             key: 'certifications',
             label: 'Certifications',
             desc: 'View my certs and license',
