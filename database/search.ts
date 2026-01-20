@@ -1,15 +1,31 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { RecordModel } from 'pocketbase';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Book } from '@/types/book';
 import { Publication } from '@/types/publication';
+import { cookies } from 'next/headers';
 
 export type SearchResult =
   | { type: 'post'; data: Post }
   | { type: 'project'; data: Project }
   | { type: 'book'; data: Book }
   | { type: 'publication'; data: Publication };
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Maps a PocketBase record to a Post object with full URLs for files.
@@ -133,6 +149,7 @@ export async function searchDatabase(query: string): Promise<SearchResult[]> {
   const bookFilter = `title ~ "${searchTerms}" || author ~ "${searchTerms}"`;
   const publicationFilter = `title ~ "${searchTerms}" || excerpt ~ "${searchTerms}" || publisher ~ "${searchTerms}"`;
 
+  await ensureAuth();
   try {
     const [posts, projects, books, publications] = await Promise.all([
       pb
@@ -171,8 +188,7 @@ export async function searchDatabase(query: string): Promise<SearchResult[]> {
     ];
 
     return results;
-  } catch (error) {
-    console.error('Search error:', error);
+  } catch {
     return [];
   }
 }

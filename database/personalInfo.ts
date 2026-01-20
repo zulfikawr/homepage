@@ -2,12 +2,26 @@
 
 import pb from '@/lib/pocketbase';
 import { PersonalInfo } from '@/types/personalInfo';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import {
   COLLECTION,
   RECORD_ID,
   mapRecordToPersonalInfo,
 } from './personalInfo.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches the personal info from the database.
@@ -35,6 +49,7 @@ export async function getPersonalInfo(): Promise<PersonalInfo> {
 export async function updatePersonalInfo(
   data: PersonalInfo | FormData,
 ): Promise<{ success: boolean; data?: PersonalInfo; error?: string }> {
+  await ensureAuth();
   try {
     let updateData: Record<string, unknown> | FormData;
 
@@ -47,7 +62,7 @@ export async function updatePersonalInfo(
       };
 
       const finalAvatarUrl = data.avatarUrl;
-      if (finalAvatarUrl.includes('/api/files/')) {
+      if (finalAvatarUrl && finalAvatarUrl.includes('/api/files/')) {
         const parts = finalAvatarUrl.split('/');
         const fileName = parts[parts.length - 1].split('?')[0];
         cleanData.avatar = fileName;
@@ -62,24 +77,23 @@ export async function updatePersonalInfo(
       .collection(COLLECTION)
       .update(RECORD_ID, updateData);
 
-    try {
-      revalidateTag('profile', 'max');
-    } catch {
-      // Ignore
-    }
+    revalidatePath('/');
+    revalidatePath('/database/personal-info');
+    revalidateTag('profile', 'max');
 
     return { success: true, data: mapRecordToPersonalInfo(record) };
-  } catch {
+  } catch (error: unknown) {
+    // Try to create if it doesn't exist
     try {
       const record = await pb
         .collection(COLLECTION)
         .create({ id: RECORD_ID, ...data });
-      try {
-        revalidateTag('profile', 'max');
-      } catch {
-        // Ignore
-      }
-      return { success: true, data: record as unknown as PersonalInfo };
+
+      revalidatePath('/');
+      revalidatePath('/database/personal-info');
+      revalidateTag('profile', 'max');
+
+      return { success: true, data: mapRecordToPersonalInfo(record) };
     } catch (createError: unknown) {
       return {
         success: false,

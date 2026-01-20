@@ -3,8 +3,22 @@
 import pb from '@/lib/pocketbase';
 import { Post } from '@/types/post';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToPost } from './posts.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all posts from the database.
@@ -46,8 +60,7 @@ export async function getPostById(id: string): Promise<Post | null> {
     }
 
     return null;
-  } catch (_error) {
-    console.error('getPostById error:', _error);
+  } catch {
     return null;
   }
 }
@@ -58,14 +71,15 @@ export async function getPostById(id: string): Promise<Post | null> {
 export async function addPost(
   data: Omit<Post, 'id'> | FormData,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb.collection('posts').create<RecordModel>(data);
     const post = mapRecordToPost(record);
-    try {
-      revalidateTag('posts', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/post');
+    revalidatePath('/database/posts');
+    revalidateTag('posts', 'max');
+
     return { success: true, post };
   } catch (error: unknown) {
     return {
@@ -82,6 +96,7 @@ export async function updatePost(
   id: string,
   data: Partial<Post> | FormData,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
@@ -92,7 +107,7 @@ export async function updatePost(
     } else {
       try {
         await pb.collection('posts').getOne(id);
-      } catch {
+      } catch (_) {
         const records = await pb.collection('posts').getFullList<RecordModel>({
           filter: `slug = "${id}"`,
         });
@@ -103,11 +118,12 @@ export async function updatePost(
       .collection('posts')
       .update<RecordModel>(recordId, data);
     const post = mapRecordToPost(record);
-    try {
-      revalidateTag('posts', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/post');
+    revalidatePath(`/post/${post.slug}`);
+    revalidatePath('/database/posts');
+    revalidateTag('posts', 'max');
+
     return { success: true, post };
   } catch (error: unknown) {
     return {
@@ -123,6 +139,7 @@ export async function updatePost(
 export async function deletePost(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
@@ -130,13 +147,22 @@ export async function deletePost(
         filter: `slug = "${id}"`,
       });
       if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('posts').getOne(id);
+      } catch (_) {
+        const records = await pb.collection('posts').getFullList<RecordModel>({
+          filter: `slug = "${id}"`,
+        });
+        if (records.length > 0) recordId = records[0].id;
+      }
     }
     await pb.collection('posts').delete(recordId);
-    try {
-      revalidateTag('posts', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/post');
+    revalidatePath('/database/posts');
+    revalidateTag('posts', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {

@@ -3,8 +3,22 @@
 import pb from '@/lib/pocketbase';
 import { Publication } from '@/types/publication';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToPublication } from './publications.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all publications from the database.
@@ -27,16 +41,17 @@ export async function getPublications(): Promise<Publication[]> {
 export async function addPublication(
   data: Omit<Publication, 'id'>,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb
       .collection('publications')
       .create<RecordModel>(data);
     const publication = mapRecordToPublication(record);
-    try {
-      revalidateTag('publications', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/publications');
+    revalidatePath('/database/publications');
+    revalidateTag('publications', 'max');
+
     return { success: true, publication };
   } catch (error: unknown) {
     return {
@@ -52,18 +67,28 @@ export async function addPublication(
 export async function updatePublication(
   data: Publication,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
+  await ensureAuth();
   try {
     const { id, ...rest } = data;
     let recordId = id;
 
     if (recordId.length !== 15) {
+      const records = await pb
+        .collection('publications')
+        .getFullList<RecordModel>({
+          filter: `slug = "${recordId}"`,
+        });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
       try {
-        const record = await pb
+        await pb.collection('publications').getOne(recordId);
+      } catch (_) {
+        const records = await pb
           .collection('publications')
-          .getFirstListItem(`slug="${recordId}"`);
-        recordId = record.id;
-      } catch {
-        // Ignore
+          .getFullList<RecordModel>({
+            filter: `slug = "${recordId}"`,
+          });
+        if (records.length > 0) recordId = records[0].id;
       }
     }
 
@@ -71,11 +96,11 @@ export async function updatePublication(
       .collection('publications')
       .update<RecordModel>(recordId, rest);
     const publication = mapRecordToPublication(record);
-    try {
-      revalidateTag('publications', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/publications');
+    revalidatePath('/database/publications');
+    revalidateTag('publications', 'max');
+
     return { success: true, publication };
   } catch (error: unknown) {
     return {
@@ -93,20 +118,34 @@ export async function updatePublication(
 export async function deletePublication(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
-      const record = await pb
+      const records = await pb
         .collection('publications')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+        .getFullList<RecordModel>({
+          filter: `slug = "${id}"`,
+        });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('publications').getOne(id);
+      } catch (_) {
+        const records = await pb
+          .collection('publications')
+          .getFullList<RecordModel>({
+            filter: `slug = "${id}"`,
+          });
+        if (records.length > 0) recordId = records[0].id;
+      }
     }
     await pb.collection('publications').delete(recordId);
-    try {
-      revalidateTag('publications', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/publications');
+    revalidatePath('/database/publications');
+    revalidateTag('publications', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {

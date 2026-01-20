@@ -3,8 +3,22 @@
 import pb from '@/lib/pocketbase';
 import { Movie } from '@/types/movie';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToMovie } from './movies.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all movies from the database.
@@ -30,14 +44,15 @@ export async function getMovies(): Promise<Movie[]> {
 export async function addMovie(
   data: Omit<Movie, 'id'>,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb.collection('movies').create<RecordModel>(data);
     const movie = mapRecordToMovie(record);
-    try {
-      revalidateTag('movies', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/movies');
+    revalidatePath('/database/movies');
+    revalidateTag('movies', 'max');
+
     return { success: true, movie };
   } catch (error: unknown) {
     return {
@@ -55,18 +70,24 @@ export async function addMovie(
 export async function updateMovie(
   data: Movie,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
+  await ensureAuth();
   try {
     const { id, ...rest } = data;
     let recordId = id;
 
     if (recordId.length !== 15) {
+      const records = await pb.collection('movies').getFullList<RecordModel>({
+        filter: `slug = "${recordId}"`,
+      });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
       try {
-        const record = await pb
-          .collection('movies')
-          .getFirstListItem(`slug="${recordId}"`);
-        recordId = record.id;
-      } catch {
-        // Ignore
+        await pb.collection('movies').getOne(recordId);
+      } catch (_) {
+        const records = await pb.collection('movies').getFullList<RecordModel>({
+          filter: `slug = "${recordId}"`,
+        });
+        if (records.length > 0) recordId = records[0].id;
       }
     }
 
@@ -74,11 +95,11 @@ export async function updateMovie(
       .collection('movies')
       .update<RecordModel>(recordId, rest);
     const movie = mapRecordToMovie(record);
-    try {
-      revalidateTag('movies', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/movies');
+    revalidatePath('/database/movies');
+    revalidateTag('movies', 'max');
+
     return { success: true, movie };
   } catch (error: unknown) {
     return {
@@ -96,20 +117,30 @@ export async function updateMovie(
 export async function deleteMovie(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
-      const record = await pb
-        .collection('movies')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+      const records = await pb.collection('movies').getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+      });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('movies').getOne(id);
+      } catch (_) {
+        const records = await pb.collection('movies').getFullList<RecordModel>({
+          filter: `slug = "${id}"`,
+        });
+        if (records.length > 0) recordId = records[0].id;
+      }
     }
     await pb.collection('movies').delete(recordId);
-    try {
-      revalidateTag('movies', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/movies');
+    revalidatePath('/database/movies');
+    revalidateTag('movies', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {

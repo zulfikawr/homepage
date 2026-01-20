@@ -1,15 +1,26 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { Comment } from '@/types/comment';
 import { RecordModel } from 'pocketbase';
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Adds a new comment to a post.
- * @param postId The ID of the post.
- * @param author The name of the commenter.
- * @param content The comment text.
- * @param avatarUrl Optional avatar URL.
- * @param parentId Optional parent comment ID for replies.
- * @returns Promise with the new comment ID.
  */
 export const addComment = async (
   postId: string,
@@ -18,6 +29,7 @@ export const addComment = async (
   avatarUrl?: string,
   parentId?: string,
 ): Promise<string> => {
+  await ensureAuth();
   try {
     const data = {
       postId,
@@ -28,6 +40,10 @@ export const addComment = async (
       likedBy: [],
     };
     const record = await pb.collection('comments').create(data);
+
+    revalidatePath(`/post/${postId}`);
+    revalidatePath('/database/comments');
+
     return record.id;
   } catch {
     return '';
@@ -36,8 +52,6 @@ export const addComment = async (
 
 /**
  * Fetches all comments for a specific post.
- * @param postId The ID of the post.
- * @returns Promise with array of comments.
  */
 export const fetchComments = async (postId: string): Promise<Comment[]> => {
   try {
@@ -62,38 +76,13 @@ export const fetchComments = async (postId: string): Promise<Comment[]> => {
 };
 
 /**
- * Subscribes to comment changes for a post.
- * @param postId The ID of the post.
- * @param callback Function to call when comments change.
- * @returns Unsubscribe function.
- */
-export const subscribeToComments = (
-  postId: string,
-  callback: (comments: Comment[]) => void,
-) => {
-  fetchComments(postId).then(callback);
-
-  pb.collection('comments').subscribe(
-    '*',
-    async () => {
-      const comments = await fetchComments(postId);
-      callback(comments);
-    },
-    { filter: `postId = "${postId}"` },
-  );
-
-  return () => pb.collection('comments').unsubscribe();
-};
-
-/**
  * Toggles a like on a comment for a user.
- * @param commentId The ID of the comment.
- * @param userId The ID of the user.
  */
 export const likeComment = async (
   commentId: string,
   userId: string,
 ): Promise<void> => {
+  await ensureAuth();
   try {
     const record = await pb
       .collection('comments')
@@ -107,6 +96,10 @@ export const likeComment = async (
     }
 
     await pb.collection('comments').update(commentId, { likedBy });
+
+    if (record.postId) {
+      revalidatePath(`/post/${record.postId}`);
+    }
   } catch {
     // Silent fail
   }
@@ -114,11 +107,19 @@ export const likeComment = async (
 
 /**
  * Deletes a comment.
- * @param commentId The ID of the comment to delete.
  */
 export const deleteComment = async (commentId: string): Promise<void> => {
+  await ensureAuth();
   try {
+    const record = await pb
+      .collection('comments')
+      .getOne<RecordModel>(commentId);
     await pb.collection('comments').delete(commentId);
+
+    if (record.postId) {
+      revalidatePath(`/post/${record.postId}`);
+    }
+    revalidatePath('/database/comments');
   } catch {
     // Silent fail
   }
@@ -126,15 +127,20 @@ export const deleteComment = async (commentId: string): Promise<void> => {
 
 /**
  * Updates the content of a comment.
- * @param commentId The ID of the comment.
- * @param newContent The new text content.
  */
 export const updateComment = async (
   commentId: string,
   newContent: string,
 ): Promise<void> => {
+  await ensureAuth();
   try {
-    await pb.collection('comments').update(commentId, { content: newContent });
+    const record = await pb
+      .collection('comments')
+      .update<RecordModel>(commentId, { content: newContent });
+
+    if (record.postId) {
+      revalidatePath(`/post/${record.postId}`);
+    }
   } catch {
     // Silent fail
   }

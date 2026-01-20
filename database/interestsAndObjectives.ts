@@ -3,12 +3,26 @@
 import pb from '@/lib/pocketbase';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import {
   COLLECTION,
   mapInterestsRecord,
   defaultInterestsData,
 } from './interestsAndObjectives.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all interests and objectives from the database and picks a random one.
@@ -39,6 +53,7 @@ export async function updateInterestsAndObjectives(
   data?: InterestsAndObjectives;
   error?: string;
 }> {
+  await ensureAuth();
   try {
     const id = data.id || 'main';
     const updateData: Record<string, unknown> = { ...data };
@@ -53,11 +68,9 @@ export async function updateInterestsAndObjectives(
       record = await pb.collection(COLLECTION).create({ id, ...updateData });
     }
 
-    try {
-      revalidateTag('interests_and_objectives', 'max');
-    } catch {
-      // Ignore
-    }
+    revalidatePath('/');
+    revalidatePath('/database/interests-and-objectives');
+    revalidateTag('interests_and_objectives', 'max');
 
     return {
       success: true,

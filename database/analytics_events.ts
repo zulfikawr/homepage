@@ -1,26 +1,34 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { AnalyticsEvent } from '@/types/analytics';
+import { cookies } from 'next/headers';
 
-export async function getAnalyticsEvents(
-  callback: (events: AnalyticsEvent[]) => void,
-): Promise<() => void> {
-  const fetchEvents = async () => {
-    try {
-      // Fetch events for analysis
-      const records = await pb.collection('analytics_events').getFullList({
-        sort: '-created',
-      });
-      console.log('Analytics events fetched:', records.length);
-      callback(records as unknown as AnalyticsEvent[]);
-    } catch (err) {
-      console.error('Analytics fetch error:', err.message);
-      callback([]);
-    }
-  };
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
 
-  fetchEvents();
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
-  pb.collection('analytics_events').subscribe('*', fetchEvents);
-
-  return () => pb.collection('analytics_events').unsubscribe();
+/**
+ * Fetches analytics events. Note: Subscriptions should be handled by client hooks.
+ * This server-side function provides the initial list.
+ */
+export async function getAnalyticsEvents(): Promise<AnalyticsEvent[]> {
+  await ensureAuth();
+  try {
+    const records = await pb.collection('analytics_events').getFullList({
+      sort: '-created',
+    });
+    return records as unknown as AnalyticsEvent[];
+  } catch {
+    return [];
+  }
 }

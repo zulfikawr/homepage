@@ -3,7 +3,8 @@
 import pb from '@/lib/pocketbase';
 import { Project } from '@/types/project';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToProject } from './projects.client';
 
 /**
@@ -25,8 +26,12 @@ function cleanProjectData(
       // External URL -> move to image_url and clear image (file field)
       clean.image_url = clean.image;
       clean.image = null;
+    } else if (clean.image.startsWith('/')) {
+      // Local asset -> move to image_url and clear image (file field)
+      clean.image_url = clean.image;
+      clean.image = null;
     }
-    // If it's a local asset or already a filename, leave as is
+    // If it's already a filename, leave as is
   }
 
   // Handle favicon field
@@ -35,6 +40,10 @@ function cleanProjectData(
       const parts = clean.favicon.split('/');
       clean.favicon = parts[parts.length - 1].split('?')[0];
     } else if (clean.favicon.startsWith('http')) {
+      clean.favicon_url = clean.favicon;
+      clean.favicon = null;
+    } else if (clean.favicon.startsWith('/')) {
+      // Local asset -> move to favicon_url and clear favicon (file field)
       clean.favicon_url = clean.favicon;
       clean.favicon = null;
     }
@@ -70,11 +79,25 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 /**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
+
+/**
  * Adds a new project to the database.
  */
 export async function addProject(
   data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
+  await ensureAuth();
   try {
     const payload =
       data instanceof FormData
@@ -82,15 +105,14 @@ export async function addProject(
         : (cleanProjectData(data) as Record<string, unknown>);
     const record = await pb.collection('projects').create<RecordModel>(payload);
     const project = mapRecordToProject(record);
-    try {
-      revalidateTag('projects', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/projects');
+    revalidatePath('/database/projects');
+    revalidateTag('projects', 'max');
+
     return { success: true, project };
   } catch (error: unknown) {
     const pbError = error as { data?: unknown; message?: string };
-    console.error('PocketBase create error:', pbError.data || pbError);
     return {
       success: false,
       error: pbError.message || String(pbError),
@@ -104,45 +126,68 @@ export async function addProject(
 export async function updateProject(
   data: Project | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
+  await ensureAuth();
   try {
     let recordId: string;
     let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
       recordId = data.get('id') as string;
-      updateData = data;
+      // Create a new FormData without the id field to avoid PB errors
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
     } else {
       recordId = data.id;
+      updateData = cleanProjectData(data);
+    }
 
-      // Basic slug-to-ID matching if ID is not standard
-      if (recordId.length !== 15) {
-        try {
-          const record = await pb
-            .collection('projects')
-            .getFirstListItem(`slug="${recordId}"`);
-          recordId = record.id;
-        } catch {
-          // Ignore error if not found by slug
+    // Resolve slug to ID if necessary
+    if (recordId.length !== 15) {
+      const records = await pb.collection('projects').getFullList<RecordModel>({
+        filter: `slug = "${recordId}"`,
+      });
+      if (records.length > 0) {
+        recordId = records[0].id;
+      }
+    } else {
+      // Even if 15 chars, check if it's a valid ID or if it's actually a slug
+      try {
+        await pb.collection('projects').getOne(recordId);
+      } catch (_) {
+        const records = await pb
+          .collection('projects')
+          .getFullList<RecordModel>({
+            filter: `slug = "${recordId}"`,
+          });
+        if (records.length > 0) {
+          recordId = records[0].id;
         }
       }
-
-      updateData = cleanProjectData(data);
     }
 
     const record = await pb
       .collection('projects')
       .update<RecordModel>(recordId, updateData);
     const project = mapRecordToProject(record);
-    try {
-      revalidateTag('projects', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/projects');
+    revalidatePath(`/projects/${project.slug}`);
+    revalidatePath('/database/projects');
+    revalidatePath(`/database/projects/${project.id}/edit`);
+    revalidateTag('projects', 'max');
+
     return { success: true, project };
   } catch (error: unknown) {
-    const pbError = error as { data?: unknown; message?: string };
-    console.error('PocketBase update error details:', pbError.data);
-    console.error('PocketBase update error message:', pbError.message);
+    const pbError = error as {
+      data?: unknown;
+      message?: string;
+      status?: number;
+    };
     return {
       success: false,
       error: pbError.message || String(pbError),
@@ -156,20 +201,32 @@ export async function updateProject(
 export async function deleteProject(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
-      const record = await pb
-        .collection('projects')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+      const records = await pb.collection('projects').getFullList<RecordModel>({
+        filter: `slug = "${id}"`,
+      });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('projects').getOne(id);
+      } catch {
+        const records = await pb
+          .collection('projects')
+          .getFullList<RecordModel>({
+            filter: `slug = "${id}"`,
+          });
+        if (records.length > 0) recordId = records[0].id;
+      }
     }
     await pb.collection('projects').delete(recordId);
-    try {
-      revalidateTag('projects', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/projects');
+    revalidatePath('/database/projects');
+    revalidateTag('projects', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {

@@ -1,11 +1,28 @@
+'use server';
+
 import pb from '@/lib/pocketbase';
 import { RecordModel } from 'pocketbase';
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export interface FeedbackEntry {
   id: string;
   feedback: string;
   contact: string;
   created: string;
+}
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
 }
 
 /**
@@ -44,8 +61,12 @@ export function feedbackData(callback: (data: FeedbackEntry[]) => void) {
 export async function deleteFeedback(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     await pb.collection('feedback').delete(id);
+
+    revalidatePath('/database/feedback');
+
     return { success: true };
   } catch (error: unknown) {
     return {

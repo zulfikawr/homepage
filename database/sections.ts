@@ -3,8 +3,22 @@
 import pb from '@/lib/pocketbase';
 import { Section } from '@/types/section';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToSection } from './sections.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all sections from the database.
@@ -27,14 +41,15 @@ export async function getSections(): Promise<Section[]> {
 export async function addSection(
   data: Omit<Section, 'id'>,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb.collection('sections').create<RecordModel>(data);
     const section = mapRecordToSection(record);
-    try {
-      revalidateTag('sections', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/');
+    revalidatePath('/database/sections');
+    revalidateTag('sections', 'max');
+
     return { success: true, section };
   } catch (error: unknown) {
     return {
@@ -51,16 +66,17 @@ export async function updateSection(
   id: string,
   data: Partial<Section>,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb
       .collection('sections')
       .update<RecordModel>(id, data);
     const section = mapRecordToSection(record);
-    try {
-      revalidateTag('sections', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/');
+    revalidatePath('/database/sections');
+    revalidateTag('sections', 'max');
+
     return { success: true, section };
   } catch (error: unknown) {
     return {
@@ -76,13 +92,14 @@ export async function updateSection(
 export async function deleteSection(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     await pb.collection('sections').delete(id);
-    try {
-      revalidateTag('sections', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/');
+    revalidatePath('/database/sections');
+    revalidateTag('sections', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {

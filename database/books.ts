@@ -3,8 +3,22 @@
 import pb from '@/lib/pocketbase';
 import { Book } from '@/types/book';
 import { RecordModel } from 'pocketbase';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { cookies } from 'next/headers';
 import { mapRecordToBook } from './books.client';
+
+/**
+ * Ensures the PocketBase client is authenticated for server-side operations
+ * by loading the auth state from the request cookies.
+ */
+async function ensureAuth() {
+  const cookieStore = await cookies();
+  const authCookie = cookieStore.get('pb_auth');
+
+  if (authCookie) {
+    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+  }
+}
 
 /**
  * Fetches all books from the database.
@@ -27,16 +41,17 @@ export async function getBooks(): Promise<Book[]> {
 export async function addBook(
   data: Omit<Book, 'id'>,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
+  await ensureAuth();
   try {
     const record = await pb
       .collection('reading_list')
       .create<RecordModel>(data);
     const book = mapRecordToBook(record);
-    try {
-      revalidateTag('reading_list', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/reading-list');
+    revalidatePath('/database/reading-list');
+    revalidateTag('reading_list', 'max');
+
     return { success: true, book };
   } catch (error: unknown) {
     return {
@@ -52,18 +67,28 @@ export async function addBook(
 export async function updateBook(
   data: Book,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
+  await ensureAuth();
   try {
     const { id, ...rest } = data;
     let recordId = id;
 
     if (recordId.length !== 15) {
+      const records = await pb
+        .collection('reading_list')
+        .getFullList<RecordModel>({
+          filter: `slug = "${recordId}"`,
+        });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
       try {
-        const record = await pb
+        await pb.collection('reading_list').getOne(recordId);
+      } catch (_) {
+        const records = await pb
           .collection('reading_list')
-          .getFirstListItem(`slug="${recordId}"`);
-        recordId = record.id;
-      } catch {
-        // Ignore if not found by slug
+          .getFullList<RecordModel>({
+            filter: `slug = "${recordId}"`,
+          });
+        if (records.length > 0) recordId = records[0].id;
       }
     }
 
@@ -71,11 +96,11 @@ export async function updateBook(
       .collection('reading_list')
       .update<RecordModel>(recordId, rest);
     const book = mapRecordToBook(record);
-    try {
-      revalidateTag('reading_list', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/reading-list');
+    revalidatePath('/database/reading-list');
+    revalidateTag('reading_list', 'max');
+
     return { success: true, book };
   } catch (error: unknown) {
     return {
@@ -91,20 +116,34 @@ export async function updateBook(
 export async function deleteBook(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
+  await ensureAuth();
   try {
     let recordId = id;
     if (id.length !== 15) {
-      const record = await pb
+      const records = await pb
         .collection('reading_list')
-        .getFirstListItem(`slug="${id}"`);
-      recordId = record.id;
+        .getFullList<RecordModel>({
+          filter: `slug = "${id}"`,
+        });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('reading_list').getOne(id);
+      } catch (_) {
+        const records = await pb
+          .collection('reading_list')
+          .getFullList<RecordModel>({
+            filter: `slug = "${id}"`,
+          });
+        if (records.length > 0) recordId = records[0].id;
+      }
     }
     await pb.collection('reading_list').delete(recordId);
-    try {
-      revalidateTag('reading_list', 'max');
-    } catch {
-      // Ignore
-    }
+
+    revalidatePath('/reading-list');
+    revalidatePath('/database/reading-list');
+    revalidateTag('reading_list', 'max');
+
     return { success: true };
   } catch (error: unknown) {
     return {
