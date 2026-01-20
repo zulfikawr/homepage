@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Book } from '@/types/book';
 import {
   Button,
@@ -19,7 +19,6 @@ import { Separator } from '@/components/UI/Separator';
 import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
 import { useRouter } from 'next/navigation';
-import { useSyncExternalStore } from 'react';
 
 interface BookFormProps {
   bookToEdit?: Book;
@@ -36,28 +35,24 @@ const initialBookState: Book = {
   dateAdded: '',
 };
 
-const emptySubscribe = () => () => {};
-
 const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
   const [book, setBook] = useState<Book>(bookToEdit || initialBookState);
 
-  const now = useSyncExternalStore(
-    emptySubscribe,
-    () => new Date(),
-    () => new Date('2025-01-01'),
-  );
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    if (bookToEdit?.dateAdded) {
+      return new Date(bookToEdit.dateAdded);
+    }
+    return new Date('2025-01-01');
+  });
 
-  const initialDate = useMemo(() => {
-    const date = bookToEdit?.dateAdded ? new Date(bookToEdit.dateAdded) : now;
-    return date;
-  }, [bookToEdit, now]);
-
-  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
-
-  // Sync state if initialDate change
   useEffect(() => {
-    setSelectedDate(initialDate);
-  }, [initialDate]);
+    const frame = requestAnimationFrame(() => {
+      if (!bookToEdit?.dateAdded) {
+        setSelectedDate(new Date());
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [bookToEdit?.dateAdded]);
 
   const currentPreviewBook: Book = {
     id: book.id || 'preview',

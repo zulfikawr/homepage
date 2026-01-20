@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Post } from '@/types/post';
 import { addPost, updatePost, deletePost } from '@/database/posts';
 import { toast } from '@/components/Toast';
@@ -19,7 +19,6 @@ import { formatDate } from '@/utilities/formatDate';
 import DateSelect from '@/components/DateSelect';
 import { Separator } from '@/components/UI/Separator';
 import { useRouter } from 'next/navigation';
-import { useSyncExternalStore } from 'react';
 
 interface PostFormProps {
   postToEdit?: Post;
@@ -39,31 +38,29 @@ const initialPostState: Post = {
   audio_url: '',
 };
 
-const emptySubscribe = () => () => {};
-
 const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
   const [post, setPost] = useState<Post>(postToEdit || initialPostState);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
 
-  const now = useSyncExternalStore(
-    emptySubscribe,
-    () => new Date(),
-    () => new Date('2025-01-01'),
-  );
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    if (postToEdit?.dateString) {
+      return new Date(postToEdit.dateString);
+    }
+    return new Date('2025-01-01');
+  });
 
-  const initialDate = useMemo(() => {
-    const date = postToEdit?.dateString ? new Date(postToEdit.dateString) : now;
-    return date;
-  }, [postToEdit, now]);
-
-  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
-
-  // Sync state if initialDate change
   useEffect(() => {
-    setSelectedDate(initialDate);
-  }, [initialDate]);
+    const frame = requestAnimationFrame(() => {
+      if (postToEdit?.dateString) {
+        setSelectedDate(new Date(postToEdit.dateString));
+      } else {
+        setSelectedDate(new Date());
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [postToEdit]);
 
   const currentPreviewPost: Post = {
     id: post.id || 'preview',

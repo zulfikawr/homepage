@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Employment } from '@/types/employment';
 import {
   Button,
@@ -22,7 +22,6 @@ import { modal } from '@/components/Modal';
 import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
 import { useRouter } from 'next/navigation';
-import { useSyncExternalStore } from 'react';
 
 interface EmploymentFormProps {
   employmentToEdit?: Employment;
@@ -41,8 +40,6 @@ const initialEmploymentState: Employment = {
   organizationLocation: '',
 };
 
-const emptySubscribe = () => () => {};
-
 const EmploymentForm: React.FC<EmploymentFormProps> = ({
   employmentToEdit,
 }) => {
@@ -54,38 +51,35 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
   );
   const [newResponsibility, setNewResponsibility] = useState('');
 
-  const now = useSyncExternalStore(
-    emptySubscribe,
-    () => new Date(),
-    () => new Date('2025-01-01'),
-  );
-
-  const initialDates = useMemo(() => {
-    if (!employmentToEdit?.dateString) {
-      return {
-        start: now,
-        end: now,
-      };
+  const [startDate, setStartDate] = useState<Date>(() => {
+    if (employmentToEdit?.dateString) {
+      const [startStr] = employmentToEdit.dateString.split(' - ');
+      return new Date(startStr);
     }
+    return new Date('2025-01-01');
+  });
+  const [endDate, setEndDate] = useState<Date>(() => {
+    if (employmentToEdit?.dateString) {
+      const [, endStr] = employmentToEdit.dateString.split(' - ');
+      return endStr === 'Present' ? new Date() : new Date(endStr);
+    }
+    return new Date('2025-01-01');
+  });
 
-    const [startStr, endStr] = employmentToEdit.dateString.split(' - ');
-    const start = new Date(startStr);
-    const end = endStr === 'Present' ? now : new Date(endStr);
-
-    return {
-      start,
-      end,
-    };
-  }, [employmentToEdit, now]);
-
-  const [startDate, setStartDate] = useState(initialDates.start);
-  const [endDate, setEndDate] = useState(initialDates.end);
-
-  // Sync state if initialDates change (important for hydration)
   useEffect(() => {
-    setStartDate(initialDates.start);
-    setEndDate(initialDates.end);
-  }, [initialDates]);
+    const frame = requestAnimationFrame(() => {
+      if (employmentToEdit?.dateString) {
+        const [startStr, endStr] = employmentToEdit.dateString.split(' - ');
+        setStartDate(new Date(startStr));
+        setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
+      } else {
+        const now = new Date();
+        setStartDate(now);
+        setEndDate(now);
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [employmentToEdit]);
 
   const currentPreviewEmployment: Employment = {
     id: employment.id || 'preview',

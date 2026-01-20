@@ -1,11 +1,6 @@
 'use client';
 
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useSyncExternalStore,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Project } from '@/types/project';
 import { modal } from '@/components/Modal';
 import {
@@ -49,8 +44,6 @@ const initialProjectState: Project = {
   slug: '',
 };
 
-const emptySubscribe = () => () => {};
-
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [project, setProject] = useState<Project>(
     projectToEdit || initialProjectState,
@@ -63,47 +56,35 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
 
+  // Use a stable mounted state to handle hydration safely
+  const [mounted, setMounted] = useState(false);
+
   // Debounced image for preview
   const [displayImage, setDisplayImage] = useState(project.image);
   useEffect(() => {
+    setMounted(true);
     const timer = setTimeout(() => {
       setDisplayImage(project.image);
     }, 2000); // 2 second debounce for better UX
     return () => clearTimeout(timer);
   }, [project.image]);
 
-  const now = useSyncExternalStore(
-    emptySubscribe,
-    () => new Date(),
-    () => new Date('2025-01-01'),
-  );
+  const [startDate, setStartDate] = useState<Date>(new Date('2025-01-01'));
+  const [endDate, setEndDate] = useState<Date>(new Date('2025-01-01'));
 
-  const initialDates = useMemo(() => {
-    if (!projectToEdit?.dateString) {
-      return {
-        start: now,
-        end: now,
-      };
-    }
-
-    const [startStr, endStr] = projectToEdit.dateString.split(' - ');
-    const start = new Date(startStr);
-    const end = endStr === 'Present' ? now : new Date(endStr);
-
-    return {
-      start,
-      end,
-    };
-  }, [projectToEdit, now]);
-
-  const [startDate, setStartDate] = useState(initialDates.start);
-  const [endDate, setEndDate] = useState(initialDates.end);
-
-  // Sync state if initialDates change (important for hydration)
   useEffect(() => {
-    setStartDate(initialDates.start);
-    setEndDate(initialDates.end);
-  }, [initialDates]);
+    if (!mounted) return;
+
+    if (projectToEdit?.dateString) {
+      const [startStr, endStr] = projectToEdit.dateString.split(' - ');
+      setStartDate(new Date(startStr));
+      setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
+    } else {
+      const now = new Date();
+      setStartDate(now);
+      setEndDate(now);
+    }
+  }, [projectToEdit, mounted]);
 
   // GitHub fetch states
   const [githubUrl, setGithubUrl] = useState('');
