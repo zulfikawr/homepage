@@ -7,6 +7,7 @@ import { Icon } from '@/components/UI';
 import { useRealtimeData } from '@/hooks';
 import { getAnalyticsEvents } from '@/database/analytics_events';
 import CardEmpty from '@/components/Card/Empty';
+import WorldMap from '@/components/Visual/WorldMap';
 
 export default function AnalyticsContent() {
   const { data: events, loading, error } = useRealtimeData(getAnalyticsEvents);
@@ -128,6 +129,7 @@ export default function AnalyticsContent() {
   }
 
   if (error) return <CardEmpty message={`Error: ${error}`} />;
+
   if (!stats) return <CardEmpty message='Initializing analytics...' />;
 
   if (stats.totalViews === 0) {
@@ -138,6 +140,7 @@ export default function AnalyticsContent() {
           title='Analytics'
           subtitle='Real-time insights into website traffic and visitor behavior.'
         />
+
         <div className='mt-10'>
           <CardEmpty message='No visitor data recorded yet. Browse the site to generate activity!' />
         </div>
@@ -198,7 +201,10 @@ export default function AnalyticsContent() {
                 Visitor Geography
               </h3>
             </div>
-            <div className='h-[400px] w-full relative'></div>
+
+            <div className='h-[400px] w-full relative bg-muted/5'>
+              <WorldMap data={stats.countries} />
+            </div>
           </Card>
 
           {/* Countries List */}
