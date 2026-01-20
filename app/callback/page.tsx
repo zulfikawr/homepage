@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import pb from '@/lib/pocketbase';
+import { saveSpotifyTokens } from '@/lib/spotify';
 import { toast } from '@/components/Toast';
 
 function CallbackContent() {
@@ -48,12 +48,8 @@ function CallbackContent() {
             throw new Error(data.error_description || data.error);
           }
 
-          // Save to PocketBase
-          await pb.collection('spotify_tokens').update('spotify', {
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
-            timestamp: Date.now(),
-          });
+          // Save tokens using abstracted function
+          await saveSpotifyTokens(data.access_token, data.refresh_token);
 
           toast.success('Spotify connected successfully!');
           router.push('/');

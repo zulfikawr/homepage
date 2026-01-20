@@ -1,26 +1,22 @@
 'use client';
 
-import { ProjectCard } from '@/components/Card/Project';
-import { projectsData } from '@/database/projects.client';
-import { sortByDate } from '@/utilities/sortByDate';
+import ProjectCard from '@/components/Card/Project';
+import { mapRecordToProject } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
+import { sortByDate } from '@/utilities/sortByDate';
 import { Project } from '@/types/project';
 
-interface ProjectsContentProps {
-  initialData?: Project[];
-}
-
-export default function ProjectsContent({ initialData }: ProjectsContentProps) {
+export default function ProjectsContent() {
   const {
     data: projects,
     loading,
     error,
-  } = useRealtimeData(projectsData, initialData);
+  } = useCollection<Project>('projects', mapRecordToProject);
   const sortedProjects = projects ? sortByDate(projects) : [];
 
   const wipProjects = sortedProjects.filter(

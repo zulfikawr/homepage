@@ -4,9 +4,8 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Button, Icon } from '@/components/UI';
-import pb from '@/lib/pocketbase';
 import { toast } from '@/components/Toast';
-import { RecordModel, ClientResponseError } from 'pocketbase';
+import { uploadFile } from '@/database/files';
 import { twMerge } from 'tailwind-merge';
 import Image from 'next/image';
 
@@ -87,43 +86,25 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     formData.append(fieldName, file);
 
     try {
-      const record = await pb
-        .collection(collectionName)
-        .update<RecordModel>(recordId, formData);
+      const result = await uploadFile(
+        collectionName,
+        recordId,
+        fieldName,
+        formData,
+      );
 
-      const fileName = record[fieldName] as string;
-
-      if (!fileName) {
-        toast.error('Upload succeeded but no filename returned');
-        return;
+      if (result.success && result.url) {
+        onUploadSuccess(result.url);
+        setSelectedFile(file);
+        toast.success('File uploaded successfully');
+      } else {
+        toast.error(result.error || 'Failed to upload file');
       }
-
-      const fullUrl = pb.files.getURL(record, fileName);
-
-      onUploadSuccess(fullUrl);
-      setSelectedFile(file);
-      toast.success('File uploaded successfully');
     } catch (error: unknown) {
       console.error('Upload error:', error);
-      let message = 'Failed to upload file';
-
-      if (error instanceof ClientResponseError) {
-        message = error.message;
-        const details = error.response.data;
-        if (details && typeof details === 'object') {
-          const errors = Object.entries(details)
-            .map(([key, val]) => {
-              const err = val as { message?: string };
-              return `${key}: ${err.message || 'invalid'}`;
-            })
-            .join(', ');
-          if (errors) message += ` (${errors})`;
-        }
-      } else if (error instanceof Error) {
-        message = error.message;
-      }
-
-      toast.error(message);
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to upload file',
+      );
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

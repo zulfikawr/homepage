@@ -1,13 +1,14 @@
 'use client';
 
-import { EmploymentCard } from '@/components/Card/Employment';
-import { employmentsData } from '@/database/employments.client';
+import EmploymentCard from '@/components/Card/Employment';
+import { mapRecordToEmployment } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Employment } from '@/types/employment';
 
 export default function EmploymentDatabase() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function EmploymentDatabase() {
     data: employments,
     loading,
     error,
-  } = useRealtimeData(employmentsData);
+  } = useCollection<Employment>('employments', mapRecordToEmployment);
 
   if (error) return <CardEmpty message='Failed to load employments' />;
 

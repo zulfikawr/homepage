@@ -2,11 +2,20 @@
 
 import ResumeForm from '@/components/Form/Resume';
 import PageTitle from '@/components/PageTitle';
-import { resumeData } from '@/database/resume.client';
-import { useRealtimeData } from '@/hooks';
+import { mapRecordToResume } from '@/lib/mappers';
+import { useCollection } from '@/hooks';
+import { Resume } from '@/types/resume';
+import { useMemo } from 'react';
 
 export default function ResumeContent() {
-  const { data: resume } = useRealtimeData(resumeData);
+  const { data: resumeList } = useCollection<Resume>(
+    'resume',
+    mapRecordToResume,
+  );
+
+  const resume = useMemo(() => {
+    return resumeList && resumeList.length > 0 ? resumeList[0] : undefined;
+  }, [resumeList]);
 
   return (
     <div>

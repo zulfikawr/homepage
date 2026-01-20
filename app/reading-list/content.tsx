@@ -1,27 +1,21 @@
 'use client';
 
-import { booksData } from '@/database/books.client';
+import BookCard from '@/components/Card/Book';
+import { mapRecordToBook } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
-import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
-import BookCard from '@/components/Card/Book';
-import { useRealtimeData } from '@/hooks';
+import CardEmpty from '@/components/Card/Empty';
+import { useCollection } from '@/hooks';
 import { Book } from '@/types/book';
 
-interface ReadingListContentProps {
-  initialData?: Book[];
-}
-
-export default function ReadingListContent({
-  initialData,
-}: ReadingListContentProps) {
+export default function ReadingListContent() {
   const {
     data: books,
     loading,
     error,
-  } = useRealtimeData(booksData, initialData);
+  } = useCollection<Book>('reading_list', mapRecordToBook);
 
   const booksArray = books || [];
 

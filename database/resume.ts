@@ -4,7 +4,10 @@ import pb from '@/lib/pocketbase';
 import { Resume } from '@/types/resume';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { COLLECTION, RECORD_ID, mapRecordToResume } from './resume.client';
+import { mapRecordToResume } from '@/lib/mappers';
+
+const COLLECTION = 'resume';
+const RECORD_ID = 'resumemainrec00';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

@@ -1,22 +1,20 @@
+'use client';
+
 import { ProjectCard } from '@/components/Card/Project';
-import { projectsData } from '@/database/projects.client';
+import { mapRecordToProject } from '@/lib/mappers';
 import { parseDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { Project } from '@/types/project';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 
-interface ProjectSectionProps {
-  initialData?: Project[];
-}
-
-const ProjectSection = ({ initialData }: ProjectSectionProps) => {
+const ProjectSection = () => {
   const {
     data: projects,
     loading,
     error,
-  } = useRealtimeData(projectsData, initialData);
+  } = useCollection<Project>('projects', mapRecordToProject);
 
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);

@@ -1,20 +1,25 @@
-import { personalInfoData } from '@/database/personalInfo.client';
+'use client';
+
+import { mapRecordToPersonalInfo } from '@/lib/mappers';
 import Loading from './loading';
 import { Hover } from '@/components/Visual';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { PersonalInfo } from '@/types/personalInfo';
+import { useMemo } from 'react';
 
-interface PersonalInfoSectionProps {
-  initialData?: PersonalInfo;
-}
-
-const PersonalInfoSection = ({ initialData }: PersonalInfoSectionProps) => {
+const PersonalInfoSection = () => {
   const {
-    data: personalInfo,
+    data: personalInfoList,
     loading,
     error,
-  } = useRealtimeData(personalInfoData, initialData);
+  } = useCollection<PersonalInfo>('profile', mapRecordToPersonalInfo);
+
+  const personalInfo = useMemo(() => {
+    return personalInfoList && personalInfoList.length > 0
+      ? personalInfoList[0]
+      : null;
+  }, [personalInfoList]);
 
   if (error) return <div>Failed to load personal info</div>;
   if (loading || !personalInfo) return <Loading />;

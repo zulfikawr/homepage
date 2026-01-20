@@ -5,7 +5,7 @@ import { Movie } from '@/types/movie';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToMovie } from './movies.client';
+import { mapRecordToMovie } from '@/lib/mappers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

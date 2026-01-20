@@ -1,16 +1,24 @@
 'use client';
 
+import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { useMemo } from 'react';
 import PageTitle from '@/components/PageTitle';
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/UI';
-import { useRealtimeData } from '@/hooks';
-import { getAnalyticsEvents } from '@/database/analytics_events';
-import CardEmpty from '@/components/Card/Empty';
+import { useCollection } from '@/hooks';
 import WorldMap from '@/components/Visual/WorldMap';
+import { AnalyticsEvent } from '@/types/analytics';
+import CardEmpty from '@/components/Card/Empty';
 
 export default function AnalyticsContent() {
-  const { data: events, loading, error } = useRealtimeData(getAnalyticsEvents);
+  const {
+    data: events,
+    loading,
+    error,
+  } = useCollection<AnalyticsEvent>(
+    'analytics_events',
+    mapRecordToAnalyticsEvent,
+  );
 
   const stats = useMemo(() => {
     if (!events) return null;

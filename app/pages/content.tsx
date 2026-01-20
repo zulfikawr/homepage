@@ -1,13 +1,22 @@
 'use client';
 
-import NavigationCard from '@/components/Card/Navigation';
 import PageTitle from '@/components/PageTitle';
+import { useCollection } from '@/hooks';
+import { mapRecordToResume } from '@/lib/mappers';
+import { Resume } from '@/types/resume';
+import { useMemo } from 'react';
+import NavigationCard from '@/components/Card/Navigation';
 import { IconName } from '@/components/UI/Icon';
-import { useRealtimeData } from '@/hooks';
-import { resumeData } from '@/database/resume.client';
 
 export default function PagesContent() {
-  const { data: resume } = useRealtimeData(resumeData);
+  const { data: resumeList } = useCollection<Resume>(
+    'resume',
+    mapRecordToResume,
+  );
+
+  const resume = useMemo(() => {
+    return resumeList && resumeList.length > 0 ? resumeList[0] : null;
+  }, [resumeList]);
 
   const pages: { title: string; desc: string; icon: IconName; href: string }[] =
     [

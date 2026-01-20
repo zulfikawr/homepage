@@ -1,18 +1,23 @@
 'use client';
 
 import BookCard from '@/components/Card/Book';
-import { booksData } from '@/database/books.client';
+import { mapRecordToBook } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Book } from '@/types/book';
 
 export default function ReadingListDatabase() {
   const router = useRouter();
 
-  const { data: books, loading, error } = useRealtimeData(booksData);
+  const {
+    data: books,
+    loading,
+    error,
+  } = useCollection<Book>('reading_list', mapRecordToBook);
 
   if (error) return <CardEmpty message='Failed to load books' />;
 

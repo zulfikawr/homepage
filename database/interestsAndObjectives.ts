@@ -5,11 +5,21 @@ import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import {
-  COLLECTION,
-  mapInterestsRecord,
-  defaultInterestsData,
-} from './interestsAndObjectives.client';
+import { mapRecordToInterests } from '@/lib/mappers';
+
+const COLLECTION = 'interests_and_objectives';
+
+const defaultInterestsData: InterestsAndObjectives = {
+  description:
+    'I write articles about diplomacy, economy, climate, and conflicts, with a primary interest in climate and renewable energy in Southeast Asia.',
+  objectives: [
+    'Analyze the impact of climate policies on regional economies and international relations.',
+    'Explore sustainable energy solutions and their role in diplomacy.',
+    'Report on conflicts and geopolitical issues related to resource management and environmental change.',
+  ],
+  conclusion:
+    'Through my work, I aim to contribute to discussions on sustainable development and how climate policies shape global relations.',
+};
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations
@@ -35,7 +45,7 @@ export async function getInterestsAndObjectives(): Promise<InterestsAndObjective
 
     if (records.length > 0) {
       const randomRecord = records[Math.floor(Math.random() * records.length)];
-      return mapInterestsRecord(randomRecord);
+      return mapRecordToInterests(randomRecord);
     }
     return defaultInterestsData;
   } catch {
@@ -74,7 +84,7 @@ export async function updateInterestsAndObjectives(
 
     return {
       success: true,
-      data: mapInterestsRecord(record as unknown as RecordModel),
+      data: mapRecordToInterests(record as unknown as RecordModel),
     };
   } catch (error: unknown) {
     return {

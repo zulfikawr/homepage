@@ -5,7 +5,7 @@ import { Section } from '@/types/section';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToSection } from './sections.client';
+import { mapRecordToSection } from '@/lib/mappers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

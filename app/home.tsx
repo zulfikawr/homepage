@@ -7,43 +7,25 @@ import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObje
 import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
 import Banners from '@/components/Section/Banners';
-import { useRealtimeData } from '@/hooks';
-import { sectionsData } from '@/database/sections.client';
+import { useCollection } from '@/hooks';
+import { mapRecordToSection } from '@/lib/mappers';
 import { Section } from '@/types/section';
-import { PersonalInfo } from '@/types/personalInfo';
-import { Post } from '@/types/post';
-import { Project } from '@/types/project';
-import { Employment } from '@/types/employment';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
-interface HomeProps {
-  initialData: {
-    sections: Section[];
-    personalInfo: PersonalInfo;
-    posts: Post[];
-    projects: Project[];
-    employments: Employment[];
-    interests: InterestsAndObjectives;
-  };
-}
-
-export default function Home({ initialData }: HomeProps) {
-  const { data: sections } = useRealtimeData(
-    sectionsData,
-    initialData.sections,
+export default function Home() {
+  const options = React.useMemo(() => ({ sort: 'order' }), []);
+  const { data: sections } = useCollection<Section>(
+    'sections',
+    mapRecordToSection,
+    options,
   );
 
   const sectionMap: Record<string, React.ReactNode> = {
-    'personal-info': (
-      <PersonalInfoSection initialData={initialData.personalInfo} />
-    ),
+    'personal-info': <PersonalInfoSection />,
     banners: <Banners />,
-    interests: (
-      <InterestsAndObjectivesSection initialData={initialData.interests} />
-    ),
-    projects: <ProjectSection initialData={initialData.projects} />,
-    employment: <EmploymentSection initialData={initialData.employments} />,
-    posts: <PostSection initialData={initialData.posts} />,
+    interests: <InterestsAndObjectivesSection />,
+    projects: <ProjectSection />,
+    employment: <EmploymentSection />,
+    posts: <PostSection />,
   };
 
   const defaultOrder = [

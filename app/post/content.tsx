@@ -2,25 +2,21 @@
 
 import { useState, useMemo } from 'react';
 import PostCard from '@/components/Card/Post';
-import { postsData } from '@/database/posts.client';
+import { mapRecordToPost } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import { Toggle, Icon } from '@/components/UI';
 import { sortByDate } from '@/utilities/sortByDate';
 import { Post } from '@/types/post';
 
-interface PostsContentProps {
-  initialData?: Post[];
-}
-
-export default function PostsContent({ initialData }: PostsContentProps) {
+export default function PostsContent() {
   const {
     data: posts,
     loading,
     error,
-  } = useRealtimeData(postsData, initialData);
+  } = useCollection<Post>('posts', mapRecordToPost);
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
   const sortedPosts = useMemo(() => (posts ? sortByDate(posts) : []), [posts]);

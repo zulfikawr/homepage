@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import ProjectsContent from './content';
-import { getProjects } from '@/database/projects';
 
 export const metadata: Metadata = {
   title: 'Projects - Zulfikar',
@@ -8,6 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
-  return <ProjectsContent initialData={projects} />;
+  return <ProjectsContent />;
 }

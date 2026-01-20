@@ -4,22 +4,14 @@ import { useState } from 'react';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import PageTitle from '@/components/PageTitle';
 import { Separator } from '@/components/UI/Separator';
-import pb from '@/lib/pocketbase';
+import { createFeedback } from '@/database/feedback';
 import { toast } from '@/components/Toast';
 import { Card } from '@/components/Card';
 import { escapeHtml } from '@/utilities/escapeHtml';
-import { useSyncExternalStore } from 'react';
 
 const MAX_CHARS = 5000;
 
-const emptySubscribe = () => () => {};
-
 export default function FeedbackContent() {
-  const isMounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false,
-  );
   const [feedback, setFeedback] = useState('');
   const [contact, setContact] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,18 +40,18 @@ export default function FeedbackContent() {
       const safeFeedback = escapeHtml(feedback.trim());
       const safeContact = escapeHtml(contact.trim());
 
-      const feedbackData = {
+      const result = await createFeedback({
         feedback: safeFeedback,
         contact: safeContact || 'Anonymous',
-        timestamp: isMounted
-          ? new Date().toISOString()
-          : '2025-01-01T00:00:00Z',
-      };
+      });
 
-      await pb.collection('feedback').create(feedbackData);
-
-      setContact('');
-      toast.success('Thank you for your feedback!');
+      if (result.success) {
+        setFeedback('');
+        setContact('');
+        toast.success('Thank you for your feedback!');
+      } else {
+        toast.error(result.error || 'Failed to submit feedback.');
+      }
     } catch {
       // Ignored
       toast.error('Failed to submit feedback. Please try again.');

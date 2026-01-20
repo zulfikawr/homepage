@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { PersonalInfo } from '@/types/personalInfo';
 import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
 import { updatePersonalInfo } from '@/database/personalInfo';
-import { COLLECTION } from '@/database/personalInfo.client';
 import { toast } from '@/components/Toast';
 import { Hover } from '@/components/Visual';
 import ImageWithFallback from '@/components/ImageWithFallback';
@@ -134,7 +133,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
                 required
               />
               <FileUpload
-                collectionName={COLLECTION}
+                collectionName='profile'
                 fieldName='avatar'
                 onUploadSuccess={(url) => handleChange('avatarUrl', url)}
                 onFileSelect={setAvatarFile}

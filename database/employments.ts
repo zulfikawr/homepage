@@ -5,7 +5,7 @@ import { Employment } from '@/types/employment';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToEmployment } from './employments.client';
+import { mapRecordToEmployment } from '@/lib/mappers';
 
 /**
  * Helper to clean employment data before sending to PocketBase.

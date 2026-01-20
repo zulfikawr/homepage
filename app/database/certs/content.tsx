@@ -1,22 +1,23 @@
 'use client';
 
 import CertificateCard from '@/components/Card/Certificate';
-import { certificatesData } from '@/database/certificates.client';
+import { mapRecordToCertificate } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Certificate } from '@/types/certificate';
 
-export default function CertsContent() {
+export default function CertificatesDatabase() {
   const router = useRouter();
 
   const {
     data: certificates,
     loading,
     error,
-  } = useRealtimeData(certificatesData);
+  } = useCollection<Certificate>('certificates', mapRecordToCertificate);
 
   if (error) return <CardEmpty message='Failed to load certificates' />;
 

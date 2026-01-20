@@ -5,7 +5,7 @@ import { Post } from '@/types/post';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToPost } from './posts.client';
+import { mapRecordToPost } from '@/lib/mappers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

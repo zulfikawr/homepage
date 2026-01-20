@@ -4,11 +4,16 @@ import pb from '@/lib/pocketbase';
 import { PersonalInfo } from '@/types/personalInfo';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import {
-  COLLECTION,
-  RECORD_ID,
-  mapRecordToPersonalInfo,
-} from './personalInfo.client';
+import { mapRecordToPersonalInfo } from '@/lib/mappers';
+
+const COLLECTION = 'profile';
+const RECORD_ID = 'me';
+
+const defaultData: PersonalInfo = {
+  name: 'Zulfikar',
+  title: 'I build things for the web',
+  avatarUrl: '/avatar.jpg',
+};
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations
@@ -33,11 +38,7 @@ export async function getPersonalInfo(): Promise<PersonalInfo> {
     const record = await pb.collection(COLLECTION).getOne(RECORD_ID);
     return mapRecordToPersonalInfo(record);
   } catch {
-    return {
-      name: 'Zulfikar',
-      title: 'I build things for the web',
-      avatarUrl: '/avatar.jpg',
-    };
+    return defaultData;
   }
 }
 

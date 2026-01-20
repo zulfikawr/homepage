@@ -2,11 +2,20 @@
 
 import PersonalInfoForm from '@/components/Form/PersonalInfo';
 import PageTitle from '@/components/PageTitle';
-import { personalInfoData } from '@/database/personalInfo.client';
-import { useRealtimeData } from '@/hooks';
+import { mapRecordToPersonalInfo } from '@/lib/mappers';
+import { useCollection } from '@/hooks';
+import { PersonalInfo } from '@/types/personalInfo';
 
 export default function PersonalInfoContent() {
-  const { data: personalInfo } = useRealtimeData(personalInfoData);
+  const { data: personalInfoList } = useCollection<PersonalInfo>(
+    'profile',
+    mapRecordToPersonalInfo,
+  );
+
+  const personalInfo =
+    personalInfoList && personalInfoList.length > 0
+      ? personalInfoList[0]
+      : undefined;
 
   return (
     <div>

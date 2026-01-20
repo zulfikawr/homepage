@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import MoviesContent from './content';
-import { getMovies } from '@/database/movies';
 
 export const metadata: Metadata = {
   title: 'Movies - Zulfikar',
@@ -8,6 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function MoviesPage() {
-  const movies = await getMovies();
-  return <MoviesContent initialData={movies} />;
+  return <MoviesContent />;
 }

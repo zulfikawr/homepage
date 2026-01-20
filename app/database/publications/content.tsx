@@ -1,22 +1,23 @@
 'use client';
 
 import PublicationCard from '@/components/Card/Publication';
-import { publicationsData } from '@/database/publications.client';
+import { mapRecordToPublication } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Publication } from '@/types/publication';
 
-export default function PublicationDatabase() {
+export default function PublicationsDatabase() {
   const router = useRouter();
 
   const {
     data: publications,
     loading,
     error,
-  } = useRealtimeData(publicationsData);
+  } = useCollection<Publication>('publications', mapRecordToPublication);
 
   if (error) return <CardEmpty message='Failed to load publications' />;
 

@@ -26,6 +26,17 @@ export const getSpotifyAuthUrl = () => {
   return `${SPOTIFY_AUTH_URL}?${params.toString()}`;
 };
 
+export const saveSpotifyTokens = async (
+  accessToken: string,
+  refreshToken: string,
+) => {
+  return await pb.collection('spotify_tokens').update('spotify', {
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    timestamp: Date.now(),
+  });
+};
+
 export const getAccessToken = async () => {
   try {
     const tokens = await pb

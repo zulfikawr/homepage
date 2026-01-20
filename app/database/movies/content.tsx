@@ -1,17 +1,22 @@
 'use client';
 
 import MovieCard from '@/components/Card/Movie';
-import { moviesData } from '@/database/movies.client';
+import { mapRecordToMovie } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Movie } from '@/types/movie';
 
 export default function MoviesContent() {
   const router = useRouter();
-  const { data: movies, loading, error } = useRealtimeData(moviesData);
+  const {
+    data: movies,
+    loading,
+    error,
+  } = useCollection<Movie>('movies', mapRecordToMovie);
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 

@@ -41,6 +41,13 @@ export function useAuthActions() {
     }
   };
 
+  const handleLogout = () => {
+    pb.authStore.clear();
+    router.push('/');
+    router.refresh();
+    toast.show('Logged out successfully!');
+  };
+
   const confirmLogout = () => {
     modal.open(
       React.createElement(LogoutConfirm, {
@@ -54,5 +61,5 @@ export function useAuthActions() {
     );
   };
 
-  return { handleLogin, handleGithubLogin, confirmLogout, error };
+  return { handleLogin, handleGithubLogin, handleLogout, confirmLogout, error };
 }

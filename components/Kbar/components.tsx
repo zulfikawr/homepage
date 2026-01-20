@@ -15,12 +15,13 @@ import ProjectCard from '@/components/Card/Project';
 import BookCard from '@/components/Card/Book';
 import { PublicationCard } from '@/components/Card/Publication';
 import { searchDatabase, SearchResult } from '@/database/search';
-import { useRealtimeData } from '@/hooks';
-import { resumeData } from '@/database/resume.client';
+import { useCollection } from '@/hooks';
+import { mapRecordToResume } from '@/lib/mappers';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Book } from '@/types/book';
 import { Publication } from '@/types/publication';
+import { Resume } from '@/types/resume';
 
 type StaticKbarItem = {
   key: string;
@@ -50,7 +51,15 @@ type KbarSection = {
 export function KbarContent() {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
-  const { data: resume } = useRealtimeData(resumeData);
+  const { data: resumeList } = useCollection<Resume>(
+    'resume',
+    mapRecordToResume,
+  );
+
+  const resume = useMemo(() => {
+    return resumeList && resumeList.length > 0 ? resumeList[0] : null;
+  }, [resumeList]);
+
   const [search, setSearch] = useState('');
   const [dbResults, setDbResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);

@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import ReadingListContent from './content';
-import { getBooks } from '@/database/books';
 
 export const metadata: Metadata = {
   title: 'Reading List - Zulfikar',
@@ -8,6 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ReadingListPage() {
-  const books = await getBooks();
-  return <ReadingListContent initialData={books} />;
+  return <ReadingListContent />;
 }

@@ -86,8 +86,6 @@ export default async function proxy(request: NextRequest) {
         // silent fail
       }
     })();
-
-    console.log(`Visitor Request: ${ip} -> ${req.nextUrl.pathname}`);
   }
 
   if (isDatabaseRoute && !isAdmin) {

@@ -1,23 +1,19 @@
 'use client';
 
-import { moviesData } from '@/database/movies.client';
+import { mapRecordToMovie } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import MovieCard from '@/components/Card/Movie';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import { Movie } from '@/types/movie';
 
-interface MoviesContentProps {
-  initialData?: Movie[];
-}
-
-export default function MoviesContent({ initialData }: MoviesContentProps) {
+export default function MoviesContent() {
   const {
     data: movies,
     loading,
     error,
-  } = useRealtimeData(moviesData, initialData);
+  } = useCollection<Movie>('movies', mapRecordToMovie);
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 

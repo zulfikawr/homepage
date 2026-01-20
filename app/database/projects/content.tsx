@@ -1,18 +1,23 @@
 'use client';
 
 import ProjectCard from '@/components/Card/Project';
-import { projectsData } from '@/database/projects.client';
+import { mapRecordToProject } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Project } from '@/types/project';
 
-export default function ProjectDatabase() {
+export default function ProjectsDatabase() {
   const router = useRouter();
 
-  const { data: projects, loading, error } = useRealtimeData(projectsData);
+  const {
+    data: projects,
+    loading,
+    error,
+  } = useCollection<Project>('projects', mapRecordToProject);
 
   if (error) return <CardEmpty message='Failed to load projects' />;
 

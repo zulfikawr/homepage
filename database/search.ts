@@ -7,6 +7,12 @@ import { Project } from '@/types/project';
 import { Book } from '@/types/book';
 import { Publication } from '@/types/publication';
 import { cookies } from 'next/headers';
+import {
+  mapRecordToPost,
+  mapRecordToProject,
+  mapRecordToBook,
+  mapRecordToPublication,
+} from '@/lib/mappers';
 
 export type SearchResult =
   | { type: 'post'; data: Post }
@@ -25,119 +31,6 @@ async function ensureAuth() {
   if (authCookie) {
     pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
   }
-}
-
-/**
- * Maps a PocketBase record to a Post object with full URLs for files.
- */
-function mapRecordToPost(record: RecordModel): Post {
-  let image = (record.image as string) || (record.image_url as string) || '';
-  if (image && !image.startsWith('http') && !image.startsWith('/')) {
-    image = pb.files.getURL(
-      { collectionName: 'posts', id: record.id } as unknown as RecordModel,
-      image,
-    );
-  }
-  let audio = (record.audio as string) || (record.audio_url as string) || '';
-  if (audio && !audio.startsWith('http') && !audio.startsWith('/')) {
-    audio = pb.files.getURL(
-      { collectionName: 'posts', id: record.id } as unknown as RecordModel,
-      audio,
-    );
-  }
-  return {
-    id: record.id,
-    title: record.title,
-    content: record.content,
-    excerpt: record.excerpt,
-    dateString: record.dateString,
-    image,
-    image_url: record.image_url,
-    audio,
-    audio_url: record.audio_url,
-    slug: record.slug,
-    categories:
-      typeof record.categories === 'string'
-        ? JSON.parse(record.categories)
-        : record.categories,
-  };
-}
-
-/**
- * Maps a PocketBase record to a Project object.
- */
-function mapRecordToProject(record: RecordModel): Project {
-  let image = (record.image as string) || (record.image_url as string) || '';
-  if (image && !image.startsWith('http') && !image.startsWith('/')) {
-    image = pb.files.getURL(
-      { collectionName: 'projects', id: record.id } as unknown as RecordModel,
-      image,
-    );
-  }
-  let favicon =
-    (record.favicon as string) || (record.favicon_url as string) || '';
-  if (favicon && !favicon.startsWith('http') && !favicon.startsWith('/')) {
-    favicon = pb.files.getURL(
-      { collectionName: 'projects', id: record.id } as unknown as RecordModel,
-      favicon,
-    );
-  }
-  return {
-    id: record.id,
-    name: record.name,
-    dateString: record.dateString,
-    image,
-    description: record.description,
-    tools:
-      typeof record.tools === 'string'
-        ? JSON.parse(record.tools)
-        : record.tools,
-    readme: record.readme,
-    status: record.status,
-    link: record.link,
-    favicon,
-    pinned: record.pinned,
-    slug: record.slug,
-  };
-}
-
-/**
- * Maps a PocketBase record to a Book object.
- */
-function mapRecordToBook(record: RecordModel): Book {
-  return {
-    id: record.id,
-    slug: record.slug,
-    type: record.type,
-    title: record.title,
-    author: record.author,
-    imageURL: record.imageURL,
-    link: record.link,
-    dateAdded: record.dateAdded,
-  };
-}
-
-/**
- * Maps a PocketBase record to a Publication object.
- */
-function mapRecordToPublication(record: RecordModel): Publication {
-  return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    publisher: record.publisher,
-    link: record.link,
-    openAccess: record.openAccess,
-    excerpt: record.excerpt,
-    authors:
-      typeof record.authors === 'string'
-        ? JSON.parse(record.authors)
-        : record.authors,
-    keywords:
-      typeof record.keywords === 'string'
-        ? JSON.parse(record.keywords)
-        : record.keywords,
-  };
 }
 
 export async function searchDatabase(query: string): Promise<SearchResult[]> {

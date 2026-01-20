@@ -1,22 +1,20 @@
-import { postsData } from '@/database/posts.client';
+'use client';
+
+import { mapRecordToPost } from '@/lib/mappers';
 import PostCard from '@/components/Card/Post';
 import CardEmpty from '@/components/Card/Empty';
 import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import { Post } from '@/types/post';
 
-interface PostSectionProps {
-  initialData?: Post[];
-}
-
-const PostSection = ({ initialData }: PostSectionProps) => {
+const PostSection = () => {
   const {
     data: posts,
     loading,
     error,
-  } = useRealtimeData(postsData, initialData);
+  } = useCollection<Post>('posts', mapRecordToPost);
 
   const sortedPosts = posts ? sortByDate(posts) : [];
 

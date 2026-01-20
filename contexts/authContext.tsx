@@ -1,11 +1,15 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import pb from '@/lib/pocketbase';
-import type { AuthRecord } from 'pocketbase';
+import {
+  getCurrentAuth,
+  onAuthChange,
+  getAuthCookie,
+  type AppUser,
+} from '@/lib/auth';
 
 interface AuthContextType {
-  user: AuthRecord | null;
+  user: AppUser | null;
   loading: boolean;
   isAdmin: boolean;
 }
@@ -17,39 +21,29 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthRecord | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Initial sync after mount to avoid hydration mismatch
     const syncAuth = () => {
-      const record = pb.authStore.record;
-      setUser(record);
-      setIsAdmin(
-        !!record &&
-          pb.authStore.isValid &&
-          (pb.authStore.isSuperuser ||
-            (record as unknown as { role?: string }).role === 'admin'),
-      );
+      const { user: currentUser, isAdmin: currentIsAdmin } = getCurrentAuth();
+      setUser(currentUser);
+      setIsAdmin(currentIsAdmin);
       // Sync to cookie for middleware
-      document.cookie = pb.authStore.exportToCookie({
-        httpOnly: false,
-        path: '/',
-      });
+      document.cookie = getAuthCookie();
       setLoading(false);
     };
 
     syncAuth();
 
     // Listen to auth changes
-    const unsubscribe = pb.authStore.onChange(() => {
-      syncAuth();
+    const unsubscribe = onAuthChange((newUser, newIsAdmin) => {
+      setUser(newUser);
+      setIsAdmin(newIsAdmin);
       // Sync to cookie for middleware
-      document.cookie = pb.authStore.exportToCookie({
-        httpOnly: false,
-        path: '/',
-      });
+      document.cookie = getAuthCookie();
     });
 
     return () => unsubscribe();

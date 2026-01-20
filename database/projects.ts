@@ -5,10 +5,10 @@ import { Project } from '@/types/project';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToProject } from './projects.client';
+import { mapRecordToProject } from '@/lib/mappers';
 
 /**
- * Helper to clean project data before sending to PocketBase.
+ * Maps a PocketBase record to a Project object with full URLs for images.
  * Handles file field vs text field URL issues.
  */
 function cleanProjectData(

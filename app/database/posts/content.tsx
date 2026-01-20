@@ -1,18 +1,23 @@
 'use client';
 
 import PostCard from '@/components/Card/Post';
-import { postsData } from '@/database/posts.client';
+import { mapRecordToPost } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import { CardLoading } from '@/components/Card/Loading';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+import { Post } from '@/types/post';
 
 export default function PostDatabase() {
   const router = useRouter();
 
-  const { data: posts, loading, error } = useRealtimeData(postsData);
+  const {
+    data: posts,
+    loading,
+    error,
+  } = useCollection<Post>('posts', mapRecordToPost);
 
   if (error) return <CardEmpty message='Failed to load posts' />;
 

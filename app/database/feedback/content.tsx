@@ -2,11 +2,9 @@
 
 import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
-import {
-  feedbackData,
-  deleteFeedback,
-  FeedbackEntry,
-} from '@/database/feedback';
+import { deleteFeedback } from '@/database/feedback';
+import { FeedbackEntry } from '@/types/feedback';
+import { mapRecordToFeedback } from '@/lib/mappers';
 import PageTitle from '@/components/PageTitle';
 import {
   Table,
@@ -17,7 +15,7 @@ import {
   Button,
 } from '@/components/UI';
 import { toast } from '@/components/Toast';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
 
 const SkeletonLoader = () => {
@@ -71,9 +69,9 @@ const SkeletonLoader = () => {
 export default function FeedbackResponsesContent() {
   const { user, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
-  const { data: feedbacks, loading } = useRealtimeData<FeedbackEntry[]>(
-    feedbackData,
-    [],
+  const { data: feedbacks, loading } = useCollection<FeedbackEntry>(
+    'feedback',
+    mapRecordToFeedback,
   );
 
   const handleDelete = async (id: string) => {

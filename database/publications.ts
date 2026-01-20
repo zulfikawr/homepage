@@ -5,7 +5,7 @@ import { Publication } from '@/types/publication';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToPublication } from './publications.client';
+import { mapRecordToPublication } from '@/lib/mappers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

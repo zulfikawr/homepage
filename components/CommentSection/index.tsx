@@ -1,24 +1,25 @@
 'use client';
 
 import { Comment } from '@/types/comment';
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import CommentCard from '@/components/Card/Comment';
 import {
   addComment,
-  subscribeToComments,
   likeComment,
   deleteComment,
   updateComment,
 } from '@/database/comments';
+import { mapRecordToComment } from '@/lib/mappers';
 import { Button, Icon } from '@/components/UI';
 import { Card } from '@/components/Card';
 import { Editor } from '@/components/Editor';
 import { useAuth } from '@/contexts/authContext';
-import pb from '@/lib/pocketbase';
 import { RecordModel } from 'pocketbase';
 import { toast } from '@/components/Toast';
 import ImageWithFallback from '../ImageWithFallback';
-import { useRealtimeData } from '@/hooks';
+import { useAuthActions } from '@/hooks/useAuthActions';
+import { useCollection } from '@/hooks';
+import { getFileUrl } from '@/lib/storage';
 
 interface CommentSectionProps {
   postId: string;
@@ -28,8 +29,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isAuthLoading, setIsAuthLoading] = useState(false);
   const { user, isAdmin } = useAuth();
+  const { handleGithubLogin, handleLogout: authLogout } = useAuthActions();
 
   const githubUsername = user
     ? (user.username as string) ||
@@ -38,11 +39,17 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       ''
     : '';
 
-  // Use the new realtime hook
-  const { data: comments, loading: isLoading } = useRealtimeData<Comment[]>(
-    useCallback((callback) => subscribeToComments(postId, callback), [postId]),
-    [],
-    [postId],
+  // Use the new generic collection hook
+  const { data: comments, loading: isLoading } = useCollection<Comment>(
+    'comments',
+    mapRecordToComment,
+    useMemo(
+      () => ({
+        filter: `postId = "${postId}"`,
+        sort: '-created',
+      }),
+      [postId],
+    ),
   );
 
   // Set author from user profile
@@ -52,24 +59,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     }
   }, [user]);
 
-  const handleGithubLogin = async () => {
-    setIsAuthLoading(true);
-    try {
-      await pb.collection('users').authWithOAuth2({ provider: 'github' });
-      toast.show('Logged in with GitHub!');
-    } catch {
-      toast.show('Failed to login with GitHub', 'error');
-    } finally {
-      setIsAuthLoading(false);
-    }
-  };
-
   const handleLogout = async () => {
     try {
-      pb.authStore.clear();
+      authLogout();
       setAuthor('');
       setContent('');
-      toast.show('Logged out successfully!');
     } catch {
       toast.show('Failed to logout', 'error');
     }
@@ -85,10 +79,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
         content,
         user?.avatar
-          ? pb.files.getURL(
-              user as unknown as RecordModel,
-              user.avatar as string,
-            )
+          ? getFileUrl(user as unknown as RecordModel, user.avatar as string)
           : undefined,
       );
       setContent('');
@@ -111,10 +102,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         replyAuthor,
         replyContent,
         user?.avatar
-          ? pb.files.getURL(
-              user as unknown as RecordModel,
-              user.avatar as string,
-            )
+          ? getFileUrl(user as unknown as RecordModel, user.avatar as string)
           : undefined,
         parentId,
       );
@@ -175,7 +163,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                 <ImageWithFallback
                   src={
                     user?.avatar
-                      ? pb.files.getURL(
+                      ? getFileUrl(
                           user as unknown as RecordModel,
                           user.avatar as string,
                         )
@@ -217,12 +205,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             <p className='mb-6 text-muted-foreground'>
               Please login with GitHub to post a comment.
             </p>
-            <Button
-              onClick={handleGithubLogin}
-              icon='githubLogo'
-              disabled={isAuthLoading}
-            >
-              {isAuthLoading ? 'Logging in...' : 'Login with GitHub'}
+            <Button onClick={handleGithubLogin} icon='githubLogo'>
+              Login with GitHub
             </Button>
           </div>
         )}

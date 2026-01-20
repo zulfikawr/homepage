@@ -2,13 +2,19 @@
 
 import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
 import PageTitle from '@/components/PageTitle';
-import { interestsAndObjectivesData } from '@/database/interestsAndObjectives.client';
-import { useRealtimeData } from '@/hooks';
+import { mapRecordToInterests } from '@/lib/mappers';
+import { useCollection } from '@/hooks';
+import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 export default function PersonalInfoContent() {
-  const { data: interestsAndObjectives } = useRealtimeData(
-    interestsAndObjectivesData,
-  );
+  const { data: interestsAndObjectivesList } = useCollection<
+    InterestsAndObjectives & { id: string }
+  >('interests_and_objectives', mapRecordToInterests);
+
+  const interestsAndObjectives =
+    interestsAndObjectivesList && interestsAndObjectivesList.length > 0
+      ? interestsAndObjectivesList[0]
+      : undefined;
 
   return (
     <div>

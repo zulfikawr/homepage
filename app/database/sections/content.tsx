@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import PageTitle from '@/components/PageTitle';
-import { sectionsData } from '@/database/sections.client';
+import { mapRecordToSection } from '@/lib/mappers';
 import { updateSection } from '@/database/sections';
-import { useRealtimeData } from '@/hooks';
+import { useCollection } from '@/hooks';
 import { Switch, Icon, Button } from '@/components/UI';
 import { toast } from '@/components/Toast';
 import { Section } from '@/types/section';
@@ -47,7 +47,11 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
 };
 
 export default function SectionDatabase() {
-  const { data: sections, loading, error } = useRealtimeData(sectionsData);
+  const {
+    data: sections,
+    loading,
+    error,
+  } = useCollection<Section>('sections', mapRecordToSection, { sort: 'order' });
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>([]);
 

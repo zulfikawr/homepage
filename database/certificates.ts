@@ -5,7 +5,7 @@ import { Certificate } from '@/types/certificate';
 import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
-import { mapRecordToCertificate } from './certificates.client';
+import { mapRecordToCertificate } from '@/lib/mappers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

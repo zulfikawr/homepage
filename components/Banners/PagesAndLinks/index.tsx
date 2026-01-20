@@ -3,11 +3,20 @@
 import { Card } from '@/components/Card';
 import { Button, Icon, Tooltip } from '@/components/UI';
 import Link from 'next/link';
-import { useRealtimeData } from '@/hooks';
-import { resumeData } from '@/database/resume.client';
+import { useCollection } from '@/hooks';
+import { mapRecordToResume } from '@/lib/mappers';
+import { Resume } from '@/types/resume';
+import { useMemo } from 'react';
 
 const PagesAndLinks = () => {
-  const { data: resume } = useRealtimeData(resumeData);
+  const { data: resumeList } = useCollection<Resume>(
+    'resume',
+    mapRecordToResume,
+  );
+
+  const resume = useMemo(() => {
+    return resumeList && resumeList.length > 0 ? resumeList[0] : null;
+  }, [resumeList]);
 
   return (
     <Card isPreview>

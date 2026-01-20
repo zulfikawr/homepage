@@ -1,22 +1,35 @@
-import { interestsAndObjectivesData } from '@/database/interestsAndObjectives.client';
-import { useRealtimeData } from '@/hooks';
+'use client';
+
+import { mapRecordToInterests } from '@/lib/mappers';
+import { useCollection } from '@/hooks';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';
 import { Separator } from '@/components/UI/Separator';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { useState, useEffect } from 'react';
 
-interface InterestsAndObjectivesSectionProps {
-  initialData?: InterestsAndObjectives;
-}
-
-const InterestsAndObjectivesSection = ({
-  initialData,
-}: InterestsAndObjectivesSectionProps) => {
+const InterestsAndObjectivesSection = () => {
   const {
-    data: interestsAndObjectives,
+    data: allInterests,
     loading,
     error,
-  } = useRealtimeData(interestsAndObjectivesData, initialData);
+  } = useCollection<InterestsAndObjectives & { id: string }>(
+    'interests_and_objectives',
+    mapRecordToInterests,
+  );
+
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (allInterests.length > 0 && selectedIndex === null) {
+      queueMicrotask(() =>
+        setSelectedIndex(Math.floor(Math.random() * allInterests.length)),
+      );
+    }
+  }, [allInterests, selectedIndex]);
+
+  const interestsAndObjectives =
+    selectedIndex !== null ? allInterests[selectedIndex] : null;
 
   if (error) return <div>Failed to load interests and objectives</div>;
 
