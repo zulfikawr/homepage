@@ -18,7 +18,7 @@ const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
     if (position === 0) {
       ref.current.style.backdropFilter = '';
       ref.current.style.background = 'transparent';
-      ref.current.style.borderBottom = 'transparent';
+      ref.current.style.borderBottom = '1px solid transparent';
       ref.current.style.boxShadow = 'none';
       return;
     }
@@ -27,28 +27,18 @@ const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
 
     if (effectEnabled) {
       ref.current.style.backdropFilter = 'blur(12px)';
-      ref.current.style.borderBottom =
-        resolvedTheme === 'dark'
-          ? `1px solid rgba(255, 255, 255, ${0.1 * ratio})`
-          : `1px solid rgba(255, 255, 255, ${0.2 * ratio})`;
-
+      ref.current.style.borderBottom = `1px solid var(--border)`;
       ref.current.style.background =
         resolvedTheme === 'dark'
-          ? `rgba(255, 255, 255, ${0.05 * ratio})`
-          : `rgba(255, 255, 255, ${0.5 * ratio})`;
+          ? `rgba(50, 48, 47, ${0.8 * ratio})` // bg-card (dark) with opacity
+          : `rgba(249, 245, 215, ${0.8 * ratio})`; // bg-card (light) with opacity
 
-      ref.current.style.boxShadow =
-        resolvedTheme === 'dark'
-          ? `0 1px 3px rgba(0, 0, 0, ${0.15 * ratio})`
-          : `0 1px 4px rgba(0, 0, 0, ${0.1 * ratio})`;
+      ref.current.style.boxShadow = 'var(--shadow-header)';
     } else {
       ref.current.style.backdropFilter = '';
-      ref.current.style.border = '';
+      ref.current.style.borderBottom = `1px solid var(--border)`;
       ref.current.style.boxShadow = '';
-      ref.current.style.background =
-        resolvedTheme === 'dark'
-          ? `rgba(38, 38, 38, ${ratio})`
-          : `rgba(255, 255, 255, ${ratio})`;
+      ref.current.style.background = 'var(--card)';
     }
   };
 

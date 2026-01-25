@@ -149,23 +149,29 @@ export default function SpotifyMusicContent() {
         trigger={
           <Button
             type='ghost'
-            className='w-32 flex items-center gap-2 text-sm px-0'
+            className='w-fit flex items-center gap-2 text-sm px-0 hover:bg-transparent group/time'
           >
-            {timeRangeOptions.find((opt) => opt.value === value)?.label}
-            <Icon name='caretDown' className='size-4' />
+            <span className='group-hover/time:text-primary transition-colors'>
+              {timeRangeOptions.find((opt) => opt.value === value)?.label}
+            </span>
+            <Icon
+              name='caretDown'
+              className='size-4 group-hover/time:text-primary transition-colors'
+            />
           </Button>
         }
-        matchTriggerWidth
       >
-        {timeRangeOptions.map((option) => (
-          <DropdownItem
-            key={option.value}
-            onClick={() => onChange(option.value as TimeRange)}
-            isActive={value === option.value}
-          >
-            {option.label}
-          </DropdownItem>
-        ))}
+        <div className='flex flex-col space-y-1 whitespace-nowrap min-w-max'>
+          {timeRangeOptions.map((option) => (
+            <DropdownItem
+              key={option.value}
+              onClick={() => onChange(option.value as TimeRange)}
+              isActive={value === option.value}
+            >
+              {option.label}
+            </DropdownItem>
+          ))}
+        </div>
       </Dropdown>
     );
   };
@@ -180,7 +186,7 @@ export default function SpotifyMusicContent() {
 
       {/* Currently Playing Section */}
       <div className='mt-8'>
-        <CurrentlyListening />
+        <CurrentlyListening showMoreButton={false} />
       </div>
 
       {/* Tabs Navigation */}
@@ -188,10 +194,10 @@ export default function SpotifyMusicContent() {
         <nav className='flex space-x-8 min-w-max'>
           <button
             onClick={() => setActiveTab('recent')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'recent'
                 ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
             <Icon name='playCircle' className='size-5' />
@@ -199,10 +205,10 @@ export default function SpotifyMusicContent() {
           </button>
           <button
             onClick={() => setActiveTab('top')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'top'
                 ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
             <Icon name='musicNotes' className='size-5' />
@@ -210,10 +216,10 @@ export default function SpotifyMusicContent() {
           </button>
           <button
             onClick={() => setActiveTab('artists')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'artists'
                 ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
             <Icon name='userCircle' className='size-5' />
@@ -221,10 +227,10 @@ export default function SpotifyMusicContent() {
           </button>
           <button
             onClick={() => setActiveTab('playlists')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'playlists'
                 ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
             <Icon name='playlist' className='size-5' />

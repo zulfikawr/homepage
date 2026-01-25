@@ -9,16 +9,24 @@ import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const emptySubscribe = () => () => {};
 
-const FlipNumber = ({ number }: { number: string }) => {
+const FlipNumber = ({
+  number,
+  isDaytime,
+}: {
+  number: string;
+  isDaytime: boolean;
+}) => {
   const { radius } = useRadius();
 
   return (
     <div
-      className='relative w-8 h-12 bg-gruv-bg/40 overflow-hidden mx-0.5'
+      className={`relative w-8 h-12 overflow-hidden mx-0.5 ${isDaytime ? 'bg-gruv-bg/10' : 'bg-gruv-bg/40'}`}
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
-        <span className='text-xl font-mono font-bold text-gruv-fg'>
+        <span
+          className={`text-xl font-mono font-bold ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
+        >
           {number}
         </span>
       </div>
@@ -26,8 +34,12 @@ const FlipNumber = ({ number }: { number: string }) => {
   );
 };
 
-const Separator = () => (
-  <div className='mx-1 text-gruv-fg/80 text-xl font-bold'>:</div>
+const Separator = ({ isDaytime }: { isDaytime: boolean }) => (
+  <div
+    className={`mx-1 text-xl font-bold ${isDaytime ? 'text-gruv-bg/60' : 'text-gruv-fg/80'}`}
+  >
+    :
+  </div>
 );
 
 const LocationAndTime = () => {
@@ -119,14 +131,14 @@ const LocationAndTime = () => {
       className={`relative w-full min-h-[120px] overflow-hidden
         ${
           isDaytime
-            ? 'bg-gradient-to-br from-gruv-blue/40 to-gruv-yellow/30'
+            ? 'bg-gradient-to-br from-gruv-aqua/40 to-gruv-yellow/60'
             : 'bg-gradient-to-br from-[#1d2021] to-[#32302f]'
         }
       `}
       isPreview
     >
       {isDaytime ? (
-        <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-yellow rounded-full' />
+        <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-orange rounded-full shadow-[0_0_30px_rgba(254,128,25,0.4)]' />
       ) : (
         <>
           <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-fg/20 rounded-full shadow-[0_0_20px_5px_rgba(235,219,178,0.1)]' />
@@ -154,31 +166,38 @@ const LocationAndTime = () => {
         <div className='flex flex-col items-start space-y-4'>
           <div className='flex items-center justify-between w-full'>
             <div className='flex items-center gap-2'>
-              <Icon name='mapPin' className='size-5 text-gruv-aqua' />
-              <h2 className='text-[15px] font-medium text-gruv-fg'>
+              <Icon
+                name='mapPin'
+                className={`size-5 ${isDaytime ? 'text-gruv-orange' : 'text-gruv-aqua'}`}
+              />
+              <h2
+                className={`text-[15px] font-bold ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
+              >
                 Jakarta, Indonesia
               </h2>
             </div>
-            <div className='text-gruv-blue font-medium text-sm'>
+            <div
+              className={`font-bold text-sm ${isDaytime ? 'text-gruv-bg/70' : 'text-gruv-blue'}`}
+            >
               {timeData.date}
             </div>
           </div>
 
           <div className='flex items-center justify-center w-full'>
             <div className='flex items-center'>
-              <FlipNumber number={timeData.hours} />
-              <Separator />
-              <FlipNumber number={timeData.minutes} />
-              <Separator />
-              <FlipNumber number={timeData.seconds} />
+              <FlipNumber number={timeData.hours} isDaytime={isDaytime} />
+              <Separator isDaytime={isDaytime} />
+              <FlipNumber number={timeData.minutes} isDaytime={isDaytime} />
+              <Separator isDaytime={isDaytime} />
+              <FlipNumber number={timeData.seconds} isDaytime={isDaytime} />
               <div className='ml-2 flex flex-col justify-between h-12'>
                 <span
-                  className={`text-xs font-bold ${timeData.ampm === 'AM' ? 'text-gruv-yellow' : 'text-gruv-fg/30'}`}
+                  className={`text-xs font-bold ${timeData.ampm === 'AM' ? (isDaytime ? 'text-gruv-orange' : 'text-gruv-yellow') : isDaytime ? 'text-gruv-bg/20' : 'text-gruv-fg/30'}`}
                 >
                   AM
                 </span>
                 <span
-                  className={`text-xs font-bold ${timeData.ampm === 'PM' ? 'text-gruv-blue' : 'text-gruv-fg/30'}`}
+                  className={`text-xs font-bold ${timeData.ampm === 'PM' ? (isDaytime ? 'text-gruv-blue' : 'text-gruv-blue') : isDaytime ? 'text-gruv-bg/20' : 'text-gruv-fg/30'}`}
                 >
                   PM
                 </span>

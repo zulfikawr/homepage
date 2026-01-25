@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { Icon, Button, Tooltip } from '@/components/UI';
@@ -29,7 +27,14 @@ const apiCache: {
   lastPlayedAt: null,
   isAuthorized: true,
 };
-const CurrentlyListening = () => {
+
+interface CurrentlyListeningProps {
+  showMoreButton?: boolean;
+}
+
+const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
+  showMoreButton = true,
+}) => {
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
     apiCache.currentTrack,
   );
@@ -117,7 +122,7 @@ const CurrentlyListening = () => {
       if (!currentResponse) {
         // Only set unauthorized if we are explicitly not authorized (status 401)
         // or if we have no tokens at all. For transient errors, we keep current state.
-        setIsLoading(false);
+        setDataLoading(false);
         setShowSkeleton(false);
         return;
       }
@@ -127,7 +132,7 @@ const CurrentlyListening = () => {
         if (!apiCache.currentTrack) {
           setIsAuthorized(false);
         }
-        setIsLoading(false);
+        setDataLoading(false);
         setShowSkeleton(false);
         return;
       }
@@ -300,26 +305,30 @@ const CurrentlyListening = () => {
             {isPlaying ? 'Currently Listening' : 'Last Played'}
           </span>
         </div>
-        <div className='hidden md:block'>
-          <Tooltip text='Music Stats'>
-            <Link href='/music'>
-              <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-                <span className='size-5'>
-                  <Icon name='caretRight' />
-                </span>
-              </Button>
-            </Link>
-          </Tooltip>
-        </div>
-        <div className='block md:hidden'>
-          <Link href='/music'>
-            <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-              <span className='size-5'>
-                <Icon name='caretRight' />
-              </span>
-            </Button>
-          </Link>
-        </div>
+        {showMoreButton && (
+          <>
+            <div className='hidden md:block'>
+              <Tooltip text='Music Stats'>
+                <Link href='/music'>
+                  <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+                    <span className='size-5'>
+                      <Icon name='caretRight' />
+                    </span>
+                  </Button>
+                </Link>
+              </Tooltip>
+            </div>
+            <div className='block md:hidden'>
+              <Link href='/music'>
+                <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+                  <span className='size-5'>
+                    <Icon name='caretRight' />
+                  </span>
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
 
       <Link
