@@ -6,7 +6,7 @@ import Stars from './component';
 export default function StarsBackground() {
   const { resolvedTheme } = useTheme();
 
-  const starColor = resolvedTheme === 'dark' ? '#ffffff' : '#000000';
+  const starColor = resolvedTheme === 'dark' ? '#ebdbb2' : '#3c3836';
 
   return (
     <div className='fixed inset-0 -z-10 h-screen w-screen pointer-events-none overflow-hidden'>
@@ -20,12 +20,12 @@ export default function StarsBackground() {
           background-image:
             radial-gradient(
               circle at top right,
-              rgba(121, 68, 154, 0.13),
+              rgba(254, 128, 25, 0.08),
               transparent
             ),
             radial-gradient(
               circle at 20% 80%,
-              rgba(41, 196, 255, 0.13),
+              rgba(142, 192, 124, 0.08),
               transparent
             );
         }

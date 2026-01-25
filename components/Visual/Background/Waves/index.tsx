@@ -8,10 +8,10 @@ export default function WavesBackground() {
 
   const isDark = resolvedTheme === 'dark';
 
-  const lineColor = isDark ? '#fff' : '#000';
+  const lineColor = '#8ec07c'; // gruv-aqua
   const backgroundColor = isDark
-    ? 'rgba(255, 255, 255, 0.2)'
-    : 'rgba(0, 0, 0, 0.2)';
+    ? 'rgba(235, 219, 178, 0.1)' // gruv-fg with opacity
+    : 'rgba(60, 56, 54, 0.1)'; // gruv-fg (light) with opacity
 
   return (
     <div className='fixed inset-0 -z-10 h-screen w-screen'>

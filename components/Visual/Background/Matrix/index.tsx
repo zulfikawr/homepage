@@ -5,10 +5,10 @@ export default function DigitalRainBackground() {
   const { resolvedTheme } = useTheme();
 
   const isDark = resolvedTheme === 'dark';
-  const characterColor = isDark ? '#00F000' : '#000000';
+  const characterColor = '#b8bb26'; // gruv-green
   const fadeColor = isDark
-    ? 'rgba(0, 0, 0, 0.05)'
-    : 'rgba(255, 255, 255, 0.05)';
+    ? 'rgba(40, 40, 40, 0.05)' // gruv-bg
+    : 'rgba(251, 241, 199, 0.05)'; // gruv-bg (light)
 
   return (
     <div className='fixed inset-0 -z-10 h-screen w-screen pointer-events-none overflow-hidden'>
