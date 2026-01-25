@@ -9,15 +9,19 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Post } from '@/types/post';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function PostDatabase() {
   const router = useRouter();
 
   const {
     data: posts,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Post>('posts', mapRecordToPost);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load posts' />;
 

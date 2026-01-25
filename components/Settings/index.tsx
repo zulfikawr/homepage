@@ -1,5 +1,4 @@
 'use client';
-import { useMemo } from 'react';
 import { Button, Icon, Switch, Slider, ToggleGroup } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
@@ -7,6 +6,7 @@ import { useTheme } from 'next-themes';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useBackground } from '@/contexts/backgroundContext';
 import { useRadius } from '@/contexts/radiusContext';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },
@@ -28,6 +28,7 @@ export default function Settings() {
   const { background, setBackground } = useBackground();
   const { effectEnabled, toggleEffect } = useEffectToggle();
   const { radius, setRadius } = useRadius();
+  const { forceLoading, toggleForceLoading } = useLoadingToggle();
 
   const sectionTitleClass = 'text-left text-md text-muted-foreground';
 
@@ -105,6 +106,18 @@ export default function Settings() {
 
         <div className={sectionTitleClass}>Theme</div>
         <ToggleGroup value={theme} onChange={setTheme} options={themeOptions} />
+
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            <div className={sectionTitleClass}>Loading</div>
+            <Switch
+              id='force-loading-switch'
+              checked={forceLoading}
+              onChange={toggleForceLoading}
+              label={forceLoading ? 'Disable Skeleton' : 'Enable Skeleton'}
+            />
+          </>
+        )}
       </div>
     </Dropdown>
   );

@@ -110,11 +110,17 @@ const PageTitle = ({
           {!isPostTitle && (
             <div className='mt-2 flex h-full items-center justify-end whitespace-nowrap'>
               <div className='flex-1 pl-5 pr-3'>
-                <Button type='ghost' onClick={() => router.back()}>
-                  <span className='mr-2 h-5 w-5'>
+                <Button
+                  type='ghost'
+                  onClick={() => router.back()}
+                  className='hover:bg-transparent group/back'
+                >
+                  <span className='mr-2 h-5 w-5 group-hover/back:text-primary transition-colors'>
                     <Icon name='arrowLeft' />
                   </span>
-                  Back
+                  <span className='group-hover/back:text-primary transition-colors'>
+                    Back
+                  </span>
                 </Button>
               </div>
             </div>

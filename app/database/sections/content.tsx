@@ -10,6 +10,7 @@ import { toast } from '@/components/Toast';
 import { Section } from '@/types/section';
 import { drawer } from '@/components/Drawer';
 import CardEmpty from '@/components/Card/Empty';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 // Preview Components
 import EmploymentSection from '@/components/Section/Employment';
@@ -49,9 +50,13 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
 export default function SectionDatabase() {
   const {
     data: sections,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Section>('sections', mapRecordToSection, { sort: 'order' });
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
+
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>([]);
 
@@ -142,56 +147,56 @@ export default function SectionDatabase() {
       </div>
 
       <div className='space-y-3'>
-        {loading ? (
-          Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
-            >
-              <Skeleton width={20} height={20} />
-              <div className='flex-1 space-y-2'>
-                <Skeleton width='40%' height={16} />
-                <Skeleton width='20%' height={10} />
+        {loading
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
+              >
+                <Skeleton width={20} height={20} />
+                <div className='flex-1 space-y-2'>
+                  <Skeleton width='40%' height={16} />
+                  <Skeleton width='20%' height={10} />
+                </div>
+                <Skeleton width={36} height={20} className='rounded-full' />
               </div>
-              <Skeleton width={36} height={20} className='rounded-full' />
-            </div>
-          ))
-        ) : (
-          localSections.map((section, index) => (
-            <div
-              key={section.id}
-              draggable
-              onDragStart={(e) => onDragStart(e, section)}
-              onDragOver={(e) => onDragOver(e, index)}
-              onDragEnd={onDragEnd}
-              className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
-                draggedItem?.id === section.id
-                  ? 'opacity-50 scale-95 border-gruv-blue'
-                  : 'opacity-100'
-              } cursor-grab active:cursor-grabbing`}
-            >
-              <div className='text-muted-foreground size-5 flex-shrink-0'>
-                <Icon name='dotsSixVertical' />
-              </div>
+            ))
+          : localSections.map((section, index) => (
+              <div
+                key={section.id}
+                draggable
+                onDragStart={(e) => onDragStart(e, section)}
+                onDragOver={(e) => onDragOver(e, index)}
+                onDragEnd={onDragEnd}
+                className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
+                  draggedItem?.id === section.id
+                    ? 'opacity-50 scale-95 border-gruv-blue'
+                    : 'opacity-100'
+                } cursor-grab active:cursor-grabbing`}
+              >
+                <div className='text-muted-foreground size-5 flex-shrink-0'>
+                  <Icon name='dotsSixVertical' />
+                </div>
 
-              <div className='flex-1 min-w-0'>
-                <p className='font-medium truncate text-sm'>{section.title}</p>
-                <p className='text-[10px] text-muted-foreground font-mono'>
-                  {section.name}
-                </p>
-              </div>
+                <div className='flex-1 min-w-0'>
+                  <p className='font-medium truncate text-sm'>
+                    {section.title}
+                  </p>
+                  <p className='text-[10px] text-muted-foreground font-mono'>
+                    {section.name}
+                  </p>
+                </div>
 
-              <div onPointerDown={(e) => e.stopPropagation()}>
-                <Switch
-                  id={`show-${section.id}`}
-                  checked={section.enabled}
-                  onChange={() => handleToggle(section)}
-                  label=''
-                />
+                <div onPointerDown={(e) => e.stopPropagation()}>
+                  <Switch
+                    id={`show-${section.id}`}
+                    checked={section.enabled}
+                    onChange={() => handleToggle(section)}
+                    label=''
+                  />
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))}
       </div>
 
       <div className='p-4 rounded-md bg-gruv-blue/10 dark:bg-gruv-blue/30/20 border border-gruv-blue/30 dark:border-gruv-blue/50 text-xs text-gruv-blue dark:text-gruv-blue'>

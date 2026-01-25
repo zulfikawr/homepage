@@ -9,14 +9,18 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/types/movie';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function MoviesContent() {
   const router = useRouter();
   const {
     data: movies,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Movie>('movies', mapRecordToMovie);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 

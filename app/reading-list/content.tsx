@@ -9,13 +9,17 @@ import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
 import { Book } from '@/types/book';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ReadingListContent() {
   const {
     data: books,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Book>('reading_list', mapRecordToBook);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   const booksArray = books || [];
 
@@ -45,7 +49,7 @@ export default function ReadingListContent() {
             className={`grid ${booksArray.filter((book) => book.type === 'currentlyReading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
             {loading ? (
-              Array(2)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'currentlyReading')
@@ -74,7 +78,7 @@ export default function ReadingListContent() {
             className={`grid ${booksArray.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
             {loading ? (
-              Array(2)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'read').length > 0 ? (
@@ -102,7 +106,7 @@ export default function ReadingListContent() {
             className={`grid ${booksArray.filter((book) => book.type === 'toRead').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
             {loading ? (
-              Array(2)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'toRead').length >

@@ -4,21 +4,25 @@ import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { useMemo } from 'react';
 import PageTitle from '@/components/PageTitle';
 import { Card } from '@/components/Card';
-import { Icon } from '@/components/UI';
+import { Icon, Skeleton } from '@/components/UI';
 import { useCollection } from '@/hooks';
 import WorldMap from '@/components/Visual/WorldMap';
 import { AnalyticsEvent } from '@/types/analytics';
 import CardEmpty from '@/components/Card/Empty';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function AnalyticsContent() {
   const {
     data: events,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<AnalyticsEvent>(
     'analytics_events',
     mapRecordToAnalyticsEvent,
   );
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   const stats = useMemo(() => {
     if (!events) return null;
@@ -137,18 +141,57 @@ export default function AnalyticsContent() {
           subtitle='Real-time insights into website traffic and visitor behavior.'
         />
 
-        {/* Summary Cards Skeleton */}
-        <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} isPreview className='p-5 flex flex-col justify-between h-32'>
-              <div className='flex items-center justify-between'>
-                <Skeleton width={80} height={12} />
-                <Skeleton width={18} height={18} variant='circle' />
-              </div>
-              <Skeleton width={100} height={32} />
-            </Card>
-          ))}
-        </div>
+                {/* Summary Cards Skeleton */}
+
+                <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
+
+                  {[
+
+                    'text-gruv-aqua',
+
+                    'text-gruv-green',
+
+                    'text-gruv-yellow',
+
+                    'text-gruv-blue',
+
+                  ].map((color, i) => (
+
+                    <Card
+
+                      key={i}
+
+                      isPreview
+
+                      className='p-5 flex flex-col justify-between h-32'
+
+                    >
+
+                      <div className='flex items-center justify-between'>
+
+                        <Skeleton width={80} height={12} />
+
+                        <Skeleton
+
+                          width={18}
+
+                          height={18}
+
+                          variant='circle'
+
+                          className={color}
+
+                        />
+
+                      </div>
+
+                      <Skeleton width={100} height={32} />
+
+                    </Card>
+
+                  ))}
+
+                </div>
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Left Column Skeleton */}
@@ -171,7 +214,11 @@ export default function AnalyticsContent() {
                       <Skeleton width={100} height={14} />
                       <Skeleton width={40} height={14} />
                     </div>
-                    <Skeleton width='100%' height={8} className='rounded-full' />
+                    <Skeleton
+                      width='100%'
+                      height={8}
+                      className='rounded-full'
+                    />
                   </div>
                 ))}
               </div>
@@ -189,7 +236,11 @@ export default function AnalyticsContent() {
                       <Skeleton width={120} height={14} />
                       <Skeleton width={30} height={14} />
                     </div>
-                    <Skeleton width='100%' height={6} className='rounded-full' />
+                    <Skeleton
+                      width='100%'
+                      height={6}
+                      className='rounded-full'
+                    />
                   </div>
                 ))}
               </div>
@@ -206,7 +257,11 @@ export default function AnalyticsContent() {
                         <Skeleton width={60} height={14} />
                         <Skeleton width={30} height={14} />
                       </div>
-                      <Skeleton width='100%' height={8} className='rounded-full' />
+                      <Skeleton
+                        width='100%'
+                        height={8}
+                        className='rounded-full'
+                      />
                     </div>
                   </div>
                 ))}
@@ -253,14 +308,26 @@ export default function AnalyticsContent() {
             label: 'Total Views',
             value: stats.totalViews.toLocaleString(),
             icon: 'eye' as const,
+            color: 'text-gruv-aqua',
           },
           {
             label: 'Unique Visitors',
             value: stats.uniqueVisitors.toLocaleString(),
             icon: 'users' as const,
+            color: 'text-gruv-green',
           },
-          { label: 'Real-time', value: 'Active Now', icon: 'clock' as const },
-          { label: 'Status', value: 'Healthy', icon: 'checkCircle' as const },
+          { 
+            label: 'Real-time', 
+            value: 'Active Now', 
+            icon: 'clock' as const,
+            color: 'text-gruv-yellow',
+          },
+          { 
+            label: 'Status', 
+            value: 'Healthy', 
+            icon: 'checkCircle' as const,
+            color: 'text-gruv-blue',
+          },
         ].map((stat, i) => (
           <Card
             key={i}
@@ -271,9 +338,9 @@ export default function AnalyticsContent() {
               <span className='text-xs font-medium uppercase tracking-wider'>
                 {stat.label}
               </span>
-              <Icon name={stat.icon} size={18} />
+              <Icon name={stat.icon} size={18} className={stat.color} />
             </div>
-            <div className='text-2xl font-semibold tracking-tight'>
+            <div className='text-2xl font-semibold tracking-tight text-foreground'>
               {stat.value}
             </div>
           </Card>
@@ -286,45 +353,57 @@ export default function AnalyticsContent() {
           {/* World Map */}
           <Card isPreview className='overflow-hidden'>
             <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
-              <h3 className='text-sm font-semibold flex items-center gap-2'>
-                <Icon name='globe' size={16} />
+              <h3 className='text-sm font-semibold flex items-center gap-2 text-foreground'>
+                <Icon name='globe' size={16} className='text-gruv-aqua' />
                 Visitor Geography
               </h3>
             </div>
 
-            <div className='h-[400px] w-full relative bg-muted/5'>
+            <div className='h-[400px] w-full relative bg-card/50'>
               <WorldMap data={stats.countries} />
             </div>
           </Card>
 
           {/* Countries List */}
           <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2'>
-              <Icon name='mapPin' size={18} />
+            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+              <Icon name='mapPin' size={18} className='text-gruv-yellow' />
               Top Countries
             </h3>
             <div className='space-y-5'>
-              {stats.countries.slice(0, 5).map((country) => (
-                <div key={country.code} className='space-y-1.5'>
-                  <div className='flex justify-between text-sm font-medium'>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-muted-foreground'>
-                        {country.code}
+              {stats.countries.slice(0, 5).map((country) => {
+                const ratio = country.count / (maxCountryCount || 1);
+                // Interpolate between light cream (#f9f5d7) and dark orange (#af3a03)
+                const r = Math.round(249 + (175 - 249) * ratio);
+                const g = Math.round(245 + (58 - 245) * ratio);
+                const b = Math.round(215 + (3 - 215) * ratio);
+                const barColor = `rgb(${r}, ${g}, ${b})`;
+
+                return (
+                  <div key={country.code} className='space-y-1.5'>
+                    <div className='flex justify-between text-sm font-medium'>
+                      <div className='flex items-center gap-2 text-foreground'>
+                        <span className='text-muted-foreground'>
+                          {country.code}
+                        </span>
+                        <span>{country.name}</span>
+                      </div>
+                      <span className='text-foreground'>
+                        {country.count.toLocaleString()}
                       </span>
-                      <span>{country.name}</span>
                     </div>
-                    <span>{country.count.toLocaleString()}</span>
+                    <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
+                      <div
+                        className='h-full rounded-full transition-all duration-1000'
+                        style={{
+                          width: `${ratio * 100}%`,
+                          backgroundColor: barColor,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
-                    <div
-                      className='h-full bg-primary/60 rounded-full transition-all duration-1000'
-                      style={{
-                        width: `${(country.count / maxCountryCount) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
         </div>
@@ -333,82 +412,108 @@ export default function AnalyticsContent() {
         <div className='space-y-8'>
           {/* Top Routes */}
           <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2'>
-              <Icon name='article' size={18} />
+            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+              <Icon name='article' size={18} className='text-gruv-blue' />
               Top Pages
             </h3>
             <div className='space-y-4'>
-              {stats.topRoutes.map((route) => (
-                <div key={route.path} className='group'>
-                  <div className='flex justify-between text-sm mb-1.5'>
-                    <span
-                      className='text-muted-foreground truncate max-w-[180px]'
-                      title={route.path}
-                    >
-                      {route.path}
-                    </span>
-                    <span className='font-medium'>
-                      {route.views.toLocaleString()}
-                    </span>
+              {stats.topRoutes.map((route) => {
+                const ratio = route.views / (maxViews || 1);
+                const r = Math.round(249 + (175 - 249) * ratio);
+                const g = Math.round(245 + (58 - 245) * ratio);
+                const b = Math.round(215 + (3 - 215) * ratio);
+                const barColor = `rgb(${r}, ${g}, ${b})`;
+
+                return (
+                  <div key={route.path} className='group'>
+                    <div className='flex justify-between text-sm mb-1.5'>
+                      <span
+                        className='text-muted-foreground truncate max-w-[180px] group-hover:text-foreground transition-colors'
+                        title={route.path}
+                      >
+                        {route.path}
+                      </span>
+                      <span className='font-medium text-foreground'>
+                        {route.views.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className='h-1.5 w-full bg-muted rounded-full overflow-hidden'>
+                      <div
+                        className='h-full rounded-full transition-all duration-500'
+                        style={{
+                          width: `${ratio * 100}%`,
+                          backgroundColor: barColor,
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className='h-1.5 w-full bg-muted rounded-full overflow-hidden'>
-                    <div
-                      className='h-full bg-gruv-blue/60 rounded-full group-hover:bg-gruv-blue transition-all duration-500'
-                      style={{ width: `${(route.views / maxViews) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
 
           {/* Device Distribution */}
           <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2'>
-              <Icon name='monitor' size={18} />
+            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+              <Icon name='monitor' size={18} className='text-primary' />
               Devices
             </h3>
             <div className='space-y-6'>
-              {stats.devices.map((device) => (
-                <div key={device.type} className='flex items-center gap-4'>
-                  <div className='p-2 bg-muted rounded-lg'>
-                    <Icon
-                      name={device.icon}
-                      size={20}
-                      className='text-primary'
-                    />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='flex justify-between text-sm font-medium mb-1'>
-                      <span>{device.type}</span>
-                      <span>{device.percentage}%</span>
-                    </div>
-                    <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
-                      <div
-                        className='h-full bg-gruv-aqua/60 rounded-full'
-                        style={{ width: `${device.percentage}%` }}
+              {stats.devices.map((device) => {
+                const ratio = device.percentage / 100;
+                const r = Math.round(249 + (175 - 249) * ratio);
+                const g = Math.round(245 + (58 - 245) * ratio);
+                const b = Math.round(215 + (3 - 215) * ratio);
+                const barColor = `rgb(${r}, ${g}, ${b})`;
+
+                return (
+                  <div key={device.type} className='flex items-center gap-4'>
+                    <div className='p-2 bg-muted rounded-lg'>
+                      <Icon
+                        name={device.icon}
+                        size={20}
+                        className={
+                          device.type === 'Desktop'
+                            ? 'text-gruv-blue'
+                            : 'text-gruv-aqua'
+                        }
                       />
                     </div>
+                    <div className='flex-1'>
+                      <div className='flex justify-between text-sm font-medium mb-1 text-foreground'>
+                        <span>{device.type}</span>
+                        <span>{device.percentage}%</span>
+                      </div>
+                      <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
+                        <div
+                          className='h-full rounded-full transition-all duration-1000'
+                          style={{
+                            width: `${device.percentage}%`,
+                            backgroundColor: barColor,
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
 
           {/* Referrers */}
           <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2'>
-              <Icon name='shareNetwork' size={18} />
+            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+              <Icon name='shareNetwork' size={18} className='text-gruv-green' />
               Top Referrers
             </h3>
             <div className='space-y-4'>
               {stats.referrers.map((referrer) => (
                 <div
                   key={referrer.name}
-                  className='flex justify-between items-center text-sm'
+                  className='flex justify-between items-center text-sm group'
                 >
-                  <span className='text-muted-foreground'>{referrer.name}</span>
-                  <span className='font-medium py-1 px-2 bg-muted rounded text-xs'>
+                  <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>{referrer.name}</span>
+                  <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-gruv-fg'>
                     {referrer.count.toLocaleString()}
                   </span>
                 </div>

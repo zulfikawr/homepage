@@ -8,14 +8,18 @@ import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Employment } from '@/types/employment';
 
 const EmploymentSection = () => {
   const {
     data: employments,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Employment>('employments', mapRecordToEmployment);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -68,19 +72,19 @@ const EmploymentSection = () => {
             // onScroll={handleScroll}
             className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
           >
-            {loading
-              ? Array(8)
-                  .fill(0)
-                  .map((_, index) => (
-                    <CardLoading key={index} type='employment' />
-                  ))
-              : (
-                  <div className='flex gap-x-4 animate-fade-in'>
-                    {sortedEmployments.map((employment) => (
-                      <EmploymentCard key={employment.id} employment={employment} />
-                    ))}
-                  </div>
-                )}
+            {loading ? (
+              Array(8)
+                .fill(0)
+                .map((_, index) => (
+                  <CardLoading key={index} type='employment' />
+                ))
+            ) : (
+              <div className='flex gap-x-4 animate-fade-in'>
+                {sortedEmployments.map((employment) => (
+                  <EmploymentCard key={employment.id} employment={employment} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

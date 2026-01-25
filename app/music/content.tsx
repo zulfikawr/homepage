@@ -21,6 +21,8 @@ import { formatDate } from '@/utilities/formatDate';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import { useRadius } from '@/contexts/radiusContext';
+import { useLoadingToggle } from '@/contexts/loadingContext';
+import { Skeleton } from '@/components/UI';
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
@@ -47,12 +49,21 @@ export default function SpotifyMusicContent() {
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
   const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
-  const [loading, setLoading] = useState({
+  const [dataLoading, setDataLoading] = useState({
     recentTracks: true,
     topTracks: true,
     topArtists: true,
     playlists: true,
   });
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = {
+    recentTracks: dataLoading.recentTracks || forceLoading,
+    topTracks: dataLoading.topTracks || forceLoading,
+    topArtists: dataLoading.topArtists || forceLoading,
+    playlists: dataLoading.playlists || forceLoading,
+  };
+
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
     'recent' | 'top' | 'artists' | 'playlists'
@@ -94,7 +105,7 @@ export default function SpotifyMusicContent() {
         );
       }
 
-      setLoading({
+      setDataLoading({
         recentTracks: false,
         topTracks: false,
         topArtists: false,
@@ -102,7 +113,7 @@ export default function SpotifyMusicContent() {
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-      setLoading({
+      setDataLoading({
         recentTracks: false,
         topTracks: false,
         playlists: false,
@@ -227,7 +238,7 @@ export default function SpotifyMusicContent() {
         {activeTab === 'recent' && (
           <div className='space-y-4'>
             {loading.recentTracks ? (
-              Array(5)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
             ) : recentTracks.length > 0 ? (
@@ -289,7 +300,7 @@ export default function SpotifyMusicContent() {
               />
             </div>
             {loading.topTracks ? (
-              Array(5)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
             ) : topTracks.length > 0 ? (
@@ -350,15 +361,15 @@ export default function SpotifyMusicContent() {
             </div>
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
               {loading.topArtists ? (
-                Array(10)
+                Array(8)
                   .fill(0)
                   .map((_, index) => (
                     <div
                       key={index}
                       className='flex flex-col items-center space-y-2 p-3'
                     >
-                      <div className='h-24 w-24 rounded-full bg-muted dark:bg-muted' />
-                      <div className='h-4 w-3/4 rounded bg-muted dark:bg-muted' />
+                      <Skeleton width={96} height={96} variant='circle' />
+                      <Skeleton width='75%' height={16} />
                     </div>
                   ))
               ) : topArtists.length > 0 ? (
@@ -393,7 +404,7 @@ export default function SpotifyMusicContent() {
         {activeTab === 'playlists' && (
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
             {loading.playlists ? (
-              Array(4)
+              Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='playlist' />)
             ) : playlists.length > 0 ? (

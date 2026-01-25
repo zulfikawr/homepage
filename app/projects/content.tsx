@@ -10,13 +10,18 @@ import { CardLoading } from '@/components/Card/Loading';
 import { useCollection } from '@/hooks';
 import { sortByDate } from '@/utilities/sortByDate';
 import { Project } from '@/types/project';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ProjectsContent() {
   const {
     data: projects,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Project>('projects', mapRecordToProject);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
+
   const sortedProjects = projects ? sortByDate(projects) : [];
 
   const wipProjects = sortedProjects.filter(
@@ -48,7 +53,7 @@ export default function ProjectsContent() {
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (
-            Array(2)
+            Array(8)
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : wipProjects.length > 0 ? (
@@ -72,7 +77,7 @@ export default function ProjectsContent() {
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (
-            Array(2)
+            Array(8)
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : doneProjects.length > 0 ? (
@@ -96,7 +101,7 @@ export default function ProjectsContent() {
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (
-            Array(2)
+            Array(8)
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : upcomingProjects.length > 0 ? (

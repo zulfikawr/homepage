@@ -68,7 +68,11 @@ const ProjectCardLoading = () => (
 
       <div className='flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:gap-6'>
         {/* Desktop image */}
-        <Skeleton width={224} height={128} className='hidden sm:block rounded-md flex-shrink-0' />
+        <Skeleton
+          width={224}
+          height={128}
+          className='hidden sm:block rounded-md flex-shrink-0'
+        />
 
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           <div className='border-b border-border pb-2'>
@@ -95,7 +99,11 @@ const ProjectCardLoading = () => (
 const PostCardLoading = () => (
   <BaseCardLoading>
     <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
-      <Skeleton width={120} height={180} className='hidden sm:block rounded-md flex-shrink-0 lg:w-[150px] lg:h-[200px]' />
+      <Skeleton
+        width={120}
+        height={180}
+        className='hidden sm:block rounded-md flex-shrink-0 lg:w-[150px] lg:h-[200px]'
+      />
 
       <div className='flex flex-1 flex-col space-y-4 min-w-0'>
         <div className='flex gap-3'>

@@ -6,6 +6,7 @@ import { TitleProvider } from '@/contexts/titleContext';
 import { EffectProvider } from '@/contexts/effectContext';
 import { BackgroundProvider } from '@/contexts/backgroundContext';
 import { RadiusProvider } from '@/contexts/radiusContext';
+import { LoadingProvider } from '@/contexts/loadingContext';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -16,11 +17,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         enableSystem={true}
       >
         <BackgroundProvider>
-          <TitleProvider>
-            <EffectProvider>
-              <RadiusProvider>{children}</RadiusProvider>
-            </EffectProvider>
-          </TitleProvider>
+          <LoadingProvider>
+            <TitleProvider>
+              <EffectProvider>
+                <RadiusProvider>{children}</RadiusProvider>
+              </EffectProvider>
+            </TitleProvider>
+          </LoadingProvider>
         </BackgroundProvider>
       </ThemeProvider>
     </AuthProvider>

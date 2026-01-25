@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
-import { Icon } from '@/components/UI';
+import { Icon, Button, Tooltip } from '@/components/UI';
 import {
   getCurrentTrack,
   getRecentlyPlayed,
@@ -16,6 +16,7 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
 import { Card } from '@/components/Card';
 import { TimeAgo } from '@/components/UI';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const apiCache: {
   currentTrack: SpotifyTrack | null;
@@ -28,7 +29,6 @@ const apiCache: {
   lastPlayedAt: null,
   isAuthorized: true,
 };
-
 const CurrentlyListening = () => {
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
     apiCache.currentTrack,
@@ -39,7 +39,10 @@ const CurrentlyListening = () => {
     apiCache.lastPlayedAt,
   );
   const [isAuthorized, setIsAuthorized] = useState(apiCache.isAuthorized);
-  const [isLoading, setIsLoading] = useState(!apiCache.currentTrack);
+  const [dataLoading, setDataLoading] = useState(!apiCache.currentTrack);
+  const { forceLoading } = useLoadingToggle();
+  const isLoading = dataLoading || forceLoading;
+
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [progress, setProgress] = useState(0);
   const { isAdmin, loading: authLoading } = useAuth();
@@ -140,7 +143,7 @@ const CurrentlyListening = () => {
         }, retryDelay.current);
         retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
-        setIsLoading(false);
+        setDataLoading(false);
         setShowSkeleton(false);
         return;
       }
@@ -166,7 +169,7 @@ const CurrentlyListening = () => {
 
           setIsPlaying(data.is_playing);
           setLastPlayedAt(null);
-          setIsLoading(false);
+          setDataLoading(false);
           setShowSkeleton(false);
           retryDelay.current = 1000;
         }
@@ -202,7 +205,7 @@ const CurrentlyListening = () => {
           // Ignored
         }
 
-        setIsLoading(false);
+        setDataLoading(false);
         setShowSkeleton(false);
       }
     } catch {
@@ -212,7 +215,7 @@ const CurrentlyListening = () => {
       }, retryDelay.current);
       retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
-      setIsLoading(false);
+      setDataLoading(false);
       setShowSkeleton(false);
     }
   }, []);
@@ -296,6 +299,26 @@ const CurrentlyListening = () => {
           <span className='h-5'>
             {isPlaying ? 'Currently Listening' : 'Last Played'}
           </span>
+        </div>
+        <div className='hidden md:block'>
+          <Tooltip text='Music Stats'>
+            <Link href='/music'>
+              <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+                <span className='size-5'>
+                  <Icon name='caretRight' />
+                </span>
+              </Button>
+            </Link>
+          </Tooltip>
+        </div>
+        <div className='block md:hidden'>
+          <Link href='/music'>
+            <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+              <span className='size-5'>
+                <Icon name='caretRight' />
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
 

@@ -7,13 +7,17 @@ import { CardLoading } from '@/components/Card/Loading';
 import MovieCard from '@/components/Card/Movie';
 import { useCollection } from '@/hooks';
 import { Movie } from '@/types/movie';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function MoviesContent() {
   const {
     data: movies,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Movie>('movies', mapRecordToMovie);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 
@@ -23,7 +27,7 @@ export default function MoviesContent() {
 
       <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : movies && movies.length > 0 ? (

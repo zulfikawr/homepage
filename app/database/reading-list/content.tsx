@@ -9,15 +9,19 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Book } from '@/types/book';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ReadingListDatabase() {
   const router = useRouter();
 
   const {
     data: books,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Book>('reading_list', mapRecordToBook);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load books' />;
 

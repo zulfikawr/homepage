@@ -9,9 +9,9 @@ interface FormSkeletonProps {
   hasPreview?: boolean;
 }
 
-const FormSkeleton: React.FC<FormSkeletonProps> = ({ 
+const FormSkeleton: React.FC<FormSkeletonProps> = ({
   fields = 5,
-  hasPreview = true 
+  hasPreview = true,
 }) => {
   return (
     <div className='space-y-6'>
@@ -34,7 +34,7 @@ const FormSkeleton: React.FC<FormSkeletonProps> = ({
       </div>
 
       <Separator margin='5' />
-      
+
       <div className='flex gap-4'>
         <Skeleton width='100%' height={40} />
       </div>

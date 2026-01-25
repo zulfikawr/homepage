@@ -10,13 +10,18 @@ import { useCollection } from '@/hooks';
 import { Toggle, Icon } from '@/components/UI';
 import { sortByDate } from '@/utilities/sortByDate';
 import { Post } from '@/types/post';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function PostsContent() {
   const {
     data: posts,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Post>('posts', mapRecordToPost);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
+
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
   const sortedPosts = useMemo(() => (posts ? sortByDate(posts) : []), [posts]);
@@ -80,7 +85,7 @@ export default function PostsContent() {
 
       {loading ? (
         <div className='flex flex-col gap-y-4'>
-          {Array(4)
+          {Array(8)
             .fill(0)
             .map((_, index) => (
               <CardLoading key={index} type='post' />

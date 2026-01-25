@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRadius } from '@/contexts/radiusContext';
 
 interface TooltipProps {
@@ -19,8 +19,6 @@ const Tooltip: React.FC<TooltipProps> = ({
   const { radius } = useRadius();
 
   const getPositionStyles = (): React.CSSProperties => {
-    const isVertical = position === 'top' || position === 'bottom';
-
     switch (position) {
       case 'top':
         return {

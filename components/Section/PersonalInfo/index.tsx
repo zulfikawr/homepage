@@ -7,13 +7,17 @@ import { useCollection } from '@/hooks';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { PersonalInfo } from '@/types/personalInfo';
 import { useMemo } from 'react';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const PersonalInfoSection = () => {
   const {
     data: personalInfoList,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<PersonalInfo>('profile', mapRecordToPersonalInfo);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   const personalInfo = useMemo(() => {
     return personalInfoList && personalInfoList.length > 0

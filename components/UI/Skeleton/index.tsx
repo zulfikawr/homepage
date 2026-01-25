@@ -20,7 +20,7 @@ const Skeleton: React.FC<SkeletonProps> = ({
   const { radius } = useRadius();
 
   const baseStyles = 'animate-pulse bg-muted dark:bg-muted/50';
-  
+
   const variantStyles = {
     rectangle: '',
     circle: 'rounded-full',

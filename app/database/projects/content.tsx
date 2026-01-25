@@ -9,15 +9,19 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Project } from '@/types/project';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ProjectsDatabase() {
   const router = useRouter();
 
   const {
     data: projects,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Project>('projects', mapRecordToProject);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load projects' />;
 
@@ -31,7 +35,7 @@ export default function ProjectsDatabase() {
 
       <div className='grid grid-cols-1 gap-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='project' />)
         ) : (

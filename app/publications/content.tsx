@@ -7,13 +7,17 @@ import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import { useCollection } from '@/hooks';
 import { Publication } from '@/types/publication';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function PublicationsContent() {
   const {
     data: publications,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Publication>('publications', mapRecordToPublication);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load publications' />;
 
@@ -27,7 +31,7 @@ export default function PublicationsContent() {
 
       <div className='grid grid-cols-1 gap-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='publication' />)
         ) : publications.length > 0 ? (

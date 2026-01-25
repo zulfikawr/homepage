@@ -311,8 +311,9 @@ export default function WorldMap({ data, className }: WorldMapProps) {
 
     // Color scale for intensity
     const colorScale = d3
-      .scaleSequential(d3.interpolateYlOrRd)
-      .domain([0, maxCount]);
+      .scaleSequential()
+      .domain([0, maxCount])
+      .interpolator(d3.interpolateRgb('#f9f5d7', '#af3a03')); // light cream to dark orange
 
     const g = svg.append('g');
 
@@ -322,7 +323,7 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       .append('div')
       .attr(
         'class',
-        'absolute hidden bg-background/95 border border-border p-2 rounded shadow-lg text-xs z-[100]',
+        'absolute hidden bg-card/95 border border-primary/20 p-2 rounded shadow-lg text-xs z-[100] text-foreground backdrop-blur-md',
       )
       .style('pointer-events', 'none');
 
@@ -333,9 +334,9 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       .attr('d', (d) => path(d as d3.GeoPermissibleObjects))
       .attr('fill', (d) => {
         const count = counts.get(d.id as string) || 0;
-        return count > 0 ? colorScale(count) : 'var(--color-muted)';
+        return count > 0 ? colorScale(count) : '#ebdbb222'; // subtle muted fill
       })
-      .attr('stroke', 'var(--color-border)')
+      .attr('stroke', 'rgba(60, 56, 54, 0.05)')
       .attr('stroke-width', 0.5)
       .attr('class', 'transition-colors hover:opacity-80 cursor-pointer')
       .on('mouseover', (event: MouseEvent, d: WorldFeature) => {

@@ -392,6 +392,7 @@ export function KbarContent() {
             placeholder='What do you need?'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>

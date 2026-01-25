@@ -9,15 +9,19 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Certificate } from '@/types/certificate';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function CertificatesDatabase() {
   const router = useRouter();
 
   const {
     data: certificates,
-    loading,
+    loading: dataLoading,
     error,
   } = useCollection<Certificate>('certificates', mapRecordToCertificate);
+
+  const { forceLoading } = useLoadingToggle();
+  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load certificates' />;
 

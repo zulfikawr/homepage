@@ -5,6 +5,7 @@ import { Icon } from '@/components/UI';
 import LoadingSkeleton from './loading';
 import { Card } from '@/components/Card';
 import { useRadius } from '@/contexts/radiusContext';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const emptySubscribe = () => () => {};
 
@@ -35,6 +36,8 @@ const LocationAndTime = () => {
     () => true,
     () => false,
   );
+
+  const { forceLoading } = useLoadingToggle();
 
   const [timeData, setTimeData] = useState({
     hours: '00',
@@ -109,7 +112,7 @@ const LocationAndTime = () => {
     return () => clearInterval(timer);
   }, [mounted]);
 
-  if (!mounted) return <LoadingSkeleton />;
+  if (!mounted || forceLoading) return <LoadingSkeleton />;
 
   return (
     <Card
