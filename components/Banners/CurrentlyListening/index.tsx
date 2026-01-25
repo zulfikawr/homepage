@@ -112,8 +112,15 @@ const CurrentlyListening = () => {
       const currentResponse = await getCurrentTrack();
 
       if (!currentResponse) {
-        // Only set unauthorized if we don't have a cached track,
-        // to prevent flickering during transient navigation issues
+        // Only set unauthorized if we are explicitly not authorized (status 401)
+        // or if we have no tokens at all. For transient errors, we keep current state.
+        setIsLoading(false);
+        setShowSkeleton(false);
+        return;
+      }
+
+      if (currentResponse.status === 401) {
+        // Explicitly unauthorized (token expired or invalid and refresh failed)
         if (!apiCache.currentTrack) {
           setIsAuthorized(false);
         }
@@ -122,7 +129,7 @@ const CurrentlyListening = () => {
         return;
       }
 
-      // If we got a response, we are authorized
+      // If we got any response (200, 204, etc), we are authorized
       setIsAuthorized(true);
 
       if (currentResponse.status === 429) {

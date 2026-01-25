@@ -52,13 +52,18 @@ export const getAccessToken = async () => {
 
     if (isExpired && tokens.refresh_token) {
       // Refresh token
+      const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+      const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
+      
+      const authHeader = typeof btoa !== 'undefined' 
+        ? btoa(`${clientId}:${clientSecret}`)
+        : Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
       const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${Buffer.from(
-            `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
-          ).toString('base64')}`,
+          Authorization: `Basic ${authHeader}`,
         },
         body: new URLSearchParams({
           grant_type: 'refresh_token',
@@ -68,18 +73,21 @@ export const getAccessToken = async () => {
 
       const data = await response.json();
 
-      // Update token in PocketBase
-      await pb.collection('spotify_tokens').update('spotify', {
-        access_token: data.access_token,
-        refresh_token: tokens.refresh_token,
-        timestamp: Date.now(),
-      });
+      if (data.access_token) {
+        // Update token in PocketBase
+        await pb.collection('spotify_tokens').update('spotify', {
+          access_token: data.access_token,
+          refresh_token: tokens.refresh_token,
+          timestamp: Date.now(),
+        });
 
-      return data.access_token;
+        return data.access_token;
+      }
     }
 
     return tokens.access_token;
-  } catch {
+  } catch (error) {
+    console.error('Spotify token error:', error);
     return null;
   }
 };
