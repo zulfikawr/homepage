@@ -44,7 +44,7 @@ export default function ProjectsContent() {
         <SectionTitle
           icon='hammer'
           title='Work in Progress'
-          iconClassName='text-yellow-500'
+          iconClassName='text-gruv-yellow'
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (
@@ -68,7 +68,7 @@ export default function ProjectsContent() {
         <SectionTitle
           icon='checkCircle'
           title='Completed Projects'
-          iconClassName='text-green-500'
+          iconClassName='text-gruv-green'
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (
@@ -92,7 +92,7 @@ export default function ProjectsContent() {
         <SectionTitle
           icon='calendarPlus'
           title='Upcoming Projects'
-          iconClassName='text-blue-500'
+          iconClassName='text-gruv-blue'
         />
         <div className='flex flex-col gap-6 w-full'>
           {loading ? (

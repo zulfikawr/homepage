@@ -167,7 +167,7 @@ body::-webkit-scrollbar {
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 hover:bg-muted-foreground/50;
+  @apply bg-gruv-fg-dim/30 hover:bg-gruv-fg-dim/50;
   border: 4px solid transparent;
   border-radius: 8px;
   background-clip: padding-box;
@@ -203,7 +203,7 @@ body::-webkit-scrollbar {
 }
 
 .prose a {
-  @apply text-primary underline underline-offset-2 hover:opacity-80;
+  @apply text-primary underline underline-offset-2 hover:text-gruv-aqua transition-colors;
 }
 
 .prose strong {
@@ -245,7 +245,7 @@ body::-webkit-scrollbar {
 }
 
 .prose th {
-  @apply py-4 px-6 font-medium text-left border border-border;
+  @apply py-4 px-6 font-medium text-left border border-border text-primary;
 }
 
 .prose td {
@@ -253,7 +253,7 @@ body::-webkit-scrollbar {
 }
 
 .prose pre {
-  @apply rounded-md overflow-hidden my-4 bg-muted border border-border;
+  @apply rounded-md overflow-hidden my-4 bg-gruv-bg-dark border border-border;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.6;
@@ -261,7 +261,7 @@ body::-webkit-scrollbar {
 }
 
 .prose pre code {
-  @apply block p-4 overflow-x-auto text-foreground;
+  @apply block p-4 overflow-x-auto text-gruv-fg;
   background: transparent;
   font-family: inherit;
   font-size: inherit;
@@ -274,7 +274,7 @@ body::-webkit-scrollbar {
 .prose h1 code,
 .prose h2 code,
 .prose h3 code {
-  @apply text-sm px-2 py-1 rounded-md bg-muted border border-border font-medium text-primary;
+  @apply text-sm px-2 py-1 rounded-md bg-muted border border-border font-medium text-gruv-aqua;
   font-family: var(--font-mono);
 }
 

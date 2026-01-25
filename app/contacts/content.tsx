@@ -35,11 +35,11 @@ const contacts: ContactItem[] = [
     color: 'text-gruv-blue',
   },
   {
-    platform: 'WhatsApp',
-    link: 'https://wa.me/+6285156453730',
-    username: '+62 851 5645 3730',
-    icon: 'whatsappLogo',
-    color: 'text-green-500',
+    platform: 'GitHub',
+    link: 'https://github.com/zulfikawr',
+    username: 'zulfikawr',
+    icon: 'githubLogo',
+    color: 'text-gruv-green',
   },
 ];
 

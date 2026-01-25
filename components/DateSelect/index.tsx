@@ -82,7 +82,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
               disabled={disabled}
             >
               {value.getDate()}
-              <Icon name='caretDown' className='size-3' />
+              <Icon name='caretDown' className='size-3 text-gruv-aqua' />
             </Button>
           }
           matchTriggerWidth
@@ -109,7 +109,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             disabled={disabled}
           >
             {formatMonth(value.getMonth())}
-            <Icon name='caretDown' className='size-3' />
+            <Icon name='caretDown' className='size-3 text-gruv-aqua' />
           </Button>
         }
         matchTriggerWidth
@@ -135,7 +135,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             disabled={disabled}
           >
             {value.getFullYear()}
-            <Icon name='caretDown' className='size-3' />
+            <Icon name='caretDown' className='size-3 text-gruv-aqua' />
           </Button>
         }
         matchTriggerWidth

@@ -87,16 +87,13 @@ export default function DatabaseContent() {
 
   const colors = [
     'text-gruv-orange',
-    'text-yellow-500',
-    'text-green-500',
-    'text-teal-500',
-    'text-blue-500',
-    'text-indigo-500',
+    'text-gruv-yellow',
+    'text-gruv-green',
     'text-gruv-aqua',
-    'text-pink-500',
+    'text-gruv-blue',
+    'text-gruv-red',
+    'text-primary',
     'text-muted-foreground',
-    'text-violet-500',
-    'text-rose-500',
   ];
 
   return (

@@ -69,7 +69,7 @@ function CallbackContent() {
 
   return (
     <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-      <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500'></div>
+      <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gruv-green'></div>
       <p className='text-lg font-medium'>Connecting to Spotify...</p>
     </div>
   );
@@ -80,7 +80,7 @@ export default function CallbackPage() {
     <Suspense
       fallback={
         <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500'></div>
+          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gruv-green'></div>
           <p className='text-lg font-medium'>Loading...</p>
         </div>
       }

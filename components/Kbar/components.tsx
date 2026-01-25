@@ -384,16 +384,14 @@ export function KbarContent() {
         <div className='relative'>
           <Icon
             name={isSearching ? 'circleNotch' : 'magnifyingGlass'}
-            className={`absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5 z-10 ${isSearching ? 'animate-spin' : ''}`}
+            className={`absolute left-4 top-1/2 -translate-y-1/2 text-primary size-5 z-10 ${isSearching ? 'animate-spin' : ''}`}
           />
           <Input
             ref={inputRef}
-            type='text'
+            className='w-full bg-muted/50 dark:bg-card border-none rounded-none px-12 py-6 text-lg focus:ring-0 placeholder:text-muted-foreground transition-all duration-200'
+            placeholder='What do you need?'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder='Type to search...'
-            className='pl-[2.5rem] w-full'
           />
         </div>
       </div>

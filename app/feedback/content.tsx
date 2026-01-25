@@ -69,7 +69,7 @@ export default function FeedbackContent() {
       />
 
       <Card isPreview className='p-6'>
-        <p className='text-sm text-neutral-700 dark:text-muted-foreground'>
+        <p className='text-sm text-foreground dark:text-muted-foreground'>
           Please use this form to share whatever you&apos;d like with me. This
           form is anonymous (really). If you&apos;d like me to respond, please
           feel free to leave your contact.

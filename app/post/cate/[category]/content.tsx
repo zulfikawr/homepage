@@ -24,7 +24,7 @@ export default function CategoryContent({
 
       {posts.length === 0 ? (
         <div className='flex flex-col items-center justify-center space-y-6 py-12'>
-          <p className='text-xl font-medium text-neutral-700 dark:text-neutral-200'>
+          <p className='text-xl font-medium text-foreground'>
             No posts found in {category}
           </p>
           <div className='flex justify-center space-x-4'>
