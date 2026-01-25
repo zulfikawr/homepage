@@ -1,5 +1,5 @@
 'use client';
-
+import { useMemo } from 'react';
 import { Button, Icon, Switch, Slider, ToggleGroup } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
@@ -41,9 +41,14 @@ export default function Settings() {
         <Button
           type='default'
           aria-label='Open settings'
-          icon='gear'
-          className='bg-card dark:hover:bg-muted w-10 h-10'
-        />
+          className='bg-card w-10 h-10 p-0 transition-colors group/btn'
+        >
+          <Icon 
+            name='gear' 
+            size={20} 
+            className='text-primary group-hover/btn:text-accent-foreground transition-colors' 
+          />
+        </Button>
       }
     >
       <div className='p-3 space-y-3'>

@@ -197,7 +197,7 @@ const Drawer = () => {
       <div
         ref={drawerRef}
         className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
-          border-t flex flex-col overflow-hidden
+          border flex flex-col overflow-hidden
           ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}
           ${
             effectEnabled

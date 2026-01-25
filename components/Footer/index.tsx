@@ -3,7 +3,7 @@
 import { useRef, useCallback, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { OffsetTransition } from '@/components/Motion';
-import { Button } from '@/components/UI';
+import { Button, Icon } from '@/components/UI';
 import Settings from '@/components/Settings';
 
 const emptySubscribe = () => () => {};
@@ -69,11 +69,16 @@ export default function Footer() {
           <Button
             type='default'
             ref={backToTopRef}
-            icon='caretUp'
             aria-label='scroll to top'
             onClick={handleScrollToTop}
-            className='bg-card dark:hover:bg-muted w-10 h-10'
-          />
+            className='bg-card w-10 h-10 p-0 transition-colors group/btn'
+          >
+            <Icon 
+              name='caretUp' 
+              size={20} 
+              className='text-primary group-hover/btn:text-accent-foreground transition-colors' 
+            />
+          </Button>
         </OffsetTransition>
       </div>
       <FooterContent />

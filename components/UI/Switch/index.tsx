@@ -32,7 +32,7 @@ const Switch = ({
         disabled={disabled}
         className={twMerge(
           'relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent transition-colors duration-200 ease-in-out overflow-hidden',
-          checked ? 'bg-gruv-aqua' : 'bg-muted',
+          checked ? 'bg-gruv-aqua' : 'bg-muted dark:bg-secondary',
           disabled && 'opacity-50 cursor-not-allowed',
         )}
         style={{ borderRadius: `${radius}px` }}

@@ -67,7 +67,7 @@ const Slider = ({
         }
 
         .dark input[type='range'].slider-thumb::-webkit-slider-runnable-track {
-          background-color: #3c3836;
+          background-color: var(--secondary);
         }
 
         input[type='range'].slider-thumb::-webkit-slider-thumb {
@@ -99,7 +99,7 @@ const Slider = ({
         }
 
         .dark input[type='range'].slider-thumb::-moz-range-track {
-          background-color: #3c3836;
+          background-color: var(--secondary);
         }
 
         input[type='range'].slider-thumb::-moz-range-thumb {
