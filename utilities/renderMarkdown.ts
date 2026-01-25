@@ -26,6 +26,11 @@ md.use(anchor, {
 
 md.enable('table');
 
+// Wrap tables in a scrollable container
+md.renderer.rules.table_open = () =>
+  '<div class="markdown-table-container"><table>';
+md.renderer.rules.table_close = () => '</table></div>';
+
 export function renderMarkdown(text: unknown): string {
   try {
     const safeText = typeof text === 'string' ? text : '';

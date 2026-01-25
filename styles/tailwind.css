@@ -343,12 +343,14 @@ body::-webkit-scrollbar {
   object-fit: contain;
 }
 
+.markdown-table-container {
+  @apply overflow-x-auto my-4 border border-border rounded-md;
+}
+
 .prose table {
-  @apply w-full border-collapse bg-card mt-4;
-  border-radius: 0.25rem;
-  overflow: hidden;
+  @apply w-full border-collapse bg-card;
+  margin: 0 !important;
   border-style: hidden;
-  box-shadow: 0 0 0 0.75px var(--border);
 }
 
 .prose thead {
@@ -360,15 +362,15 @@ body::-webkit-scrollbar {
 }
 
 .prose tr {
-  @apply border border-border;
+  @apply border-b border-border last:border-b-0;
 }
 
 .prose th {
-  @apply py-4 px-6 font-medium text-left border border-border text-primary;
+  @apply py-4 px-6 font-medium text-left border-r border-border last:border-r-0 text-primary;
 }
 
 .prose td {
-  @apply py-4 px-6 border border-border;
+  @apply py-4 px-6 border-r border-border last:border-r-0;
 }
 
 .prose pre {
