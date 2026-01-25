@@ -141,57 +141,38 @@ export default function AnalyticsContent() {
           subtitle='Real-time insights into website traffic and visitor behavior.'
         />
 
-                {/* Summary Cards Skeleton */}
+        {/* Summary Cards Skeleton */}
 
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
+          {[
+            'text-gruv-aqua',
 
-                  {[
+            'text-gruv-green',
 
-                    'text-gruv-aqua',
+            'text-gruv-yellow',
 
-                    'text-gruv-green',
+            'text-gruv-blue',
+          ].map((color, i) => (
+            <Card
+              key={i}
+              isPreview
+              className='p-5 flex flex-col justify-between h-32'
+            >
+              <div className='flex items-center justify-between'>
+                <Skeleton width={80} height={12} />
 
-                    'text-gruv-yellow',
+                <Skeleton
+                  width={18}
+                  height={18}
+                  variant='circle'
+                  className={color}
+                />
+              </div>
 
-                    'text-gruv-blue',
-
-                  ].map((color, i) => (
-
-                    <Card
-
-                      key={i}
-
-                      isPreview
-
-                      className='p-5 flex flex-col justify-between h-32'
-
-                    >
-
-                      <div className='flex items-center justify-between'>
-
-                        <Skeleton width={80} height={12} />
-
-                        <Skeleton
-
-                          width={18}
-
-                          height={18}
-
-                          variant='circle'
-
-                          className={color}
-
-                        />
-
-                      </div>
-
-                      <Skeleton width={100} height={32} />
-
-                    </Card>
-
-                  ))}
-
-                </div>
+              <Skeleton width={100} height={32} />
+            </Card>
+          ))}
+        </div>
 
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Left Column Skeleton */}
@@ -316,15 +297,15 @@ export default function AnalyticsContent() {
             icon: 'users' as const,
             color: 'text-gruv-green',
           },
-          { 
-            label: 'Real-time', 
-            value: 'Active Now', 
+          {
+            label: 'Real-time',
+            value: 'Active Now',
             icon: 'clock' as const,
             color: 'text-gruv-yellow',
           },
-          { 
-            label: 'Status', 
-            value: 'Healthy', 
+          {
+            label: 'Status',
+            value: 'Healthy',
             icon: 'checkCircle' as const,
             color: 'text-gruv-blue',
           },
@@ -512,7 +493,9 @@ export default function AnalyticsContent() {
                   key={referrer.name}
                   className='flex justify-between items-center text-sm group'
                 >
-                  <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>{referrer.name}</span>
+                  <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>
+                    {referrer.name}
+                  </span>
                   <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-gruv-fg'>
                     {referrer.count.toLocaleString()}
                   </span>

@@ -158,8 +158,107 @@
   }
 }
 
-.rhap_container {
-  @apply dark:!bg-card !border-none;
+/* Audio Player Gruvbox Theming */
+div.rhap_container {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 1rem 0 !important;
+}
+
+.rhap_main-container {
+  @apply gap-2;
+}
+
+.rhap_time {
+  color: #a89984 !important; /* gruv-fg-dim */
+  font-family: var(--font-mono) !important;
+  font-size: 0.875rem !important;
+}
+
+.rhap_progress-section {
+  @apply gap-4;
+}
+
+.rhap_progress-container {
+  margin: 0 !important;
+}
+
+.rhap_progress-bar {
+  background-color: #504945 !important; /* gruv-bg-soft/secondary */
+  height: 6px !important;
+  border-radius: 9999px !important;
+}
+
+.dark .rhap_progress-bar {
+  background-color: #665c54 !important; /* lighter for visibility */
+}
+
+.rhap_progress-filled {
+  background-color: #fe8019 !important; /* gruv-orange */
+  border-radius: 9999px !important;
+}
+
+.rhap_download-progress {
+  background-color: rgba(254, 128, 25, 0.2) !important;
+  border-radius: 9999px !important;
+}
+
+.rhap_progress-indicator {
+  background-color: #ebdbb2 !important; /* gruv-fg */
+  border: 2px solid #fe8019 !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  top: -5px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.rhap_controls-section {
+  @apply mt-2;
+}
+
+.rhap_main-controls-button {
+  color: #fe8019 !important;
+  transition-property: color !important;
+  transition-duration: 200ms !important;
+}
+
+.rhap_main-controls-button:hover {
+  opacity: 0.8 !important;
+}
+
+.rhap_volume-container {
+  @apply gap-2;
+}
+
+.rhap_volume-bar {
+  background-color: #504945 !important;
+  height: 6px !important;
+  border-radius: 9999px !important;
+}
+
+.dark .rhap_volume-bar {
+  background-color: #665c54 !important;
+}
+
+.rhap_volume-indicator {
+  background-color: #fe8019 !important;
+  width: 12px !important;
+  height: 12px !important;
+  top: -3px !important;
+  opacity: 1 !important;
+}
+
+.rhap_volume-button {
+  color: #fe8019 !important;
+}
+
+.rhap_repeat-button {
+  color: #a89984 !important;
+}
+
+.rhap_repeat-button:hover {
+  color: #fe8019 !important;
 }
 
 body::-webkit-scrollbar {
