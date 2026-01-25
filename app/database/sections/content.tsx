@@ -5,7 +5,7 @@ import PageTitle from '@/components/PageTitle';
 import { mapRecordToSection } from '@/lib/mappers';
 import { updateSection } from '@/database/sections';
 import { useCollection } from '@/hooks';
-import { Switch, Icon, Button } from '@/components/UI';
+import { Switch, Icon, Button, Skeleton } from '@/components/UI';
 import { toast } from '@/components/Toast';
 import { Section } from '@/types/section';
 import { drawer } from '@/components/Drawer';
@@ -143,7 +143,19 @@ export default function SectionDatabase() {
 
       <div className='space-y-3'>
         {loading ? (
-          <div>Loading...</div>
+          Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
+            >
+              <Skeleton width={20} height={20} />
+              <div className='flex-1 space-y-2'>
+                <Skeleton width='40%' height={16} />
+                <Skeleton width='20%' height={10} />
+              </div>
+              <Skeleton width={36} height={20} className='rounded-full' />
+            </div>
+          ))
         ) : (
           localSections.map((section, index) => (
             <div

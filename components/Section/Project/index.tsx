@@ -45,13 +45,15 @@ const ProjectSection = () => {
       />
       <div className='flex flex-col gap-y-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='project' />)
         ) : sortedProjects.length > 0 ? (
-          sortedProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))
+          <div className='flex flex-col gap-y-4 animate-fade-in'>
+            {sortedProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} />
+            ))}
+          </div>
         ) : (
           <CardEmpty message='No projects found.' />
         )}

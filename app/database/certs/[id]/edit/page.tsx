@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditCertificatePage from './content';
 import { Suspense } from 'react';
+import { FormSkeleton } from '@/components/Form/Loading';
 
 type Props = {
   params: Promise<{
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function CertificateEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<FormSkeleton />}>
       <CertificateLoader params={params} />
     </Suspense>
   );

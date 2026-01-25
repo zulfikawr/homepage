@@ -1,119 +1,60 @@
-'use client';
-
-import { useState } from 'react';
+import { Button, Input, FormLabel, Skeleton } from '@/components/UI';
+import { useAuthActions } from '@/hooks/useAuthActions';
 import { useAuth } from '@/contexts/authContext';
-import { Button, FormLabel, Input } from '@/components/UI';
-import PageTitle from '@/components/PageTitle';
-import { useAuthActions } from '@/hooks';
 import { useRouter } from 'next/navigation';
+import PageTitle from '@/components/PageTitle';
+import { Card } from '@/components/Card';
 
 export default function LoginContent() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const { user, loading } = useAuth();
-  const { handleLogin, handleGithubLogin, confirmLogout, error } =
-    useAuthActions();
+  const { handleGithubLogin, handlePasswordLogin, loading } = useAuthActions();
+  const { user } = useAuth();
   const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  return (
-    <div>
-      <PageTitle
-        emoji='🔑'
-        title='Login'
-        subtitle='Admin login to manage database.'
-      />
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+    }
+  }, [user, router]);
 
-      {loading ? (
-        <div className='mt-0 flex h-[65vh] items-center justify-center pt-24 lg:mt-20 lg:pt-0'>
-          <div className='p-4'>
-            <p className='text-center text-lg dark:text-white'>Loading...</p>
+  const onPasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    try {
+      await handlePasswordLogin(email, password);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className='max-w-md mx-auto mt-20 p-6'>
+        <div className='space-y-8'>
+          <div className='space-y-4'>
+            <Skeleton width={150} height={32} />
+            <Skeleton width='100%' height={20} />
           </div>
-        </div>
-      ) : user ? (
-        <div className='w-full mx-auto rounded-md border bg-white shadow-sm dark:border-border dark:bg-card'>
-          <div className='px-6 py-10'>
-            <p className='text-center text-lg dark:text-white'>
-              You are already logged in as {user.email || user.displayName}.
-            </p>
-            <div className='mt-4 flex justify-center space-x-4'>
-              <Button type='primary' onClick={() => router.push('/')}>
-                Go to Home
-              </Button>
-              <Button type='destructive' onClick={confirmLogout}>
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className='space-y-6 mx-auto rounded-md border bg-white shadow-sm dark:border-border dark:bg-card px-6 py-10'>
-          <div className='flex flex-col space-y-4'>
-            <Button
-              className='w-full'
-              icon='githubLogo'
-              onClick={handleGithubLogin}
-            >
-              Sign in with GitHub
-            </Button>
-
+          <Card isPreview className='p-8 space-y-6'>
+            <Skeleton width='100%' height={44} />
             <div className='relative'>
-              <div className='absolute inset-0 flex items-center'>
-                <span className='w-full border-t border-border dark:border-border' />
-              </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-white px-2 text-muted-foreground dark:bg-card'>
-                  Or Admin Login
-                </span>
-              </div>
+              <Skeleton width='100%' height={1} />
             </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleLogin(email, password);
-              }}
-              className='space-y-4'
-            >
-              <div>
-                <FormLabel htmlFor='email' required>
-                  Email
-                </FormLabel>
-                <Input
-                  type='email'
-                  value={email}
-                  placeholder='admin.email@mail.com'
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+            <div className='space-y-4'>
+              <div className='space-y-2'>
+                <Skeleton width={80} height={20} />
+                <Skeleton width='100%' height={40} />
               </div>
-
-              <div>
-                <FormLabel htmlFor='password' required>
-                  Password
-                </FormLabel>
-                <Input
-                  type='password'
-                  value={password}
-                  placeholder='********'
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+              <div className='space-y-2'>
+                <Skeleton width={80} height={20} />
+                <Skeleton width='100%' height={40} />
               </div>
-
-              {error && <p className='text-sm text-destructive'>{error}</p>}
-
-              <div className='flex justify-end pt-2'>
-                <Button
-                  type='primary'
-                  onClick={() => handleLogin(email, password)}
-                >
-                  Login
-                </Button>
-              </div>
-            </form>
-          </div>
+              <Skeleton width='100%' height={44} className='mt-6' />
+            </div>
+          </Card>
         </div>
-      )}
-    </div>
-  );
-}
+      </div>
+    );
+  }

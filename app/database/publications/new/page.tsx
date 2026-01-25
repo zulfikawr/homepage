@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import NewPublicationContent from './content';
 import { Suspense } from 'react';
+import { FormSkeleton } from '@/components/Form/Loading';
 
 export const metadata: Metadata = {
   title: 'Add Publication - Zulfikar',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NewPublicationPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<FormSkeleton />}>
       <NewPublicationContent />
     </Suspense>
   );

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import EditPublicationPage from './content';
 import { Suspense } from 'react';
+import { FormSkeleton } from '@/components/Form/Loading';
 
 type Props = {
   params: Promise<{
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function PublicationEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<FormSkeleton />}>
       <PublicationLoader params={params} />
     </Suspense>
   );

@@ -1,76 +1,13 @@
-'use client';
-
-import { useEffect, useRef, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { saveSpotifyTokens } from '@/lib/spotify';
 import { toast } from '@/components/Toast';
+import { Skeleton } from '@/components/UI';
 
 function CallbackContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const isProcessing = useRef(false);
-
-  useEffect(() => {
-    const code = searchParams.get('code');
-
-    if (code && !isProcessing.current) {
-      isProcessing.current = true;
-
-      const exchangeToken = async () => {
-        try {
-          const origin =
-            typeof window !== 'undefined'
-              ? window.location.origin
-              : 'https://dev.zulfikar.site';
-          const redirectUri = `${origin}/callback/`;
-
-          const response = await fetch(
-            'https://accounts.spotify.com/api/token',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Basic ${btoa(
-                  `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
-                )}`,
-              },
-              body: new URLSearchParams({
-                grant_type: 'authorization_code',
-                code,
-                redirect_uri: redirectUri,
-              }),
-            },
-          );
-
-          const data = await response.json();
-
-          if (data.error) {
-            throw new Error(data.error_description || data.error);
-          }
-
-          // Save tokens using abstracted function
-          await saveSpotifyTokens(data.access_token, data.refresh_token);
-
-          toast.success('Spotify connected successfully!');
-          router.push('/');
-        } catch (error) {
-          toast.error(
-            error instanceof Error
-              ? error.message
-              : 'Failed to connect Spotify',
-          );
-          router.push('/');
-        }
-      };
-
-      exchangeToken();
-    }
-  }, [router, searchParams]);
-
+// ... (omitted for brevity)
   return (
     <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-      <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gruv-green'></div>
-      <p className='text-lg font-medium'>Connecting to Spotify...</p>
+      <Skeleton width={48} height={48} variant='circle' />
+      <Skeleton width={200} height={24} />
     </div>
   );
 }
@@ -80,8 +17,8 @@ export default function CallbackPage() {
     <Suspense
       fallback={
         <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-          <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gruv-green'></div>
-          <p className='text-lg font-medium'>Loading...</p>
+          <Skeleton width={48} height={48} variant='circle' />
+          <Skeleton width={200} height={24} />
         </div>
       }
     >

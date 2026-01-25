@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import NewCertificateContent from './content';
 import { Suspense } from 'react';
+import { FormSkeleton } from '@/components/Form/Loading';
 
 export const metadata: Metadata = {
   title: 'Add Certificate - Zulfikar',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NewCertificatePage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<FormSkeleton />}>
       <NewCertificateContent />
     </Suspense>
   );

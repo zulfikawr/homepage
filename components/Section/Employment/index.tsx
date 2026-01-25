@@ -69,14 +69,18 @@ const EmploymentSection = () => {
             className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
           >
             {loading
-              ? Array(3)
+              ? Array(8)
                   .fill(0)
                   .map((_, index) => (
                     <CardLoading key={index} type='employment' />
                   ))
-              : sortedEmployments.map((employment) => (
-                  <EmploymentCard key={employment.id} employment={employment} />
-                ))}
+              : (
+                  <div className='flex gap-x-4 animate-fade-in'>
+                    {sortedEmployments.map((employment) => (
+                      <EmploymentCard key={employment.id} employment={employment} />
+                    ))}
+                  </div>
+                )}
           </div>
         </div>
       </div>

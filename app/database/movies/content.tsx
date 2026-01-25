@@ -30,7 +30,7 @@ export default function MoviesContent() {
 
       <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : (

@@ -35,9 +35,13 @@ export default function ReadingListDatabase() {
 
       <div className='grid grid-cols-1 gap-4'>
         {loading ? (
-          Array(4)
-            .fill(0)
-            .map((_, index) => <CardLoading key={index} type='book' />)
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+            {Array(8)
+              .fill(0)
+              .map((_, index) => (
+                <CardLoading key={index} type='book' />
+              ))}
+          </div>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5 min-h-[100px]'>

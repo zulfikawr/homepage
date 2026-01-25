@@ -13,58 +13,11 @@ import {
   TableRow,
   TableCell,
   Button,
+  TableSkeleton,
 } from '@/components/UI';
 import { toast } from '@/components/Toast';
 import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
-
-const SkeletonLoader = () => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableCell
-            isHeader
-            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-          >
-            Date
-          </TableCell>
-          <TableCell
-            isHeader
-            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-          >
-            Feedback
-          </TableCell>
-          <TableCell
-            isHeader
-            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-          >
-            Contact
-          </TableCell>
-          <TableCell
-            isHeader
-            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-          >
-            Actions
-          </TableCell>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <TableRow key={index}>
-            {[...Array(4)].map((_, i) => (
-              <TableCell key={i}>
-                <div className='animate-pulse'>
-                  <div className='h-6 w-24 rounded bg-muted dark:bg-muted' />
-                </div>
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-};
 
 export default function FeedbackResponsesContent() {
   const { user, loading: authLoading, isAdmin } = useAuth();
@@ -107,7 +60,7 @@ export default function FeedbackResponsesContent() {
       />
 
       {loading ? (
-        <SkeletonLoader />
+        <TableSkeleton rows={8} cols={4} />
       ) : feedbacks && feedbacks.length > 0 ? (
         <Table>
           <TableHeader>

@@ -33,7 +33,7 @@ const PostSection = () => {
       />
       {loading || !posts ? (
         <div className='flex flex-col gap-y-4'>
-          {Array(4)
+          {Array(8)
             .fill(0)
             .map((_, index) => (
               <CardLoading key={index} type='post' />
@@ -42,7 +42,7 @@ const PostSection = () => {
       ) : posts.length === 0 ? (
         <CardEmpty message='No posts found.' />
       ) : (
-        <div className='grid grid-cols-1 gap-6'>
+        <div className='grid grid-cols-1 gap-6 animate-fade-in'>
           {sortedPosts.map((post) => (
             <div key={post.id} className='cursor-pointer'>
               <PostCard key={post.id} post={post} />

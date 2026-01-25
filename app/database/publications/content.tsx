@@ -35,7 +35,7 @@ export default function PublicationsDatabase() {
 
       <div className='grid grid-cols-1 gap-4'>
         {loading ? (
-          Array(4)
+          Array(8)
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='publication' />)
         ) : (
