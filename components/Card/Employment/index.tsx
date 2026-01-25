@@ -55,7 +55,7 @@ export default function EmploymentCard({
       isInForm={isInForm}
       className='min-w-[18rem] lg:min-w-[25rem]'
     >
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-neutral-700 dark:border-border dark:text-white'>
+      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground dark:border-border dark:text-foreground'>
         <div className='flex items-center gap-x-2'>
           {employment.orgLogoUrl && (
             <ImageWithFallback
@@ -72,7 +72,7 @@ export default function EmploymentCard({
         <Badge icon='mapPin'>{employment.organizationLocation}</Badge>
       </div>
       <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
-        <div className='text-sm tracking-wide text-muted-foreground dark:text-neutral-300'>
+        <div className='text-sm tracking-wide text-muted-foreground dark:text-muted-foreground'>
           <p>{employment.jobTitle}</p>
         </div>
         <div className='flex flex-col items-start text-xs font-medium text-muted-foreground lg:items-center'>

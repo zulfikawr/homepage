@@ -37,7 +37,7 @@ export default function PublicationCard({
       isActive={isActive}
     >
       <div className='p-4 space-y-2'>
-        <p className='text-lg line-clamp-2 text-ellipsis font-medium leading-tight dark:text-white'>
+        <p className='text-lg line-clamp-2 text-ellipsis font-medium leading-tight dark:text-foreground'>
           {publication.title}
         </p>
         <p className='text-sm font-light text-muted-foreground'>
@@ -50,7 +50,7 @@ export default function PublicationCard({
         </div>
       </div>
 
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
         <span>{publication.publisher}</span>
         <span>
           {publication.openAccess ? (

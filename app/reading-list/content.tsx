@@ -38,7 +38,7 @@ export default function ReadingListContent() {
         <SectionTitle
           icon='eye'
           title='Currently Reading'
-          iconClassName='text-green-500'
+          iconClassName='text-gruv-green'
         />
         <div className='mt-4'>
           <div
@@ -67,7 +67,7 @@ export default function ReadingListContent() {
         <SectionTitle
           icon='checks'
           title='Read'
-          iconClassName='text-yellow-500'
+          iconClassName='text-gruv-yellow'
         />
         <div className='mt-4'>
           <div
@@ -95,7 +95,7 @@ export default function ReadingListContent() {
         <SectionTitle
           icon='bookmarks'
           title='To Read'
-          iconClassName='text-blue-500'
+          iconClassName='text-gruv-blue'
         />
         <div className='mt-4'>
           <div

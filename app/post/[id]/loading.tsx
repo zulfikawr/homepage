@@ -7,7 +7,7 @@ const LoadingSkeleton = () => (
         <div>
           <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-foreground'>
             <div className='h-8 w-48 bg-muted dark:bg-muted rounded animate-pulse' />
-            <span className='rounded-full border border-blue-300 bg-blue-50 p-2 text-xs text-blue-500 dark:border-blue-700 dark:bg-blue-800 dark:text-blue-400'>
+            <span className='rounded-full border border-blue-300 bg-gruv-blue/10 p-2 text-xs text-blue-500 dark:border-blue-700 dark:bg-blue-800 dark:text-gruv-blue'>
               <div className='h-3 w-8 bg-muted dark:bg-muted rounded animate-pulse' />
             </span>
           </h2>

@@ -25,6 +25,18 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-gruv-bg: #282828;
+  --color-gruv-bg-soft: #32302f;
+  --color-gruv-bg-dark: #1d2021;
+  --color-gruv-fg: #ebdbb2;
+  --color-gruv-fg-dim: #a89984;
+  --color-gruv-orange: #fe8019;
+  --color-gruv-green: #b8bb26;
+  --color-gruv-yellow: #fabd2f;
+  --color-gruv-blue: #83a598;
+  --color-gruv-red: #fb4934;
+  --color-gruv-aqua: #8ec07c;
+
   --spacing-1: 3px;
   --spacing-2: 6px;
   --spacing-3: 9px;

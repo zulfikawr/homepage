@@ -60,7 +60,7 @@ export default function NavigationCard({
             {title}
           </h1>
           {desc && (
-            <p className='text-xs md:text-sm tracking-wide text-muted-foreground dark:text-neutral-400 line-clamp-1 text-ellipsis'>
+            <p className='text-xs md:text-sm tracking-wide text-muted-foreground dark:text-muted-foreground line-clamp-1 text-ellipsis'>
               {desc}
             </p>
           )}

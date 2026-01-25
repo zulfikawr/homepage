@@ -84,6 +84,7 @@ export const iconMap = {
   playlist: PhosphorIcons.PlaylistIcon,
   plus: PhosphorIcons.PlusIcon,
   presentationChart: PhosphorIcons.PresentationChartIcon,
+  prohibit: PhosphorIcons.ProhibitIcon,
   pushPin: PhosphorIcons.PushPinIcon,
   pushPinSlash: PhosphorIcons.PushPinSlashIcon,
   quotes: PhosphorIcons.QuotesIcon,

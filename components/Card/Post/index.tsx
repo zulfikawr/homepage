@@ -141,14 +141,14 @@ export default function PostCard({
       </div>
       {renderAudio()}
 
-      <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-neutral-100 px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
+      <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
         <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
           <span className='flex items-center gap-x-2'>
             <TimeAgo date={post.dateString} prefix='Posted' />
           </span>
           <span className='flex items-center'>
             <button
-              className='effect-pressing flex items-center gap-x-2 hover:text-muted-foreground dark:hover:text-neutral-300'
+              className='effect-pressing flex items-center gap-x-2 hover:text-muted-foreground dark:hover:text-muted-foreground'
               onClick={handleShare}
             >
               <Icon name='share' size={15} />

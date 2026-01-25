@@ -384,7 +384,7 @@ export function KbarContent() {
         <div className='relative'>
           <Icon
             name={isSearching ? 'circleNotch' : 'magnifyingGlass'}
-            className={`absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 size-5 z-10 ${isSearching ? 'animate-spin' : ''}`}
+            className={`absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground size-5 z-10 ${isSearching ? 'animate-spin' : ''}`}
           />
           <Input
             ref={inputRef}

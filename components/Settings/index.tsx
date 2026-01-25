@@ -15,7 +15,7 @@ const themeOptions: { label: string; value: string; icon: IconName }[] = [
 ];
 
 const backgroundOptions: { label: string; value: string; icon: IconName }[] = [
-  { label: 'Clouds', value: 'clouds', icon: 'cloudMoon' },
+  { label: 'None', value: 'none', icon: 'prohibit' },
   { label: 'Waves', value: 'waves', icon: 'waves' },
   { label: 'Tetris', value: 'tetris', icon: 'wall' },
   { label: 'Stars', value: 'stars', icon: 'asterisk' },
@@ -42,7 +42,7 @@ export default function Settings() {
           type='default'
           aria-label='Open settings'
           icon='gear'
-          className='bg-card dark:hover:bg-neutral-700 w-10 h-10'
+          className='bg-card dark:hover:bg-muted w-10 h-10'
         />
       }
     >

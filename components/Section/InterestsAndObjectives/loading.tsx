@@ -20,7 +20,7 @@ const Loading = () => {
       <div className='mt-4.5 space-y-4'>
         {[1, 2, 3].map((index) => (
           <div key={index} className='flex items-center gap-x-6'>
-            <div className='h-2 w-2 rounded-full bg-muted/500 dark:bg-neutral-300' />
+            <div className='h-2 w-2 rounded-full bg-muted dark:bg-muted' />
             <div className='h-[16px] w-full rounded bg-muted dark:bg-muted' />
           </div>
         ))}

@@ -22,7 +22,7 @@ const FormLabel = ({
       className={twMerge('block text-md font-medium mb-2', className)}
     >
       {children}
-      {required && <span className='text-red-500'> *</span>}
+      {required && <span className='text-destructive'> *</span>}
     </label>
   );
 };

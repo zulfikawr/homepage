@@ -115,7 +115,7 @@ export default function CommentCard({
 
   return (
     <div
-      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border-neutral-100 dark:border-border pl-4 sm:pl-6' : ''}`}
+      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border-border dark:border-border pl-4 sm:pl-6' : ''}`}
     >
       <Card className='p-4'>
         <div className='flex items-start justify-between'>
@@ -129,7 +129,7 @@ export default function CommentCard({
             />
             <div>
               <div className='flex items-center gap-x-2'>
-                <span className='font-medium dark:text-white'>
+                <span className='font-medium dark:text-foreground'>
                   {comment.author}
                 </span>
                 {comment.parentId && (
@@ -162,7 +162,7 @@ export default function CommentCard({
                 <DropdownItem
                   onClick={onDelete}
                   icon='trashSimple'
-                  className='text-red-500'
+                  className='text-destructive'
                 >
                   Delete
                 </DropdownItem>
@@ -224,7 +224,7 @@ export default function CommentCard({
         </div>
 
         {isReplying && (
-          <div className='mt-4 space-y-4 rounded-md bg-muted/50 p-4 dark:bg-neutral-900'>
+          <div className='mt-4 space-y-4 rounded-md bg-muted/50 p-4 dark:bg-background'>
             <Editor content={replyContent} onUpdate={handleReplyChange} />
             <div className='flex justify-end gap-x-2'>
               <Button onClick={() => setIsReplying(false)} type='outline'>

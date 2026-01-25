@@ -37,7 +37,7 @@ export default function MovieCard({
     const filled = index <= rating;
     return (
       <div
-        className={`p-0.5 ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-muted-foreground'}`}
+        className={`p-0.5 ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
         aria-hidden
       >
         <Icon name='star' className='size-[12px] md:size-4.5' />
@@ -56,7 +56,7 @@ export default function MovieCard({
         <>
           <div className='flex flex-1 items-center'>
             <div className='flex-shrink-0 px-4.5 py-4'>
-              <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
+              <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
                 <ImageWithFallback
                   width={35}
                   height={52}
@@ -69,7 +69,7 @@ export default function MovieCard({
               </div>
             </div>
             <div className='py-2 pr-4 space-y-1'>
-              <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
+              <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-foreground'>
                 {movie.title}
               </p>
               <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
@@ -81,7 +81,7 @@ export default function MovieCard({
           <Separator margin='0' />
 
           <div className='flex items-center gap-2 px-4.5 py-2 text-xs font-light text-muted-foreground'>
-            <span className='text-neutral-400'>Rating</span>
+            <span className='text-muted-foreground'>Rating</span>
             <div className='flex items-center gap-0.5'>
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} index={i} />
@@ -108,7 +108,7 @@ export default function MovieCard({
             {/* Hover overlay with title */}
             <div className='absolute inset-0 z-20 flex items-center justify-center p-4 opacity-0 transition-all duration-300 group-hover:opacity-100 pointer-events-none'>
               <div className='text-center max-w-full'>
-                <h2 className='text-sm font-bold tracking-wider text-white line-clamp-3 drop-shadow-md'>
+                <h2 className='text-sm font-bold tracking-wider text-foreground line-clamp-3 drop-shadow-md'>
                   {movie.title}
                 </h2>
               </div>

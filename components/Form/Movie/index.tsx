@@ -212,7 +212,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
-        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
+        <p className='mb-6 text-foreground dark:text-muted-foreground'>
           Are you sure you want to delete this movie? This action cannot be
           undone.
         </p>
@@ -268,7 +268,9 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
             </Button>
           </div>
 
-          {searchError && <p className='text-xs text-red-500'>{searchError}</p>}
+          {searchError && (
+            <p className='text-xs text-destructive'>{searchError}</p>
+          )}
 
           {searchResults.length > 0 && (
             <div className='grid grid-cols-1 gap-3'>
@@ -282,7 +284,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                   <Card key={i} onClick={() => handleSelectResult(r)}>
                     <div className='flex flex-1 items-center'>
                       <div className='flex-shrink-0 px-4.5 py-4'>
-                        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
+                        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
                           {poster ? (
                             <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-muted dark:bg-card border border-border'>
                               <ImageWithFallback
@@ -305,7 +307,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                           {title}
                         </p>
                         {actors && (
-                          <p className='text-xs text-muted-foreground dark:text-neutral-400 mt-2 line-clamp-1'>
+                          <p className='text-xs text-muted-foreground dark:text-muted-foreground mt-2 line-clamp-1'>
                             {actors}
                           </p>
                         )}
@@ -380,7 +382,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     type='button'
                     onClick={() => handleChange('rating', i)}
                     onMouseDown={(e) => e.preventDefault()}
-                    className={`p-0.5 focus:outline-none ${filled ? 'text-yellow-400' : 'text-neutral-300 dark:text-muted-foreground'}`}
+                    className={`p-0.5 focus:outline-none ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
                     aria-label={`${i} star`}
                   >
                     <div className='w-4 h-4'>

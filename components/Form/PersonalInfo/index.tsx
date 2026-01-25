@@ -79,7 +79,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               <span className='mr-3 inline-block'>👋</span>
               {personalInfo.name}
             </h1>
-            <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-neutral-300 lg:text-lg'>
+            <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-muted-foreground lg:text-lg'>
               <p>{personalInfo.title}</p>
             </div>
           </div>
@@ -95,7 +95,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               width={105}
               alt={personalInfo.name}
               priority
-              className='aspect-square object-cover rounded-xl bg-muted shadow-sm dark:border dark:border-neutral-600'
+              className='aspect-square object-cover rounded-xl bg-muted shadow-sm dark:border dark:border-border'
               type='square'
             />
           </Hover>

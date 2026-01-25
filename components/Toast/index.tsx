@@ -138,29 +138,29 @@ const getVariantProps = (
     case 'info':
       return {
         icon: 'info',
-        bgClass: 'bg-yellow-100 dark:bg-yellow-900',
-        textClass: 'text-yellow-700 dark:text-yellow-300',
-        borderClass: 'border-yellow-200 dark:border-yellow-800',
+        bgClass: 'bg-gruv-yellow/20 dark:bg-gruv-yellow/40',
+        textClass: 'text-gruv-yellow dark:text-gruv-yellow',
+        borderClass: 'border-gruv-yellow/30 dark:border-gruv-yellow/50',
       };
     case 'success':
       return {
         icon: 'checkCircle',
-        bgClass: 'bg-blue-100 dark:bg-blue-900',
-        textClass: 'text-blue-700 dark:text-blue-300',
-        borderClass: 'border-blue-200 dark:border-blue-800',
+        bgClass: 'bg-gruv-blue/20 dark:bg-gruv-blue/40',
+        textClass: 'text-gruv-blue dark:text-gruv-blue',
+        borderClass: 'border-gruv-blue/30 dark:border-gruv-blue/50',
       };
     case 'error':
       return {
         icon: 'warning',
-        bgClass: 'bg-red-100 dark:bg-red-900',
-        textClass: 'text-red-700 dark:text-red-300',
-        borderClass: 'border-red-200 dark:border-red-800',
+        bgClass: 'bg-gruv-red/20 dark:bg-gruv-red/40',
+        textClass: 'text-gruv-red dark:text-gruv-red',
+        borderClass: 'border-gruv-red/30 dark:border-gruv-red/50',
       };
     default:
       return {
         bgClass: 'bg-card',
-        textClass: 'text-neutral-800 dark:text-white',
-        borderClass: 'border-neutral-300 dark:border-neutral-600',
+        textClass: 'text-foreground dark:text-white',
+        borderClass: 'border-border dark:border-border',
       };
   }
 };

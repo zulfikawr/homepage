@@ -147,8 +147,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     <section className='mt-12 space-y-8'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-x-3'>
-          <h2 className='text-2xl font-bold dark:text-white'>Comments</h2>
-          <span className='rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-muted-foreground dark:bg-card dark:text-neutral-400'>
+          <h2 className='text-2xl font-bold dark:text-foreground'>Comments</h2>
+          <span className='rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-muted-foreground dark:bg-card dark:text-muted-foreground'>
             {comments?.length || 0}
           </span>
         </div>
@@ -174,7 +174,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                   height={32}
                   className='rounded-full'
                 />
-                <span className='font-medium dark:text-white'>
+                <span className='font-medium dark:text-foreground'>
                   {githubUsername}
                 </span>
               </div>
@@ -197,9 +197,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
           <div className='flex flex-col items-center justify-center py-8 text-center'>
             <Icon
               name='chatCenteredText'
-              className='mb-4 h-12 w-12 text-neutral-300'
+              className='mb-4 h-12 w-12 text-muted-foreground'
             />
-            <h3 className='mb-2 text-lg font-medium dark:text-white'>
+            <h3 className='mb-2 text-lg font-medium dark:text-foreground'>
               Join the conversation
             </h3>
             <p className='mb-6 text-muted-foreground'>

@@ -131,7 +131,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
             className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'
             title='Remove file'
           >
-            <Icon name='trash' className='size-5 text-white' />
+            <Icon name='trash' className='size-5 text-foreground' />
           </button>
         </div>
       )}

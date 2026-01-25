@@ -26,7 +26,7 @@ const BookCardLoading = () => (
     </div>
 
     {/* Footer: Info + Rating */}
-    <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-3 dark:border-border'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-3 dark:border-border'>
       <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
       <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
     </div>
@@ -46,7 +46,7 @@ const EmploymentCardLoading = () => (
           <div className='h-5 w-32 rounded bg-muted dark:bg-muted' />
         </div>
         {/* Location badge */}
-        <div className='h-5 w-24 rounded-full border bg-muted dark:border-neutral-600 dark:bg-muted' />
+        <div className='h-5 w-24 rounded-full border bg-muted dark:border-border dark:bg-muted' />
       </div>
 
       {/* Job details */}
@@ -133,7 +133,7 @@ const PostCardLoading = () => (
       </div>
 
       {/* Footer: Posted time + Share button */}
-      <div className='h-auto w-full border-t border-neutral-100 px-6 py-2 dark:border-border lg:px-8 lg:py-3'>
+      <div className='h-auto w-full border-t border-border px-6 py-2 dark:border-border lg:px-8 lg:py-3'>
         <div className='flex items-center justify-between whitespace-nowrap text-muted-foreground'>
           <div className='h-4 w-32 rounded bg-muted dark:bg-muted' />
           <div className='h-4 w-16 rounded bg-muted dark:bg-muted' />
@@ -167,7 +167,7 @@ const PlaylistCardLoading = () => (
       </div>
 
       {/* Footer: Spotify + Listen now */}
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
         <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
         <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
       </div>
@@ -185,7 +185,7 @@ const CertificateCardLoading = () => (
         <div className='w-full aspect-video bg-muted dark:bg-muted' />
 
         {/* Title */}
-        <div className='w-full border-b border-neutral-100 px-4 py-3 dark:border-border'>
+        <div className='w-full border-b border-border px-4 py-3 dark:border-border'>
           <div className='h-5 w-3/4 rounded bg-muted dark:bg-muted' />
         </div>
 
@@ -224,7 +224,7 @@ const CertificateCardLoading = () => (
       </div>
 
       {/* Footer */}
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
         <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
         <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
       </div>
@@ -251,7 +251,7 @@ const PublicationCardLoading = () => (
     </div>
 
     {/* Footer: Publisher + Access status */}
-    <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
       <div className='h-3 w-16 rounded bg-muted dark:bg-muted' />
       <div className='h-3 w-20 rounded bg-muted dark:bg-muted' />
     </div>

@@ -117,7 +117,7 @@ export default function SpotifyMusicContent() {
 
   if (error) {
     return (
-      <div className='p-4 text-red-500'>
+      <div className='p-4 text-destructive'>
         {error}
         <Button onClick={loadData} className='ml-4'>
           Retry
@@ -179,8 +179,8 @@ export default function SpotifyMusicContent() {
             onClick={() => setActiveTab('recent')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'recent'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
+                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
             }`}
           >
             <Icon name='playCircle' className='size-5' />
@@ -190,8 +190,8 @@ export default function SpotifyMusicContent() {
             onClick={() => setActiveTab('top')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'top'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
+                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
             }`}
           >
             <Icon name='musicNotes' className='size-5' />
@@ -201,8 +201,8 @@ export default function SpotifyMusicContent() {
             onClick={() => setActiveTab('artists')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'artists'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
+                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
             }`}
           >
             <Icon name='userCircle' className='size-5' />
@@ -212,8 +212,8 @@ export default function SpotifyMusicContent() {
             onClick={() => setActiveTab('playlists')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'playlists'
-                ? 'border-green-500 text-green-600 dark:text-green-400'
-                : 'border-transparent text-muted-foreground hover:text-neutral-700 dark:hover:text-neutral-300'
+                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
             }`}
           >
             <Icon name='playlist' className='size-5' />
@@ -237,7 +237,7 @@ export default function SpotifyMusicContent() {
                   className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
                   style={{ borderRadius: `${radius}px` }}
                 >
-                  <span className='hidden md:flex text-neutral-400 dark:text-muted-foreground w-5 text-sm'>
+                  <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
                     {index + 1}
                   </span>
                   <div className='flex-shrink-0'>
@@ -299,7 +299,7 @@ export default function SpotifyMusicContent() {
                   className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
                   style={{ borderRadius: `${radius}px` }}
                 >
-                  <span className='hidden md:flex text-neutral-400 dark:text-muted-foreground w-5 text-sm'>
+                  <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
                     {index + 1}
                   </span>
                   <div className='flex-shrink-0'>

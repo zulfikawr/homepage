@@ -39,7 +39,7 @@ export default function BookCard({
     >
       <div className='flex flex-1 items-center'>
         <div className='flex-shrink-0 px-4.5 py-4'>
-          <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-neutral-200 dark:shadow-none dark:border-neutral-600'>
+          <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
             <ImageWithFallback
               width={35}
               height={52}
@@ -52,7 +52,7 @@ export default function BookCard({
           </div>
         </div>
         <div className='py-2 pr-4 space-y-1'>
-          <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
+          <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-foreground'>
             {book.title}
           </p>
           <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
@@ -60,7 +60,7 @@ export default function BookCard({
           </p>
         </div>
       </div>
-      <div className='flex w-full items-center justify-between border-t border-neutral-100 px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-neutral-400'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
         <span>Date Added</span>
         <span>{book.dateAdded}</span>
       </div>

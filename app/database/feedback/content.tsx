@@ -25,25 +25,25 @@ const SkeletonLoader = () => {
         <TableRow>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
           >
             Date
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
           >
             Feedback
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
           >
             Contact
           </TableCell>
           <TableCell
             isHeader
-            className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+            className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
           >
             Actions
           </TableCell>
@@ -114,25 +114,25 @@ export default function FeedbackResponsesContent() {
             <TableRow>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
               >
                 Date
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
               >
                 Feedback
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
               >
                 Contact
               </TableCell>
               <TableCell
                 isHeader
-                className='bg-neutral-50 dark:bg-muted font-medium border-b border-neutral-300 dark:border-neutral-600'
+                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
               >
                 Actions
               </TableCell>

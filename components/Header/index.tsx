@@ -47,7 +47,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   type='square'
                 />
               </div>
-              <div className='text-base font-medium text-muted-foreground group-hover:text-neutral-800 dark:group-hover:text-neutral-200'>
+              <div className='text-base font-medium text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground'>
                 Zulfikar
               </div>
             </div>

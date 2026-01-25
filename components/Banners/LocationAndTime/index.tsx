@@ -121,7 +121,7 @@ const LocationAndTime = () => {
       isPreview
     >
       {isDaytime ? (
-        <div className='absolute top-4 right-4 w-10 h-10 bg-yellow-300 rounded-full' />
+        <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-yellow rounded-full' />
       ) : (
         <>
           <div className='absolute top-4 right-4 w-10 h-10 bg-white/30 rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.2)]' />

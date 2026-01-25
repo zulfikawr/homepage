@@ -30,7 +30,7 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
   };
 
   return (
-    <div className='flex-1 overflow-y-auto p-4 lg:p-12 bg-neutral-50 dark:bg-neutral-900/50'>
+    <div className='flex-1 overflow-y-auto p-4 lg:p-12 bg-muted dark:bg-background/50'>
       <div className='max-w-4xl mx-auto'>
         <section className='space-y-14 origin-top transition-all'>
           {sections
@@ -154,11 +154,11 @@ export default function SectionDatabase() {
               onDragEnd={onDragEnd}
               className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
                 draggedItem?.id === section.id
-                  ? 'opacity-50 scale-95 border-blue-500'
+                  ? 'opacity-50 scale-95 border-gruv-blue'
                   : 'opacity-100'
               } cursor-grab active:cursor-grabbing`}
             >
-              <div className='text-neutral-400 size-5 flex-shrink-0'>
+              <div className='text-muted-foreground size-5 flex-shrink-0'>
                 <Icon name='dotsSixVertical' />
               </div>
 
@@ -182,7 +182,7 @@ export default function SectionDatabase() {
         )}
       </div>
 
-      <div className='p-4 rounded-md bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 text-xs text-blue-600 dark:text-blue-400'>
+      <div className='p-4 rounded-md bg-gruv-blue/10 dark:bg-gruv-blue/30/20 border border-gruv-blue/30 dark:border-gruv-blue/50 text-xs text-gruv-blue dark:text-gruv-blue'>
         <p>
           Drag sections to change their appearance order on the home page. Use
           the switches to show or hide sections.

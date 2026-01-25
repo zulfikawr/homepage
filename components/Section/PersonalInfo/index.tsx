@@ -31,7 +31,7 @@ const PersonalInfoSection = () => {
           <span className='mr-3 inline-block'>👋</span>
           {personalInfo.name}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-neutral-300 lg:text-lg'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-muted-foreground lg:text-lg'>
           <p>{personalInfo.title}</p>
         </div>
       </div>
@@ -47,7 +47,7 @@ const PersonalInfoSection = () => {
           width={105}
           alt={personalInfo.name}
           priority
-          className='bg-muted shadow-sm dark:border dark:border-neutral-600 aspect-square object-cover'
+          className='bg-muted shadow-sm dark:border dark:border-border aspect-square object-cover'
           type='square'
         />
       </Hover>

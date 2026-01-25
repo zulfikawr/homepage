@@ -4,9 +4,6 @@ import { useBackground } from '@/contexts/backgroundContext';
 import dynamic from 'next/dynamic';
 import { useSyncExternalStore } from 'react';
 
-const CloudAndStarsBackground = dynamic(() => import('./CloudsAndStars'), {
-  ssr: false,
-});
 const WavesBackground = dynamic(() => import('./Waves'), { ssr: false });
 const TetrisBackground = dynamic(() => import('./Tetris'), { ssr: false });
 const StarsBackground = dynamic(() => import('./Stars'), { ssr: false });
@@ -32,5 +29,5 @@ export default function DynamicBackground() {
   if (background === 'stars') return <StarsBackground />;
   if (background === 'matrix') return <DigitalRainBackground />;
   if (background === 'network') return <ParticleNetworkBackground />;
-  return <CloudAndStarsBackground />;
+  return null;
 }

@@ -36,7 +36,7 @@ export default function CategoryContent({
             </Link>
             <Link
               href='/'
-              className='rounded-md border border-border px-4 py-2 text-sm hover:bg-neutral-50 dark:border-border dark:hover:bg-neutral-700'
+              className='rounded-md border border-border px-4 py-2 text-sm hover:bg-muted dark:border-border dark:hover:bg-neutral-700'
             >
               Return to Home
             </Link>

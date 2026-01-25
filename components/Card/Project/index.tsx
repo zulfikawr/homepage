@@ -72,7 +72,7 @@ export default function ProjectCard({
         {/* Main content container */}
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           {/* Name at the top */}
-          <div className='border-b border-border pb-2 text-lg font-semibold text-neutral-700 dark:border-border dark:text-white'>
+          <div className='border-b border-border pb-2 text-lg font-semibold text-foreground dark:border-border dark:text-foreground'>
             <div className='flex items-center'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
@@ -90,7 +90,7 @@ export default function ProjectCard({
           </div>
 
           {/* Description in the middle */}
-          <p className='text-sm text-muted-foreground dark:text-neutral-300'>
+          <p className='text-sm text-muted-foreground dark:text-muted-foreground'>
             {project.description}
           </p>
 

@@ -301,7 +301,7 @@ const CurrentlyListening = () => {
           <div className='absolute inset-0 overflow-hidden rounded-b-md'>
             <div className='absolute bottom-0 left-0 right-0 h-1 bg-muted/50 dark:bg-muted/50'>
               <div
-                className='h-full bg-green-500'
+                className='h-full bg-gruv-green'
                 style={{
                   width: `${Math.min(100, (progress / currentTrack.duration_ms) * 100)}%`,
                   background: 'linear-gradient(90deg, #1DB954, #1ED760)',
@@ -340,12 +340,12 @@ const CurrentlyListening = () => {
             <span className='text-xs text-muted-foreground truncate'>
               {currentTrack.album.name}
             </span>
-            <span className='text-xs text-muted-foreground dark:text-neutral-40'>
+            <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
               |
             </span>
             {isPlaying ? (
-              <span className='flex items-center gap-x-1 text-xs text-green-500'>
-                <span className='size-2 rounded-full bg-green-500 animate-pulse' />
+              <span className='flex items-center gap-x-1 text-xs text-gruv-green'>
+                <span className='size-2 rounded-full bg-gruv-green animate-pulse' />
                 <span className='truncate'>Playing now</span>
               </span>
             ) : lastPlayedAt ? (

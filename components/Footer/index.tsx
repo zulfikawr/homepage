@@ -60,11 +60,11 @@ export default function Footer() {
   return (
     <footer className='mt-20 border-b border-t border-border bg-white py-4 text-center dark:border-border dark:bg-card'>
       {/* Settings Button */}
-      <div className='fixed bottom-8 left-8 z-[9997] text-muted-foreground dark:text-neutral-300'>
+      <div className='fixed bottom-8 left-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
         <Settings />
       </div>
       {/* Scroll To Top Button */}
-      <div className='fixed bottom-8 right-8 z-[9997] text-muted-foreground dark:text-neutral-300'>
+      <div className='fixed bottom-8 right-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
         <OffsetTransition componentRef={backToTopRef}>
           <Button
             type='default'
@@ -72,7 +72,7 @@ export default function Footer() {
             icon='caretUp'
             aria-label='scroll to top'
             onClick={handleScrollToTop}
-            className='bg-card dark:hover:bg-neutral-700 w-10 h-10'
+            className='bg-card dark:hover:bg-muted w-10 h-10'
           />
         </OffsetTransition>
       </div>

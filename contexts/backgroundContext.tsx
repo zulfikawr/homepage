@@ -11,7 +11,7 @@ const BackgroundContext = createContext<{
   background: string;
   setBackground: (bg: string) => void;
 }>({
-  background: 'clouds',
+  background: 'none',
   setBackground: () => {},
 });
 
@@ -25,12 +25,12 @@ export const BackgroundProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [internalBackground, setInternalBackground] = useState('clouds');
+  const [internalBackground, setInternalBackground] = useState('none');
 
   const background = useSyncExternalStore(
     subscribe,
     () => localStorage.getItem('background') || internalBackground,
-    () => 'clouds',
+    () => 'none',
   );
 
   const setBackground = (bg: string) => {

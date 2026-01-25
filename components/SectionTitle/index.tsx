@@ -39,8 +39,8 @@ const SectionTitle = ({
       >
         {loading ? (
           <>
-            <div className='mr-1.5 h-6 w-6 rounded bg-muted dark:bg-neutral-700' />
-            <div className='h-6 w-32 rounded bg-muted dark:bg-neutral-700' />
+            <div className='mr-1.5 h-6 w-6 rounded bg-muted dark:bg-muted' />
+            <div className='h-6 w-32 rounded bg-muted dark:bg-muted' />
           </>
         ) : (
           <>
@@ -55,7 +55,7 @@ const SectionTitle = ({
         <Link
           href={link.href}
           target='_blank'
-          className='flex items-center gap-x-2 text-muted-foreground hover:text-muted-foreground dark:hover:text-neutral-300'
+          className='flex items-center gap-x-2 text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
         >
           {link.label}
           <span className='h-5 w-5'>

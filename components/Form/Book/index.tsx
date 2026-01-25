@@ -154,7 +154,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
-        <p className='mb-6 text-neutral-800 dark:text-neutral-300'>
+        <p className='mb-6 text-foreground dark:text-muted-foreground'>
           Are you sure you want to delete the following book? This action cannot
           be undone.
         </p>

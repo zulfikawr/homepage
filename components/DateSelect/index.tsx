@@ -78,7 +78,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
         <Dropdown
           trigger={
             <Button
-              className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-neutral-700 disabled:cursor-not-allowed'
+              className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
               disabled={disabled}
             >
               {value.getDate()}
@@ -105,7 +105,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-neutral-700 disabled:cursor-not-allowed'
+            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {formatMonth(value.getMonth())}
@@ -131,7 +131,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-neutral-700 disabled:cursor-not-allowed'
+            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {value.getFullYear()}

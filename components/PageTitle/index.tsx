@@ -39,12 +39,12 @@ const PageTitle = ({
   }, [emoji, title, setHeaderTitle]);
 
   const badgeStyles = {
-    red: 'rounded-full border border-red-300 bg-red-50 px-2 py-0.5 text-xs text-red-500 dark:border-red-700 dark:bg-red-800 dark:text-red-400',
+    red: 'rounded-full border border-gruv-red/30 bg-gruv-red/10 px-2 py-0.5 text-xs text-destructive dark:border-gruv-red/30 dark:bg-gruv-red/20 dark:text-gruv-red',
     yellow:
-      'rounded-full border border-yellow-300 bg-yellow-50 px-2 py-0.5 text-xs text-yellow-500 dark:border-yellow-700 dark:bg-yellow-800 dark:text-yellow-400',
+      'rounded-full border border-gruv-yellow/30 bg-gruv-yellow/10 px-2 py-0.5 text-xs text-gruv-yellow dark:border-gruv-yellow/30 dark:bg-gruv-yellow/20 dark:text-gruv-yellow',
     green:
-      'rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-xs text-green-500 dark:border-green-700 dark:bg-green-800 dark:text-green-400',
-    blue: 'rounded-full border border-blue-300 bg-blue-50 px-2 py-0.5 text-xs text-blue-500 dark:border-blue-700 dark:bg-blue-800 dark:text-blue-400',
+      'rounded-full border border-gruv-green/30 bg-gruv-green/10 px-2 py-0.5 text-xs text-gruv-green dark:border-gruv-green/30 dark:bg-gruv-green/20 dark:text-gruv-green',
+    blue: 'rounded-full border border-gruv-blue/30 bg-gruv-blue/10 px-2 py-0.5 text-xs text-gruv-blue dark:border-gruv-blue/30 dark:bg-gruv-blue/20 dark:text-gruv-blue',
   };
 
   return (

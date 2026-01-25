@@ -271,7 +271,7 @@ export default function AnalyticsContent() {
                   </div>
                   <div className='h-1.5 w-full bg-muted rounded-full overflow-hidden'>
                     <div
-                      className='h-full bg-blue-500/60 rounded-full group-hover:bg-blue-500 transition-all duration-500'
+                      className='h-full bg-gruv-blue/60 rounded-full group-hover:bg-gruv-blue transition-all duration-500'
                       style={{ width: `${(route.views / maxViews) * 100}%` }}
                     />
                   </div>
@@ -303,7 +303,7 @@ export default function AnalyticsContent() {
                     </div>
                     <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
                       <div
-                        className='h-full bg-purple-500/60 rounded-full'
+                        className='h-full bg-gruv-aqua/60 rounded-full'
                         style={{ width: `${device.percentage}%` }}
                       />
                     </div>

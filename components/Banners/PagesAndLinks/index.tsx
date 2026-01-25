@@ -30,7 +30,7 @@ const PagesAndLinks = () => {
         <div className='hidden md:block'>
           <Tooltip text='All Pages'>
             <Link href='/pages'>
-              <Button className='h-7 p-1 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'>
+              <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
                 <span className='size-5'>
                   <Icon name='caretRight' />
                 </span>
@@ -40,7 +40,7 @@ const PagesAndLinks = () => {
         </div>
         <div className='block md:hidden'>
           <Link href='/pages'>
-            <Button className='h-7 p-1 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'>
+            <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
               <span className='size-5'>
                 <Icon name='caretRight' />
               </span>
@@ -53,7 +53,7 @@ const PagesAndLinks = () => {
           <Link href='/contacts'>
             <Button
               icon='addressBook'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Contacts
             </Button>
@@ -66,7 +66,7 @@ const PagesAndLinks = () => {
           >
             <Button
               icon='filePdf'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Résumé
             </Button>
@@ -75,7 +75,7 @@ const PagesAndLinks = () => {
           <Link href='/projects'>
             <Button
               icon='package'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Projects
             </Button>
@@ -84,7 +84,7 @@ const PagesAndLinks = () => {
           <Link href='/publications'>
             <Button
               icon='newspaper'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Publications
             </Button>
@@ -93,7 +93,7 @@ const PagesAndLinks = () => {
           <Link href='/music'>
             <Button
               icon='musicNotes'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Music
             </Button>
@@ -102,7 +102,7 @@ const PagesAndLinks = () => {
           <Link href='/feedback'>
             <Button
               icon='chatCenteredText'
-              className='h-7 px-3 hover:bg-muted/50 dark:bg-muted dark:hover:bg-neutral-600 tracking-normal'
+              className='h-7 px-3 dark:bg-muted tracking-normal'
             >
               Feedback
             </Button>
