@@ -22,7 +22,7 @@ const PagesAndLinks = () => {
     <Card isPreview>
       <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
         <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
-          <span className='size-5'>
+          <span className='size-5 text-gruv-aqua'>
             <Icon name='cube' />
           </span>
           <span>Pages & Links</span>
@@ -52,9 +52,11 @@ const PagesAndLinks = () => {
         <div className='flex items-center gap-x-2.5'>
           <Link href='/contacts'>
             <Button
-              icon='addressBook'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-gruv-aqua group-hover/btn:text-accent-foreground'>
+                <Icon name='addressBook' />
+              </span>
               Contacts
             </Button>
           </Link>
@@ -65,45 +67,55 @@ const PagesAndLinks = () => {
             rel='noopener noreferrer'
           >
             <Button
-              icon='filePdf'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-gruv-red group-hover/btn:text-accent-foreground'>
+                <Icon name='filePdf' />
+              </span>
               Résumé
             </Button>
           </Link>
 
           <Link href='/projects'>
             <Button
-              icon='package'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-gruv-yellow group-hover/btn:text-accent-foreground'>
+                <Icon name='package' />
+              </span>
               Projects
             </Button>
           </Link>
 
           <Link href='/publications'>
             <Button
-              icon='newspaper'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-gruv-green group-hover/btn:text-accent-foreground'>
+                <Icon name='newspaper' />
+              </span>
               Publications
             </Button>
           </Link>
 
           <Link href='/music'>
             <Button
-              icon='musicNotes'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-gruv-blue group-hover/btn:text-accent-foreground'>
+                <Icon name='musicNotes' />
+              </span>
               Music
             </Button>
           </Link>
 
           <Link href='/feedback'>
             <Button
-              icon='chatCenteredText'
-              className='h-7 px-3 dark:bg-muted tracking-normal'
+              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
             >
+              <span className='size-5 flex-shrink-0 text-primary group-hover/btn:text-accent-foreground'>
+                <Icon name='chatCenteredText' />
+              </span>
               Feedback
             </Button>
           </Link>

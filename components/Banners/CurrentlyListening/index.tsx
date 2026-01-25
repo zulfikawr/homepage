@@ -263,7 +263,7 @@ const CurrentlyListening = () => {
             <div className='flex gap-2'>
               <button
                 onClick={() => (window.location.href = getSpotifyAuthUrl())}
-                className='flex-1 flex items-center justify-center gap-2 bg-[#1DB954] text-white py-2 px-4 rounded-md hover:bg-[#1ed760] transition-colors'
+                className='flex-1 flex items-center justify-center gap-2 bg-[#1DB954] text-gruv-bg font-bold py-2 px-4 rounded-md hover:bg-[#1ed760] transition-colors'
               >
                 <Icon name='spotifyLogo' className='size-5' />
                 <span>Connect with Spotify</span>
@@ -285,7 +285,7 @@ const CurrentlyListening = () => {
     <Card isPreview>
       <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
-          <Icon name='musicNotes' className='size-5' />
+          <Icon name='musicNotes' className='size-5 text-gruv-green' />
           <span className='h-5'>
             {isPlaying ? 'Currently Listening' : 'Last Played'}
           </span>
@@ -330,21 +330,21 @@ const CurrentlyListening = () => {
         </Hover>
 
         <div className='flex-1 min-w-0 space-y-1'>
-          <h3 className='font-medium text-md text-foreground truncate'>
+          <h3 className='font-bold text-md text-gruv-aqua truncate'>
             {currentTrack.name}
           </h3>
-          <p className='text-sm text-muted-foreground truncate'>
+          <p className='text-sm text-gruv-yellow font-medium truncate'>
             {currentTrack.artists.map((artist) => artist.name).join(', ')}
           </p>
           <div className='flex items-center gap-x-2'>
-            <span className='text-xs text-muted-foreground truncate'>
+            <span className='text-xs text-gruv-blue truncate'>
               {currentTrack.album.name}
             </span>
             <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
               |
             </span>
             {isPlaying ? (
-              <span className='flex items-center gap-x-1 text-xs text-gruv-green'>
+              <span className='flex items-center gap-x-1 text-xs text-gruv-green font-medium'>
                 <span className='size-2 rounded-full bg-gruv-green animate-pulse' />
                 <span className='truncate'>Playing now</span>
               </span>

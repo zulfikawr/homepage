@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
@@ -25,6 +26,22 @@ const SectionTitle = ({
   const { effectEnabled } = useEffectToggle();
   const { radius } = useRadius();
 
+  const iconColor = useMemo(() => {
+    if (!title) return 'text-primary';
+    const colors = [
+      'text-gruv-aqua',
+      'text-gruv-green',
+      'text-gruv-yellow',
+      'text-gruv-blue',
+      'text-gruv-red',
+      'text-primary',
+    ];
+    const charCodeSum = title
+      .split('')
+      .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    return colors[charCodeSum % colors.length];
+  }, [title]);
+
   return (
     <div
       className={`flex items-center relative z-10 mb-5 ${link && !loading ? 'justify-between' : 'justify-start'}`}
@@ -32,7 +49,7 @@ const SectionTitle = ({
       <div
         className={`inline-flex items-center border shadow-md px-4 py-[4px] font-medium tracking-wider ${
           effectEnabled
-            ? 'border-white/20 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md'
+            ? 'border-primary/10 dark:border-primary/5 bg-card/50 dark:bg-card/30 backdrop-blur-md'
             : 'border-border bg-card'
         } ${loading ? 'animate-pulse' : ''}`}
         style={{ borderRadius: `${radius}px` }}
@@ -44,7 +61,7 @@ const SectionTitle = ({
           </>
         ) : (
           <>
-            <span className={`mr-1.5 flex h-5 w-5 ${iconClassName}`}>
+            <span className={`mr-1.5 flex h-5 w-5 ${iconColor} ${iconClassName}`}>
               {icon && <Icon name={icon} />}
             </span>
             <span className='block uppercase'>{title}</span>
@@ -55,7 +72,7 @@ const SectionTitle = ({
         <Link
           href={link.href}
           target='_blank'
-          className='flex items-center gap-x-2 text-muted-foreground hover:text-muted-foreground dark:hover:text-muted-foreground'
+          className='flex items-center gap-x-2 text-muted-foreground hover:text-primary transition-colors'
         >
           {link.label}
           <span className='h-5 w-5'>

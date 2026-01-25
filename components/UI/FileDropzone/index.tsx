@@ -90,7 +90,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-6 shadow-sm focus:outline-none dark:border-border dark:bg-muted min-h-[200px]',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
-            : 'hover:bg-muted/50 dark:hover:bg-white/20',
+            : 'hover:bg-muted/50 dark:hover:bg-primary/10',
           fileName || value ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}

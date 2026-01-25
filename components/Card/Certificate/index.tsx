@@ -70,7 +70,7 @@ export default function CertificateCard({
             <p className='text-xs font-light text-muted-foreground'>
               Issued {certificate.dateIssued}
             </p>
-            <p className='text-xs font-light text-muted-foreground'>
+            <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded w-fit'>
               Credential ID: {certificate.credentialId}
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function CertificateCard({
               Issued {certificate.dateIssued}
             </p>
             <span className='text-muted-foreground font-light text-xs'>|</span>
-            <p className='text-xs font-light text-muted-foreground'>
+            <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded'>
               Credential ID: {certificate.credentialId}
             </p>
           </div>
@@ -122,9 +122,9 @@ export default function CertificateCard({
       </div>
 
       {/* Footer */}
-      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
-        <span>Certificate</span>
-        <span>View</span>
+      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-medium text-muted-foreground dark:border-border dark:text-muted-foreground'>
+        <span className='text-gruv-aqua'>Certificate</span>
+        <span className='text-gruv-blue hover:underline cursor-pointer'>View</span>
       </div>
     </Card>
   );

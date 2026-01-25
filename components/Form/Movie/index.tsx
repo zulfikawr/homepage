@@ -303,7 +303,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                         </div>
                       </div>
                       <div className='py-2 pr-4 space-y-1'>
-                        <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-white'>
+                        <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-foreground'>
                           {title}
                         </p>
                         {actors && (

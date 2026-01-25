@@ -105,7 +105,7 @@ const Modal = () => {
   return (
     <div className={`fixed inset-0 z-[9999] ${isVisible ? 'block' : 'hidden'}`}>
       <div
-        className={`absolute inset-0 bg-black/50 transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
           animation === 'in' ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleClose}

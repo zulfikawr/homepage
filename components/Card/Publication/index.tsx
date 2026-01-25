@@ -44,9 +44,22 @@ export default function PublicationCard({
           {publication.authors.join(', ')}
         </p>
         <div className='flex flex-wrap gap-2 pt-2'>
-          {publication.keywords.map((keyword, index) => (
-            <Badge key={index}>{keyword}</Badge>
-          ))}
+          {publication.keywords.map((keyword, index) => {
+            const colors: (
+              | 'aqua'
+              | 'green'
+              | 'yellow'
+              | 'blue'
+              | 'red'
+              | 'default'
+            )[] = ['blue', 'aqua', 'green', 'yellow', 'red'];
+            const badgeType = colors[index % colors.length];
+            return (
+              <Badge key={index} type={badgeType}>
+                {keyword}
+              </Badge>
+            );
+          })}
         </div>
       </div>
 
@@ -54,12 +67,12 @@ export default function PublicationCard({
         <span>{publication.publisher}</span>
         <span>
           {publication.openAccess ? (
-            <span className='flex items-center gap-2'>
+            <span className='flex items-center gap-2 text-gruv-green font-medium'>
               <Icon name='lockOpen' className='size-4.5' />
               Open Access
             </span>
           ) : (
-            <span className='flex items-center gap-2'>
+            <span className='flex items-center gap-2 text-gruv-red font-medium'>
               <Icon name='lock' className='size-4.5' />
               Restricted Access
             </span>

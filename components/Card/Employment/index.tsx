@@ -63,19 +63,19 @@ export default function EmploymentCard({
               height={24}
               width={24}
               alt={`${employment.organization} logo`}
-              className='rounded-full border bg-white dark:border-border'
+              className='rounded-full border bg-muted dark:border-border'
               type='square'
             />
           )}
           <p>{employment.organization}</p>
         </div>
-        <Badge icon='mapPin'>{employment.organizationLocation}</Badge>
+        <Badge type='yellow' icon='mapPin'>{employment.organizationLocation}</Badge>
       </div>
       <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
-        <div className='text-sm tracking-wide text-muted-foreground dark:text-muted-foreground'>
+        <div className='text-sm font-medium tracking-wide text-foreground dark:text-foreground'>
           <p>{employment.jobTitle}</p>
         </div>
-        <div className='flex flex-col items-start text-xs font-medium text-muted-foreground lg:items-center'>
+        <div className='flex flex-col items-start text-xs font-medium text-gruv-blue lg:items-center'>
           {employment.dateString}
         </div>
       </div>
@@ -85,9 +85,9 @@ export default function EmploymentCard({
           <p className='text-sm text-muted-foreground'>
             {trimStr(employment.organizationIndustry, 25)}
           </p>
-          <p className='text-sm text-muted-foreground'>
+          <Badge type='aqua' className='text-[10px] px-1.5 py-0'>
             {formatJobType(employment.jobType)}
-          </p>
+          </Badge>
         </div>
       )}
     </Card>

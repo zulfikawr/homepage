@@ -5,7 +5,14 @@ import { Icon, IconName, iconMap, iconifyMap } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 import { twMerge } from 'tailwind-merge';
 
-type LabelTypes = 'primary' | 'secondary';
+type LabelTypes =
+  | 'primary'
+  | 'secondary'
+  | 'aqua'
+  | 'green'
+  | 'yellow'
+  | 'blue'
+  | 'red';
 
 interface Props {
   type: LabelTypes;
@@ -39,6 +46,11 @@ const Label = ({
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary:
       'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:animate-pulse',
+    aqua: 'bg-gruv-aqua text-gruv-bg hover:opacity-90',
+    green: 'bg-gruv-green text-gruv-bg hover:opacity-90',
+    yellow: 'bg-gruv-yellow text-gruv-bg hover:opacity-90',
+    blue: 'bg-gruv-blue text-gruv-bg hover:opacity-90',
+    red: 'bg-gruv-red text-white hover:opacity-90',
   };
 
   return (

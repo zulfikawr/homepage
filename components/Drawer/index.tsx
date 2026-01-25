@@ -187,7 +187,7 @@ const Drawer = () => {
     <div className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}>
       {/* Overlay */}
       <div
-        className={`absolute inset-0 bg-black/50 transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
           animation === 'in' ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleClose}
@@ -201,7 +201,7 @@ const Drawer = () => {
           ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}
           ${
             effectEnabled
-              ? 'bg-white/70 dark:bg-background/70 border-white/20 dark:border-white/10 backdrop-blur-xl shadow-2xl'
+              ? 'bg-background/80 dark:bg-background/70 border-primary/10 dark:border-primary/5 backdrop-blur-xl shadow-2xl'
               : 'bg-background border-border dark:border-border'
           }`}
         style={{

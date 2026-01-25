@@ -128,10 +128,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           <Image src={previewUrl} alt='Preview' fill className='object-cover' />
           <button
             onClick={handleRemove}
-            className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'
+            className='absolute inset-0 bg-card/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'
             title='Remove file'
           >
-            <Icon name='trash' className='size-5 text-foreground' />
+            <Icon name='trash' className='size-5 text-primary' />
           </button>
         </div>
       )}

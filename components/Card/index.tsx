@@ -33,10 +33,10 @@ const Card: React.FC<CardProps> = ({
 
   const effectStyles = effectEnabled
     ? isActive
-      ? 'bg-primary/20 dark:bg-primary/30 border-primary/50 dark:border-primary/50 backdrop-blur-md'
-      : 'bg-white/50 dark:bg-white/5 border-white/20 dark:border-white/10 backdrop-blur-md'
+      ? 'bg-primary/20 dark:bg-primary/30 border-primary/30 dark:border-primary/20 backdrop-blur-md'
+      : 'bg-card/50 dark:bg-card/30 border-primary/10 dark:border-primary/5 backdrop-blur-md'
     : isActive
-      ? 'bg-primary/10 border-primary dark:border-primary'
+      ? 'bg-primary/10 border-primary/50 dark:border-primary/40'
       : 'bg-card border-border backdrop-blur-none';
 
   const interactiveStyles =

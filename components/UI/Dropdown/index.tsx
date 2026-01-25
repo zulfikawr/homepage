@@ -103,7 +103,7 @@ const Dropdown = ({
   };
 
   const effectStyles = effectEnabled
-    ? 'bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md'
+    ? 'bg-popover/50 dark:bg-card/30 border border-primary/10 dark:border-primary/5 backdrop-blur-md'
     : 'bg-popover border border-border backdrop-blur-none';
 
   return (

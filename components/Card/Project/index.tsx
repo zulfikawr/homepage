@@ -72,7 +72,7 @@ export default function ProjectCard({
         {/* Main content container */}
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           {/* Name at the top */}
-          <div className='border-b border-border pb-2 text-lg font-semibold text-foreground dark:border-border dark:text-foreground'>
+          <div className='border-b border-border pb-2 text-lg text-foreground font-semibold dark:border-border'>
             <div className='flex items-center'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
@@ -90,17 +90,28 @@ export default function ProjectCard({
           </div>
 
           {/* Description in the middle */}
-          <p className='text-sm text-muted-foreground dark:text-muted-foreground'>
+          <p className='text-sm text-muted-foreground'>
             {project.description}
           </p>
 
           {/* Tools at the bottom */}
           <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 dark:border-border'>
-            {project.tools.map((tool, index) => (
-              <Badge key={index} icon>
-                {tool}
-              </Badge>
-            ))}
+            {project.tools.map((tool, index) => {
+              const colors: (
+                | 'aqua'
+                | 'green'
+                | 'yellow'
+                | 'blue'
+                | 'red'
+                | 'default'
+              )[] = ['aqua', 'green', 'yellow', 'blue', 'red'];
+              const badgeType = colors[index % colors.length];
+              return (
+                <Badge key={index} type={badgeType} icon>
+                  {tool}
+                </Badge>
+              );
+            })}
           </div>
         </div>
       </div>

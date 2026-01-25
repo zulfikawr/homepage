@@ -13,18 +13,18 @@ const FlipNumber = ({ number }: { number: string }) => {
 
   return (
     <div
-      className='relative w-8 h-12 bg-white/10 overflow-hidden mx-0.5'
+      className='relative w-8 h-12 bg-gruv-bg/40 overflow-hidden mx-0.5'
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
-        <span className='text-xl font-mono font-bold text-white'>{number}</span>
+        <span className='text-xl font-mono font-bold text-gruv-fg'>{number}</span>
       </div>
     </div>
   );
 };
 
 const Separator = () => (
-  <div className='mx-1 text-white/80 text-xl font-bold'>:</div>
+  <div className='mx-1 text-gruv-fg/80 text-xl font-bold'>:</div>
 );
 
 const LocationAndTime = () => {
@@ -114,8 +114,8 @@ const LocationAndTime = () => {
       className={`relative w-full min-h-[120px] overflow-hidden
         ${
           isDaytime
-            ? 'bg-gradient-to-br from-blue-400 to-yellow-300'
-            : 'bg-gradient-to-br from-[#0B1026] to-[#1B103F]'
+            ? 'bg-gradient-to-br from-gruv-blue/40 to-gruv-yellow/30'
+            : 'bg-gradient-to-br from-[#1d2021] to-[#32302f]'
         }
       `}
       isPreview
@@ -124,12 +124,12 @@ const LocationAndTime = () => {
         <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-yellow rounded-full' />
       ) : (
         <>
-          <div className='absolute top-4 right-4 w-10 h-10 bg-white/30 rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.2)]' />
+          <div className='absolute top-4 right-4 w-10 h-10 bg-gruv-fg/20 rounded-full shadow-[0_0_20px_5px_rgba(235,219,178,0.1)]' />
           <div className='absolute inset-0 overflow-hidden'>
             {stars.map((star, index) => (
               <div
                 key={index}
-                className='absolute bg-white rounded-full twinkling-star'
+                className='absolute bg-gruv-fg rounded-full twinkling-star'
                 style={{
                   top: `${star.top}%`,
                   left: `${star.left}%`,
@@ -149,12 +149,12 @@ const LocationAndTime = () => {
         <div className='flex flex-col items-start space-y-4'>
           <div className='flex items-center justify-between w-full'>
             <div className='flex items-center gap-2'>
-              <Icon name='mapPin' className='size-5 text-white' />
-              <h2 className='text-[15px] font-medium text-white'>
+              <Icon name='mapPin' className='size-5 text-gruv-aqua' />
+              <h2 className='text-[15px] font-medium text-gruv-fg'>
                 Jakarta, Indonesia
               </h2>
             </div>
-            <div className='text-white/80 text-sm font-medium'>
+            <div className='text-gruv-blue font-medium text-sm'>
               {timeData.date}
             </div>
           </div>
@@ -168,12 +168,12 @@ const LocationAndTime = () => {
               <FlipNumber number={timeData.seconds} />
               <div className='ml-2 flex flex-col justify-between h-12'>
                 <span
-                  className={`text-xs font-medium ${timeData.ampm === 'AM' ? 'text-white' : 'text-white/50'}`}
+                  className={`text-xs font-bold ${timeData.ampm === 'AM' ? 'text-gruv-yellow' : 'text-gruv-fg/30'}`}
                 >
                   AM
                 </span>
                 <span
-                  className={`text-xs font-medium ${timeData.ampm === 'PM' ? 'text-white' : 'text-white/50'}`}
+                  className={`text-xs font-bold ${timeData.ampm === 'PM' ? 'text-gruv-blue' : 'text-gruv-fg/30'}`}
                 >
                   PM
                 </span>

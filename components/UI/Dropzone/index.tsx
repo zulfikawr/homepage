@@ -103,7 +103,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             : 'aspect-square max-w-[200px]',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
-            : 'hover:bg-muted/50 dark:hover:bg-white/20',
+            : 'hover:bg-muted/50 dark:hover:bg-primary/10',
           previewUrl ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}
@@ -131,7 +131,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
                 previewUrl.startsWith('blob:') || previewUrl.startsWith('http')
               }
             />
-            <div className='absolute inset-0 bg-black/50 opacity-0 group-hover/dropzone:opacity-100 transition-opacity flex items-center justify-center gap-3'>
+            <div className='absolute inset-0 bg-card/60 opacity-0 group-hover/dropzone:opacity-100 transition-opacity flex items-center justify-center gap-3'>
               <Button
                 type='destructive'
                 icon='trash'
@@ -140,7 +140,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
               >
                 Remove
               </Button>
-              <div className='bg-white/10 backdrop-blur-md text-foreground px-4 h-10 flex items-center rounded-md border border-white/20 text-sm font-medium'>
+              <div className='bg-card/30 backdrop-blur-md text-foreground px-4 h-10 flex items-center rounded-md border border-primary/10 text-sm font-medium'>
                 Click to replace
               </div>
             </div>

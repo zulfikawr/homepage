@@ -72,7 +72,7 @@ export default function MovieCard({
               <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-foreground'>
                 {movie.title}
               </p>
-              <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-light tracking-wide text-muted-foreground lg:text-sm'>
+              <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-medium tracking-wide text-gruv-aqua lg:text-sm'>
                 Released {movie.releaseDate}
               </p>
             </div>
@@ -81,7 +81,7 @@ export default function MovieCard({
           <Separator margin='0' />
 
           <div className='flex items-center gap-2 px-4.5 py-2 text-xs font-light text-muted-foreground'>
-            <span className='text-muted-foreground'>Rating</span>
+            <span className='text-gruv-aqua/80 font-medium'>Rating</span>
             <div className='flex items-center gap-0.5'>
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} index={i} />

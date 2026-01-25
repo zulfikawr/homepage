@@ -148,7 +148,7 @@ export default function PostCard({
           </span>
           <span className='flex items-center'>
             <button
-              className='effect-pressing flex items-center gap-x-2 hover:text-muted-foreground dark:hover:text-muted-foreground'
+              className='effect-pressing flex items-center gap-x-2 cursor-pointer transition-colors hover:text-primary'
               onClick={handleShare}
             >
               <Icon name='share' size={15} />

@@ -62,12 +62,12 @@ const Slider = ({
 
         input[type='range'].slider-thumb::-webkit-slider-runnable-track {
           height: 0.5rem;
-          background-color: #d1d5db;
+          background-color: #ebdbb2;
           border-radius: var(--radius);
         }
 
         .dark input[type='range'].slider-thumb::-webkit-slider-runnable-track {
-          background-color: #525252;
+          background-color: #3c3836;
         }
 
         input[type='range'].slider-thumb::-webkit-slider-thumb {
@@ -75,44 +75,45 @@ const Slider = ({
           height: 1rem;
           width: 1rem;
           margin-top: -0.25rem;
-          background-color: #fff;
-          border: 2px solid #3b82f6;
+          background-color: #fe8019;
+          border: 2px solid #fe8019;
           border-radius: var(--radius);
           box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
           transition: background-color 0.2s ease;
         }
 
         .dark input[type='range'].slider-thumb::-webkit-slider-thumb {
-          border: none;
+          background-color: #fe8019;
+          border: 2px solid #fe8019;
         }
 
         input[type='range'].slider-thumb:disabled::-webkit-slider-thumb {
-          background-color: #e5e7eb;
-          border-color: #9ca3af;
+          background-color: #a89984;
+          border-color: #7c6f64;
         }
 
         input[type='range'].slider-thumb::-moz-range-track {
           height: 0.5rem;
-          background-color: #d1d5db;
+          background-color: #ebdbb2;
           border-radius: var(--radius);
         }
 
         .dark input[type='range'].slider-thumb::-moz-range-track {
-          background-color: #525252;
+          background-color: #3c3836;
         }
 
         input[type='range'].slider-thumb::-moz-range-thumb {
           height: 1rem;
           width: 1rem;
-          background-color: #fff;
-          border: 2px solid #3b82f6;
+          background-color: #fe8019;
+          border: 2px solid #fe8019;
           border-radius: var(--radius);
           box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
         input[type='range'].slider-thumb:disabled::-moz-range-thumb {
-          background-color: #e5e7eb;
-          border-color: #9ca3af;
+          background-color: #a89984;
+          border-color: #7c6f64;
         }
       `}</style>
     </div>

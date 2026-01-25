@@ -1,7 +1,7 @@
 import { Separator } from '@/components/UI/Separator';
 
 const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
-  <div className='relative flex w-full flex-col rounded-md border bg-white shadow-sm dark:border-border dark:bg-card'>
+  <div className='relative flex w-full flex-col rounded-md border bg-card shadow-sm dark:border-border dark:bg-card'>
     <div className='animate-pulse'>{children}</div>
   </div>
 );

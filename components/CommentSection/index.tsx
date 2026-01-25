@@ -216,7 +216,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       <div className='space-y-6'>
         {isLoading ? (
           <div className='flex justify-center py-12'>
-            <div className='h-8 w-8 animate-spin rounded-full border-4 border-border border-t-primary' />
+            <div className='h-8 w-8 animate-spin rounded-full border-4 border-primary/10 border-t-primary' />
           </div>
         ) : comments && comments.length > 0 ? (
           comments

@@ -32,7 +32,7 @@ const Switch = ({
         disabled={disabled}
         className={twMerge(
           'relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center border-2 border-transparent transition-colors duration-200 ease-in-out overflow-hidden',
-          checked ? 'bg-primary' : 'bg-muted',
+          checked ? 'bg-gruv-aqua' : 'bg-muted',
           disabled && 'opacity-50 cursor-not-allowed',
         )}
         style={{ borderRadius: `${radius}px` }}
@@ -40,7 +40,7 @@ const Switch = ({
         <span
           aria-hidden='true'
           className={twMerge(
-            'absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 transform bg-background shadow ring-0 transition duration-200 ease-in-out',
+            'absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 transform bg-primary shadow ring-0 transition duration-200 ease-in-out',
             checked ? 'translate-x-[1rem]' : 'translate-x-0',
           )}
           style={{ borderRadius: `${radius}px` }}
