@@ -190,6 +190,15 @@ body::-webkit-scrollbar {
   @apply prose-base dark:prose-invert tracking-wide;
 }
 
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply text-foreground font-bold;
+}
+
+.prose h1 { @apply text-gruv-orange; }
+.prose h2 { @apply text-gruv-aqua; }
+.prose h3 { @apply text-gruv-yellow; }
+.prose h4 { @apply text-gruv-blue; }
+
 .prose p {
   @apply my-4 leading-relaxed text-muted-foreground;
 }
@@ -287,4 +296,9 @@ html {
 .prose h3[id],
 .prose h4[id] {
   scroll-margin-top: 120px;
+}
+
+/* Fix highlight.js background color to match theme */
+.hljs {
+  background: transparent !important;
 }

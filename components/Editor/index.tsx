@@ -341,7 +341,7 @@ const Editor: React.FC<EditorProps> = ({
             onSelect={updateCursorStyles}
             style={sharedStyles}
             className={twMerge(
-              'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-neutral-900 dark:caret-neutral-100 resize-none focus:outline-none overflow-hidden',
+              'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-primary resize-none focus:outline-none overflow-hidden',
               textareaClassName,
             )}
             placeholder='Write your markdown here...'
