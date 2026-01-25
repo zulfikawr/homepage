@@ -90,9 +90,7 @@ export default function ProjectCard({
           </div>
 
           {/* Description in the middle */}
-          <p className='text-sm text-muted-foreground'>
-            {project.description}
-          </p>
+          <p className='text-sm text-muted-foreground'>{project.description}</p>
 
           {/* Tools at the bottom */}
           <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 dark:border-border'>

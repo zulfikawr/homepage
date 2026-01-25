@@ -6,7 +6,9 @@ export default function ParticleNetworkBackground() {
 
   const isDark = resolvedTheme === 'dark';
   const particleColor = '#83a598'; // gruv-blue
-  const lineColor = isDark ? 'rgba(235, 219, 178, 0.2)' : 'rgba(60, 56, 54, 0.2)'; // gruv-fg with opacity
+  const lineColor = isDark
+    ? 'rgba(235, 219, 178, 0.2)'
+    : 'rgba(60, 56, 54, 0.2)'; // gruv-fg with opacity
 
   return (
     <div className='fixed inset-0 -z-10 h-screen w-screen pointer-events-none overflow-hidden'>

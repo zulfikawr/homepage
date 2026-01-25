@@ -54,10 +54,11 @@ export const getAccessToken = async () => {
       // Refresh token
       const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
       const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
-      
-      const authHeader = typeof btoa !== 'undefined' 
-        ? btoa(`${clientId}:${clientSecret}`)
-        : Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+      const authHeader =
+        typeof btoa !== 'undefined'
+          ? btoa(`${clientId}:${clientSecret}`)
+          : Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
       const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',

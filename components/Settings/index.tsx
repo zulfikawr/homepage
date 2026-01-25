@@ -43,10 +43,10 @@ export default function Settings() {
           aria-label='Open settings'
           className='bg-card w-10 h-10 p-0 transition-colors group/btn'
         >
-          <Icon 
-            name='gear' 
-            size={20} 
-            className='text-primary group-hover/btn:text-accent-foreground transition-colors' 
+          <Icon
+            name='gear'
+            size={20}
+            className='text-primary group-hover/btn:text-accent-foreground transition-colors'
           />
         </Button>
       }

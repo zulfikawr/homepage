@@ -69,7 +69,9 @@ export default function EmploymentCard({
           )}
           <p>{employment.organization}</p>
         </div>
-        <Badge type='yellow' icon='mapPin'>{employment.organizationLocation}</Badge>
+        <Badge type='yellow' icon='mapPin'>
+          {employment.organizationLocation}
+        </Badge>
       </div>
       <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
         <div className='text-sm font-medium tracking-wide text-foreground dark:text-foreground'>

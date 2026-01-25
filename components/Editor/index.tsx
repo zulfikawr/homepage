@@ -274,27 +274,34 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <div className={twMerge('flex flex-col', className)}>
-      <div className='relative flex items-center bg-muted dark:bg-card rounded-t-md border border-b-0 border-border dark:border-border shrink-0 overflow-visible'>
-        {/* Scrollable Formatting Tools */}
-        <div className='flex flex-nowrap items-center gap-2 px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
-          {toolbarButtons.map((button, index) => (
-            <Tooltip key={index} text={button.label} position='top'>
-              <Toggle
-                isActive={button.active}
-                onChange={(e) => {
-                  if (e && 'preventDefault' in e) e.preventDefault();
-                  handleToolbarAction(button.label);
-                }}
-                className='px-2 rounded-md'
+      <div className='relative flex items-center bg-muted dark:bg-card rounded-t-md border border-b-0 border-border dark:border-border shrink-0 cursor-default overflow-visible'>
+        {/* Formatting Tools */}
+        <div className='flex flex-1 items-center px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mt-20 pt-20 -ml-20 pl-20'>
+          <div className='flex items-center gap-2 overflow-visible min-w-max h-9'>
+            {toolbarButtons.map((button, index) => (
+              <Tooltip
+                key={index}
+                text={button.label}
+                position='top'
+                align='center'
               >
-                <Icon name={button.icon} className='w-5 h-5' />
-              </Toggle>
-            </Tooltip>
-          ))}
+                <Toggle
+                  isActive={button.active}
+                  onChange={(e) => {
+                    if (e && 'preventDefault' in e) e.preventDefault();
+                    handleToolbarAction(button.label);
+                  }}
+                  className='px-2 rounded-md'
+                >
+                  <Icon name={button.icon} className='w-5 h-5' />
+                </Toggle>
+              </Tooltip>
+            ))}
+          </div>
         </div>
 
         {/* Fixed Preview Button */}
-        <div className='flex items-center px-2 py-1 border-l border-border dark:border-border bg-muted dark:bg-card ml-auto shrink-0 sticky right-0'>
+        <div className='flex items-center px-2 py-1 border-l border-border dark:border-border bg-muted dark:bg-card ml-auto shrink-0 sticky right-0 z-10'>
           <Tooltip text='Preview' position='top'>
             <Button
               type='ghost'
@@ -303,7 +310,7 @@ const Editor: React.FC<EditorProps> = ({
                 e.preventDefault();
                 handlePreview();
               }}
-              className='px-2 h-8'
+              className='px-2 h-8 cursor-pointer'
             />
           </Tooltip>
         </div>

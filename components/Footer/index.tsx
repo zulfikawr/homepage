@@ -73,10 +73,10 @@ export default function Footer() {
             onClick={handleScrollToTop}
             className='bg-card w-10 h-10 p-0 transition-colors group/btn'
           >
-            <Icon 
-              name='caretUp' 
-              size={20} 
-              className='text-primary group-hover/btn:text-accent-foreground transition-colors' 
+            <Icon
+              name='caretUp'
+              size={20}
+              className='text-primary group-hover/btn:text-accent-foreground transition-colors'
             />
           </Button>
         </OffsetTransition>

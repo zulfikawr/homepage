@@ -51,9 +51,7 @@ const PagesAndLinks = () => {
       <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4'>
         <div className='flex items-center gap-x-2.5'>
           <Link href='/contacts'>
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-gruv-aqua group-hover/btn:text-accent-foreground'>
                 <Icon name='addressBook' />
               </span>
@@ -66,9 +64,7 @@ const PagesAndLinks = () => {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-gruv-red group-hover/btn:text-accent-foreground'>
                 <Icon name='filePdf' />
               </span>
@@ -77,9 +73,7 @@ const PagesAndLinks = () => {
           </Link>
 
           <Link href='/projects'>
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-gruv-yellow group-hover/btn:text-accent-foreground'>
                 <Icon name='package' />
               </span>
@@ -88,9 +82,7 @@ const PagesAndLinks = () => {
           </Link>
 
           <Link href='/publications'>
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-gruv-green group-hover/btn:text-accent-foreground'>
                 <Icon name='newspaper' />
               </span>
@@ -99,9 +91,7 @@ const PagesAndLinks = () => {
           </Link>
 
           <Link href='/music'>
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-gruv-blue group-hover/btn:text-accent-foreground'>
                 <Icon name='musicNotes' />
               </span>
@@ -110,9 +100,7 @@ const PagesAndLinks = () => {
           </Link>
 
           <Link href='/feedback'>
-            <Button
-              className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'
-            >
+            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
               <span className='size-5 flex-shrink-0 text-primary group-hover/btn:text-accent-foreground'>
                 <Icon name='chatCenteredText' />
               </span>

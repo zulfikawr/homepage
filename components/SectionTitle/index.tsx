@@ -61,7 +61,9 @@ const SectionTitle = ({
           </>
         ) : (
           <>
-            <span className={`mr-1.5 flex h-5 w-5 ${iconColor} ${iconClassName}`}>
+            <span
+              className={`mr-1.5 flex h-5 w-5 ${iconColor} ${iconClassName}`}
+            >
               {icon && <Icon name={icon} />}
             </span>
             <span className='block uppercase'>{title}</span>

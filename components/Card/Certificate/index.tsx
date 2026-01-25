@@ -124,7 +124,9 @@ export default function CertificateCard({
       {/* Footer */}
       <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-medium text-muted-foreground dark:border-border dark:text-muted-foreground'>
         <span className='text-gruv-aqua'>Certificate</span>
-        <span className='text-gruv-blue hover:underline cursor-pointer'>View</span>
+        <span className='text-gruv-blue hover:underline cursor-pointer'>
+          View
+        </span>
       </div>
     </Card>
   );
