@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { EB_Garamond } from 'next/font/google';
+import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Providers from './providers';
 import Drawer from '@/components/Drawer';
 import Modal from '@/components/Modal';
@@ -11,10 +11,16 @@ import '@/styles/atom-one-dark.css';
 import DynamicBackground from '@/components/Visual/Background';
 import { Suspense } from 'react';
 
-const ebGaramond = EB_Garamond({
+const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-eb-garamond',
+  variable: '--font-space-grotesk',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jetbrains-mono',
 });
 
 export const metadata: Metadata = {
@@ -64,7 +70,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${ebGaramond.className} relative transition-all duration-300`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative transition-all duration-300`}
       >
         <Providers>
           {/* Background layer */}
