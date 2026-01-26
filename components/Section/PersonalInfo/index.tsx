@@ -52,7 +52,7 @@ const PersonalInfoSection = () => {
           height={105}
           width={105}
           alt={personalInfo.name}
-          priority
+          preload
           className='bg-muted shadow-sm dark:border dark:border-border aspect-square object-cover'
           type='square'
         />
