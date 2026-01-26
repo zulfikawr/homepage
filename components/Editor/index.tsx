@@ -284,7 +284,6 @@ const Editor: React.FC<EditorProps> = ({
                 key={index}
                 text={button.label}
                 position='top'
-                align='center'
               >
                 <Toggle
                   isActive={button.active}
