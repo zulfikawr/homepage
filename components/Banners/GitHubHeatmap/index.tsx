@@ -73,6 +73,16 @@ const GitHubHeatmap = () => {
 
   const { totalContributions, weeks, year } = data;
 
+  const getIntensityLevel = (count: number) => {
+    if (count === 0) return 0;
+    if (count <= 2) return 1;
+    if (count <= 5) return 2;
+    if (count <= 10) return 3;
+    if (count <= 15) return 4;
+    if (count <= 25) return 5;
+    return 6;
+  };
+
   return (
     <Card isPreview>
       <div className='flex w-full items-center justify-between border-b border-border px-4 py-2.5 dark:border-border'>
@@ -138,7 +148,7 @@ const GitHubHeatmap = () => {
                     text={`${day.date}: ${day.count} contributions`}
                   >
                     <div
-                      className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(day.intensity)}`}
+                      className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(getIntensityLevel(day.count))}`}
                     />
                   </Tooltip>
                 ))}

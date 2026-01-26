@@ -132,7 +132,6 @@ function processContributionCalendar(data: GitHubGraphQLData) {
   const dailyContributions: {
     date: string;
     count: number;
-    intensity: 0 | 1 | 2 | 3 | 4;
   }[] = [];
 
   weeks.forEach((week: GitHubGraphQLWeek) => {
@@ -140,7 +139,6 @@ function processContributionCalendar(data: GitHubGraphQLData) {
       dailyContributions.push({
         date: day.date,
         count: day.contributionCount,
-        intensity: getIntensityLevel(day.contributionCount),
       });
     });
   });
@@ -158,17 +156,8 @@ function processContributionCalendar(data: GitHubGraphQLData) {
       week.contributionDays.map((day: GitHubGraphQLDay) => ({
         date: day.date,
         count: day.contributionCount,
-        intensity: getIntensityLevel(day.contributionCount),
       })),
     ),
     year,
   };
-}
-
-function getIntensityLevel(count: number): 0 | 1 | 2 | 3 | 4 {
-  if (count === 0) return 0;
-  if (count <= 2) return 1;
-  if (count <= 5) return 2;
-  if (count <= 10) return 3;
-  return 4;
 }

@@ -42,6 +42,8 @@
   --color-heatmap-2: var(--heatmap-2);
   --color-heatmap-3: var(--heatmap-3);
   --color-heatmap-4: var(--heatmap-4);
+  --color-heatmap-5: var(--heatmap-5);
+  --color-heatmap-6: var(--heatmap-6);
 
   --spacing-1: 3px;
   --spacing-2: 6px;
@@ -126,6 +128,8 @@
     --heatmap-2: #bdae93;
     --heatmap-3: #79740e;
     --heatmap-4: #b57614;
+    --heatmap-5: #af3a03;
+    --heatmap-6: #9d0006;
   }
 
   .dark {
@@ -157,6 +161,8 @@
     --heatmap-2: #665c54;
     --heatmap-3: #b8bb26;
     --heatmap-4: #fabd2f;
+    --heatmap-5: #fe8019;
+    --heatmap-6: #fb4934;
   }
 
   /* Global Styles */

@@ -47,7 +47,9 @@ const LoadingSkeleton = () => {
         </div>
 
         {/* Legend skeleton */}
-        <div className='flex items-center justify-end gap-2'>
+        <div className='flex items-center justify-end gap-1'>
+          <div className='h-3 w-3 rounded-sm bg-muted animate-pulse' />
+          <div className='h-3 w-3 rounded-sm bg-muted animate-pulse' />
           <div className='h-3 w-3 rounded-sm bg-muted animate-pulse' />
           <div className='h-3 w-3 rounded-sm bg-muted animate-pulse' />
           <div className='h-3 w-3 rounded-sm bg-muted animate-pulse' />

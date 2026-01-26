@@ -1,7 +1,7 @@
 export interface GitHubContributionDay {
   date: string;
   count: number;
-  intensity: 0 | 1 | 2 | 3 | 4;
+  intensity?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export interface GitHubContributionData {

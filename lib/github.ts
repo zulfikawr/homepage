@@ -60,6 +60,8 @@ export function getGruvboxIntensityColor(intensity: number): string {
     2: '#bdae93', // medium (medium)
     3: '#79740e', // gruv-green (high)
     4: '#b57614', // gruv-yellow (very high)
+    5: '#af3a03', // gruv-orange (extra high)
+    6: '#9d0006', // gruv-red (extreme)
   };
 
   return colors[intensity as keyof typeof colors] || colors[0];
@@ -75,6 +77,8 @@ export function getGruvboxIntensityColorDark(intensity: number): string {
     2: '#665c54', // medium
     3: '#b8bb26', // gruv-green (high)
     4: '#fabd2f', // gruv-yellow (very high)
+    5: '#fe8019', // gruv-orange (extra high)
+    6: '#fb4934', // gruv-red (extreme)
   };
 
   return colors[intensity as keyof typeof colors] || colors[0];

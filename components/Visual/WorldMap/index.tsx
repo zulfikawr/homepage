@@ -22,6 +22,10 @@ const getHeatmapIntensityValue = (intensity: number) => {
       return 'var(--heatmap-3)';
     case 4:
       return 'var(--heatmap-4)';
+    case 5:
+      return 'var(--heatmap-5)';
+    case 6:
+      return 'var(--heatmap-6)';
     default:
       return 'var(--heatmap-0)';
   }
@@ -330,10 +334,12 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     // Helper to get discrete intensity level based on count
     const getIntensity = (count: number) => {
       if (count === 0) return 0;
-      if (count <= maxCount * 0.25) return 1;
-      if (count <= maxCount * 0.5) return 2;
-      if (count <= maxCount * 0.75) return 3;
-      return 4;
+      if (count <= maxCount * 0.16) return 1;
+      if (count <= maxCount * 0.33) return 2;
+      if (count <= maxCount * 0.5) return 3;
+      if (count <= maxCount * 0.66) return 4;
+      if (count <= maxCount * 0.83) return 5;
+      return 6;
     };
 
     const g = svg.append('g');
