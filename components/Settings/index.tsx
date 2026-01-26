@@ -8,6 +8,7 @@ import { useBackground } from '@/contexts/backgroundContext';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
+import { useWeather, WeatherType } from '@/contexts/weatherContext';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },
@@ -24,11 +25,39 @@ const backgroundOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'Network', value: 'network', icon: 'network' },
 ];
 
+const weatherOptions: { label: string; value: WeatherType; icon: IconName }[] =
+  [
+    { label: 'Auto', value: 'auto', icon: 'cloud' },
+    { label: 'Clear', value: 'clear', icon: 'sun' },
+    { label: 'Clouds', value: 'clouds', icon: 'cloudSun' },
+    { label: 'Drizzle', value: 'drizzle', icon: 'cloudRain' },
+    { label: 'Rain', value: 'rain', icon: 'cloudRain' },
+    { label: 'Storm', value: 'storm', icon: 'cloudLightning' },
+    { label: 'Snow', value: 'snow', icon: 'cloudSnow' },
+    { label: 'Fog', value: 'fog', icon: 'cloudFog' },
+  ];
+
+const dayNightOptions: {
+  label: string;
+  value: 'auto' | 'day' | 'night';
+  icon: IconName;
+}[] = [
+  { label: 'Auto', value: 'auto', icon: 'clock' },
+  { label: 'Day', value: 'day', icon: 'sun' },
+  { label: 'Night', value: 'night', icon: 'moon' },
+];
+
 export default function Settings() {
   const { setTheme, theme } = useTheme();
   const { background, setBackground } = useBackground();
   const { effectEnabled, toggleEffect } = useEffectToggle();
   const { radius, setRadius } = useRadius();
+  const {
+    weatherOverride,
+    setWeatherOverride,
+    isDaytimeOverride,
+    setIsDaytimeOverride,
+  } = useWeather();
   const { forceLoading, toggleForceLoading, forceEmpty, toggleForceEmpty } =
     useLoadingToggle();
 
@@ -36,6 +65,10 @@ export default function Settings() {
 
   const selectedBackground = backgroundOptions.find(
     (option) => option.value === background,
+  );
+
+  const selectedWeather = weatherOptions.find(
+    (option) => option.value === weatherOverride,
   );
 
   return (
@@ -126,6 +159,48 @@ export default function Settings() {
                 label={forceEmpty ? 'Disable Empty' : 'Enable Empty'}
               />
             </div>
+
+            <div className={sectionTitleClass}>Weather Mode</div>
+            <ToggleGroup
+              value={isDaytimeOverride}
+              onChange={(v) =>
+                setIsDaytimeOverride(v as 'auto' | 'day' | 'night')
+              }
+              options={dayNightOptions}
+            />
+
+            <div className={sectionTitleClass}>Weather Type</div>
+            <Dropdown
+              trigger={
+                <Button
+                  type='default'
+                  aria-label='Select weather'
+                  className='w-full flex items-center justify-between gap-2 px-4'
+                >
+                  <div className='flex items-center gap-2'>
+                    {selectedWeather && (
+                      <Icon name={selectedWeather.icon} className='size-4.5' />
+                    )}
+                    <span>{selectedWeather?.label}</span>
+                  </div>
+                  <Icon name='caretDown' className='size-4.5' />
+                </Button>
+              }
+              className='w-full'
+              matchTriggerWidth
+            >
+              {weatherOptions.map((option) => (
+                <DropdownItem
+                  key={option.value}
+                  onClick={() => setWeatherOverride(option.value)}
+                  isActive={weatherOverride === option.value}
+                  className='flex items-center gap-2'
+                >
+                  <Icon name={option.icon} className='size-4.5' />
+                  <span>{option.label}</span>
+                </DropdownItem>
+              ))}
+            </Dropdown>
           </>
         )}
       </div>

@@ -1,7 +1,9 @@
 import { Icon } from 'components/UI';
 
 const LoadingSkeleton = ({ className }: { className?: string }) => (
-  <div className={`w-full rounded-md border bg-card shadow-sm dark:border-border dark:bg-card ${className || ''}`}>
+  <div
+    className={`w-full rounded-md border bg-card shadow-sm dark:border-border dark:bg-card ${className || ''}`}
+  >
     <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
       <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
         <span className='size-5 text-muted-foreground'>

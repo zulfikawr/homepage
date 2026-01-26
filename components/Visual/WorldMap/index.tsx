@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import {
   Feature,
@@ -10,7 +10,22 @@ import {
 } from 'geojson';
 
 import { HeatmapLegend } from '@/components/UI';
-import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
+
+// Helper to get CSS variable value for heatmap intensity (for SVG paths)
+const getHeatmapIntensityValue = (intensity: number) => {
+  switch (intensity) {
+    case 1:
+      return 'var(--heatmap-1)';
+    case 2:
+      return 'var(--heatmap-2)';
+    case 3:
+      return 'var(--heatmap-3)';
+    case 4:
+      return 'var(--heatmap-4)';
+    default:
+      return 'var(--heatmap-0)';
+  }
+};
 
 interface WorldMapProps {
   data: { code: string; name: string; count: number }[];
@@ -341,8 +356,7 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       .attr('fill', (d) => {
         const count = counts.get(d.id as string) || 0;
         const intensity = getIntensity(count);
-        // Map intensity to CSS variable
-        return `var(--heatmap-${intensity})`;
+        return getHeatmapIntensityValue(intensity);
       })
       .attr('stroke', 'var(--border)')
       .attr('stroke-width', 0.5)

@@ -280,11 +280,7 @@ const Editor: React.FC<EditorProps> = ({
         <div className='flex flex-1 items-center px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mt-20 pt-20 -ml-20 pl-20'>
           <div className='flex items-center gap-2 overflow-visible min-w-max h-9'>
             {toolbarButtons.map((button, index) => (
-              <Tooltip
-                key={index}
-                text={button.label}
-                position='top'
-              >
+              <Tooltip key={index} text={button.label} position='top'>
                 <Toggle
                   isActive={button.active}
                   onChange={(e) => {

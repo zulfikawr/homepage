@@ -8,6 +8,7 @@ import { EffectProvider } from '@/contexts/effectContext';
 import { LoadingProvider } from '@/contexts/loadingContext';
 import { RadiusProvider } from '@/contexts/radiusContext';
 import { TitleProvider } from '@/contexts/titleContext';
+import { WeatherProvider } from '@/contexts/weatherContext';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -21,7 +22,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <LoadingProvider>
             <TitleProvider>
               <EffectProvider>
-                <RadiusProvider>{children}</RadiusProvider>
+                <WeatherProvider>
+                  <RadiusProvider>{children}</RadiusProvider>
+                </WeatherProvider>
               </EffectProvider>
             </TitleProvider>
           </LoadingProvider>

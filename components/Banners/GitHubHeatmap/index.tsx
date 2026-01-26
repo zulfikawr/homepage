@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
-import { HeatmapLegend, Icon, Tooltip } from '@/components/UI';
+import { Button, HeatmapLegend, Icon, Tooltip } from '@/components/UI';
 import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { getGitHubContributions } from '@/lib/github';
@@ -74,12 +75,40 @@ const GitHubHeatmap = () => {
 
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
+      <div className='flex w-full items-center justify-between border-b border-border px-4 py-2.5 dark:border-border'>
         <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
           <span className='size-5 text-gruv-blue'>
             <Icon name='githubLogo' />
           </span>
           <span>GitHub Contributions</span>
+        </div>
+        <div className='hidden md:block'>
+          <Tooltip text='GitHub'>
+            <Link
+              href='https://github.com/zulfikawr'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+                <span className='size-5'>
+                  <Icon name='caretRight' />
+                </span>
+              </Button>
+            </Link>
+          </Tooltip>
+        </div>
+        <div className='block md:hidden'>
+          <Link
+            href='https://github.com/zulfikawr'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+              <span className='size-5'>
+                <Icon name='caretRight' />
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
 

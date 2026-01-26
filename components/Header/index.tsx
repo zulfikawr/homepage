@@ -127,7 +127,7 @@ const HeaderTitle = () => {
   if (!headerTitle) return null;
 
   return (
-    <h3 className='w-full max-w-[calc(90vw-180px)] text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-base'>
+    <h3 className='w-full max-w-full text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-base'>
       {headerTitle}
     </h3>
   );

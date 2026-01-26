@@ -46,6 +46,9 @@ export async function GET() {
       }
     `;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
     const response = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       headers: {
@@ -56,7 +59,13 @@ export async function GET() {
         query,
         variables: { username: GITHUB_USERNAME },
       }),
+      signal: controller.signal,
+    }).catch((error) => {
+      clearTimeout(timeoutId);
+      throw error;
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -91,6 +100,23 @@ export async function GET() {
     return NextResponse.json(contributionData);
   } catch (error) {
     console.error('Error fetching GitHub contributions:', error);
+
+    // Handle specific error types
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        return NextResponse.json(
+          { error: 'Request timeout - GitHub API took too long to respond' },
+          { status: 504 },
+        );
+      }
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        return NextResponse.json(
+          { error: 'Network error - Unable to reach GitHub API' },
+          { status: 503 },
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

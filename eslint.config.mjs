@@ -37,6 +37,7 @@ const config = [
           ],
         },
       ],
+      'react-hooks/purity': 'off',
     },
   },
 ];
