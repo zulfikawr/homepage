@@ -9,10 +9,12 @@ import { LogoutConfirm } from '@/components/Modal/LogoutConfirm';
 
 export function useAuthActions() {
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleLogin = async (email: string, password: string) => {
     setError('');
+    setLoading(true);
     try {
       try {
         await pb.collection('_superusers').authWithPassword(email, password);
@@ -28,16 +30,21 @@ export function useAuthActions() {
         err instanceof Error ? err.message : 'Failed to authenticate.';
       setError(message);
       toast.show(message, 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGithubLogin = async () => {
+    setLoading(true);
     try {
       await pb.collection('users').authWithOAuth2({ provider: 'github' });
       router.push('/');
       toast.show('You are now logged in with GitHub!');
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,5 +68,12 @@ export function useAuthActions() {
     );
   };
 
-  return { handleLogin, handleGithubLogin, handleLogout, confirmLogout, error };
+  return {
+    handleLogin,
+    handleGithubLogin,
+    handleLogout,
+    confirmLogout,
+    error,
+    loading,
+  };
 }

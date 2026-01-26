@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Skeleton } from '@/components/UI';
-import { Separator } from '@/components/UI/Separator';
+import { Separator, Skeleton } from '@/components/UI';
 
 interface FormSkeletonProps {
   fields?: number;

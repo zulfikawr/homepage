@@ -1,13 +1,14 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Button, Input, FormLabel, Skeleton } from '@/components/UI';
 import { useAuthActions } from '@/hooks/useAuthActions';
 import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
 import PageTitle from '@/components/PageTitle';
-import { Card } from '@/components/Card';
 
 export default function LoginContent() {
-  const { handleGithubLogin, handlePasswordLogin, loading } = useAuthActions();
+  const { handleGithubLogin, handleLogin, loading } = useAuthActions();
   const { user } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ export default function LoginContent() {
     e.preventDefault();
     setError('');
     try {
-      await handlePasswordLogin(email, password);
+      await handleLogin(email, password);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
@@ -38,7 +39,7 @@ export default function LoginContent() {
             <Skeleton width={150} height={32} />
             <Skeleton width='100%' height={20} />
           </div>
-          <Card isPreview className='p-8 space-y-6'>
+          <div className='py-8 space-y-6'>
             <Skeleton width='100%' height={44} />
             <div className='relative'>
               <Skeleton width='100%' height={1} />
@@ -54,40 +55,41 @@ export default function LoginContent() {
               </div>
               <Skeleton width='100%' height={44} className='mt-6' />
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className='max-w-md mx-auto mt-20'>
+    <div className='max-w-md mx-auto mt-20 px-6 pb-20'>
       <PageTitle emoji='🔐' title='Login' subtitle='Welcome back' />
 
-      <Card isPreview className='p-8'>
-        <div className='flex flex-col space-y-6'>
-          <Button
-            onClick={handleGithubLogin}
-            icon='githubLogo'
-            className='w-full h-11'
-          >
-            Continue with GitHub
-          </Button>
+      <div className='mt-12 flex flex-col space-y-8'>
+        <Button
+          onClick={handleGithubLogin}
+          type='outline'
+          icon='githubLogo'
+          className='w-full h-12'
+        >
+          Continue with GitHub
+        </Button>
 
-          <div className='relative'>
-            <div className='absolute inset-0 flex items-center'>
-              <span className='w-full border-t border-border dark:border-border' />
-            </div>
-            <div className='relative flex justify-center text-xs uppercase'>
-              <span className='bg-white px-2 text-muted-foreground dark:bg-card'>
-                Or continue with email
-              </span>
-            </div>
+        <div className='relative'>
+          <div className='absolute inset-0 flex items-center'>
+            <span className='w-full border-t border-border' />
           </div>
+          <div className='relative flex justify-center text-xs uppercase'>
+            <span className='px-4 text-gruv-fg-dim tracking-widest'>
+              Or continue with email
+            </span>
+          </div>
+        </div>
 
-          <form onSubmit={onPasswordLogin} className='space-y-4'>
+        <form onSubmit={onPasswordLogin} className='space-y-6'>
+          <div className='space-y-5'>
             <div className='space-y-2'>
-              <FormLabel htmlFor='email'>Email</FormLabel>
+              <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>Email Address</FormLabel>
               <Input
                 id='email'
                 type='email'
@@ -95,34 +97,34 @@ export default function LoginContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
               />
             </div>
             <div className='space-y-2'>
-              <FormLabel htmlFor='password'>Password</FormLabel>
+              <FormLabel htmlFor='password' required className='text-gruv-fg-dim text-sm'>Password</FormLabel>
               <Input
                 id='password'
                 type='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
               />
             </div>
+          </div>
 
-            {error && <p className='text-sm text-destructive'>{error}</p>}
+          {error && <p className='text-sm text-gruv-red text-center italic'>{error}</p>}
 
-            <div className='flex justify-end pt-2'>
-              <Button
-                type='primary'
-                nativeType='submit'
-                className='w-full h-11'
-                icon='signIn'
-              >
-                Sign In
-              </Button>
-            </div>
-          </form>
-        </div>
-      </Card>
+          <Button
+            type='primary'
+            nativeType='submit'
+            className='w-full h-12 bg-gruv-orange hover:bg-gruv-orange/90 text-gruv-bg-dark font-bold'
+            icon='signIn'
+          >
+            Sign In
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }
