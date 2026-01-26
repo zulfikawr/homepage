@@ -12,7 +12,7 @@ const TitleContext = createContext<TitleContextType | undefined>(undefined);
 export const TitleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [headerTitle, setHeaderTitle] = useState<string>('Zulfikar');
+  const [headerTitle, setHeaderTitle] = useState<string>('');
 
   return (
     <TitleContext.Provider value={{ headerTitle, setHeaderTitle }}>

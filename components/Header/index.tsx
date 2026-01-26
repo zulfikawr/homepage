@@ -63,19 +63,27 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             <div className='pointer-events-auto flex justify-center w-full'>
               {/* Desktop: Show Kbar at top, Title when scrolled */}
               <div className='hidden lg:block relative w-full'>
-                <ReverseOffsetTransition>
-                  <Kbar />
-                </ReverseOffsetTransition>
-                <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
-                  <OffsetTransition
-                    disabled={!nonHomePage}
-                    componentRef={titleRef}
-                  >
-                    <div ref={titleRef} className='pointer-events-auto'>
-                      <HeaderTitle />
+                {nonHomePage ? (
+                  <>
+                    <ReverseOffsetTransition>
+                      <Kbar />
+                    </ReverseOffsetTransition>
+                    <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
+                      <OffsetTransition
+                        disabled={!nonHomePage}
+                        componentRef={titleRef}
+                      >
+                        <div ref={titleRef} className='pointer-events-auto'>
+                          <HeaderTitle />
+                        </div>
+                      </OffsetTransition>
                     </div>
-                  </OffsetTransition>
-                </div>
+                  </>
+                ) : (
+                  <div className='w-full flex justify-center'>
+                    <Kbar />
+                  </div>
+                )}
               </div>
               {/* Mobile: Removed HeaderTitle */}
             </div>
