@@ -23,7 +23,6 @@ import {
   getTopTracks,
 } from '@/lib/spotify';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
-import { formatDate } from '@/utilities/formatDate';
 import { getTimeAgo } from '@/utilities/timeAgo';
 
 interface RecentlyPlayedItem {
@@ -107,11 +106,9 @@ export default function SpotifyMusicContent() {
       setPlaylists(playlistsData?.items || []);
 
       if (recentData?.items?.[0]?.played_at) {
-        setLastPlayedAt(
-          formatDate(recentData.items[0].played_at, {
-            includeDay: true,
-          }),
-        );
+        // Pass the raw ISO timestamp directly to getTimeAgo
+        // Don't format it first, as getTimeAgo can parse ISO timestamps correctly
+        setLastPlayedAt(recentData.items[0].played_at);
       }
 
       setDataLoading({

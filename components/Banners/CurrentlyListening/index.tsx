@@ -15,7 +15,6 @@ import {
   getSpotifyAuthUrl,
 } from '@/lib/spotify';
 import { SpotifyTrack } from '@/types/spotify';
-import { formatDate } from '@/utilities/formatDate';
 
 import LoadingSkeleton from './loading';
 
@@ -201,13 +200,9 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
             setIsPlaying(false);
             updateProgress(0);
 
-            const lastPlayedAtDate = formatDate(
-              recentlyPlayed.items[0].played_at,
-              {
-                includeDay: true,
-              },
-            );
-            setLastPlayedAt(lastPlayedAtDate);
+            // Pass the raw ISO timestamp directly to TimeAgo
+            // Don't format it first, as TimeAgo can parse ISO timestamps correctly
+            setLastPlayedAt(recentlyPlayed.items[0].played_at);
           }
         } catch {
           // Ignored
