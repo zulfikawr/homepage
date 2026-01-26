@@ -44,7 +44,7 @@ const Separator = ({ isDaytime }: { isDaytime: boolean }) => (
   </div>
 );
 
-const LocationAndTime = () => {
+const LocationAndTime = ({ className }: { className?: string }) => {
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -126,11 +126,11 @@ const LocationAndTime = () => {
     return () => clearInterval(timer);
   }, [mounted]);
 
-  if (!mounted || forceLoading) return <LoadingSkeleton />;
+  if (!mounted || forceLoading) return <LoadingSkeleton className={className} />;
 
   return (
     <Card
-      className={`relative w-full min-h-[120px] overflow-hidden
+      className={`relative w-full min-h-[120px] overflow-hidden ${className || ''}
         ${
           isDaytime
             ? 'bg-gradient-to-br from-gruv-aqua/40 to-gruv-yellow/60'

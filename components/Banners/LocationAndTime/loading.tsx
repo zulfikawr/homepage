@@ -1,7 +1,7 @@
 import { Icon } from '@/components/UI';
 
-const LoadingSkeleton = () => (
-  <div className='overflow-hidden min-h-[120px] relative w-full rounded-md border bg-card shadow-sm dark:border-border'>
+const LoadingSkeleton = ({ className }: { className?: string }) => (
+  <div className={`overflow-hidden min-h-[120px] relative w-full rounded-md border bg-card shadow-sm dark:border-border ${className || ''}`}>
     {/* Glass overlay */}
     <div className='absolute inset-0 bg-gruv-fg/5 backdrop-blur-[2px]' />
 

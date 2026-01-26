@@ -32,10 +32,12 @@ const apiCache: {
 
 interface CurrentlyListeningProps {
   showMoreButton?: boolean;
+  className?: string;
 }
 
 const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
   showMoreButton = true,
+  className,
 }) => {
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
     apiCache.currentTrack,
@@ -251,17 +253,18 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     };
   }, [isPlaying, fetchTracks]);
 
-  if (error || forceEmpty) return <CardEmpty message='No data' />;
+  if (error || forceEmpty)
+    return <CardEmpty message='No data' className={className} />;
 
   if (isLoading || showSkeleton || (isPlaying && !currentTrack)) {
-    return <LoadingSkeleton />;
+    return <LoadingSkeleton className={className} />;
   }
 
   if (!isAuthorized) {
-    if (authLoading) return <LoadingSkeleton />;
+    if (authLoading) return <LoadingSkeleton className={className} />;
 
     return (
-      <Card isPreview>
+      <Card isPreview className={className}>
         <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
           <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
             <span className='size-5'>
@@ -292,10 +295,11 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     );
   }
 
-  if (!currentTrack) return <CardEmpty message='No data' />;
+  if (!currentTrack)
+    return <CardEmpty message='No data' className={className} />;
 
   return (
-    <Card isPreview>
+    <Card isPreview className={className}>
       <div className='flex w-full items-center justify-between px-4 py-2.5 border-b border-border'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
           <Icon name='musicNotes' className='size-5 text-gruv-green' />

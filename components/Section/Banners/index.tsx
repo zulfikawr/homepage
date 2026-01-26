@@ -18,11 +18,11 @@ const Banners = () => {
         </ViewTransition>
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
           <StaggerContainer initialDelay={0.2}>
-            <ViewTransition key='listening'>
-              <CurrentlyListening />
+            <ViewTransition key='listening' className='h-full'>
+              <CurrentlyListening className='h-full' />
             </ViewTransition>
-            <ViewTransition key='location'>
-              <LocationAndTime />
+            <ViewTransition key='location' className='h-full'>
+              <LocationAndTime className='h-full' />
             </ViewTransition>
           </StaggerContainer>
         </div>
