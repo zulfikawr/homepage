@@ -18,11 +18,15 @@ const PersonalInfoSection = () => {
   const personalInfo = useMemo(() => {
     return personalInfoList && personalInfoList.length > 0
       ? personalInfoList[0]
-      : null;
+      : {
+          name: 'Zulfikar',
+          title: 'I build things for the web',
+          avatarUrl: '/images/placeholder-square.png',
+        };
   }, [personalInfoList]);
 
   if (error) return <div>Failed to load personal info</div>;
-  if (loading || !personalInfo) return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <section className='flex items-center justify-between gap-x-10 gap-y-8'>

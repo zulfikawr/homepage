@@ -13,6 +13,7 @@ import { formatDate } from '@/utilities/formatDate';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
 import { Card } from '@/components/Card';
+import CardEmpty from '@/components/Card/Empty';
 import { TimeAgo } from '@/components/UI';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 
@@ -253,7 +254,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     };
   }, [isPlaying, fetchTracks]);
 
-  if (error || forceEmpty) return null;
+  if (error || forceEmpty) return <CardEmpty message='No data' />;
 
   if (isLoading || showSkeleton || (isPlaying && !currentTrack)) {
     return <LoadingSkeleton />;
@@ -294,7 +295,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     );
   }
 
-  if (!currentTrack) return null;
+  if (!currentTrack) return <CardEmpty message='No data' />;
 
   return (
     <Card isPreview>

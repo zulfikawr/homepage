@@ -45,44 +45,51 @@ const EmploymentSection = () => {
         }}
       />
       <div className='flex flex-col gap-y-4'>
-        <div className='relative'>
-          {/* Left Mask */}
-          {/* <div
+        {loading ? (
+          <div
+            ref={scrollContainerRef}
+            className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
+          >
+            {Array(8)
+              .fill(0)
+              .map((_, index) => (
+                <CardLoading key={index} type='employment' />
+              ))}
+          </div>
+        ) : sortedEmployments.length === 0 ? (
+          <CardEmpty message='No employments found.' />
+        ) : (
+          <div className='relative'>
+            {/* Left Mask */}
+            {/* <div
             className={`absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50 
             transition-opacity duration-300 ease-in-out ${
               showLeftMask ? 'opacity-100' : 'opacity-0'
             }`}
           /> */}
 
-          {/* Right Mask */}
-          {/* <div
+            {/* Right Mask */}
+            {/* <div
             className={`absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-neutral-100 via-neutral-100/50 to-transparent pointer-events-none z-10 dark:from-neutral-900 dark:via-neutral-900/50 
             transition-opacity duration-300 ease-in-out ${
               showRightMask ? 'opacity-100' : 'opacity-0'
             }`}
           /> */}
 
-          {/* Scrollable Container */}
-          <div
-            ref={scrollContainerRef}
-            // onScroll={handleScroll}
-            className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
-          >
-            {loading ? (
-              Array(8)
-                .fill(0)
-                .map((_, index) => (
-                  <CardLoading key={index} type='employment' />
-                ))
-            ) : (
+            {/* Scrollable Container */}
+            <div
+              ref={scrollContainerRef}
+              // onScroll={handleScroll}
+              className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
+            >
               <div className='flex gap-x-4 animate-fade-in'>
                 {sortedEmployments.map((employment) => (
                   <EmploymentCard key={employment.id} employment={employment} />
                 ))}
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

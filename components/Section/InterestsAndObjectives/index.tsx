@@ -4,6 +4,7 @@ import { mapRecordToInterests } from '@/lib/mappers';
 import { useCollection } from '@/hooks';
 import SectionTitle from '@/components/SectionTitle';
 import Loading from './loading';
+import CardEmpty from '@/components/Card/Empty';
 import { Separator } from '@/components/UI/Separator';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { useState, useEffect } from 'react';
@@ -41,7 +42,11 @@ const InterestsAndObjectivesSection = () => {
         loading={loading}
       />
 
-      {loading || !interestsAndObjectives ? (
+      {loading ? (
+        <Loading />
+      ) : allInterests.length === 0 ? (
+        <CardEmpty message='No interests and objectives found.' />
+      ) : !interestsAndObjectives ? (
         <Loading />
       ) : (
         <div className='-mt-2 flex flex-col font-light text-muted-foreground dark:text-muted-foreground'>
