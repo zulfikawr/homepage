@@ -89,7 +89,9 @@ export default function LoginContent() {
         <form onSubmit={onPasswordLogin} className='space-y-6'>
           <div className='space-y-5'>
             <div className='space-y-2'>
-              <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>Email Address</FormLabel>
+              <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>
+                Email Address
+              </FormLabel>
               <Input
                 id='email'
                 type='email'
@@ -101,7 +103,13 @@ export default function LoginContent() {
               />
             </div>
             <div className='space-y-2'>
-              <FormLabel htmlFor='password' required className='text-gruv-fg-dim text-sm'>Password</FormLabel>
+              <FormLabel
+                htmlFor='password'
+                required
+                className='text-gruv-fg-dim text-sm'
+              >
+                Password
+              </FormLabel>
               <Input
                 id='password'
                 type='password'
@@ -113,7 +121,9 @@ export default function LoginContent() {
             </div>
           </div>
 
-          {error && <p className='text-sm text-gruv-red text-center italic'>{error}</p>}
+          {error && (
+            <p className='text-sm text-gruv-red text-center italic'>{error}</p>
+          )}
 
           <Button
             type='primary'
