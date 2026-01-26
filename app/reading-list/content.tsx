@@ -9,17 +9,13 @@ import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
 import { Book } from '@/types/book';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ReadingListContent() {
   const {
     data: books,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Book>('reading_list', mapRecordToBook);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const booksArray = books || [];
 

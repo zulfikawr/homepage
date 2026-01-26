@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import pb from '@/lib/pocketbase';
 import { RecordModel } from 'pocketbase';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 
 /**
  * A generic hook to fetch and subscribe to any PocketBase collection.
@@ -19,8 +20,9 @@ export function useCollection<T>(
   initialData?: T[],
 ) {
   const [data, setData] = useState<T[]>(initialData || []);
-  const [loading, setLoading] = useState(!initialData);
+  const [dataLoading, setDataLoading] = useState(!initialData);
   const [error, setError] = useState<Error | null>(null);
+  const { forceEmpty, forceLoading } = useLoadingToggle();
 
   // Memoize options to prevent unnecessary refetches
   const optionsKey = JSON.stringify(options);
@@ -35,14 +37,14 @@ export function useCollection<T>(
         });
       setData(records.map(mapper));
       setError(null);
-      setLoading(false);
+      setDataLoading(false);
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'isAbort' in err && err.isAbort)
         return; // Don't update state if request was cancelled
 
       console.error(`Error fetching collection ${collectionName}:`, err);
       setError(err instanceof Error ? err : new Error(String(err)));
-      setLoading(false);
+      setDataLoading(false);
     }
   }, [collectionName, mapper, optionsKey]);
 
@@ -78,5 +80,10 @@ export function useCollection<T>(
     };
   }, [collectionName, fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  return {
+    data: forceEmpty ? [] : data,
+    loading: dataLoading || forceLoading,
+    error,
+    refetch: fetchData,
+  };
 }

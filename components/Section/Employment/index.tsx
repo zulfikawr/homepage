@@ -8,18 +8,14 @@ import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Employment } from '@/types/employment';
 
 const EmploymentSection = () => {
   const {
     data: employments,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Employment>('employments', mapRecordToEmployment);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const sortedEmployments = employments ? sortByDate(employments) : [];
   const scrollContainerRef = useRef<HTMLDivElement>(null);

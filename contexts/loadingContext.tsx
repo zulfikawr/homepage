@@ -10,6 +10,8 @@ import React, {
 const LoadingContext = createContext({
   forceLoading: false,
   toggleForceLoading: () => {},
+  forceEmpty: false,
+  toggleForceEmpty: () => {},
 });
 
 const subscribe = (callback: () => void) => {
@@ -23,6 +25,7 @@ export const LoadingProvider = ({
   children: React.ReactNode;
 }) => {
   const [internalForceLoading, setInternalForceLoading] = useState(false);
+  const [internalForceEmpty, setInternalForceEmpty] = useState(false);
 
   const forceLoading = useSyncExternalStore(
     subscribe,
@@ -30,6 +33,16 @@ export const LoadingProvider = ({
       if (process.env.NODE_ENV !== 'development') return false;
       const stored = localStorage.getItem('forceLoading');
       return stored !== null ? stored === 'true' : internalForceLoading;
+    },
+    () => false,
+  );
+
+  const forceEmpty = useSyncExternalStore(
+    subscribe,
+    () => {
+      if (process.env.NODE_ENV !== 'development') return false;
+      const stored = localStorage.getItem('forceEmpty');
+      return stored !== null ? stored === 'true' : internalForceEmpty;
     },
     () => false,
   );
@@ -42,8 +55,18 @@ export const LoadingProvider = ({
     window.dispatchEvent(new Event('storage'));
   };
 
+  const toggleForceEmpty = () => {
+    if (process.env.NODE_ENV !== 'development') return;
+    const newValue = !forceEmpty;
+    localStorage.setItem('forceEmpty', String(newValue));
+    setInternalForceEmpty(newValue);
+    window.dispatchEvent(new Event('storage'));
+  };
+
   return (
-    <LoadingContext.Provider value={{ forceLoading, toggleForceLoading }}>
+    <LoadingContext.Provider
+      value={{ forceLoading, toggleForceLoading, forceEmpty, toggleForceEmpty }}
+    >
       {children}
     </LoadingContext.Provider>
   );

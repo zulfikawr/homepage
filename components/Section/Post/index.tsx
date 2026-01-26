@@ -7,18 +7,14 @@ import { sortByDate } from '@/utilities/sortByDate';
 import SectionTitle from '@/components/SectionTitle';
 import { CardLoading } from '@/components/Card/Loading';
 import { useCollection } from '@/hooks';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Post } from '@/types/post';
 
 const PostSection = () => {
   const {
     data: posts,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Post>('posts', mapRecordToPost);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const sortedPosts = posts ? sortByDate(posts) : [];
 

@@ -10,17 +10,13 @@ import { useCollection } from '@/hooks';
 import { Toggle, Icon } from '@/components/UI';
 import { sortByDate } from '@/utilities/sortByDate';
 import { Post } from '@/types/post';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function PostsContent() {
   const {
     data: posts,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Post>('posts', mapRecordToPost);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 

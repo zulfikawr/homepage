@@ -9,19 +9,15 @@ import CardEmpty from '@/components/Card/Empty';
 import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
 import { Publication } from '@/types/publication';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function PublicationsDatabase() {
   const router = useRouter();
 
   const {
     data: publications,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Publication>('publications', mapRecordToPublication);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load publications' />;
 

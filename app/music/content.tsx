@@ -56,7 +56,7 @@ export default function SpotifyMusicContent() {
     playlists: true,
   });
 
-  const { forceLoading } = useLoadingToggle();
+  const { forceLoading, forceEmpty } = useLoadingToggle();
   const loading = {
     recentTracks: dataLoading.recentTracks || forceLoading,
     topTracks: dataLoading.topTracks || forceLoading,
@@ -74,6 +74,13 @@ export default function SpotifyMusicContent() {
     useState<TimeRange>('short_term');
 
   const { radius } = useRadius();
+
+  const displayData = {
+    recentTracks: forceEmpty ? [] : recentTracks,
+    topTracks: forceEmpty ? [] : topTracks,
+    topArtists: forceEmpty ? [] : topArtists,
+    playlists: forceEmpty ? [] : playlists,
+  };
 
   const loadData = useCallback(async () => {
     try {
@@ -247,8 +254,8 @@ export default function SpotifyMusicContent() {
               Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
-            ) : recentTracks.length > 0 ? (
-              recentTracks.map((item, index) => (
+            ) : displayData.recentTracks.length > 0 ? (
+              displayData.recentTracks.map((item, index) => (
                 <div
                   key={index}
                   className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
@@ -309,8 +316,8 @@ export default function SpotifyMusicContent() {
               Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
-            ) : topTracks.length > 0 ? (
-              topTracks.map((track, index) => (
+            ) : displayData.topTracks.length > 0 ? (
+              displayData.topTracks.map((track, index) => (
                 <div
                   key={track.id}
                   className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
@@ -378,8 +385,8 @@ export default function SpotifyMusicContent() {
                       <Skeleton width='75%' height={16} />
                     </div>
                   ))
-              ) : topArtists.length > 0 ? (
-                topArtists.map((artist) => (
+              ) : displayData.topArtists.length > 0 ? (
+                displayData.topArtists.map((artist) => (
                   <Link
                     key={artist.id}
                     href={artist.external_urls.spotify}
@@ -413,8 +420,8 @@ export default function SpotifyMusicContent() {
               Array(8)
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='playlist' />)
-            ) : playlists.length > 0 ? (
-              playlists.map((playlist) => (
+            ) : displayData.playlists.length > 0 ? (
+              displayData.playlists.map((playlist) => (
                 <PlaylistCard key={playlist.id} playlist={playlist} />
               ))
             ) : (

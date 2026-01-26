@@ -7,17 +7,13 @@ import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
 import { Certificate } from '@/types/certificate';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function CertificatesContent() {
   const {
     data: certificates,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Certificate>('certificates', mapRecordToCertificate);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load certificates' />;
 

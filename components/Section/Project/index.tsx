@@ -8,17 +8,13 @@ import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
 import { Project } from '@/types/project';
 import { useCollection } from '@/hooks';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 const ProjectSection = () => {
   const {
     data: projects,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Project>('projects', mapRecordToProject);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);

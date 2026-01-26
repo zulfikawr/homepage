@@ -18,16 +18,14 @@ import {
 import { toast } from '@/components/Toast';
 import { useCollection } from '@/hooks';
 import CardEmpty from '@/components/Card/Empty';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function FeedbackResponsesContent() {
   const { user, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
-  const { data: feedbacks, loading: dataLoading } =
-    useCollection<FeedbackEntry>('feedback', mapRecordToFeedback);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
+  const { data: feedbacks, loading } = useCollection<FeedbackEntry>(
+    'feedback',
+    mapRecordToFeedback,
+  );
 
   const handleDelete = async (id: string) => {
     const confirmDelete = confirm(

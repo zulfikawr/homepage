@@ -10,17 +10,13 @@ import { CardLoading } from '@/components/Card/Loading';
 import { useCollection } from '@/hooks';
 import { sortByDate } from '@/utilities/sortByDate';
 import { Project } from '@/types/project';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function ProjectsContent() {
   const {
     data: projects,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Project>('projects', mapRecordToProject);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const sortedProjects = projects ? sortByDate(projects) : [];
 

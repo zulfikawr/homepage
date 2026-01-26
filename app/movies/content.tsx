@@ -7,17 +7,13 @@ import { CardLoading } from '@/components/Card/Loading';
 import MovieCard from '@/components/Card/Movie';
 import { useCollection } from '@/hooks';
 import { Movie } from '@/types/movie';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function MoviesContent() {
   const {
     data: movies,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Movie>('movies', mapRecordToMovie);
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 

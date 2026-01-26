@@ -10,7 +10,6 @@ import { toast } from '@/components/Toast';
 import { Section } from '@/types/section';
 import { drawer } from '@/components/Drawer';
 import CardEmpty from '@/components/Card/Empty';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 // Preview Components
 import EmploymentSection from '@/components/Section/Employment';
@@ -50,12 +49,9 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
 export default function SectionDatabase() {
   const {
     data: sections,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<Section>('sections', mapRecordToSection, { sort: 'order' });
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>([]);

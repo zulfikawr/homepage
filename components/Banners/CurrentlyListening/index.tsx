@@ -45,7 +45,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
   );
   const [isAuthorized, setIsAuthorized] = useState(apiCache.isAuthorized);
   const [dataLoading, setDataLoading] = useState(!apiCache.currentTrack);
-  const { forceLoading } = useLoadingToggle();
+  const { forceLoading, forceEmpty } = useLoadingToggle();
   const isLoading = dataLoading || forceLoading;
 
   const [showSkeleton, setShowSkeleton] = useState(false);
@@ -253,7 +253,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     };
   }, [isPlaying, fetchTracks]);
 
-  if (error) return null;
+  if (error || forceEmpty) return null;
 
   if (isLoading || showSkeleton || (isPlaying && !currentTrack)) {
     return <LoadingSkeleton />;

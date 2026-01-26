@@ -9,20 +9,16 @@ import { useCollection } from '@/hooks';
 import WorldMap from '@/components/Visual/WorldMap';
 import { AnalyticsEvent } from '@/types/analytics';
 import CardEmpty from '@/components/Card/Empty';
-import { useLoadingToggle } from '@/contexts/loadingContext';
 
 export default function AnalyticsContent() {
   const {
     data: events,
-    loading: dataLoading,
+    loading,
     error,
   } = useCollection<AnalyticsEvent>(
     'analytics_events',
     mapRecordToAnalyticsEvent,
   );
-
-  const { forceLoading } = useLoadingToggle();
-  const loading = dataLoading || forceLoading;
 
   const stats = useMemo(() => {
     if (!events) return null;
