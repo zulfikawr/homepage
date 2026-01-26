@@ -44,7 +44,7 @@ const SectionTitle = ({
 
   return (
     <div
-      className={`flex items-center relative z-10 mb-5 ${link && !loading ? 'justify-between' : 'justify-start'}`}
+      className={`flex items-center relative z-10 mb-5 select-none ${link && !loading ? 'justify-between' : 'justify-start'}`}
     >
       <div
         className={`inline-flex items-center border shadow-md px-4 py-[4px] font-medium tracking-wider ${
@@ -66,7 +66,7 @@ const SectionTitle = ({
             >
               {icon && <Icon name={icon} />}
             </span>
-            <span className='block uppercase'>{title}</span>
+            <span className='block uppercase cursor-default'>{title}</span>
           </>
         )}
       </div>

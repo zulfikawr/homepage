@@ -227,7 +227,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
   // Use an effect to assign the function to the ref
   useEffect(() => {
-    (fetchTracksRef as React.MutableRefObject<() => Promise<void>>).current =
+    (fetchTracksRef as React.RefObject<() => Promise<void>>).current =
       fetchTracks;
   }, [fetchTracks]);
 

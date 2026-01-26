@@ -30,7 +30,7 @@ class Particle implements IParticle {
   size: number;
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
-  private config: React.MutableRefObject<{
+  private config: React.RefObject<{
     particleColor: string;
     lineColor: string;
     particleCount: number;
@@ -44,7 +44,7 @@ class Particle implements IParticle {
     size: number,
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
-    config: React.MutableRefObject<{
+    config: React.RefObject<{
       particleColor: string;
       lineColor: string;
       particleCount: number;

@@ -4,7 +4,7 @@ import React from 'react';
 import { useEffectToggle } from '@/contexts/effectContext';
 
 interface Props {
-  componentRef: React.MutableRefObject<HTMLDivElement>;
+  componentRef: React.RefObject<HTMLDivElement>;
   children: React.ReactNode;
 }
 

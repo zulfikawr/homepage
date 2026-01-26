@@ -1,6 +1,6 @@
 'use client';
 
-import { type MutableRefObject, useRef } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
 import { drawer } from '@/components/Drawer';
 import { HeaderTransition, OffsetTransition } from '@/components/Motion';
@@ -13,7 +13,7 @@ import { Button } from '@/components/UI/Button';
 import ImageWithFallback from '../ImageWithFallback';
 
 interface HeaderComponentProps {
-  headerRef: MutableRefObject<HTMLDivElement>;
+  headerRef: React.RefObject<HTMLDivElement>;
 }
 
 const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
@@ -31,10 +31,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       <header
         ref={headerRef}
         id='header'
-        className='header fixed top-0 z-50 w-full px-3 py-2 lg:px-5 lg:py-4 duration-300'
+        className='header fixed top-0 z-50 w-full pl-2 py-2 lg:px-4 lg:py-4 duration-300'
       >
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
-          <Link href='/' passHref className='relative z-10'>
+          <Link href='/' passHref className='relative z-10 select-none'>
             <div className='group flex items-center space-x-3 flex-shrink-0 z-10'>
               <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                 <ImageWithFallback
@@ -86,7 +86,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             <Button
               type='ghost'
               icon='list'
-              className='flex lg:hidden'
+              className='flex lg:hidden -mr-4'
               onClick={() => drawer.open(<KbarContent />)}
             />
           </div>
