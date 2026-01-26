@@ -3,7 +3,11 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { drawer } from '@/components/Drawer';
-import { HeaderTransition, OffsetTransition } from '@/components/Motion';
+import {
+  HeaderTransition,
+  OffsetTransition,
+  ReverseOffsetTransition,
+} from '@/components/Motion';
 import ScrollWrapper from '@/components/Motion/scroll';
 import { useTitle } from '@/contexts/titleContext';
 import { Kbar } from '@/components/Kbar';
@@ -18,12 +22,14 @@ interface HeaderComponentProps {
 
 const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
+  const [isScrolled, setIsScrolled] = React.useState(false);
 
   const { isHomePage, nonHomePage } = useRouteInfo();
 
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
     headerRef.current.style.transform = `translateY(${15 - position || 0}%)`;
+    setIsScrolled(position > 0);
   };
 
   return (
@@ -53,16 +59,28 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             </div>
           </Link>
 
-          <OffsetTransition disabled={!nonHomePage} componentRef={titleRef}>
-            <div
-              ref={titleRef}
-              className='absolute inset-x-0 mx-auto w-full flex justify-center pointer-events-none'
-            >
-              <div className='pointer-events-auto'>
-                {!isHomePage ? <HeaderTitle /> : <Kbar />}
+          <div className='absolute inset-x-0 mx-auto w-full flex justify-center pointer-events-none'>
+            <div className='pointer-events-auto flex justify-center w-full'>
+              {/* Desktop: Show Kbar at top, Title when scrolled */}
+              <div className='hidden lg:block relative w-full'>
+                <ReverseOffsetTransition>
+                  <Kbar />
+                </ReverseOffsetTransition>
+                <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
+                  <OffsetTransition
+                    disabled={!nonHomePage}
+                    componentRef={titleRef}
+                  >
+                    <div ref={titleRef} className='pointer-events-auto'>
+                      <HeaderTitle />
+                    </div>
+                  </OffsetTransition>
+                </div>
               </div>
+              {/* Mobile: Always show Title if not on home page */}
+              <div className='lg:hidden'>{!isHomePage && <HeaderTitle />}</div>
             </div>
-          </OffsetTransition>
+          </div>
 
           <div className='ml-auto flex items-center space-x-2'>
             {isHomePage ? (
