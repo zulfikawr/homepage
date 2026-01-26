@@ -62,10 +62,10 @@ export default function LoginContent() {
   }
 
   return (
-    <div className='max-w-md mx-auto mt-20 px-6 pb-20'>
+    <div>
       <PageTitle emoji='🔐' title='Login' subtitle='Welcome back' />
 
-      <div className='mt-12 flex flex-col space-y-8'>
+      <div className='max-w-md mx-auto mt-12 flex flex-col space-y-8'>
         <Button
           onClick={handleGithubLogin}
           type='outline'
