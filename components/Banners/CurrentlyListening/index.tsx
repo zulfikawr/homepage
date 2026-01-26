@@ -264,7 +264,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
       <Card isPreview>
         <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
           <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
-            <span className='h-4.5 w-4.5 lg:h-7 lg:w-7'>
+            <span className='size-5'>
               <Icon name='musicNotes' />
             </span>
             <span>Spotify Integration</span>
@@ -299,9 +299,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
       <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
           <Icon name='musicNotes' className='size-5 text-gruv-green' />
-          <span className='h-5'>
-            {isPlaying ? 'Currently Listening' : 'Last Played'}
-          </span>
+          <span>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>
         </div>
         {showMoreButton && (
           <>

@@ -1,6 +1,7 @@
 'use client';
 
 import CurrentlyListening from '../../Banners/CurrentlyListening';
+import GitHubHeatmap from '../../Banners/GitHubHeatmap';
 import LocationAndTime from '../../Banners/LocationAndTime';
 import PagesAndLinks from '../../Banners/PagesAndLinks';
 
@@ -12,6 +13,7 @@ const Banners = () => {
         <CurrentlyListening />
         <LocationAndTime />
       </div>
+      <GitHubHeatmap />
     </div>
   );
 };

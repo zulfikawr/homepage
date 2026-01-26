@@ -9,6 +9,7 @@ export { FormLabel } from './FormLabel';
 export { Icon } from './Icon';
 export { Input } from './Input';
 export { Label } from './Label';
+export { Portal } from './Portal';
 export { Separator } from './Separator';
 export { Skeleton } from './Skeleton';
 export { Slider } from './Slider';

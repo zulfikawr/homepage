@@ -104,7 +104,6 @@ export default function AnalyticsContent() {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
-    console.log('Analytics Stats:', { totalViews, uniqueVisitors });
     return {
       totalViews,
       uniqueVisitors,

@@ -235,7 +235,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   ];
 
   const validateForm = () => {
-    console.log('Validating form...', project);
     for (const field of requiredProjectFields) {
       const value =
         field.key === 'dateRange' ? null : project[field.key as keyof Project];
@@ -246,12 +245,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           : !value;
 
       if (isEmpty) {
-        console.log(`Validation failed for field: ${field.label}`);
         toast.error(`${field.label} is required.`);
         return false;
       }
     }
-    console.log('Validation passed');
     return true;
   };
 
@@ -259,7 +256,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('handleSubmit triggered');
 
     if (!validateForm()) return;
 
@@ -269,7 +265,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       dateString: formatDateRange(startDate, endDate, isPresent),
       readme: project.readme || '',
     };
-    console.log('Submitting project data:', projectData);
 
     try {
       let result;
