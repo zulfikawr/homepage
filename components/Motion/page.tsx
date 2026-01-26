@@ -9,14 +9,14 @@ interface Props {
   delay?: number;
 }
 
-const PageTransition = ({ children, duration = 0.5, delay = 0 }: Props) => {
+const PageTransition = ({ children, duration = 0.3, delay = 0 }: Props) => {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setMounted(true);
-    }, 50);
+    }, 10); // Reduced from 50ms to 10ms for faster loading
     return () => {
       setMounted(false);
       clearTimeout(timeout);

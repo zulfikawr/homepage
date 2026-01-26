@@ -16,7 +16,7 @@ const ViewTransition = ({
   delay = 0,
   direction = 'up',
   distance = 20,
-  duration = 0.6,
+  duration = 0.3,
   className = '',
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -28,13 +28,22 @@ const ViewTransition = ({
         setIsVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.1,
+        threshold: 0.01, // Lower threshold for faster detection
       },
     );
 
     const currentRef = ref.current;
     if (currentRef) {
       observer.observe(currentRef);
+
+      // Fallback: if element is already in viewport, make it visible immediately
+      // This handles cases where IntersectionObserver doesn't trigger properly
+      const rect = currentRef.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      }
     }
 
     return () => {

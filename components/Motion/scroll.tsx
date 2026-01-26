@@ -18,7 +18,7 @@ const ScrollWrapper = (props: Props) => {
     children,
   } = props;
   const { resolvedTheme } = useTheme();
-  const [yOffset, setYOffset] = useState(0);
+  const [yOffset, setYOffset] = useState<number | null>(null);
 
   const handler = useCallback(() => {
     let position = window.scrollY;
@@ -36,6 +36,7 @@ const ScrollWrapper = (props: Props) => {
   }, [startPosition, endPosition, applyEffect]);
 
   useEffect(() => {
+    // Call handler immediately on mount to set initial state
     requestAnimationFrame(() => {
       handler();
     });
@@ -47,7 +48,9 @@ const ScrollWrapper = (props: Props) => {
     };
   }, [handler, resolvedTheme]);
 
-  if (yOffset < startPosition) {
+  // Only hide when yOffset is explicitly less than startPosition
+  // This prevents hiding content on initial render
+  if (yOffset !== null && yOffset < startPosition) {
     return null;
   }
 
