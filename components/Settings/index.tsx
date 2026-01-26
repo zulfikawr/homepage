@@ -61,7 +61,7 @@ export default function Settings() {
             <Button
               type='default'
               aria-label='Select background'
-              className='w-full flex items-center justify-between gap-2 px-4 h-8'
+              className='w-full flex items-center justify-between gap-2 px-4'
             >
               <div className='flex items-center gap-2'>
                 {selectedBackground && (

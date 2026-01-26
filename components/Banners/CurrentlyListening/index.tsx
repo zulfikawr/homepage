@@ -296,7 +296,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
+      <div className='flex w-full items-center justify-between px-4 py-2.5 border-b border-border'>
         <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
           <Icon name='musicNotes' className='size-5 text-gruv-green' />
           <span>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>

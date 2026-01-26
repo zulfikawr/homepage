@@ -9,6 +9,9 @@ import {
   Geometry,
 } from 'geojson';
 
+import { HeatmapLegend } from '@/components/UI';
+import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
+
 interface WorldMapProps {
   data: { code: string; name: string; count: number }[];
   className?: string;
@@ -309,11 +312,14 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     );
     const maxCount = d3.max(memoizedData, (d) => d.count) || 1;
 
-    // Color scale for intensity
-    const colorScale = d3
-      .scaleSequential()
-      .domain([0, maxCount])
-      .interpolator(d3.interpolateRgb('#f9f5d7', '#af3a03')); // light cream to dark orange
+    // Helper to get discrete intensity level based on count
+    const getIntensity = (count: number) => {
+      if (count === 0) return 0;
+      if (count <= maxCount * 0.25) return 1;
+      if (count <= maxCount * 0.5) return 2;
+      if (count <= maxCount * 0.75) return 3;
+      return 4;
+    };
 
     const g = svg.append('g');
 
@@ -334,9 +340,11 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       .attr('d', (d) => path(d as d3.GeoPermissibleObjects))
       .attr('fill', (d) => {
         const count = counts.get(d.id as string) || 0;
-        return count > 0 ? colorScale(count) : '#ebdbb222'; // subtle muted fill
+        const intensity = getIntensity(count);
+        // Map intensity to CSS variable
+        return `var(--heatmap-${intensity})`;
       })
-      .attr('stroke', 'rgba(60, 56, 54, 0.05)')
+      .attr('stroke', 'var(--border)')
       .attr('stroke-width', 0.5)
       .attr('class', 'transition-colors hover:opacity-80 cursor-pointer')
       .on('mouseover', (event: MouseEvent, d: WorldFeature) => {
@@ -362,13 +370,12 @@ export default function WorldMap({ data, className }: WorldMapProps) {
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full min-h-[400px] ${className}`}
+      className={`relative w-full h-full min-h-[400px] ${className}`}
     >
-      <svg
-        ref={svgRef}
-        className='w-full h-full'
-        style={{ color: 'var(--color-foreground)' }}
-      />
+      <svg ref={svgRef} className='w-full h-full' />
+      <div className='absolute bottom-4 right-4'>
+        <HeatmapLegend />
+      </div>
     </div>
   );
 }

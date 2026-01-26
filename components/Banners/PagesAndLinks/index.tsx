@@ -21,7 +21,7 @@ const PagesAndLinks = () => {
 
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between border-b border-border px-4.5 py-2.5 dark:border-border'>
+      <div className='flex w-full items-center justify-between px-4 py-2.5 border-b border-border'>
         <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
           <span className='size-5 text-gruv-aqua'>
             <Icon name='cube' />
@@ -49,7 +49,7 @@ const PagesAndLinks = () => {
           </Link>
         </div>
       </div>
-      <div className='mask-x mt-4 flex items-center justify-between gap-x-2.5 overflow-x-auto whitespace-nowrap px-4.5 pb-4'>
+      <div className='flex items-center justify-between p-4 gap-x-2 overflow-x-auto whitespace-nowrap'>
         <div className='flex items-center gap-x-2.5'>
           <Link href='/contacts'>
             <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
+import { Portal } from '@/components/UI';
 import { Icon, IconName } from '@/components/UI/Icon';
 
 type ToastVariant = 'default' | 'info' | 'success' | 'error';
@@ -169,12 +170,16 @@ const getVariantProps = (
 const Toast = () => {
   const toasts = useToast();
 
+  if (toasts.length === 0) return null;
+
   return (
-    <>
-      {toasts.map((toast, index) => (
-        <ToastItem key={toast.id} toast={toast} index={index} />
-      ))}
-    </>
+    <Portal>
+      <div className='fixed inset-0 pointer-events-none z-[10001]'>
+        {toasts.map((toast, index) => (
+          <ToastItem key={toast.id} toast={toast} index={index} />
+        ))}
+      </div>
+    </Portal>
   );
 };
 
@@ -222,13 +227,13 @@ const ToastItem = ({
 
   return (
     <div
-      className={`fixed z-[9999] top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out ${
+      className={`fixed top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out pointer-events-auto ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
       }`}
-      style={{ marginTop: `${index * 50}px` }}
+      style={{ marginTop: `${index * 60}px` }}
     >
       <div
-        className={`${variantProps.bgClass} ${variantProps.textClass} border ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-md flex items-center justify-center cursor-pointer text-sm lg:text-lg`}
+        className={`${variantProps.bgClass} ${variantProps.textClass} border ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-md flex items-center justify-center cursor-pointer text-sm lg:text-lg whitespace-nowrap`}
       >
         {variantProps.icon && (
           <span className='mr-2 size-5'>

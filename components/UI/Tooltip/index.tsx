@@ -21,6 +21,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   const [shouldRender, setShouldRender] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
+  const isHoveredRef = useRef(false);
 
   const updateCoords = useCallback(() => {
     if (triggerRef.current) {
@@ -53,8 +54,6 @@ const Tooltip: React.FC<TooltipProps> = ({
 
   useEffect(() => {
     if (isVisible) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      updateCoords();
       window.addEventListener('scroll', updateCoords, true);
       window.addEventListener('resize', updateCoords);
     }
@@ -65,19 +64,28 @@ const Tooltip: React.FC<TooltipProps> = ({
   }, [isVisible, updateCoords]);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
     if (!isVisible && shouldRender) {
-      timeout = setTimeout(() => setShouldRender(false), 200);
+      const timeout = setTimeout(() => setShouldRender(false), 200);
+      return () => clearTimeout(timeout);
     }
-    return () => {
-      if (timeout) clearTimeout(timeout);
-    };
   }, [isVisible, shouldRender]);
 
   const handleMouseEnter = () => {
+    isHoveredRef.current = true;
     updateCoords();
     setShouldRender(true);
-    setIsVisible(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (isHoveredRef.current) {
+          setIsVisible(true);
+        }
+      });
+    });
+  };
+
+  const handleMouseLeave = () => {
+    isHoveredRef.current = false;
+    setIsVisible(false);
   };
 
   const getTransform = () => {
@@ -105,7 +113,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       ref={triggerRef}
       className='relative inline-flex items-center justify-center'
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsVisible(false)}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Trigger Element */}
       {children}

@@ -37,6 +37,12 @@
   --color-gruv-red: #fb4934;
   --color-gruv-aqua: #8ec07c;
 
+  --color-heatmap-0: var(--heatmap-0);
+  --color-heatmap-1: var(--heatmap-1);
+  --color-heatmap-2: var(--heatmap-2);
+  --color-heatmap-3: var(--heatmap-3);
+  --color-heatmap-4: var(--heatmap-4);
+
   --spacing-1: 3px;
   --spacing-2: 6px;
   --spacing-3: 9px;
@@ -113,6 +119,13 @@
     --input: #fe80191a;
     --ring: #fe8019;
     --radius: 0.25rem;
+
+    /* Heatmap Levels (Light) */
+    --heatmap-0: #ebdbb2;
+    --heatmap-1: #d5c4a1;
+    --heatmap-2: #bdae93;
+    --heatmap-3: #79740e;
+    --heatmap-4: #b57614;
   }
 
   .dark {
@@ -137,6 +150,13 @@
     --input: #fe80191a;
     --ring: #fe8019;
     --radius: 0.25rem;
+
+    /* Heatmap Levels (Dark) */
+    --heatmap-0: #3c3836;
+    --heatmap-1: #504945;
+    --heatmap-2: #665c54;
+    --heatmap-3: #b8bb26;
+    --heatmap-4: #fabd2f;
   }
 
   /* Global Styles */

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { Portal } from '@/components/UI';
 import { useBodyScroll } from '@/hooks';
 
 type ModalInstance = {
@@ -104,26 +105,30 @@ const Modal = () => {
   }
 
   return (
-    <div className={`fixed inset-0 z-[9999] ${isVisible ? 'block' : 'hidden'}`}>
+    <Portal>
       <div
-        className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
-          animation === 'in' ? 'opacity-100' : 'opacity-0'
-        }`}
-        onClick={handleClose}
-      />
-
-      <div className='fixed inset-0 flex items-center justify-center p-4'>
+        className={`fixed inset-0 z-[9999] ${isVisible ? 'block' : 'hidden'}`}
+      >
         <div
-          className={`w-full max-w-xl bg-card rounded-xl border dark:border-border 
+          className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
+            animation === 'in' ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={handleClose}
+        />
+
+        <div className='fixed inset-0 flex items-center justify-center p-4'>
+          <div
+            className={`w-full max-w-xl bg-card rounded-xl border dark:border-border 
           shadow-md flex flex-col transition-all duration-400 ease-in-out
           ${animation === 'in' ? 'scale-100' : 'scale-95'} ${
             animation === 'in' ? 'opacity-100' : 'opacity-0'
           }`}
-        >
-          {currentContent}
+          >
+            {currentContent}
+          </div>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 };
 

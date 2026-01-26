@@ -164,9 +164,9 @@ const LocationAndTime = () => {
       )}
 
       {/* Content */}
-      <div className='relative px-4.5 py-2.5'>
+      <div className='relative'>
         <div className='flex flex-col items-start space-y-4'>
-          <div className='flex items-center justify-between w-full'>
+          <div className='flex w-full items-center justify-between px-4 py-4 border-b border-border'>
             <div className='flex items-center gap-2'>
               <Icon
                 name='mapPin'

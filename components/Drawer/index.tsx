@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { Portal } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useBodyScroll } from '@/hooks';
@@ -185,19 +186,22 @@ const Drawer = () => {
   }
 
   return (
-    <div className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}>
-      {/* Overlay */}
+    <Portal>
       <div
-        className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
-          animation === 'in' ? 'opacity-100' : 'opacity-0'
-        }`}
-        onClick={handleClose}
-      />
+        className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}
+      >
+        {/* Overlay */}
+        <div
+          className={`absolute inset-0 bg-card/60 transition-opacity duration-500 ${
+            animation === 'in' ? 'opacity-100' : 'opacity-0'
+          }`}
+          onClick={handleClose}
+        />
 
-      {/* Drawer Panel */}
-      <div
-        ref={drawerRef}
-        className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
+        {/* Drawer Panel */}
+        <div
+          ref={drawerRef}
+          className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
           border flex flex-col overflow-hidden
           ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}
           ${
@@ -205,32 +209,33 @@ const Drawer = () => {
               ? 'bg-background/80 dark:bg-background/70 border-primary/10 dark:border-primary/5 backdrop-blur-xl shadow-2xl'
               : 'bg-background border-border dark:border-border'
           }`}
-        style={{
-          borderRadius: `${radius}px ${radius}px 0 0`,
-          transform: isDragging
-            ? `translateY(${dragY}px)`
-            : animation === 'in'
-              ? 'translateY(0)'
-              : 'translateY(100%)',
-          touchAction: 'none',
-        }}
-      >
-        {/* Drag Handle / Thumb */}
-        <div
-          className='w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing'
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          style={{
+            borderRadius: `${radius}px ${radius}px 0 0`,
+            transform: isDragging
+              ? `translateY(${dragY}px)`
+              : animation === 'in'
+                ? 'translateY(0)'
+                : 'translateY(100%)',
+            touchAction: 'none',
+          }}
         >
-          <div className='w-12 h-1.5 bg-border dark:bg-muted rounded-full' />
-        </div>
+          {/* Drag Handle / Thumb */}
+          <div
+            className='w-full flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing'
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div className='w-12 h-1.5 bg-border dark:bg-muted rounded-full' />
+          </div>
 
-        <div className='flex-1 flex flex-col overflow-hidden'>
-          {currentContent}
+          <div className='flex-1 flex flex-col overflow-hidden'>
+            {currentContent}
+          </div>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 };
 

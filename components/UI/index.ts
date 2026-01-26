@@ -6,6 +6,7 @@ export { Dropzone } from './Dropzone';
 export { FileDropzone } from './FileDropzone';
 export { FileUpload } from './FileUpload';
 export { FormLabel } from './FormLabel';
+export { default as HeatmapLegend } from './HeatmapLegend';
 export { Icon } from './Icon';
 export { Input } from './Input';
 export { Label } from './Label';

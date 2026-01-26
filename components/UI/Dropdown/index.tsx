@@ -9,13 +9,14 @@ import React, {
   useState,
 } from 'react';
 
+import { Portal } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 
 import { Icon, type IconName } from '../Icon';
 
 const DropdownContext = createContext<{
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (open: boolean) => void;
 }>({
   setIsOpen: () => {},
 });
@@ -36,52 +37,90 @@ const Dropdown = ({
   matchTriggerWidth = false,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [triggerWidth, setTriggerWidth] = useState('auto');
+  const [menuCoords, setMenuCoords] = useState({ top: 0, left: 0, width: 0 });
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
+  const isIntentOpenRef = useRef(false);
 
   const { effectEnabled } = useEffectToggle();
   const { radius } = useRadius();
 
   const calculatePosition = useCallback(() => {
-    if (!isOpen || !triggerRef.current || !menuRef.current) return;
+    if (!triggerRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
-    const menuRect = menuRef.current.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
+
+    const menuHeight = menuRef.current?.offsetHeight || 200;
 
     const spaceBelow = viewportHeight - triggerRect.bottom;
     const newPosition =
-      spaceBelow < menuRect.height && triggerRect.top > menuRect.height
+      spaceBelow < menuHeight && triggerRect.top > menuHeight
         ? 'top'
         : 'bottom';
 
     setPosition(newPosition);
-  }, [isOpen]);
+    setMenuCoords({
+      top:
+        newPosition === 'bottom' ? triggerRect.bottom + 8 : triggerRect.top - 8,
+      left: triggerRect.left,
+      width: triggerRect.width,
+    });
+  }, []);
+
+  const handleOpen = useCallback(() => {
+    isIntentOpenRef.current = true;
+    calculatePosition();
+    setShouldRender(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (isIntentOpenRef.current) {
+          setIsOpen(true);
+          onOpenChange?.(true);
+        }
+      });
+    });
+  }, [calculatePosition, onOpenChange]);
+
+  const handleClose = useCallback(() => {
+    isIntentOpenRef.current = false;
+    setIsOpen(false);
+    onOpenChange?.(false);
+  }, [onOpenChange]);
 
   useEffect(() => {
     if (isOpen) {
-      requestAnimationFrame(() => {
-        calculatePosition();
-      });
       window.addEventListener('resize', calculatePosition);
-      return () => window.removeEventListener('resize', calculatePosition);
+      window.addEventListener('scroll', calculatePosition, true);
+      return () => {
+        window.removeEventListener('resize', calculatePosition);
+        window.removeEventListener('scroll', calculatePosition, true);
+      };
     }
   }, [isOpen, calculatePosition]);
+
+  useEffect(() => {
+    if (!isOpen && shouldRender) {
+      const timeout = setTimeout(() => setShouldRender(false), 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen, shouldRender]);
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(event.target as Node) &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
-        onOpenChange?.(false);
+        handleClose();
       }
     },
-    [onOpenChange],
+    [handleClose],
   );
 
   useEffect(() => {
@@ -89,19 +128,12 @@ const Dropdown = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [handleClickOutside]);
 
-  useEffect(() => {
-    if (matchTriggerWidth && triggerRef.current) {
-      const width = triggerRef.current.offsetWidth;
-      requestAnimationFrame(() => {
-        setTriggerWidth(`${width}px`);
-      });
-    }
-  }, [isOpen, matchTriggerWidth]);
-
   const toggleDropdown = () => {
-    const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
-    onOpenChange?.(newIsOpen);
+    if (isOpen) {
+      handleClose();
+    } else {
+      handleOpen();
+    }
   };
 
   const effectStyles = effectEnabled
@@ -109,7 +141,7 @@ const Dropdown = ({
     : 'bg-popover border border-border backdrop-blur-none';
 
   return (
-    <DropdownContext.Provider value={{ setIsOpen }}>
+    <DropdownContext.Provider value={{ setIsOpen: handleClose }}>
       <div className={`relative inline-block ${className}`} ref={dropdownRef}>
         {/* Trigger Element */}
         <div
@@ -122,28 +154,34 @@ const Dropdown = ({
           {trigger}
         </div>
 
-        {/* Dropdown Menu */}
-        <div
-          ref={menuRef}
-          className={`absolute ${
-            position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
-          } left-0 z-[9998] ${
-            matchTriggerWidth ? 'w-[var(--trigger-width)]' : 'min-w-fit'
-          } shadow-lg transition-all duration-200 ease-in-out ${
-            isOpen
-              ? 'opacity-100 scale-y-100'
-              : 'opacity-0 scale-y-95 pointer-events-none'
-          }
-            ${effectStyles}
-          `}
-          role='menu'
-          style={{
-            ...(matchTriggerWidth ? { '--trigger-width': triggerWidth } : {}),
-            borderRadius: `${radius}px`,
-          }}
-        >
-          <div className='p-1 space-y-1'>{children}</div>
-        </div>
+        {/* Dropdown Menu Portal */}
+        {shouldRender && (
+          <Portal>
+            <div
+              ref={menuRef}
+              className={`fixed z-[9998] ${
+                matchTriggerWidth ? '' : 'min-w-fit'
+              } shadow-lg transition-all duration-200 ease-in-out ${
+                isOpen
+                  ? 'opacity-100 scale-y-100'
+                  : 'opacity-0 scale-y-95 pointer-events-none'
+              }
+                ${effectStyles}
+              `}
+              role='menu'
+              style={{
+                top: menuCoords.top,
+                left: menuCoords.left,
+                width: matchTriggerWidth ? `${menuCoords.width}px` : 'auto',
+                transformOrigin: position === 'top' ? 'bottom' : 'top',
+                transform: position === 'top' ? 'translateY(-100%)' : 'none',
+                borderRadius: `${radius}px`,
+              }}
+            >
+              <div className='p-1 space-y-1'>{children}</div>
+            </div>
+          </Portal>
+        )}
       </div>
     </DropdownContext.Provider>
   );

@@ -9,11 +9,11 @@ const Banners = () => {
   return (
     <div className='space-y-6'>
       <PagesAndLinks />
+      <GitHubHeatmap />
       <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
         <CurrentlyListening />
         <LocationAndTime />
       </div>
-      <GitHubHeatmap />
     </div>
   );
 };

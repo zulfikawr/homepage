@@ -4,13 +4,10 @@ import { useEffect, useState } from 'react';
 
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
-import { Icon, Tooltip } from '@/components/UI';
+import { HeatmapLegend, Icon, Tooltip } from '@/components/UI';
+import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import {
-  getGitHubContributions,
-  getGruvboxIntensityColor,
-  getGruvboxIntensityColorDark,
-} from '@/lib/github';
+import { getGitHubContributions } from '@/lib/github';
 import { GitHubContributionData } from '@/types/github';
 
 import LoadingSkeleton from './loading';
@@ -67,9 +64,7 @@ const GitHubHeatmap = () => {
   }, []);
 
   if (error || forceEmpty)
-    return (
-      <CardEmpty message='No data - Check GITHUB_TOKEN (format: ghp_xxx...)' />
-    );
+    return <CardEmpty message='No data - Check GITHUB_TOKEN' />;
 
   if (isLoading) return <LoadingSkeleton />;
 
@@ -108,50 +103,24 @@ const GitHubHeatmap = () => {
           <div className='flex gap-1 min-w-max'>
             {weeks.map((week, weekIndex) => (
               <div key={weekIndex} className='flex flex-col gap-1'>
-                {week.map((day, dayIndex) => {
-                  const isDark =
-                    document.documentElement.classList.contains('dark');
-                  const color = isDark
-                    ? getGruvboxIntensityColorDark(day.intensity)
-                    : getGruvboxIntensityColor(day.intensity);
-
-                  return (
-                    <Tooltip
-                      key={`${weekIndex}-${dayIndex}`}
-                      text={`${day.date}: ${day.count} contributions`}
-                    >
-                      <div
-                        className='w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50'
-                        style={{
-                          backgroundColor: color,
-                        }}
-                      />
-                    </Tooltip>
-                  );
-                })}
+                {week.map((day, dayIndex) => (
+                  <Tooltip
+                    key={`${weekIndex}-${dayIndex}`}
+                    text={`${day.date}: ${day.count} contributions`}
+                  >
+                    <div
+                      className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(day.intensity)}`}
+                    />
+                  </Tooltip>
+                ))}
               </div>
             ))}
           </div>
         </div>
 
         {/* Legend */}
-        <div className='flex items-center justify-end md:pt-2 gap-1 text-xs text-muted-foreground'>
-          <span>Less</span>
-          {[0, 1, 2, 3, 4].map((intensity) => {
-            const isDark = document.documentElement.classList.contains('dark');
-            const color = isDark
-              ? getGruvboxIntensityColorDark(intensity)
-              : getGruvboxIntensityColor(intensity);
-
-            return (
-              <div
-                key={intensity}
-                className='w-3 h-3 rounded-sm'
-                style={{ backgroundColor: color }}
-              />
-            );
-          })}
-          <span>More</span>
+        <div className='pt-2'>
+          <HeatmapLegend />
         </div>
       </div>
     </Card>

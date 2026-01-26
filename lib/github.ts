@@ -55,11 +55,11 @@ export async function getGitHubContributions(): Promise<GitHubContributionData |
  */
 export function getGruvboxIntensityColor(intensity: number): string {
   const colors = {
-    0: '#3c3836', // gruv-bg-dark (empty)
-    1: '#504945', // gruv-bg-soft (low)
-    2: '#665c54', // medium
-    3: '#b8bb26', // gruv-green (high)
-    4: '#fabd2f', // gruv-yellow (very high)
+    0: '#ebdbb2', // gruv-bg-light (empty)
+    1: '#d5c4a1', // light-medium (low)
+    2: '#bdae93', // medium (medium)
+    3: '#79740e', // gruv-green (high)
+    4: '#b57614', // gruv-yellow (very high)
   };
 
   return colors[intensity as keyof typeof colors] || colors[0];
