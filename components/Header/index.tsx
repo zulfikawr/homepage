@@ -77,8 +77,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   </OffsetTransition>
                 </div>
               </div>
-              {/* Mobile: Always show Title if not on home page */}
-              <div className='lg:hidden'>{!isHomePage && <HeaderTitle />}</div>
+              {/* Mobile: Removed HeaderTitle */}
             </div>
           </div>
 
