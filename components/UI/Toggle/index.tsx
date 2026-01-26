@@ -1,8 +1,9 @@
 'use client';
 
-import { useRadius } from '@/contexts/radiusContext';
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
+
+import { useRadius } from '@/contexts/radiusContext';
 
 interface ToggleProps {
   isActive?: boolean;

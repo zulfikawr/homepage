@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { PersonalInfo } from '@/types/personalInfo';
-import { Button, FormLabel, Input, FileUpload } from '@/components/UI';
-import { updatePersonalInfo } from '@/database/personalInfo';
-import { toast } from '@/components/Toast';
-import { Hover } from '@/components/Visual';
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { Separator } from '@/components/UI/Separator';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { toast } from '@/components/Toast';
+import { Button, FileUpload, FormLabel, Input } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
+import { Hover } from '@/components/Visual';
+import { updatePersonalInfo } from '@/database/personalInfo';
+import { PersonalInfo } from '@/types/personalInfo';
 
 interface PersonalInfoFormProps {
   data?: PersonalInfo;

@@ -1,12 +1,13 @@
 'use client';
 
+import { useMemo } from 'react';
+import Link from 'next/link';
+
 import { Card } from '@/components/Card';
 import { Button, Icon, Tooltip } from '@/components/UI';
-import Link from 'next/link';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
-import { useMemo } from 'react';
 
 const PagesAndLinks = () => {
   const { data: resumeList } = useCollection<Resume>(

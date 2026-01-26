@@ -1,11 +1,12 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { Certificate } from '@/types/certificate';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
 import { mapRecordToCertificate } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { Certificate } from '@/types/certificate';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

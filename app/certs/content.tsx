@@ -1,11 +1,12 @@
 'use client';
 
 import CertificateCard from '@/components/Card/Certificate';
-import { mapRecordToCertificate } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
 import { useCollection } from '@/hooks';
+import { mapRecordToCertificate } from '@/lib/mappers';
 import { Certificate } from '@/types/certificate';
 
 export default function CertificatesContent() {
@@ -31,9 +32,13 @@ export default function CertificatesContent() {
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='certificate' />)
         ) : certificates.length > 0 ? (
-          certificates.map((certificate) => (
-            <CertificateCard key={certificate.id} certificate={certificate} />
-          ))
+          <StaggerContainer>
+            {certificates.map((certificate) => (
+              <ViewTransition key={certificate.id}>
+                <CertificateCard certificate={certificate} />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         ) : (
           <CardEmpty message='No certificates available' />
         )}

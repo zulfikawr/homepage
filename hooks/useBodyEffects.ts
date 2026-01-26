@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 /**
  * Hook to turn on/off body scrolling
@@ -53,4 +53,4 @@ const useBodyPointerEvents = (): [
   return [pointerEvents, setPointerEvents];
 };
 
-export { useBodyScroll, useBodyPointerEvents };
+export { useBodyPointerEvents, useBodyScroll };

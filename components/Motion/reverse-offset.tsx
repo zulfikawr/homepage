@@ -1,7 +1,8 @@
 'use client';
 
-import ScrollWrapper from './scroll';
 import React, { useRef } from 'react';
+
+import ScrollWrapper from './scroll';
 
 interface Props {
   children: React.ReactNode;

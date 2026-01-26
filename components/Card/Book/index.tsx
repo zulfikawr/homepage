@@ -1,8 +1,9 @@
-import { Book } from '@/types/book';
-import openLink from '@/utilities/externalLink';
+import { useRouter } from 'next/navigation';
+
 import { Card } from '@/components/Card';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { useRouter } from 'next/navigation';
+import { Book } from '@/types/book';
+import openLink from '@/utilities/externalLink';
 
 interface BookCardProps {
   book: Book;

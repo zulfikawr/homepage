@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, CSSProperties, FC } from 'react';
+import React, { CSSProperties, FC, useEffect, useRef } from 'react';
 
 interface DigitalRainProps {
   characterColor?: string;

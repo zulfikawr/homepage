@@ -1,28 +1,30 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Button, Icon, Tooltip } from '@/components/UI';
-import PageTitle from '@/components/PageTitle';
-import {
-  getAccessToken,
-  getRecentlyPlayed,
-  getTopTracks,
-  getTopArtists,
-  getPlaylists,
-} from '@/lib/spotify';
-import { CardLoading } from '@/components/Card/Loading';
-import CardEmpty from '@/components/Card/Empty';
-import { getTimeAgo } from '@/utilities/timeAgo';
+
 import CurrentlyListening from '@/components/Banners/CurrentlyListening';
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
 import PlaylistCard from '@/components/Card/Playlist/Spotify';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { formatDate } from '@/utilities/formatDate';
-import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
-import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
-import { useRadius } from '@/contexts/radiusContext';
-import { useLoadingToggle } from '@/contexts/loadingContext';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button, Icon, Tooltip } from '@/components/UI';
 import { Skeleton } from '@/components/UI';
+import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { useLoadingToggle } from '@/contexts/loadingContext';
+import { useRadius } from '@/contexts/radiusContext';
+import {
+  getAccessToken,
+  getPlaylists,
+  getRecentlyPlayed,
+  getTopArtists,
+  getTopTracks,
+} from '@/lib/spotify';
+import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
+import { formatDate } from '@/utilities/formatDate';
+import { getTimeAgo } from '@/utilities/timeAgo';
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
@@ -255,46 +257,49 @@ export default function SpotifyMusicContent() {
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
             ) : displayData.recentTracks.length > 0 ? (
-              displayData.recentTracks.map((item, index) => (
-                <div
-                  key={index}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
-                  style={{ borderRadius: `${radius}px` }}
-                >
-                  <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
-                    {index + 1}
-                  </span>
-                  <div className='flex-shrink-0'>
-                    <Tooltip text={item.track.album.name}>
-                      <ImageWithFallback
-                        src={item.track.album.images[0]?.url}
-                        alt={item.track.album.name}
-                        width={48}
-                        height={48}
-                        type='square'
-                      />
-                    </Tooltip>
-                  </div>
-                  <div className='min-w-0 flex-1 overflow-hidden'>
-                    <Link
-                      href={item.track.external_urls.spotify}
-                      target='_blank'
-                      className='font-medium hover:underline block truncate'
-                      title={item.track.name}
+              <StaggerContainer>
+                {displayData.recentTracks.map((item, index) => (
+                  <ViewTransition key={index}>
+                    <div
+                      className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
+                      style={{ borderRadius: `${radius}px` }}
                     >
-                      {item.track.name}
-                    </Link>
-                    <p className='text-sm text-muted-foreground truncate'>
-                      {item.track.artists
-                        .map((artist) => artist.name)
-                        .join(', ')}
-                    </p>
-                  </div>
-                  <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                    {getTimeAgo(lastPlayedAt)}
-                  </div>
-                </div>
-              ))
+                      <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
+                        {index + 1}
+                      </span>
+                      <div className='flex-shrink-0'>
+                        <Tooltip text={item.track.album.name}>
+                          <ImageWithFallback
+                            src={item.track.album.images[0]?.url}
+                            alt={item.track.album.name}
+                            width={48}
+                            height={48}
+                            type='square'
+                          />
+                        </Tooltip>
+                      </div>
+                      <div className='min-w-0 flex-1 overflow-hidden'>
+                        <Link
+                          href={item.track.external_urls.spotify}
+                          target='_blank'
+                          className='font-medium hover:underline block truncate'
+                          title={item.track.name}
+                        >
+                          {item.track.name}
+                        </Link>
+                        <p className='text-sm text-muted-foreground truncate'>
+                          {item.track.artists
+                            .map((artist) => artist.name)
+                            .join(', ')}
+                        </p>
+                      </div>
+                      <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
+                        {getTimeAgo(lastPlayedAt)}
+                      </div>
+                    </div>
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No recent tracks found' />
             )}
@@ -317,44 +322,49 @@ export default function SpotifyMusicContent() {
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='track' />)
             ) : displayData.topTracks.length > 0 ? (
-              displayData.topTracks.map((track, index) => (
-                <div
-                  key={track.id}
-                  className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
-                  style={{ borderRadius: `${radius}px` }}
-                >
-                  <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
-                    {index + 1}
-                  </span>
-                  <div className='flex-shrink-0'>
-                    <Tooltip text={track.album.name}>
-                      <ImageWithFallback
-                        src={track.album.images[0]?.url}
-                        alt={track.album.name}
-                        width={48}
-                        height={48}
-                        type='square'
-                      />
-                    </Tooltip>
-                  </div>
-                  <div className='min-w-0 flex-1 overflow-hidden'>
-                    <Link
-                      href={track.external_urls.spotify}
-                      target='_blank'
-                      className='font-medium hover:underline block truncate'
-                      title={track.name}
+              <StaggerContainer>
+                {displayData.topTracks.map((track, index) => (
+                  <ViewTransition key={track.id}>
+                    <div
+                      className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
+                      style={{ borderRadius: `${radius}px` }}
                     >
-                      {track.name}
-                    </Link>
-                    <p className='text-sm text-muted-foreground truncate'>
-                      {track.artists.map((artist) => artist.name).join(', ')}
-                    </p>
-                  </div>
-                  <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                    {formatDuration(track.duration_ms)}
-                  </div>
-                </div>
-              ))
+                      <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
+                        {index + 1}
+                      </span>
+                      <div className='flex-shrink-0'>
+                        <Tooltip text={track.album.name}>
+                          <ImageWithFallback
+                            src={track.album.images[0]?.url}
+                            alt={track.album.name}
+                            width={48}
+                            height={48}
+                            type='square'
+                          />
+                        </Tooltip>
+                      </div>
+                      <div className='min-w-0 flex-1 overflow-hidden'>
+                        <Link
+                          href={track.external_urls.spotify}
+                          target='_blank'
+                          className='font-medium hover:underline block truncate'
+                          title={track.name}
+                        >
+                          {track.name}
+                        </Link>
+                        <p className='text-sm text-muted-foreground truncate'>
+                          {track.artists
+                            .map((artist) => artist.name)
+                            .join(', ')}
+                        </p>
+                      </div>
+                      <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
+                        {formatDuration(track.duration_ms)}
+                      </div>
+                    </div>
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No top tracks found' />
             )}
@@ -386,25 +396,30 @@ export default function SpotifyMusicContent() {
                     </div>
                   ))
               ) : displayData.topArtists.length > 0 ? (
-                displayData.topArtists.map((artist) => (
-                  <Link
-                    key={artist.id}
-                    href={artist.external_urls.spotify}
-                    target='_blank'
-                    className='flex flex-col items-center space-y-2 p-3 hover:bg-muted/50 hover:bg-muted transition-colors'
-                    style={{ borderRadius: `${radius}px` }}
-                  >
-                    <ImageWithFallback
-                      src={artist.images[0]?.url}
-                      alt={artist.name}
-                      width={96}
-                      height={96}
-                      className='object-cover aspect-square'
-                      type='square'
-                    />
-                    <h3 className='font-medium text-center'>{artist.name}</h3>
-                  </Link>
-                ))
+                <StaggerContainer>
+                  {displayData.topArtists.map((artist) => (
+                    <ViewTransition key={artist.id}>
+                      <Link
+                        href={artist.external_urls.spotify}
+                        target='_blank'
+                        className='flex flex-col items-center space-y-2 p-3 hover:bg-muted/50 hover:bg-muted transition-colors'
+                        style={{ borderRadius: `${radius}px` }}
+                      >
+                        <ImageWithFallback
+                          src={artist.images[0]?.url}
+                          alt={artist.name}
+                          width={96}
+                          height={96}
+                          className='object-cover aspect-square'
+                          type='square'
+                        />
+                        <h3 className='font-medium text-center'>
+                          {artist.name}
+                        </h3>
+                      </Link>
+                    </ViewTransition>
+                  ))}
+                </StaggerContainer>
               ) : (
                 <div className='col-span-full'>
                   <CardEmpty message='No top artists found' />
@@ -421,9 +436,13 @@ export default function SpotifyMusicContent() {
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='playlist' />)
             ) : displayData.playlists.length > 0 ? (
-              displayData.playlists.map((playlist) => (
-                <PlaylistCard key={playlist.id} playlist={playlist} />
-              ))
+              <StaggerContainer>
+                {displayData.playlists.map((playlist) => (
+                  <ViewTransition key={playlist.id}>
+                    <PlaylistCard playlist={playlist} />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <div className='col-span-full'>
                 <CardEmpty message='No playlists found' />

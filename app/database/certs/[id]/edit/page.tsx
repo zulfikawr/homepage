@@ -1,9 +1,11 @@
-import { getCertificateById } from '@/database/certificates';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import EditCertificatePage from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+import { getCertificateById } from '@/database/certificates';
+
+import EditCertificatePage from './content';
 
 type Props = {
   params: Promise<{

@@ -1,8 +1,9 @@
-import { Publication } from '@/types/publication';
+import { useRouter } from 'next/navigation';
+
 import { Card } from '@/components/Card';
 import { Badge, Icon } from '@/components/UI';
+import { Publication } from '@/types/publication';
 import openLink from '@/utilities/externalLink';
-import { useRouter } from 'next/navigation';
 
 interface PublicationCardProps {
   publication: Publication;

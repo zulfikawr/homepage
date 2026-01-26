@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/UI';
+
 import { modal } from '@/components/Modal';
+import { Button } from '@/components/UI';
 
 interface LogoutConfirmProps {
   onConfirm: () => void;

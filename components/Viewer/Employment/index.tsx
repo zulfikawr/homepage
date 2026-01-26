@@ -1,7 +1,7 @@
-import { Employment } from '@/types/employment';
-import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Table, TableBody, TableRow, TableCell } from '@/components/UI';
+import { Table, TableBody, TableCell, TableRow } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
+import { Employment } from '@/types/employment';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
   return (

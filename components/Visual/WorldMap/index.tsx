@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import {
-  FeatureCollection,
-  Geometry,
-  GeoJsonProperties,
   Feature,
+  FeatureCollection,
+  GeoJsonProperties,
+  Geometry,
 } from 'geojson';
 
 interface WorldMapProps {

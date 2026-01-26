@@ -1,7 +1,9 @@
-import { Metadata } from 'next';
-import NewCertificateContent from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+
+import NewCertificateContent from './content';
 
 export const metadata: Metadata = {
   title: 'Add Certificate - Zulfikar',

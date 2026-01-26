@@ -1,8 +1,9 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+
+import pb from '@/lib/pocketbase';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

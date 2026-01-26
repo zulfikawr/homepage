@@ -1,9 +1,10 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
+import pb from '@/lib/pocketbase';
 import { getFileUrl } from '@/lib/storage';
 
 /**

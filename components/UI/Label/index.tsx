@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Icon, IconName, iconMap, iconifyMap } from '@/components/UI/Icon';
-import { useRadius } from '@/contexts/radiusContext';
 import { twMerge } from 'tailwind-merge';
+
+import { Icon, iconifyMap, iconMap, IconName } from '@/components/UI/Icon';
+import { useRadius } from '@/contexts/radiusContext';
 
 type LabelTypes =
   | 'primary'

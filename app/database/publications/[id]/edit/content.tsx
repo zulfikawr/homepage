@@ -1,10 +1,11 @@
 'use client';
 
-import { Publication } from '@/types/publication';
-import PageTitle from '@/components/PageTitle';
-import PublicationForm from '@/components/Form/Publication';
-import { useTitle } from '@/contexts/titleContext';
 import { useEffect } from 'react';
+
+import PublicationForm from '@/components/Form/Publication';
+import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
+import { Publication } from '@/types/publication';
 
 interface EditPublicationPageProps {
   publication: Publication;

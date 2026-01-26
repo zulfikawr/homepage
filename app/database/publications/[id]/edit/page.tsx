@@ -1,9 +1,11 @@
-import { getPublicationById } from '@/database/publications';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import EditPublicationPage from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+import { getPublicationById } from '@/database/publications';
+
+import EditPublicationPage from './content';
 
 type Props = {
   params: Promise<{

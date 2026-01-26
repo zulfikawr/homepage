@@ -1,11 +1,12 @@
 'use client';
 
-import { Card } from '@/components/Card';
-import openLink from '@/utilities/externalLink';
-import { Certificate } from '@/types/certificate';
-import { Separator } from '@/components/UI/Separator';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
+
+import { Card } from '@/components/Card';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { Separator } from '@/components/UI/Separator';
+import { Certificate } from '@/types/certificate';
+import openLink from '@/utilities/externalLink';
 
 interface CertificateCardProps {
   certificate: Certificate;

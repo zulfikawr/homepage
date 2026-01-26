@@ -1,5 +1,5 @@
-import { Separator } from '@/components/UI/Separator';
 import { Skeleton } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
 
 const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
   <div className='relative flex w-full flex-col rounded-md border border-border bg-card shadow-sm'>

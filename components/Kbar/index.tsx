@@ -1,7 +1,9 @@
-import { drawer } from '@/components/Drawer';
-import { KbarContent } from './components';
 import { useHotkeys } from 'react-hotkeys-hook';
+
+import { drawer } from '@/components/Drawer';
 import { Input } from '@/components/UI';
+
+import { KbarContent } from './components';
 
 export function Kbar() {
   useHotkeys('ctrl+k, command+k', (e) => {

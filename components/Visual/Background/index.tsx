@@ -1,8 +1,9 @@
 'use client';
 
-import { useBackground } from '@/contexts/backgroundContext';
-import dynamic from 'next/dynamic';
 import { useSyncExternalStore } from 'react';
+import dynamic from 'next/dynamic';
+
+import { useBackground } from '@/contexts/backgroundContext';
 
 const WavesBackground = dynamic(() => import('./Waves'), { ssr: false });
 const TetrisBackground = dynamic(() => import('./Tetris'), { ssr: false });

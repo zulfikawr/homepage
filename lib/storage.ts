@@ -1,5 +1,6 @@
-import pb from './pocketbase';
 import { RecordModel } from 'pocketbase';
+
+import pb from './pocketbase';
 
 /**
  * Generates a URL for a file stored in PocketBase.

@@ -1,5 +1,6 @@
-import NotFound from '@/components/NotFound';
 import { Metadata } from 'next';
+
+import NotFound from '@/components/NotFound';
 
 export const metadata: Metadata = {
   title: 'Zulfikar - 404 Not Found',

@@ -1,14 +1,16 @@
 'use client';
 
 import { useRef } from 'react';
+
 import { EmploymentCard } from '@/components/Card/Employment';
-import { mapRecordToEmployment } from '@/lib/mappers';
-import { sortByDate } from '@/utilities/sortByDate';
-import SectionTitle from '@/components/SectionTitle';
-import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import SectionTitle from '@/components/SectionTitle';
 import { useCollection } from '@/hooks';
+import { mapRecordToEmployment } from '@/lib/mappers';
 import { Employment } from '@/types/employment';
+import { sortByDate } from '@/utilities/sortByDate';
 
 const EmploymentSection = () => {
   const {
@@ -82,10 +84,14 @@ const EmploymentSection = () => {
               // onScroll={handleScroll}
               className='flex gap-x-4 overflow-x-auto whitespace-nowrap pt-[2px] pb-[2px] -mt-[2px] -mb-[2px] scrollbar-hide relative'
             >
-              <div className='flex gap-x-4 animate-fade-in'>
-                {sortedEmployments.map((employment) => (
-                  <EmploymentCard key={employment.id} employment={employment} />
-                ))}
+              <div className='flex gap-x-4'>
+                <StaggerContainer>
+                  {sortedEmployments.map((employment) => (
+                    <ViewTransition key={employment.id} direction='right'>
+                      <EmploymentCard employment={employment} />
+                    </ViewTransition>
+                  ))}
+                </StaggerContainer>
               </div>
             </div>
           </div>

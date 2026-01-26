@@ -1,13 +1,15 @@
 'use client';
 
-import EmploymentCard from '@/components/Card/Employment';
-import { mapRecordToEmployment } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import EmploymentCard from '@/components/Card/Employment';
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToEmployment } from '@/lib/mappers';
 import { Employment } from '@/types/employment';
 
 export default function EmploymentDatabase() {
@@ -40,27 +42,29 @@ export default function EmploymentDatabase() {
             .map((_, index) => <CardLoading key={index} type='employment' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddEmployment}
-                className='mx-auto'
-              >
-                {employments && employments.length > 0
-                  ? 'Add more'
-                  : 'Add employment'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddEmployment}
+                  className='mx-auto'
+                >
+                  {employments && employments.length > 0
+                    ? 'Add more'
+                    : 'Add employment'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(employments) && employments.length > 0 ? (
-              employments.map((employment) => (
-                <EmploymentCard
-                  key={employment.id}
-                  employment={employment}
-                  openForm
-                />
-              ))
+              <StaggerContainer>
+                {employments.map((employment) => (
+                  <ViewTransition key={employment.id}>
+                    <EmploymentCard employment={employment} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No employments available' />
             )}

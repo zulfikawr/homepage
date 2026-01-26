@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
+
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import Banners from '@/components/Section/Banners';
 import EmploymentSection from '@/components/Section/Employment';
-import ProjectSection from '@/components/Section/Project';
 import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
 import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
-import Banners from '@/components/Section/Banners';
+import ProjectSection from '@/components/Section/Project';
 import { useCollection } from '@/hooks';
 import { mapRecordToSection } from '@/lib/mappers';
 import { Section } from '@/types/section';
@@ -48,11 +50,13 @@ export default function Home() {
 
   return (
     <section className='mt-0 pt-24 lg:pt-12 space-y-14'>
-      {activeSections.map((section) => (
-        <React.Fragment key={section.name}>
-          {sectionMap[section.name]}
-        </React.Fragment>
-      ))}
+      <StaggerContainer>
+        {activeSections.map((section) => (
+          <ViewTransition key={section.name}>
+            {sectionMap[section.name]}
+          </ViewTransition>
+        ))}
+      </StaggerContainer>
     </section>
   );
 }

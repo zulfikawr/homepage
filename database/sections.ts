@@ -1,11 +1,12 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { Section } from '@/types/section';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
 import { mapRecordToSection } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { Section } from '@/types/section';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

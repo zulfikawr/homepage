@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
+
+import { Card } from '@/components/Card';
+import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { toast } from '@/components/Toast';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { createFeedback } from '@/database/feedback';
-import { toast } from '@/components/Toast';
-import { Card } from '@/components/Card';
 import { escapeHtml } from '@/utilities/escapeHtml';
 
 const MAX_CHARS = 5000;
@@ -68,62 +70,64 @@ export default function FeedbackContent() {
         subtitle="I appreciate thoughtful feedback and believe that we don't get enough of them these days."
       />
 
-      <Card isPreview className='p-6'>
-        <p className='text-sm text-foreground dark:text-muted-foreground'>
-          Please use this form to share whatever you&apos;d like with me. This
-          form is anonymous (really). If you&apos;d like me to respond, please
-          feel free to leave your contact.
-        </p>
+      <ViewTransition>
+        <Card isPreview className='p-6'>
+          <p className='text-sm text-foreground dark:text-muted-foreground'>
+            Please use this form to share whatever you&apos;d like with me. This
+            form is anonymous (really). If you&apos;d like me to respond, please
+            feel free to leave your contact.
+          </p>
 
-        <Separator />
+          <Separator />
 
-        <div className='space-y-4'>
-          <div>
-            <div className='flex justify-between items-center'>
-              <FormLabel htmlFor='feedback' required>
-                Comments/Feedback
-              </FormLabel>
-              <span
-                className={`text-xs ${feedback.length === MAX_CHARS ? 'text-destructive font-bold' : 'text-muted-foreground'}`}
-              >
-                {feedback.length}/{MAX_CHARS}
-              </span>
+          <div className='space-y-4'>
+            <div>
+              <div className='flex justify-between items-center'>
+                <FormLabel htmlFor='feedback' required>
+                  Comments/Feedback
+                </FormLabel>
+                <span
+                  className={`text-xs ${feedback.length === MAX_CHARS ? 'text-destructive font-bold' : 'text-muted-foreground'}`}
+                >
+                  {feedback.length}/{MAX_CHARS}
+                </span>
+              </div>
+
+              <Textarea
+                id='feedback'
+                rows={5}
+                value={feedback}
+                onChange={handleFeedbackChange}
+                required
+                placeholder="What's on your mind?"
+                maxLength={MAX_CHARS}
+              />
             </div>
 
-            <Textarea
-              id='feedback'
-              rows={5}
-              value={feedback}
-              onChange={handleFeedbackChange}
-              required
-              placeholder="What's on your mind?"
-              maxLength={MAX_CHARS}
-            />
-          </div>
+            <div>
+              <FormLabel htmlFor='contact'>Your contact (optional)</FormLabel>
+              <Input
+                id='contact'
+                type='text'
+                value={contact}
+                onChange={(e) => setContact(e.target.value)}
+                placeholder='Email or other contact information'
+                maxLength={100}
+              />
+            </div>
 
-          <div>
-            <FormLabel htmlFor='contact'>Your contact (optional)</FormLabel>
-            <Input
-              id='contact'
-              type='text'
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder='Email or other contact information'
-              maxLength={100}
-            />
+            <div className='flex justify-end pt-4'>
+              <Button
+                type='primary'
+                disabled={isSubmitting || !feedback.trim()}
+                onClick={handleSubmit}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </div>
           </div>
-
-          <div className='flex justify-end pt-4'>
-            <Button
-              type='primary'
-              disabled={isSubmitting || !feedback.trim()}
-              onClick={handleSubmit}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
-            </Button>
-          </div>
-        </div>
-      </Card>
+        </Card>
+      </ViewTransition>
     </div>
   );
 }

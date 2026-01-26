@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+
 import MoviesContent from './content';
 
 export const metadata: Metadata = {

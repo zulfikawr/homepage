@@ -1,11 +1,12 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+
 import {
+  type AppUser,
+  getAuthCookie,
   getCurrentAuth,
   onAuthChange,
-  getAuthCookie,
-  type AppUser,
 } from '@/lib/auth';
 
 interface AuthContextType {

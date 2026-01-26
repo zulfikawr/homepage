@@ -1,12 +1,14 @@
 'use client';
 
-import { mapRecordToPersonalInfo } from '@/lib/mappers';
-import Loading from './loading';
+import { useMemo } from 'react';
+
+import ImageWithFallback from '@/components/ImageWithFallback';
 import { Hover } from '@/components/Visual';
 import { useCollection } from '@/hooks';
-import ImageWithFallback from '@/components/ImageWithFallback';
+import { mapRecordToPersonalInfo } from '@/lib/mappers';
 import { PersonalInfo } from '@/types/personalInfo';
-import { useMemo } from 'react';
+
+import Loading from './loading';
 
 const PersonalInfoSection = () => {
   const {

@@ -1,13 +1,13 @@
 'use client';
 
-import { Card } from '@/components/Card';
-import openLink from '@/utilities/externalLink';
-
-import { Movie } from '@/types/movie';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
+
+import { Card } from '@/components/Card';
+import ImageWithFallback from '@/components/ImageWithFallback';
 import { Icon } from '@/components/UI/Icon';
 import { Separator } from '@/components/UI/Separator';
+import { Movie } from '@/types/movie';
+import openLink from '@/utilities/externalLink';
 
 interface MovieCardProps {
   movie: Movie;

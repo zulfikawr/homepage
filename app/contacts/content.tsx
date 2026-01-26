@@ -1,6 +1,8 @@
 import Link from 'next/link';
+
 import { Card } from '@/components/Card';
 import NavigationCard from '@/components/Card/Navigation';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { IconName } from '@/components/UI/Icon';
 
@@ -54,31 +56,36 @@ export default function ContactsContent() {
 
       <div className='flex flex-col gap-8'>
         <div className='grid gap-4 sm:grid-cols-2'>
-          {contacts.map((contact, index) => (
-            <NavigationCard
-              key={index}
-              title={contact.platform}
-              desc={contact.username}
-              icon={contact.icon}
-              className={contact.color}
-              href={contact.link}
-            />
-          ))}
+          <StaggerContainer>
+            {contacts.map((contact, index) => (
+              <ViewTransition key={index}>
+                <NavigationCard
+                  title={contact.platform}
+                  desc={contact.username}
+                  icon={contact.icon}
+                  className={contact.color}
+                  href={contact.link}
+                />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         </div>
 
-        <Card isPreview className='p-6'>
-          <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
-          <p className='text-sm text-muted-foreground dark:text-muted-foreground'>
-            Prefer to send a private message? Feel free to use the{' '}
-            <Link
-              href='/feedback'
-              className='text-gruv-blue hover:underline dark:text-gruv-blue'
-            >
-              feedback form
-            </Link>{' '}
-            or reach out through any of the platforms above.
-          </p>
-        </Card>
+        <ViewTransition>
+          <Card isPreview className='p-6'>
+            <h2 className='mb-2 text-lg font-medium'>Direct Message</h2>
+            <p className='text-sm text-muted-foreground dark:text-muted-foreground'>
+              Prefer to send a private message? Feel free to use the{' '}
+              <Link
+                href='/feedback'
+                className='text-gruv-blue hover:underline dark:text-gruv-blue'
+              >
+                feedback form
+              </Link>{' '}
+              or reach out through any of the platforms above.
+            </p>
+          </Card>
+        </ViewTransition>
       </div>
     </div>
   );

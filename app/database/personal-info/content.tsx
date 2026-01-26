@@ -1,9 +1,10 @@
 'use client';
 
 import PersonalInfoForm from '@/components/Form/PersonalInfo';
+import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { mapRecordToPersonalInfo } from '@/lib/mappers';
 import { useCollection } from '@/hooks';
+import { mapRecordToPersonalInfo } from '@/lib/mappers';
 import { PersonalInfo } from '@/types/personalInfo';
 
 export default function PersonalInfoContent() {
@@ -25,7 +26,9 @@ export default function PersonalInfoContent() {
         subtitle='Manage your profile'
       />
 
-      <PersonalInfoForm data={personalInfo} />
+      <ViewTransition>
+        <PersonalInfoForm data={personalInfo} />
+      </ViewTransition>
     </div>
   );
 }

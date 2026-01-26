@@ -1,7 +1,7 @@
 'use client';
 
-import * as PhosphorIcons from '@phosphor-icons/react';
 import { Icon as Iconify } from '@iconify/react';
+import * as PhosphorIcons from '@phosphor-icons/react';
 
 export const iconMap = {
   addressBook: PhosphorIcons.AddressBookIcon,

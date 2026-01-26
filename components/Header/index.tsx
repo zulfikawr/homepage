@@ -2,18 +2,20 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
+
 import { drawer } from '@/components/Drawer';
+import { Kbar } from '@/components/Kbar';
+import { KbarContent } from '@/components/Kbar/components';
 import {
   HeaderTransition,
   OffsetTransition,
   ReverseOffsetTransition,
 } from '@/components/Motion';
 import ScrollWrapper from '@/components/Motion/scroll';
-import { useTitle } from '@/contexts/titleContext';
-import { Kbar } from '@/components/Kbar';
-import { KbarContent } from '@/components/Kbar/components';
-import { useRouteInfo } from '@/hooks';
 import { Button } from '@/components/UI/Button';
+import { useTitle } from '@/contexts/titleContext';
+import { useRouteInfo } from '@/hooks';
+
 import ImageWithFallback from '../ImageWithFallback';
 
 interface HeaderComponentProps {
@@ -22,14 +24,12 @@ interface HeaderComponentProps {
 
 const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
-  const [isScrolled, setIsScrolled] = React.useState(false);
 
   const { isHomePage, nonHomePage } = useRouteInfo();
 
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
     headerRef.current.style.transform = `translateY(${15 - position || 0}%)`;
-    setIsScrolled(position > 0);
   };
 
   return (

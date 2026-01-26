@@ -1,10 +1,11 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/UI';
-import { useRouter } from 'next/navigation';
-import openLink from '@/utilities/externalLink';
 import { IconName } from '@/components/UI/Icon';
+import openLink from '@/utilities/externalLink';
 
 interface Props {
   title: string;

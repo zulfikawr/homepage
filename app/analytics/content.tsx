@@ -1,14 +1,16 @@
 'use client';
 
-import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { useMemo } from 'react';
-import PageTitle from '@/components/PageTitle';
+
 import { Card } from '@/components/Card';
-import { Icon, Skeleton } from '@/components/UI';
-import { useCollection } from '@/hooks';
-import WorldMap from '@/components/Visual/WorldMap';
-import { AnalyticsEvent } from '@/types/analytics';
 import CardEmpty from '@/components/Card/Empty';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Icon, Skeleton } from '@/components/UI';
+import WorldMap from '@/components/Visual/WorldMap';
+import { useCollection } from '@/hooks';
+import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
+import { AnalyticsEvent } from '@/types/analytics';
 
 export default function AnalyticsContent() {
   const {
@@ -280,225 +282,247 @@ export default function AnalyticsContent() {
 
       {/* Summary Cards */}
       <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
-        {[
-          {
-            label: 'Total Views',
-            value: stats.totalViews.toLocaleString(),
-            icon: 'eye' as const,
-            color: 'text-gruv-aqua',
-          },
-          {
-            label: 'Unique Visitors',
-            value: stats.uniqueVisitors.toLocaleString(),
-            icon: 'users' as const,
-            color: 'text-gruv-green',
-          },
-          {
-            label: 'Real-time',
-            value: 'Active Now',
-            icon: 'clock' as const,
-            color: 'text-gruv-yellow',
-          },
-          {
-            label: 'Status',
-            value: 'Healthy',
-            icon: 'checkCircle' as const,
-            color: 'text-gruv-blue',
-          },
-        ].map((stat, i) => (
-          <Card
-            key={i}
-            isPreview
-            className='p-5 flex flex-col justify-between h-32'
-          >
-            <div className='flex items-center justify-between text-muted-foreground'>
-              <span className='text-xs font-medium uppercase tracking-wider'>
-                {stat.label}
-              </span>
-              <Icon name={stat.icon} size={18} className={stat.color} />
-            </div>
-            <div className='text-2xl font-semibold tracking-tight text-foreground'>
-              {stat.value}
-            </div>
-          </Card>
-        ))}
+        <StaggerContainer>
+          {[
+            {
+              label: 'Total Views',
+              value: stats.totalViews.toLocaleString(),
+              icon: 'eye' as const,
+              color: 'text-gruv-aqua',
+            },
+            {
+              label: 'Unique Visitors',
+              value: stats.uniqueVisitors.toLocaleString(),
+              icon: 'users' as const,
+              color: 'text-gruv-green',
+            },
+            {
+              label: 'Real-time',
+              value: 'Active Now',
+              icon: 'clock' as const,
+              color: 'text-gruv-yellow',
+            },
+            {
+              label: 'Status',
+              value: 'Healthy',
+              icon: 'checkCircle' as const,
+              color: 'text-gruv-blue',
+            },
+          ].map((stat, i) => (
+            <ViewTransition key={i}>
+              <Card
+                isPreview
+                className='p-5 flex flex-col justify-between h-32'
+              >
+                <div className='flex items-center justify-between text-muted-foreground'>
+                  <span className='text-xs font-medium uppercase tracking-wider'>
+                    {stat.label}
+                  </span>
+                  <Icon name={stat.icon} size={18} className={stat.color} />
+                </div>
+                <div className='text-2xl font-semibold tracking-tight text-foreground'>
+                  {stat.value}
+                </div>
+              </Card>
+            </ViewTransition>
+          ))}
+        </StaggerContainer>
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-        {/* Left Column: Map & Countries */}
         <div className='lg:col-span-2 space-y-8'>
-          {/* World Map */}
-          <Card isPreview className='overflow-hidden'>
-            <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
-              <h3 className='text-sm font-semibold flex items-center gap-2 text-foreground'>
-                <Icon name='globe' size={16} className='text-gruv-aqua' />
-                Visitor Geography
-              </h3>
-            </div>
+          <StaggerContainer>
+            <ViewTransition>
+              {/* World Map */}
+              <Card isPreview className='overflow-hidden'>
+                <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
+                  <h3 className='text-sm font-semibold flex items-center gap-2 text-foreground'>
+                    <Icon name='globe' size={16} className='text-gruv-aqua' />
+                    Visitor Geography
+                  </h3>
+                </div>
 
-            <div className='h-[400px] w-full relative bg-card/50'>
-              <WorldMap data={stats.countries} />
-            </div>
-          </Card>
+                <div className='h-[400px] w-full relative bg-card/50'>
+                  <WorldMap data={stats.countries} />
+                </div>
+              </Card>
+            </ViewTransition>
 
-          {/* Countries List */}
-          <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-              <Icon name='mapPin' size={18} className='text-gruv-yellow' />
-              Top Countries
-            </h3>
-            <div className='space-y-5'>
-              {stats.countries.slice(0, 5).map((country) => {
-                const ratio = country.count / (maxCountryCount || 1);
-                // Interpolate between light cream (#f9f5d7) and dark orange (#af3a03)
-                const r = Math.round(249 + (175 - 249) * ratio);
-                const g = Math.round(245 + (58 - 245) * ratio);
-                const b = Math.round(215 + (3 - 215) * ratio);
-                const barColor = `rgb(${r}, ${g}, ${b})`;
+            <ViewTransition>
+              {/* Countries List */}
+              <Card isPreview className='p-6'>
+                <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+                  <Icon name='mapPin' size={18} className='text-gruv-yellow' />
+                  Top Countries
+                </h3>
+                <div className='space-y-5'>
+                  {stats.countries.slice(0, 5).map((country) => {
+                    const ratio = country.count / (maxCountryCount || 1);
+                    // Interpolate between light cream (#f9f5d7) and dark orange (#af3a03)
+                    const r = Math.round(249 + (175 - 249) * ratio);
+                    const g = Math.round(245 + (58 - 245) * ratio);
+                    const b = Math.round(215 + (3 - 215) * ratio);
+                    const barColor = `rgb(${r}, ${g}, ${b})`;
 
-                return (
-                  <div key={country.code} className='space-y-1.5'>
-                    <div className='flex justify-between text-sm font-medium'>
-                      <div className='flex items-center gap-2 text-foreground'>
-                        <span className='text-muted-foreground'>
-                          {country.code}
-                        </span>
-                        <span>{country.name}</span>
+                    return (
+                      <div key={country.code} className='space-y-1.5'>
+                        <div className='flex justify-between text-sm font-medium'>
+                          <div className='flex items-center gap-2 text-foreground'>
+                            <span className='text-muted-foreground'>
+                              {country.code}
+                            </span>
+                            <span>{country.name}</span>
+                          </div>
+                          <span className='text-foreground'>
+                            {country.count.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
+                          <div
+                            className='h-full rounded-full transition-all duration-1000'
+                            style={{
+                              width: `${ratio * 100}%`,
+                              backgroundColor: barColor,
+                            }}
+                          />
+                        </div>
                       </div>
-                      <span className='text-foreground'>
-                        {country.count.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
-                      <div
-                        className='h-full rounded-full transition-all duration-1000'
-                        style={{
-                          width: `${ratio * 100}%`,
-                          backgroundColor: barColor,
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
+                    );
+                  })}
+                </div>
+              </Card>
+            </ViewTransition>
+          </StaggerContainer>
         </div>
 
-        {/* Right Column: Routes & Referrers */}
         <div className='space-y-8'>
-          {/* Top Routes */}
-          <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-              <Icon name='article' size={18} className='text-gruv-blue' />
-              Top Pages
-            </h3>
-            <div className='space-y-4'>
-              {stats.topRoutes.map((route) => {
-                const ratio = route.views / (maxViews || 1);
-                const r = Math.round(249 + (175 - 249) * ratio);
-                const g = Math.round(245 + (58 - 245) * ratio);
-                const b = Math.round(215 + (3 - 215) * ratio);
-                const barColor = `rgb(${r}, ${g}, ${b})`;
+          <StaggerContainer>
+            <ViewTransition>
+              {/* Top Routes */}
+              <Card isPreview className='p-6'>
+                <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+                  <Icon name='article' size={18} className='text-gruv-blue' />
+                  Top Pages
+                </h3>
+                <div className='space-y-4'>
+                  {stats.topRoutes.map((route) => {
+                    const ratio = route.views / (maxViews || 1);
+                    const r = Math.round(249 + (175 - 249) * ratio);
+                    const g = Math.round(245 + (58 - 245) * ratio);
+                    const b = Math.round(215 + (3 - 215) * ratio);
+                    const barColor = `rgb(${r}, ${g}, ${b})`;
 
-                return (
-                  <div key={route.path} className='group'>
-                    <div className='flex justify-between text-sm mb-1.5'>
-                      <span
-                        className='text-muted-foreground truncate max-w-[180px] group-hover:text-foreground transition-colors'
-                        title={route.path}
-                      >
-                        {route.path}
-                      </span>
-                      <span className='font-medium text-foreground'>
-                        {route.views.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className='h-1.5 w-full bg-muted rounded-full overflow-hidden'>
-                      <div
-                        className='h-full rounded-full transition-all duration-500'
-                        style={{
-                          width: `${ratio * 100}%`,
-                          backgroundColor: barColor,
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Device Distribution */}
-          <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-              <Icon name='monitor' size={18} className='text-primary' />
-              Devices
-            </h3>
-            <div className='space-y-6'>
-              {stats.devices.map((device) => {
-                const ratio = device.percentage / 100;
-                const r = Math.round(249 + (175 - 249) * ratio);
-                const g = Math.round(245 + (58 - 245) * ratio);
-                const b = Math.round(215 + (3 - 215) * ratio);
-                const barColor = `rgb(${r}, ${g}, ${b})`;
-
-                return (
-                  <div key={device.type} className='flex items-center gap-4'>
-                    <div className='p-2 bg-muted rounded-lg'>
-                      <Icon
-                        name={device.icon}
-                        size={20}
-                        className={
-                          device.type === 'Desktop'
-                            ? 'text-gruv-blue'
-                            : 'text-gruv-aqua'
-                        }
-                      />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='flex justify-between text-sm font-medium mb-1 text-foreground'>
-                        <span>{device.type}</span>
-                        <span>{device.percentage}%</span>
+                    return (
+                      <div key={route.path} className='group'>
+                        <div className='flex justify-between text-sm mb-1.5'>
+                          <span
+                            className='text-muted-foreground truncate max-w-[180px] group-hover:text-foreground transition-colors'
+                            title={route.path}
+                          >
+                            {route.path}
+                          </span>
+                          <span className='font-medium text-foreground'>
+                            {route.views.toLocaleString()}
+                          </span>
+                        </div>
+                        <div className='h-1.5 w-full bg-muted rounded-full overflow-hidden'>
+                          <div
+                            className='h-full rounded-full transition-all duration-500'
+                            style={{
+                              width: `${ratio * 100}%`,
+                              backgroundColor: barColor,
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
-                        <div
-                          className='h-full rounded-full transition-all duration-1000'
-                          style={{
-                            width: `${device.percentage}%`,
-                            backgroundColor: barColor,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-
-          {/* Referrers */}
-          <Card isPreview className='p-6'>
-            <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-              <Icon name='shareNetwork' size={18} className='text-gruv-green' />
-              Top Referrers
-            </h3>
-            <div className='space-y-4'>
-              {stats.referrers.map((referrer) => (
-                <div
-                  key={referrer.name}
-                  className='flex justify-between items-center text-sm group'
-                >
-                  <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>
-                    {referrer.name}
-                  </span>
-                  <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-gruv-fg'>
-                    {referrer.count.toLocaleString()}
-                  </span>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          </Card>
+              </Card>
+            </ViewTransition>
+
+            <ViewTransition>
+              {/* Device Distribution */}
+              <Card isPreview className='p-6'>
+                <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+                  <Icon name='monitor' size={18} className='text-primary' />
+                  Devices
+                </h3>
+                <div className='space-y-6'>
+                  {stats.devices.map((device) => {
+                    const ratio = device.percentage / 100;
+                    const r = Math.round(249 + (175 - 249) * ratio);
+                    const g = Math.round(245 + (58 - 245) * ratio);
+                    const b = Math.round(215 + (3 - 215) * ratio);
+                    const barColor = `rgb(${r}, ${g}, ${b})`;
+
+                    return (
+                      <div
+                        key={device.type}
+                        className='flex items-center gap-4'
+                      >
+                        <div className='p-2 bg-muted rounded-lg'>
+                          <Icon
+                            name={device.icon}
+                            size={20}
+                            className={
+                              device.type === 'Desktop'
+                                ? 'text-gruv-blue'
+                                : 'text-gruv-aqua'
+                            }
+                          />
+                        </div>
+                        <div className='flex-1'>
+                          <div className='flex justify-between text-sm font-medium mb-1 text-foreground'>
+                            <span>{device.type}</span>
+                            <span>{device.percentage}%</span>
+                          </div>
+                          <div className='h-2 w-full bg-muted rounded-full overflow-hidden'>
+                            <div
+                              className='h-full rounded-full transition-all duration-1000'
+                              style={{
+                                width: `${device.percentage}%`,
+                                backgroundColor: barColor,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            </ViewTransition>
+
+            <ViewTransition>
+              {/* Referrers */}
+              <Card isPreview className='p-6'>
+                <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
+                  <Icon
+                    name='shareNetwork'
+                    size={18}
+                    className='text-gruv-green'
+                  />
+                  Top Referrers
+                </h3>
+                <div className='space-y-4'>
+                  {stats.referrers.map((referrer) => (
+                    <div
+                      key={referrer.name}
+                      className='flex justify-between items-center text-sm group'
+                    >
+                      <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>
+                        {referrer.name}
+                      </span>
+                      <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-gruv-fg'>
+                        {referrer.count.toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </ViewTransition>
+          </StaggerContainer>
         </div>
       </div>
     </div>

@@ -2,12 +2,13 @@
 
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { Button, Icon } from '@/components/UI';
-import { toast } from '@/components/Toast';
-import { uploadFile } from '@/database/files';
-import { twMerge } from 'tailwind-merge';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { twMerge } from 'tailwind-merge';
+
+import { toast } from '@/components/Toast';
+import { Button, Icon } from '@/components/UI';
+import { uploadFile } from '@/database/files';
 
 interface FileUploadProps {
   onUploadSuccess: (url: string) => void;

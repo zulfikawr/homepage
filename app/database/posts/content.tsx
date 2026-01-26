@@ -1,13 +1,15 @@
 'use client';
 
-import PostCard from '@/components/Card/Post';
-import { mapRecordToPost } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import PostCard from '@/components/Card/Post';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 
 export default function PostDatabase() {
@@ -40,21 +42,27 @@ export default function PostDatabase() {
             .map((_, index) => <CardLoading key={index} type='post' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddPost}
-                className='mx-auto'
-              >
-                {posts && posts.length > 0 ? 'Add more' : 'Add post'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddPost}
+                  className='mx-auto'
+                >
+                  {posts && posts.length > 0 ? 'Add more' : 'Add post'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(posts) && posts.length > 0 ? (
-              posts.map((post) => (
-                <PostCard key={post.id} post={post} openForm />
-              ))
+              <StaggerContainer>
+                {posts.map((post) => (
+                  <ViewTransition key={post.id}>
+                    <PostCard post={post} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No posts available' />
             )}

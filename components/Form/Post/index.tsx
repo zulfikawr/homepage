@@ -1,24 +1,25 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Post } from '@/types/post';
-import { addPost, updatePost, deletePost } from '@/database/posts';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import PostCard from '@/components/Card/Post';
+import DateSelect from '@/components/DateSelect';
+import { Editor } from '@/components/Editor';
+import { modal } from '@/components/Modal';
 import { toast } from '@/components/Toast';
-import { generateSlug } from '@/utilities/generateSlug';
 import {
   Button,
+  FileUpload,
   FormLabel,
   Input,
   Textarea,
-  FileUpload,
 } from '@/components/UI';
-import { modal } from '@/components/Modal';
-import PostCard from '@/components/Card/Post';
-import { Editor } from '@/components/Editor';
-import { formatDate } from '@/utilities/formatDate';
-import DateSelect from '@/components/DateSelect';
 import { Separator } from '@/components/UI/Separator';
-import { useRouter } from 'next/navigation';
+import { addPost, deletePost, updatePost } from '@/database/posts';
+import { Post } from '@/types/post';
+import { formatDate } from '@/utilities/formatDate';
+import { generateSlug } from '@/utilities/generateSlug';
 
 interface PostFormProps {
   postToEdit?: Post;

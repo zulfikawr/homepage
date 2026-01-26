@@ -1,5 +1,6 @@
-import pb from './pocketbase';
 import type { AuthRecord } from 'pocketbase';
+
+import pb from './pocketbase';
 
 /**
  * Interface representing a generic User for the application.

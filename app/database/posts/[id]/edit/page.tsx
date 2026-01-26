@@ -1,9 +1,11 @@
-import { getPostById } from '@/database/posts';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import EditPostPage from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+import { getPostById } from '@/database/posts';
+
+import EditPostPage from './content';
 
 type Props = {
   params: Promise<{

@@ -1,7 +1,9 @@
-import ScrollWrapper from './scroll';
-import { useTheme } from 'next-themes';
 import React from 'react';
+import { useTheme } from 'next-themes';
+
 import { useEffectToggle } from '@/contexts/effectContext';
+
+import ScrollWrapper from './scroll';
 
 interface Props {
   componentRef: React.RefObject<HTMLDivElement>;

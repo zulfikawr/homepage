@@ -2,10 +2,11 @@
 
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { Icon, Input, Button } from '@/components/UI';
-import { twMerge } from 'tailwind-merge';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { twMerge } from 'tailwind-merge';
+
+import { Button, Icon, Input } from '@/components/UI';
 import { useRadius } from '@/contexts/radiusContext';
 
 interface DropzoneProps {

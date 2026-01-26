@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, MouseEvent, CSSProperties } from 'react';
+import React, { CSSProperties, MouseEvent, useRef, useState } from 'react';
 
 interface Props {
   className?: string;

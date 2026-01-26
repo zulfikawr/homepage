@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, Suspense } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { saveSpotifyTokens } from '@/lib/spotify';
+
 import { toast } from '@/components/Toast';
 import { Skeleton } from '@/components/UI';
+import { saveSpotifyTokens } from '@/lib/spotify';
 
 function CallbackContent() {
   const router = useRouter();

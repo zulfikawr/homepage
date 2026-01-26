@@ -1,7 +1,7 @@
-import { Button, Badge } from '@/components/UI';
-import { Project } from '@/types/project';
-import { Separator } from '@/components/UI/Separator';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { Badge, Button } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
+import { Project } from '@/types/project';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 const ProjectViewer = ({ project }: { project: Project }) => {

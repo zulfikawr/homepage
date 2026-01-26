@@ -1,11 +1,12 @@
 'use client';
 
-import { mapRecordToMovie } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import MovieCard from '@/components/Card/Movie';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
 import { useCollection } from '@/hooks';
+import { mapRecordToMovie } from '@/lib/mappers';
 import { Movie } from '@/types/movie';
 
 export default function MoviesContent() {
@@ -27,7 +28,13 @@ export default function MoviesContent() {
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : movies && movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
+          <StaggerContainer>
+            {movies.map((movie) => (
+              <ViewTransition key={movie.id}>
+                <MovieCard movie={movie} />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         ) : (
           <CardEmpty message='No movies available' />
         )}

@@ -1,11 +1,12 @@
-import { Project } from '@/types/project';
+import { useRouter } from 'next/navigation';
+
+import { Card } from '@/components/Card';
 import { drawer } from '@/components/Drawer';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { Badge } from '@/components/UI';
 import ProjectViewer from '@/components/Viewer/Project';
 import { Hover } from '@/components/Visual';
-import { Card } from '@/components/Card';
-import { Badge } from '@/components/UI';
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { useRouter } from 'next/navigation';
+import { Project } from '@/types/project';
 
 interface ProjectCardProps {
   project: Project;

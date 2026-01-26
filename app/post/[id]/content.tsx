@@ -1,7 +1,8 @@
+import CommentSection from '@/components/CommentSection';
+import { ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
 import PostContent from '@/components/PostContent';
 import { Post } from '@/types/post';
-import PageTitle from '@/components/PageTitle';
-import CommentSection from '@/components/CommentSection';
 
 interface BlogPostContentProps {
   post: Post;
@@ -10,17 +11,23 @@ interface BlogPostContentProps {
 export default function BlogPostContent({ post }: BlogPostContentProps) {
   return (
     <div>
-      <PageTitle
-        title={post.title}
-        subtitle={post.excerpt}
-        category={post.categories[0]}
-        image={post.image}
-        isPostTitle
-      />
+      <ViewTransition>
+        <PageTitle
+          title={post.title}
+          subtitle={post.excerpt}
+          category={post.categories[0]}
+          image={post.image}
+          isPostTitle
+        />
+      </ViewTransition>
 
-      <PostContent content={post.content} />
+      <ViewTransition>
+        <PostContent content={post.content} />
+      </ViewTransition>
 
-      <CommentSection postId={post.id} />
+      <ViewTransition>
+        <CommentSection postId={post.id} />
+      </ViewTransition>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { Card } from '@/components/Card';
-import openLink from '@/utilities/externalLink';
-import { SpotifyPlaylist } from '@/types/spotify';
-import { Icon } from '@/components/UI';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { Icon } from '@/components/UI';
+import { SpotifyPlaylist } from '@/types/spotify';
+import openLink from '@/utilities/externalLink';
 
 interface PlaylistCardProps {
   playlist: SpotifyPlaylist;

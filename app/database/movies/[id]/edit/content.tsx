@@ -1,10 +1,11 @@
 'use client';
 
-import { Movie } from '@/types/movie';
-import PageTitle from '@/components/PageTitle';
-import MovieForm from '@/components/Form/Movie';
-import { useTitle } from '@/contexts/titleContext';
 import { useEffect } from 'react';
+
+import MovieForm from '@/components/Form/Movie';
+import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
+import { Movie } from '@/types/movie';
 
 interface EditMoviePageProps {
   movie: Movie;

@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Employment } from '@/types/employment';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { EmploymentCard } from '@/components/Card/Employment';
+import DateSelect from '@/components/DateSelect';
+import { modal } from '@/components/Modal';
+import { toast } from '@/components/Toast';
 import {
   Button,
   Checkbox,
   Dropdown,
   DropdownItem,
+  FileUpload,
   FormLabel,
   Icon,
   Input,
-  FileUpload,
 } from '@/components/UI';
-import { EmploymentCard } from '@/components/Card/Employment';
-import { toast } from '@/components/Toast';
+import { Separator } from '@/components/UI/Separator';
 import {
   addEmployment,
-  updateEmployment,
   deleteEmployment,
+  updateEmployment,
 } from '@/database/employments';
-import { generateSlug } from '@/utilities/generateSlug';
+import { Employment } from '@/types/employment';
 import { formatDateRange } from '@/utilities/formatDate';
-import { modal } from '@/components/Modal';
-import { Separator } from '@/components/UI/Separator';
-import DateSelect from '@/components/DateSelect';
-import { useRouter } from 'next/navigation';
+import { generateSlug } from '@/utilities/generateSlug';
 
 interface EmploymentFormProps {
   employmentToEdit?: Employment;

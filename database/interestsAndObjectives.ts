@@ -1,11 +1,12 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
 import { mapRecordToInterests } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 const COLLECTION = 'interests_and_objectives';
 

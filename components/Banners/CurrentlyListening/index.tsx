@@ -1,21 +1,23 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Icon, Button, Tooltip } from '@/components/UI';
+
+import { Card } from '@/components/Card';
+import CardEmpty from '@/components/Card/Empty';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { Button, Icon, Tooltip } from '@/components/UI';
+import { TimeAgo } from '@/components/UI';
+import { Hover } from '@/components/Visual';
+import { useAuth } from '@/contexts/authContext';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import {
   getCurrentTrack,
   getRecentlyPlayed,
   getSpotifyAuthUrl,
 } from '@/lib/spotify';
-import { Hover } from '@/components/Visual';
-import { useAuth } from '@/contexts/authContext';
-import LoadingSkeleton from './loading';
-import { formatDate } from '@/utilities/formatDate';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { SpotifyTrack } from '@/types/spotify';
-import { Card } from '@/components/Card';
-import CardEmpty from '@/components/Card/Empty';
-import { TimeAgo } from '@/components/UI';
-import { useLoadingToggle } from '@/contexts/loadingContext';
+import { formatDate } from '@/utilities/formatDate';
+
+import LoadingSkeleton from './loading';
 
 const apiCache: {
   currentTrack: SpotifyTrack | null;

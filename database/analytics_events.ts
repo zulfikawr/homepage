@@ -1,8 +1,9 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
 import pb from '@/lib/pocketbase';
 import { AnalyticsEvent } from '@/types/analytics';
-import { cookies } from 'next/headers';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

@@ -1,6 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+
 import { getTimeAgo } from '@/utilities/timeAgo';
 
 interface TimeAgoProps {

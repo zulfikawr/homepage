@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Button, Input, FormLabel, Skeleton } from '@/components/UI';
-import { useAuthActions } from '@/hooks/useAuthActions';
-import { useAuth } from '@/contexts/authContext';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { Button, FormLabel, Input, Skeleton } from '@/components/UI';
+import { useAuth } from '@/contexts/authContext';
+import { useAuthActions } from '@/hooks/useAuthActions';
 
 export default function LoginContent() {
   const { handleGithubLogin, handleLogin, loading } = useAuthActions();
@@ -65,76 +67,80 @@ export default function LoginContent() {
     <div>
       <PageTitle emoji='🔐' title='Login' subtitle='Welcome back' />
 
-      <div className='max-w-md mx-auto mt-12 flex flex-col space-y-8'>
-        <Button
-          onClick={handleGithubLogin}
-          type='outline'
-          icon='githubLogo'
-          className='w-full h-12'
-        >
-          Continue with GitHub
-        </Button>
-
-        <div className='relative'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t border-border' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='px-4 text-gruv-fg-dim tracking-widest'>
-              Or continue with email
-            </span>
-          </div>
-        </div>
-
-        <form onSubmit={onPasswordLogin} className='space-y-6'>
-          <div className='space-y-5'>
-            <div className='space-y-2'>
-              <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>
-                Email Address
-              </FormLabel>
-              <Input
-                id='email'
-                type='email'
-                placeholder='m@example.com'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
-              />
-            </div>
-            <div className='space-y-2'>
-              <FormLabel
-                htmlFor='password'
-                required
-                className='text-gruv-fg-dim text-sm'
-              >
-                Password
-              </FormLabel>
-              <Input
-                id='password'
-                type='password'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
-              />
-            </div>
-          </div>
-
-          {error && (
-            <p className='text-sm text-gruv-red text-center italic'>{error}</p>
-          )}
-
+      <ViewTransition>
+        <div className='max-w-md mx-auto mt-12 flex flex-col space-y-8'>
           <Button
-            type='primary'
-            nativeType='submit'
-            className='w-full h-12 bg-gruv-orange hover:bg-gruv-orange/90 text-gruv-bg-dark font-bold'
-            icon='signIn'
+            onClick={handleGithubLogin}
+            type='outline'
+            icon='githubLogo'
+            className='w-full h-12'
           >
-            Sign In
+            Continue with GitHub
           </Button>
-        </form>
-      </div>
+
+          <div className='relative'>
+            <div className='absolute inset-0 flex items-center'>
+              <span className='w-full border-t border-border' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='px-4 text-gruv-fg-dim tracking-widest'>
+                Or continue with email
+              </span>
+            </div>
+          </div>
+
+          <form onSubmit={onPasswordLogin} className='space-y-6'>
+            <div className='space-y-5'>
+              <div className='space-y-2'>
+                <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>
+                  Email Address
+                </FormLabel>
+                <Input
+                  id='email'
+                  type='email'
+                  placeholder='m@example.com'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
+                />
+              </div>
+              <div className='space-y-2'>
+                <FormLabel
+                  htmlFor='password'
+                  required
+                  className='text-gruv-fg-dim text-sm'
+                >
+                  Password
+                </FormLabel>
+                <Input
+                  id='password'
+                  type='password'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
+                />
+              </div>
+            </div>
+
+            {error && (
+              <p className='text-sm text-gruv-red text-center italic'>
+                {error}
+              </p>
+            )}
+
+            <Button
+              type='primary'
+              nativeType='submit'
+              className='w-full h-12 bg-gruv-orange hover:bg-gruv-orange/90 text-gruv-bg-dark font-bold'
+              icon='signIn'
+            >
+              Sign In
+            </Button>
+          </form>
+        </div>
+      </ViewTransition>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { PersonalInfo } from '@/types/personalInfo';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { PersonalInfo } from '@/types/personalInfo';
 
 const COLLECTION = 'profile';
 const RECORD_ID = 'me';

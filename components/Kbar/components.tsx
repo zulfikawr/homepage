@@ -1,28 +1,29 @@
 'use client';
 
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/authContext';
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { drawer } from '@/components/Drawer';
-import { useAuthActions } from '@/hooks';
-import { Input } from '@/components/UI';
-import { Icon } from '@/components/UI';
-import SectionTitle from '@/components/SectionTitle';
-import { IconName } from '@/components/UI/Icon';
+
+import BookCard from '@/components/Card/Book';
 import NavigationCard from '@/components/Card/Navigation';
 import PostCard from '@/components/Card/Post';
 import ProjectCard from '@/components/Card/Project';
-import BookCard from '@/components/Card/Book';
 import { PublicationCard } from '@/components/Card/Publication';
+import { drawer } from '@/components/Drawer';
+import SectionTitle from '@/components/SectionTitle';
+import { Input } from '@/components/UI';
+import { Icon } from '@/components/UI';
+import { IconName } from '@/components/UI/Icon';
+import { useAuth } from '@/contexts/authContext';
 import { searchDatabase, SearchResult } from '@/database/search';
-import { calculateRank } from '@/utilities/search';
+import { useAuthActions } from '@/hooks';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
+import { Book } from '@/types/book';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
-import { Book } from '@/types/book';
 import { Publication } from '@/types/publication';
 import { Resume } from '@/types/resume';
+import { calculateRank } from '@/utilities/search';
 
 type StaticKbarItem = {
   key: string;
@@ -360,7 +361,14 @@ export function KbarContent() {
             maxScore: Math.max(...items.map((i) => i.score)),
           }))
           .sort((a, b) => b.maxScore - a.maxScore)
-          .map(({ maxScore, ...section }) => section);
+          .map((s) => {
+            return Object.keys(s)
+              .filter((key) => key !== 'maxScore')
+              .reduce((obj, key) => {
+                obj[key] = s[key];
+                return obj;
+              }, {} as KbarSection);
+          });
 
         return [...dbSections, ...staticSections];
       }

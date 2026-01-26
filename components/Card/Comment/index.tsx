@@ -1,16 +1,17 @@
 'use client';
 
-import { Comment } from '@/types/comment';
 import { useState } from 'react';
-import { getTimeAgo } from '@/utilities/timeAgo';
-import { Button, Icon } from '@/components/UI';
+
 import { Card } from '@/components/Card';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { Editor } from '@/components/Editor';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
-import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
-import { escapeHtml } from '@/utilities/escapeHtml';
+import ImageWithFallback from '@/components/ImageWithFallback';
 import { toast } from '@/components/Toast';
+import { Button, Icon } from '@/components/UI';
+import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { Comment } from '@/types/comment';
+import { escapeHtml } from '@/utilities/escapeHtml';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
+import { getTimeAgo } from '@/utilities/timeAgo';
 
 const MAX_CHARS = 5000;
 

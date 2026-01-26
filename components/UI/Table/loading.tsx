@@ -1,8 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Skeleton } from '../Skeleton';
+
 import { useRadius } from '@/contexts/radiusContext';
+
+import { Skeleton } from '../Skeleton';
 
 interface TableSkeletonProps {
   rows?: number;

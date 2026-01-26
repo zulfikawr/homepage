@@ -1,18 +1,20 @@
 import { RecordModel } from 'pocketbase';
-import { getFileUrl } from './storage';
-import { Post } from '@/types/post';
+
+import { AnalyticsEvent } from '@/types/analytics';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
+import { Comment } from '@/types/comment';
 import { Employment } from '@/types/employment';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 import { Movie } from '@/types/movie';
 import { PersonalInfo } from '@/types/personalInfo';
+import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
-import { Section } from '@/types/section';
-import { Comment } from '@/types/comment';
-import { AnalyticsEvent } from '@/types/analytics';
 import { Resume } from '@/types/resume';
+import { Section } from '@/types/section';
+
+import { getFileUrl } from './storage';
 
 /**
  * Standardized mapping functions to convert PocketBase records to application types.

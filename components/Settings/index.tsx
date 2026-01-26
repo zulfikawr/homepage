@@ -1,12 +1,13 @@
 'use client';
-import { Button, Icon, Switch, Slider, ToggleGroup } from '@/components/UI';
-import type { IconName } from '@/components/UI/Icon';
-import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import { useTheme } from 'next-themes';
-import { useEffectToggle } from '@/contexts/effectContext';
+
+import { Button, Icon, Slider, Switch, ToggleGroup } from '@/components/UI';
+import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import type { IconName } from '@/components/UI/Icon';
 import { useBackground } from '@/contexts/backgroundContext';
-import { useRadius } from '@/contexts/radiusContext';
+import { useEffectToggle } from '@/contexts/effectContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
+import { useRadius } from '@/contexts/radiusContext';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },

@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Icon, iconMap, iconifyMap } from '../Icon';
+
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
+
+import { Icon, iconifyMap, iconMap } from '../Icon';
 
 type BadgeTypes =
   | 'default'

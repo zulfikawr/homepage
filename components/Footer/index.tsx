@@ -1,10 +1,11 @@
 'use client';
 
-import { useRef, useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useRef, useSyncExternalStore } from 'react';
 import Link from 'next/link';
+
 import { OffsetTransition } from '@/components/Motion';
-import { Button, Icon } from '@/components/UI';
 import Settings from '@/components/Settings';
+import { Button, Icon } from '@/components/UI';
 
 const emptySubscribe = () => () => {};
 

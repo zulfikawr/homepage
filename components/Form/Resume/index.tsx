@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Resume } from '@/types/resume';
-import { Button, FormLabel, FileDropzone } from '@/components/UI';
-import { updateResume } from '@/database/resume';
-import { toast } from '@/components/Toast';
-import { Separator } from '@/components/UI/Separator';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+
+import { toast } from '@/components/Toast';
+import { Button, FileDropzone, FormLabel } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
+import { updateResume } from '@/database/resume';
+import { Resume } from '@/types/resume';
 
 interface ResumeFormProps {
   data?: Resume;

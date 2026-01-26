@@ -1,7 +1,7 @@
 'use client';
 
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
-import React, { useState, useEffect, useCallback } from 'react';
 
 interface Props {
   handler: (position: number) => void;

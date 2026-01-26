@@ -1,22 +1,23 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useCallback } from 'react';
-import { Movie } from '@/types/movie';
-import { Button, FormLabel, Input } from '@/components/UI';
+import { useSyncExternalStore } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { Card } from '@/components/Card';
 import MovieCard from '@/components/Card/Movie';
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { toast } from '@/components/Toast';
-import { addMovie, updateMovie, deleteMovie } from '@/database/movies';
-import { modal } from '@/components/Modal';
-import { Separator } from '@/components/UI/Separator';
 import DateSelect from '@/components/DateSelect';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { modal } from '@/components/Modal';
+import { toast } from '@/components/Toast';
+import { Button, FormLabel, Input } from '@/components/UI';
+import { Icon } from '@/components/UI/Icon';
+import { Separator } from '@/components/UI/Separator';
+import { addMovie, deleteMovie, updateMovie } from '@/database/movies';
+import { Movie } from '@/types/movie';
 import { formatDate } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
-import { Icon } from '@/components/UI/Icon';
-import { useRouter } from 'next/navigation';
-import { Card } from '@/components/Card';
-import { useSyncExternalStore } from 'react';
 
 interface MovieFormProps {
   movieToEdit?: Movie;

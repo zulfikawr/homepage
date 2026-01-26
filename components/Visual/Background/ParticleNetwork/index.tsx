@@ -1,4 +1,5 @@
 import { useTheme } from 'next-themes';
+
 import ParticleNetwork from './component';
 
 export default function ParticleNetworkBackground() {

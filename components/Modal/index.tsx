@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+
 import { useBodyScroll } from '@/hooks';
 
 type ModalInstance = {

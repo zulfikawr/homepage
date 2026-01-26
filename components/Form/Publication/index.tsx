@@ -1,19 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Publication } from '@/types/publication';
-import { Button, FormLabel, Input, Checkbox } from '@/components/UI';
+import { useRouter } from 'next/navigation';
+
 import PublicationCard from '@/components/Card/Publication';
+import { modal } from '@/components/Modal';
 import { toast } from '@/components/Toast';
+import { Button, Checkbox, FormLabel, Input } from '@/components/UI';
+import { Separator } from '@/components/UI/Separator';
 import {
   addPublication,
-  updatePublication,
   deletePublication,
+  updatePublication,
 } from '@/database/publications';
-import { modal } from '@/components/Modal';
+import { Publication } from '@/types/publication';
 import { generateSlug } from '@/utilities/generateSlug';
-import { Separator } from '@/components/UI/Separator';
-import { useRouter } from 'next/navigation';
 
 interface PublicationFormProps {
   publicationToEdit?: Publication;

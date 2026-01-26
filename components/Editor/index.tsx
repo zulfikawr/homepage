@@ -1,16 +1,17 @@
 import React, {
-  useState,
-  useRef,
-  useEffect,
   useCallback,
+  useEffect,
   useMemo,
+  useRef,
+  useState,
 } from 'react';
-import { twMerge } from 'tailwind-merge';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
-import { Icon, Toggle, Tooltip, Button } from '@/components/UI';
-import { IconName } from '@/components/UI/Icon';
 import hljs from 'highlight.js';
+import { twMerge } from 'tailwind-merge';
+
 import { drawer } from '@/components/Drawer';
+import { Button, Icon, Toggle, Tooltip } from '@/components/UI';
+import { IconName } from '@/components/UI/Icon';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface EditorProps {
   content: string;

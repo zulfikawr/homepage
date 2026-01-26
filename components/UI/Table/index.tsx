@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
+
 import { useRadius } from '@/contexts/radiusContext';
 
 interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
@@ -103,4 +104,4 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 
 TableCell.displayName = 'TableCell';
 
-export { Table, TableHeader, TableBody, TableRow, TableCell };
+export { Table, TableBody, TableCell, TableHeader, TableRow };

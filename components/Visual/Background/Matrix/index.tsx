@@ -1,4 +1,5 @@
 import { useTheme } from 'next-themes';
+
 import DigitalRain from './component';
 
 export default function DigitalRainBackground() {

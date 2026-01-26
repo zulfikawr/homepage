@@ -1,13 +1,15 @@
 'use client';
 
-import CertificateCard from '@/components/Card/Certificate';
-import { mapRecordToCertificate } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import CertificateCard from '@/components/Card/Certificate';
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToCertificate } from '@/lib/mappers';
 import { Certificate } from '@/types/certificate';
 
 export default function CertificatesDatabase() {
@@ -40,27 +42,29 @@ export default function CertificatesDatabase() {
             .map((_, index) => <CardLoading key={index} type='certificate' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddCertificate}
-                className='mx-auto'
-              >
-                {certificates && certificates.length > 0
-                  ? 'Add more'
-                  : 'Add certificate'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddCertificate}
+                  className='mx-auto'
+                >
+                  {certificates && certificates.length > 0
+                    ? 'Add more'
+                    : 'Add certificate'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(certificates) && certificates.length > 0 ? (
-              certificates.map((certificate) => (
-                <CertificateCard
-                  key={certificate.id}
-                  certificate={certificate}
-                  openForm
-                />
-              ))
+              <StaggerContainer>
+                {certificates.map((certificate) => (
+                  <ViewTransition key={certificate.id}>
+                    <CertificateCard certificate={certificate} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No certificates available' />
             )}

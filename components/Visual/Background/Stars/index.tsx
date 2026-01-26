@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
+
 import Stars from './component';
 
 export default function StarsBackground() {

@@ -1,6 +1,8 @@
+import { Metadata } from 'next';
+
 import { getPosts } from '@/database/posts';
 import { Post } from '@/types/post';
-import { Metadata } from 'next';
+
 import CategoryContent from './content';
 
 type Props = {

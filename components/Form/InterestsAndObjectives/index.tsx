@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
-import { updateInterestsAndObjectives } from '@/database/interestsAndObjectives';
+import React, { useEffect, useState } from 'react';
+
 import { toast } from '@/components/Toast';
+import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
+import { updateInterestsAndObjectives } from '@/database/interestsAndObjectives';
+import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 interface InterestsAndObjectivesFormProps {
   data?: InterestsAndObjectives;

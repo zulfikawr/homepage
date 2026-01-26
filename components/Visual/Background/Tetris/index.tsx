@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+
 import { TetrisGame } from './component';
 
 export default function TetrisBackground() {

@@ -1,7 +1,8 @@
 'use client';
 
-import PageTitle from '@/components/PageTitle';
 import NavigationCard from '@/components/Card/Navigation';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
 import { IconName } from '@/components/UI/Icon';
 
 export default function DatabaseContent() {
@@ -105,20 +106,23 @@ export default function DatabaseContent() {
       />
 
       <div className='grid grid-cols-2 gap-4'>
-        {databaseCategories.map((category, index) => {
-          // Use a deterministic "shuffle" based on index
-          const colorIndex = (index * 7) % colors.length;
-          return (
-            <NavigationCard
-              key={index}
-              title={category.title}
-              desc={category.desc}
-              icon={category.icon}
-              className={colors[colorIndex]}
-              href={category.href}
-            />
-          );
-        })}
+        <StaggerContainer>
+          {databaseCategories.map((category, index) => {
+            // Use a deterministic "shuffle" based on index
+            const colorIndex = (index * 7) % colors.length;
+            return (
+              <ViewTransition key={index}>
+                <NavigationCard
+                  title={category.title}
+                  desc={category.desc}
+                  icon={category.icon}
+                  className={colors[colorIndex]}
+                  href={category.href}
+                />
+              </ViewTransition>
+            );
+          })}
+        </StaggerContainer>
       </div>
     </div>
   );

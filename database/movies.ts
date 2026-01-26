@@ -1,11 +1,12 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { Movie } from '@/types/movie';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
 import { mapRecordToMovie } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { Movie } from '@/types/movie';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

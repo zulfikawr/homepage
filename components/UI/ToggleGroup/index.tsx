@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Toggle, Icon } from '@/components/UI';
+
+import { Icon, Toggle } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 

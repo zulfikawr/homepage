@@ -1,13 +1,15 @@
 'use client';
 
-import BookCard from '@/components/Card/Book';
-import { mapRecordToBook } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import BookCard from '@/components/Card/Book';
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToBook } from '@/lib/mappers';
 import { Book } from '@/types/book';
 
 export default function ReadingListDatabase() {
@@ -44,21 +46,27 @@ export default function ReadingListDatabase() {
           </div>
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5 min-h-[100px]'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddBook}
-                className='mx-auto'
-              >
-                {books && books.length > 0 ? 'Add more' : 'Add book'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm dark:border-border dark:bg-card p-5 min-h-[100px]'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddBook}
+                  className='mx-auto'
+                >
+                  {books && books.length > 0 ? 'Add more' : 'Add book'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(books) && books.length > 0 ? (
-              books.map((book) => (
-                <BookCard key={book.id} book={book} openForm />
-              ))
+              <StaggerContainer>
+                {books.map((book) => (
+                  <ViewTransition key={book.id}>
+                    <BookCard book={book} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <div className='md:col-span-1'>
                 <CardEmpty message='No books available' />

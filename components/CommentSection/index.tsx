@@ -1,25 +1,27 @@
 'use client';
 
-import { Comment } from '@/types/comment';
-import { useMemo, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { RecordModel } from 'pocketbase';
+
+import { Card } from '@/components/Card';
 import CommentCard from '@/components/Card/Comment';
+import { Editor } from '@/components/Editor';
+import { toast } from '@/components/Toast';
+import { Button, Icon } from '@/components/UI';
+import { useAuth } from '@/contexts/authContext';
 import {
   addComment,
-  likeComment,
   deleteComment,
+  likeComment,
   updateComment,
 } from '@/database/comments';
-import { mapRecordToComment } from '@/lib/mappers';
-import { Button, Icon } from '@/components/UI';
-import { Card } from '@/components/Card';
-import { Editor } from '@/components/Editor';
-import { useAuth } from '@/contexts/authContext';
-import { RecordModel } from 'pocketbase';
-import { toast } from '@/components/Toast';
-import ImageWithFallback from '../ImageWithFallback';
-import { useAuthActions } from '@/hooks/useAuthActions';
 import { useCollection } from '@/hooks';
+import { useAuthActions } from '@/hooks/useAuthActions';
+import { mapRecordToComment } from '@/lib/mappers';
 import { getFileUrl } from '@/lib/storage';
+import { Comment } from '@/types/comment';
+
+import ImageWithFallback from '../ImageWithFallback';
 
 interface CommentSectionProps {
   postId: string;

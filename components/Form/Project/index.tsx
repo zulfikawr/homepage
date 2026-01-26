@@ -1,29 +1,30 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Project } from '@/types/project';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { ProjectCard } from '@/components/Card/Project';
+import DateSelect from '@/components/DateSelect';
+import { Editor } from '@/components/Editor';
 import { modal } from '@/components/Modal';
+import { toast } from '@/components/Toast';
 import {
   Button,
   Checkbox,
   Dropdown,
   DropdownItem,
+  Dropzone,
   FormLabel,
   Icon,
   Input,
   Textarea,
-  Dropzone,
 } from '@/components/UI';
-import { Editor } from '@/components/Editor';
-import { ProjectCard } from '@/components/Card/Project';
-import { toast } from '@/components/Toast';
-import { addProject, updateProject, deleteProject } from '@/database/projects';
-import { generateSlug } from '@/utilities/generateSlug';
-import { formatDateRange } from '@/utilities/formatDate';
-import DateSelect from '@/components/DateSelect';
-import { Separator } from '@/components/UI/Separator';
-import { useRouter } from 'next/navigation';
 import { IconName } from '@/components/UI/Icon';
+import { Separator } from '@/components/UI/Separator';
+import { addProject, deleteProject, updateProject } from '@/database/projects';
+import { Project } from '@/types/project';
+import { formatDateRange } from '@/utilities/formatDate';
+import { generateSlug } from '@/utilities/generateSlug';
 
 interface ProjectFormProps {
   projectToEdit?: Project;

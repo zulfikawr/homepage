@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect, CSSProperties } from 'react';
+import React, { CSSProperties, useEffect, useRef } from 'react';
 
 interface StarsProps {
   starColor?: string;

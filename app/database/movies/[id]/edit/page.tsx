@@ -1,9 +1,11 @@
-import { getMovieById } from '@/database/movies';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import EditMoviePage from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+import { getMovieById } from '@/database/movies';
+
+import EditMoviePage from './content';
 
 type Props = {
   params: Promise<{

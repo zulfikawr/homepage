@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Icon, Label, Button, Separator } from '@/components/UI';
-import { useTitle } from '@/contexts/titleContext';
 import Link from 'next/link';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
-import { Hover } from '@/components/Visual';
+import { useRouter } from 'next/navigation';
+
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { Button, Icon, Label, Separator } from '@/components/UI';
+import { Hover } from '@/components/Visual';
+import { useTitle } from '@/contexts/titleContext';
+import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PageTitleProps {
   emoji?: string;

@@ -1,12 +1,14 @@
 'use client';
 
+import { useMemo } from 'react';
+
+import NavigationCard from '@/components/Card/Navigation';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { IconName } from '@/components/UI/Icon';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
-import { useMemo } from 'react';
-import NavigationCard from '@/components/Card/Navigation';
-import { IconName } from '@/components/UI/Icon';
 
 export default function PagesContent() {
   const { data: resumeList } = useCollection<Resume>(
@@ -114,21 +116,24 @@ export default function PagesContent() {
       />
 
       <div className='grid grid-cols-2 gap-4'>
-        {pages
-          .sort((a, b) => a.title.localeCompare(b.title))
-          .map((page, index) => {
-            const colorIndex = (index * 7) % colors.length;
-            return (
-              <NavigationCard
-                key={index}
-                title={page.title}
-                desc={page.desc}
-                icon={page.icon}
-                className={colors[colorIndex]}
-                href={page.href}
-              />
-            );
-          })}
+        <StaggerContainer>
+          {pages
+            .sort((a, b) => a.title.localeCompare(b.title))
+            .map((page, index) => {
+              const colorIndex = (index * 7) % colors.length;
+              return (
+                <ViewTransition key={index}>
+                  <NavigationCard
+                    title={page.title}
+                    desc={page.desc}
+                    icon={page.icon}
+                    className={colors[colorIndex]}
+                    href={page.href}
+                  />
+                </ViewTransition>
+              );
+            })}
+        </StaggerContainer>
       </div>
     </div>
   );

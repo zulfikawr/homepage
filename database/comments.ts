@@ -1,10 +1,11 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { Comment } from '@/types/comment';
-import { RecordModel } from 'pocketbase';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
+import pb from '@/lib/pocketbase';
+import { Comment } from '@/types/comment';
 
 /**
  * Ensures the PocketBase client is authenticated for server-side operations

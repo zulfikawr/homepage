@@ -1,9 +1,11 @@
-import { getBookById } from '@/database/books';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import EditBookPage from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+import { getBookById } from '@/database/books';
+
+import EditBookPage from './content';
 
 type Props = {
   params: Promise<{

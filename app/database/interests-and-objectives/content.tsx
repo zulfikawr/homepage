@@ -1,9 +1,10 @@
 'use client';
 
 import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
+import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { mapRecordToInterests } from '@/lib/mappers';
 import { useCollection } from '@/hooks';
+import { mapRecordToInterests } from '@/lib/mappers';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 export default function PersonalInfoContent() {
@@ -24,7 +25,9 @@ export default function PersonalInfoContent() {
         subtitle='Define your goal and personal focus.'
       />
 
-      <InterestsAndObjectivesForm data={interestsAndObjectives} />
+      <ViewTransition>
+        <InterestsAndObjectivesForm data={interestsAndObjectives} />
+      </ViewTransition>
     </div>
   );
 }

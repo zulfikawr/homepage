@@ -1,11 +1,12 @@
 'use client';
 
-import PublicationCard from '@/components/Card/Publication';
-import { mapRecordToPublication } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
+import PublicationCard from '@/components/Card/Publication';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
 import { useCollection } from '@/hooks';
+import { mapRecordToPublication } from '@/lib/mappers';
 import { Publication } from '@/types/publication';
 
 export default function PublicationsContent() {
@@ -31,9 +32,13 @@ export default function PublicationsContent() {
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='publication' />)
         ) : publications.length > 0 ? (
-          publications.map((publication) => (
-            <PublicationCard key={publication.id} publication={publication} />
-          ))
+          <StaggerContainer>
+            {publications.map((publication) => (
+              <ViewTransition key={publication.id}>
+                <PublicationCard publication={publication} />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         ) : (
           <CardEmpty message='No publications available' />
         )}

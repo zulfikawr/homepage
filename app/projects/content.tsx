@@ -1,15 +1,16 @@
 'use client';
 
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
 import ProjectCard from '@/components/Card/Project';
-import { mapRecordToProject } from '@/lib/mappers';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
 import { useCollection } from '@/hooks';
-import { sortByDate } from '@/utilities/sortByDate';
+import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
+import { sortByDate } from '@/utilities/sortByDate';
 
 export default function ProjectsContent() {
   const {
@@ -53,9 +54,13 @@ export default function ProjectsContent() {
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : wipProjects.length > 0 ? (
-            wipProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))
+            <StaggerContainer>
+              {wipProjects.map((project) => (
+                <ViewTransition key={project.id}>
+                  <ProjectCard project={project} />
+                </ViewTransition>
+              ))}
+            </StaggerContainer>
           ) : (
             <CardEmpty message='No projects in progress.' />
           )}
@@ -77,9 +82,13 @@ export default function ProjectsContent() {
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : doneProjects.length > 0 ? (
-            doneProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))
+            <StaggerContainer>
+              {doneProjects.map((project) => (
+                <ViewTransition key={project.id}>
+                  <ProjectCard project={project} />
+                </ViewTransition>
+              ))}
+            </StaggerContainer>
           ) : (
             <CardEmpty message='No projects completed.' />
           )}
@@ -101,9 +110,13 @@ export default function ProjectsContent() {
               .fill(0)
               .map((_, index) => <CardLoading key={index} type='project' />)
           ) : upcomingProjects.length > 0 ? (
-            upcomingProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))
+            <StaggerContainer>
+              {upcomingProjects.map((project) => (
+                <ViewTransition key={project.id}>
+                  <ProjectCard project={project} />
+                </ViewTransition>
+              ))}
+            </StaggerContainer>
           ) : (
             <CardEmpty message='No upcoming projects.' />
           )}

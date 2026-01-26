@@ -1,7 +1,7 @@
 'use client';
 
-import PageTitle from '@/components/PageTitle';
 import ProjectForm from '@/components/Form/Project';
+import PageTitle from '@/components/PageTitle';
 
 export default function NewProjectContent() {
   return (

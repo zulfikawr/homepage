@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffectToggle } from '@/contexts/effectContext';
-import { useRadius } from '@/contexts/radiusContext';
-import { Icon, type IconName } from '../Icon';
 import React, {
-  useState,
+  createContext,
+  useCallback,
+  useContext,
   useEffect,
   useRef,
-  useCallback,
-  createContext,
-  useContext,
+  useState,
 } from 'react';
+
+import { useEffectToggle } from '@/contexts/effectContext';
+import { useRadius } from '@/contexts/radiusContext';
+
+import { Icon, type IconName } from '../Icon';
 
 const DropdownContext = createContext<{
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;

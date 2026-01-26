@@ -1,15 +1,19 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
-import Providers from './providers';
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+
 import Drawer from '@/components/Drawer';
-import Modal from '@/components/Modal';
-import Toast from '@/components/Toast';
-import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
+import Modal from '@/components/Modal';
+import { PageTransition } from '@/components/Motion';
+import Toast from '@/components/Toast';
+import DynamicBackground from '@/components/Visual/Background';
+
+import Providers from './providers';
+
 import '@/styles/tailwind.css';
 import '@/styles/atom-one-dark.css';
-import DynamicBackground from '@/components/Visual/Background';
-import { Suspense } from 'react';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -82,7 +86,9 @@ export default function RootLayout({
               <Header />
             </Suspense>
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
-              <Suspense fallback={null}>{children}</Suspense>
+              <Suspense fallback={null}>
+                <PageTransition>{children}</PageTransition>
+              </Suspense>
             </main>
             <Footer />
           </div>

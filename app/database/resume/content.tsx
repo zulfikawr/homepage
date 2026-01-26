@@ -1,11 +1,13 @@
 'use client';
 
-import ResumeForm from '@/components/Form/Resume';
-import PageTitle from '@/components/PageTitle';
-import { mapRecordToResume } from '@/lib/mappers';
-import { useCollection } from '@/hooks';
-import { Resume } from '@/types/resume';
 import { useMemo } from 'react';
+
+import ResumeForm from '@/components/Form/Resume';
+import { ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { useCollection } from '@/hooks';
+import { mapRecordToResume } from '@/lib/mappers';
+import { Resume } from '@/types/resume';
 
 export default function ResumeContent() {
   const { data: resumeList } = useCollection<Resume>(
@@ -21,7 +23,9 @@ export default function ResumeContent() {
     <div>
       <PageTitle emoji='📄' title='Resume' subtitle='Update your resume' />
 
-      <ResumeForm data={resume} />
+      <ViewTransition>
+        <ResumeForm data={resume} />
+      </ViewTransition>
     </div>
   );
 }

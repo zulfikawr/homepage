@@ -1,13 +1,15 @@
 'use client';
 
-import { mapRecordToInterests } from '@/lib/mappers';
-import { useCollection } from '@/hooks';
-import SectionTitle from '@/components/SectionTitle';
-import Loading from './loading';
+import { useEffect, useState } from 'react';
+
 import CardEmpty from '@/components/Card/Empty';
+import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
+import { useCollection } from '@/hooks';
+import { mapRecordToInterests } from '@/lib/mappers';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
-import { useState, useEffect } from 'react';
+
+import Loading from './loading';
 
 const InterestsAndObjectivesSection = () => {
   const {

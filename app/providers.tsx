@@ -1,12 +1,13 @@
 'use client';
 
-import { AuthProvider } from '@/contexts/authContext';
 import { ThemeProvider } from 'next-themes';
-import { TitleProvider } from '@/contexts/titleContext';
-import { EffectProvider } from '@/contexts/effectContext';
+
+import { AuthProvider } from '@/contexts/authContext';
 import { BackgroundProvider } from '@/contexts/backgroundContext';
-import { RadiusProvider } from '@/contexts/radiusContext';
+import { EffectProvider } from '@/contexts/effectContext';
 import { LoadingProvider } from '@/contexts/loadingContext';
+import { RadiusProvider } from '@/contexts/radiusContext';
+import { TitleProvider } from '@/contexts/titleContext';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

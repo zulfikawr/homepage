@@ -1,13 +1,15 @@
 'use client';
 
-import ProjectCard from '@/components/Card/Project';
-import { mapRecordToProject } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import ProjectCard from '@/components/Card/Project';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 
 export default function ProjectsDatabase() {
@@ -36,21 +38,27 @@ export default function ProjectsDatabase() {
             .map((_, index) => <CardLoading key={index} type='project' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddProject}
-                className='mx-auto'
-              >
-                {projects && projects.length > 0 ? 'Add more' : 'Add project'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddProject}
+                  className='mx-auto'
+                >
+                  {projects && projects.length > 0 ? 'Add more' : 'Add project'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(projects) && projects.length > 0 ? (
-              projects.map((project) => (
-                <ProjectCard key={project.id} project={project} openForm />
-              ))
+              <StaggerContainer>
+                {projects.map((project) => (
+                  <ViewTransition key={project.id}>
+                    <ProjectCard project={project} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No projects available' />
             )}

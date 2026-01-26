@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
+
 import { Icon } from '@/components/UI';
+import type { IconName } from '@/components/UI/Icon';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
-import type { IconName } from '@/components/UI/Icon';
 
 interface SectionTitleProps {
   icon?: IconName;

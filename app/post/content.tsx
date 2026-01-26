@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import PostCard from '@/components/Card/Post';
-import { mapRecordToPost } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
+import { useMemo, useState } from 'react';
+
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
+import PostCard from '@/components/Card/Post';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Icon, Toggle } from '@/components/UI';
 import { useCollection } from '@/hooks';
-import { Toggle, Icon } from '@/components/UI';
-import { sortByDate } from '@/utilities/sortByDate';
+import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
+import { sortByDate } from '@/utilities/sortByDate';
 
 export default function PostsContent() {
   const {
@@ -91,9 +93,13 @@ export default function PostsContent() {
         <CardEmpty message='No posts found.' />
       ) : (
         <div className='grid grid-cols-1 gap-6'>
-          {filteredPosts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
+          <StaggerContainer>
+            {filteredPosts.map((post) => (
+              <ViewTransition key={post.id}>
+                <PostCard post={post} />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         </div>
       )}
     </div>

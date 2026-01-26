@@ -1,7 +1,8 @@
 'use client';
 
-import Waves from './component';
 import { useTheme } from 'next-themes';
+
+import Waves from './component';
 
 export default function WavesBackground() {
   const { resolvedTheme } = useTheme();

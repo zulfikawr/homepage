@@ -1,23 +1,25 @@
 'use client';
 
-import { useAuth } from '@/contexts/authContext';
 import { useRouter } from 'next/navigation';
-import { deleteFeedback } from '@/database/feedback';
-import { FeedbackEntry } from '@/types/feedback';
-import { mapRecordToFeedback } from '@/lib/mappers';
+
+import CardEmpty from '@/components/Card/Empty';
+import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { toast } from '@/components/Toast';
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableCell,
   Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
   TableSkeleton,
 } from '@/components/UI';
-import { toast } from '@/components/Toast';
+import { useAuth } from '@/contexts/authContext';
+import { deleteFeedback } from '@/database/feedback';
 import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
+import { mapRecordToFeedback } from '@/lib/mappers';
+import { FeedbackEntry } from '@/types/feedback';
 
 export default function FeedbackResponsesContent() {
   const { user, loading: authLoading, isAdmin } = useAuth();
@@ -59,62 +61,64 @@ export default function FeedbackResponsesContent() {
         subtitle='All feedback submitted by users.'
       />
 
-      {loading ? (
-        <TableSkeleton rows={8} cols={4} />
-      ) : feedbacks && feedbacks.length > 0 ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell
-                isHeader
-                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-              >
-                Date
-              </TableCell>
-              <TableCell
-                isHeader
-                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-              >
-                Feedback
-              </TableCell>
-              <TableCell
-                isHeader
-                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-              >
-                Contact
-              </TableCell>
-              <TableCell
-                isHeader
-                className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
-              >
-                Actions
-              </TableCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {feedbacks.map((entry) => (
-              <TableRow key={entry.id}>
-                <TableCell>
-                  {new Date(entry.created).toLocaleDateString()}
+      <ViewTransition>
+        {loading ? (
+          <TableSkeleton rows={8} cols={4} />
+        ) : feedbacks && feedbacks.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableCell
+                  isHeader
+                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                >
+                  Date
                 </TableCell>
-                <TableCell>{entry.feedback}</TableCell>
-                <TableCell>{entry.contact}</TableCell>
-                <TableCell>
-                  <Button
-                    type='destructive'
-                    icon='trashSimple'
-                    onClick={() => handleDelete(entry.id)}
-                  />
+                <TableCell
+                  isHeader
+                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                >
+                  Feedback
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                >
+                  Contact
+                </TableCell>
+                <TableCell
+                  isHeader
+                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                >
+                  Actions
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <div className='mt-4'>
-          <CardEmpty message='No feedback yet' />
-        </div>
-      )}
+            </TableHeader>
+            <TableBody>
+              {feedbacks.map((entry) => (
+                <TableRow key={entry.id}>
+                  <TableCell>
+                    {new Date(entry.created).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>{entry.feedback}</TableCell>
+                  <TableCell>{entry.contact}</TableCell>
+                  <TableCell>
+                    <Button
+                      type='destructive'
+                      icon='trashSimple'
+                      onClick={() => handleDelete(entry.id)}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className='mt-4'>
+            <CardEmpty message='No feedback yet' />
+          </div>
+        )}
+      </ViewTransition>
     </div>
   );
 }

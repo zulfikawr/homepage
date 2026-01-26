@@ -1,10 +1,11 @@
 'use client';
 
-import { Project } from '@/types/project';
-import PageTitle from '@/components/PageTitle';
-import ProjectForm from '@/components/Form/Project';
-import { useTitle } from '@/contexts/titleContext';
 import { useEffect } from 'react';
+
+import ProjectForm from '@/components/Form/Project';
+import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
+import { Project } from '@/types/project';
 
 interface EditProjectPageProps {
   project: Project;

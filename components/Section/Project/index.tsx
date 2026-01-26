@@ -1,13 +1,14 @@
 'use client';
 
-import { ProjectCard } from '@/components/Card/Project';
-import { mapRecordToProject } from '@/lib/mappers';
-import { parseDate } from '@/utilities/sortByDate';
-import SectionTitle from '@/components/SectionTitle';
-import { CardLoading } from '@/components/Card/Loading';
 import CardEmpty from '@/components/Card/Empty';
-import { Project } from '@/types/project';
+import { CardLoading } from '@/components/Card/Loading';
+import { ProjectCard } from '@/components/Card/Project';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import SectionTitle from '@/components/SectionTitle';
 import { useCollection } from '@/hooks';
+import { mapRecordToProject } from '@/lib/mappers';
+import { Project } from '@/types/project';
+import { parseDate } from '@/utilities/sortByDate';
 
 const ProjectSection = () => {
   const {
@@ -49,10 +50,14 @@ const ProjectSection = () => {
             .fill(0)
             .map((_, index) => <CardLoading key={index} type='project' />)
         ) : sortedProjects.length > 0 ? (
-          <div className='flex flex-col gap-y-4 animate-fade-in'>
-            {sortedProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+          <div className='flex flex-col gap-y-4'>
+            <StaggerContainer>
+              {sortedProjects.map((project) => (
+                <ViewTransition key={project.id}>
+                  <ProjectCard project={project} />
+                </ViewTransition>
+              ))}
+            </StaggerContainer>
           </div>
         ) : (
           <CardEmpty message='No projects found.' />

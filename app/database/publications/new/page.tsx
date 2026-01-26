@@ -1,7 +1,9 @@
-import { Metadata } from 'next';
-import NewPublicationContent from './content';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
 import { FormSkeleton } from '@/components/Form/Loading';
+
+import NewPublicationContent from './content';
 
 export const metadata: Metadata = {
   title: 'Add Publication - Zulfikar',

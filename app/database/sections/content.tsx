@@ -1,23 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import PageTitle from '@/components/PageTitle';
-import { mapRecordToSection } from '@/lib/mappers';
-import { updateSection } from '@/database/sections';
-import { useCollection } from '@/hooks';
-import { Switch, Icon, Button, Skeleton } from '@/components/UI';
-import { toast } from '@/components/Toast';
-import { Section } from '@/types/section';
-import { drawer } from '@/components/Drawer';
-import CardEmpty from '@/components/Card/Empty';
+import React, { useEffect, useState } from 'react';
 
+import CardEmpty from '@/components/Card/Empty';
+import { drawer } from '@/components/Drawer';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import Banners from '@/components/Section/Banners';
 // Preview Components
 import EmploymentSection from '@/components/Section/Employment';
-import ProjectSection from '@/components/Section/Project';
 import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
 import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
-import Banners from '@/components/Section/Banners';
+import ProjectSection from '@/components/Section/Project';
+import { toast } from '@/components/Toast';
+import { Button, Icon, Skeleton, Switch } from '@/components/UI';
+import { updateSection } from '@/database/sections';
+import { useCollection } from '@/hooks';
+import { mapRecordToSection } from '@/lib/mappers';
+import { Section } from '@/types/section';
 
 const SectionPreview = ({ sections }: { sections: Section[] }) => {
   const sectionMap: Record<string, React.ReactNode> = {
@@ -143,56 +144,61 @@ export default function SectionDatabase() {
       </div>
 
       <div className='space-y-3'>
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
-              >
-                <Skeleton width={20} height={20} />
-                <div className='flex-1 space-y-2'>
-                  <Skeleton width='40%' height={16} />
-                  <Skeleton width='20%' height={10} />
-                </div>
-                <Skeleton width={36} height={20} className='rounded-full' />
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
+            >
+              <Skeleton width={20} height={20} />
+              <div className='flex-1 space-y-2'>
+                <Skeleton width='40%' height={16} />
+                <Skeleton width='20%' height={10} />
               </div>
-            ))
-          : localSections.map((section, index) => (
-              <div
-                key={section.id}
-                draggable
-                onDragStart={(e) => onDragStart(e, section)}
-                onDragOver={(e) => onDragOver(e, index)}
-                onDragEnd={onDragEnd}
-                className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
-                  draggedItem?.id === section.id
-                    ? 'opacity-50 scale-95 border-gruv-blue'
-                    : 'opacity-100'
-                } cursor-grab active:cursor-grabbing`}
-              >
-                <div className='text-muted-foreground size-5 flex-shrink-0'>
-                  <Icon name='dotsSixVertical' />
-                </div>
+              <Skeleton width={36} height={20} className='rounded-full' />
+            </div>
+          ))
+        ) : (
+          <StaggerContainer>
+            {localSections.map((section, index) => (
+              <ViewTransition key={section.id}>
+                <div
+                  draggable
+                  onDragStart={(e) => onDragStart(e, section)}
+                  onDragOver={(e) => onDragOver(e, index)}
+                  onDragEnd={onDragEnd}
+                  className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
+                    draggedItem?.id === section.id
+                      ? 'opacity-50 scale-95 border-gruv-blue'
+                      : 'opacity-100'
+                  } cursor-grab active:cursor-grabbing`}
+                >
+                  <div className='text-muted-foreground size-5 flex-shrink-0'>
+                    <Icon name='dotsSixVertical' />
+                  </div>
 
-                <div className='flex-1 min-w-0'>
-                  <p className='font-medium truncate text-sm'>
-                    {section.title}
-                  </p>
-                  <p className='text-[10px] text-muted-foreground font-mono'>
-                    {section.name}
-                  </p>
-                </div>
+                  <div className='flex-1 min-w-0'>
+                    <p className='font-medium truncate text-sm'>
+                      {section.title}
+                    </p>
+                    <p className='text-[10px] text-muted-foreground font-mono'>
+                      {section.name}
+                    </p>
+                  </div>
 
-                <div onPointerDown={(e) => e.stopPropagation()}>
-                  <Switch
-                    id={`show-${section.id}`}
-                    checked={section.enabled}
-                    onChange={() => handleToggle(section)}
-                    label=''
-                  />
+                  <div onPointerDown={(e) => e.stopPropagation()}>
+                    <Switch
+                      id={`show-${section.id}`}
+                      checked={section.enabled}
+                      onChange={() => handleToggle(section)}
+                      label=''
+                    />
+                  </div>
                 </div>
-              </div>
+              </ViewTransition>
             ))}
+          </StaggerContainer>
+        )}
       </div>
 
       <div className='p-4 rounded-md bg-gruv-blue/10 dark:bg-gruv-blue/30/20 border border-gruv-blue/30 dark:border-gruv-blue/50 text-xs text-gruv-blue dark:text-gruv-blue'>

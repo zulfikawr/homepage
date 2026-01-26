@@ -1,11 +1,13 @@
 'use client';
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { Icon } from '@/components/UI';
-import LoadingSkeleton from './loading';
+
 import { Card } from '@/components/Card';
-import { useRadius } from '@/contexts/radiusContext';
+import { Icon } from '@/components/UI';
 import { useLoadingToggle } from '@/contexts/loadingContext';
+import { useRadius } from '@/contexts/radiusContext';
+
+import LoadingSkeleton from './loading';
 
 const emptySubscribe = () => () => {};
 

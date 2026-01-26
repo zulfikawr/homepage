@@ -1,11 +1,12 @@
-import { Employment } from '@/types/employment';
-import { drawer } from '@/components/Drawer';
-import EmploymentViewer from '@/components/Viewer/Employment';
-import { trimStr } from '@/utilities/string';
-import { Card } from '@/components/Card';
-import { Badge } from '@/components/UI';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { useRouter } from 'next/navigation';
+
+import { Card } from '@/components/Card';
+import { drawer } from '@/components/Drawer';
+import ImageWithFallback from '@/components/ImageWithFallback';
+import { Badge } from '@/components/UI';
+import EmploymentViewer from '@/components/Viewer/Employment';
+import { Employment } from '@/types/employment';
+import { trimStr } from '@/utilities/string';
 
 interface EmploymentCardProps {
   employment: Employment;

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import pb from '@/lib/pocketbase';
+import { useCallback, useEffect, useState } from 'react';
 import { RecordModel } from 'pocketbase';
+
 import { useLoadingToggle } from '@/contexts/loadingContext';
+import pb from '@/lib/pocketbase';
 
 /**
  * A generic hook to fetch and subscribe to any PocketBase collection.

@@ -1,13 +1,15 @@
 'use client';
 
-import MovieCard from '@/components/Card/Movie';
-import { mapRecordToMovie } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import MovieCard from '@/components/Card/Movie';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToMovie } from '@/lib/mappers';
 import { Movie } from '@/types/movie';
 
 export default function MoviesContent() {
@@ -35,14 +37,20 @@ export default function MoviesContent() {
             .map((_, index) => <CardLoading key={index} type='movie' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
-              <Button type='primary' icon='plus' onClick={handleAdd} />
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
+                <Button type='primary' icon='plus' onClick={handleAdd} />
+              </div>
+            </ViewTransition>
 
             {Array.isArray(movies) && movies.length > 0 ? (
-              movies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} openForm />
-              ))
+              <StaggerContainer>
+                {movies.map((movie) => (
+                  <ViewTransition key={movie.id}>
+                    <MovieCard movie={movie} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <div className='col-span-3 md:col-span-4'>
                 <CardEmpty message='No movies available' />

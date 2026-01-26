@@ -1,10 +1,11 @@
 'use client';
 
-import { Post } from '@/types/post';
-import PageTitle from '@/components/PageTitle';
-import PostForm from '@/components/Form/Post';
-import { useTitle } from '@/contexts/titleContext';
 import { useEffect } from 'react';
+
+import PostForm from '@/components/Form/Post';
+import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
+import { Post } from '@/types/post';
 
 interface EditPostPageProps {
   post: Post;

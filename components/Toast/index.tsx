@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import { Icon, IconName } from '@/components/UI/Icon';
 
 type ToastVariant = 'default' | 'info' | 'success' | 'error';

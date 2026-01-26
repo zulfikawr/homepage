@@ -1,13 +1,14 @@
 'use client';
 
 import BookCard from '@/components/Card/Book';
-import { mapRecordToBook } from '@/lib/mappers';
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Separator } from '@/components/UI/Separator';
-import { CardLoading } from '@/components/Card/Loading';
-import CardEmpty from '@/components/Card/Empty';
 import { useCollection } from '@/hooks';
+import { mapRecordToBook } from '@/lib/mappers';
 import { Book } from '@/types/book';
 
 export default function ReadingListContent() {
@@ -50,9 +51,15 @@ export default function ReadingListContent() {
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'currentlyReading')
                 .length > 0 ? (
-              booksArray
-                .filter((book) => book.type === 'currentlyReading')
-                .map((book) => <BookCard key={book.id} book={book} />)
+              <StaggerContainer>
+                {booksArray
+                  .filter((book) => book.type === 'currentlyReading')
+                  .map((book) => (
+                    <ViewTransition key={book.id}>
+                      <BookCard book={book} />
+                    </ViewTransition>
+                  ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No books currently being read' />
             )}
@@ -78,9 +85,15 @@ export default function ReadingListContent() {
                 .fill(0)
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'read').length > 0 ? (
-              booksArray
-                .filter((book) => book.type === 'read')
-                .map((book) => <BookCard key={book.id} book={book} />)
+              <StaggerContainer>
+                {booksArray
+                  .filter((book) => book.type === 'read')
+                  .map((book) => (
+                    <ViewTransition key={book.id}>
+                      <BookCard book={book} />
+                    </ViewTransition>
+                  ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No books read yet' />
             )}
@@ -107,9 +120,15 @@ export default function ReadingListContent() {
                 .map((_, index) => <CardLoading key={index} type='book' />)
             ) : booksArray.filter((book) => book.type === 'toRead').length >
               0 ? (
-              booksArray
-                .filter((book) => book.type === 'toRead')
-                .map((book) => <BookCard key={book.id} book={book} />)
+              <StaggerContainer>
+                {booksArray
+                  .filter((book) => book.type === 'toRead')
+                  .map((book) => (
+                    <ViewTransition key={book.id}>
+                      <BookCard book={book} />
+                    </ViewTransition>
+                  ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No books to read yet' />
             )}

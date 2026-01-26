@@ -1,13 +1,15 @@
 'use client';
 
-import PublicationCard from '@/components/Card/Publication';
-import { mapRecordToPublication } from '@/lib/mappers';
-import PageTitle from '@/components/PageTitle';
-import { CardLoading } from '@/components/Card/Loading';
-import { useCollection } from '@/hooks';
-import CardEmpty from '@/components/Card/Empty';
-import { Button } from '@/components/UI';
 import { useRouter } from 'next/navigation';
+
+import CardEmpty from '@/components/Card/Empty';
+import { CardLoading } from '@/components/Card/Loading';
+import PublicationCard from '@/components/Card/Publication';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import PageTitle from '@/components/PageTitle';
+import { Button } from '@/components/UI';
+import { useCollection } from '@/hooks';
+import { mapRecordToPublication } from '@/lib/mappers';
 import { Publication } from '@/types/publication';
 
 export default function PublicationsDatabase() {
@@ -40,27 +42,29 @@ export default function PublicationsDatabase() {
             .map((_, index) => <CardLoading key={index} type='publication' />)
         ) : (
           <>
-            <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
-              <Button
-                type='primary'
-                icon='plus'
-                onClick={handleAddPublication}
-                className='mx-auto'
-              >
-                {publications && publications.length > 0
-                  ? 'Add more'
-                  : 'Add publication'}
-              </Button>
-            </div>
+            <ViewTransition>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+                <Button
+                  type='primary'
+                  icon='plus'
+                  onClick={handleAddPublication}
+                  className='mx-auto'
+                >
+                  {publications && publications.length > 0
+                    ? 'Add more'
+                    : 'Add publication'}
+                </Button>
+              </div>
+            </ViewTransition>
 
             {Array.isArray(publications) && publications.length > 0 ? (
-              publications.map((publication) => (
-                <PublicationCard
-                  key={publication.id}
-                  publication={publication}
-                  openForm
-                />
-              ))
+              <StaggerContainer>
+                {publications.map((publication) => (
+                  <ViewTransition key={publication.id}>
+                    <PublicationCard publication={publication} openForm />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             ) : (
               <CardEmpty message='No publications available' />
             )}

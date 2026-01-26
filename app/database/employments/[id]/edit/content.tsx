@@ -1,10 +1,11 @@
 'use client';
 
-import { Employment } from '@/types/employment';
-import PageTitle from '@/components/PageTitle';
-import EmploymentForm from '@/components/Form/Employment';
-import { useTitle } from '@/contexts/titleContext';
 import { useEffect } from 'react';
+
+import EmploymentForm from '@/components/Form/Employment';
+import PageTitle from '@/components/PageTitle';
+import { useTitle } from '@/contexts/titleContext';
+import { Employment } from '@/types/employment';
 
 interface EditEmploymentPageProps {
   employment: Employment;

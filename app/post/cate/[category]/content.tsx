@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+
 import PostCard from '@/components/Card/Post';
-import { Post } from '@/types/post';
+import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { Post } from '@/types/post';
 
 interface CategoryContentProps {
   posts: Post[];
@@ -44,9 +46,13 @@ export default function CategoryContent({
         </div>
       ) : (
         <div className='mt-6 space-y-6'>
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
+          <StaggerContainer>
+            {posts.map((post) => (
+              <ViewTransition key={post.id}>
+                <PostCard post={post} />
+              </ViewTransition>
+            ))}
+          </StaggerContainer>
         </div>
       )}
     </div>

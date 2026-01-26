@@ -1,18 +1,19 @@
 'use server';
 
-import pb from '@/lib/pocketbase';
-import { RecordModel } from 'pocketbase';
-import { Post } from '@/types/post';
-import { Project } from '@/types/project';
-import { Book } from '@/types/book';
-import { Publication } from '@/types/publication';
 import { cookies } from 'next/headers';
+import { RecordModel } from 'pocketbase';
+
 import {
+  mapRecordToBook,
   mapRecordToPost,
   mapRecordToProject,
-  mapRecordToBook,
   mapRecordToPublication,
 } from '@/lib/mappers';
+import pb from '@/lib/pocketbase';
+import { Book } from '@/types/book';
+import { Post } from '@/types/post';
+import { Project } from '@/types/project';
+import { Publication } from '@/types/publication';
 
 export type SearchResult =
   | { type: 'post'; data: Post }

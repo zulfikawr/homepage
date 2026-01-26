@@ -1,8 +1,8 @@
 'use client';
 
-import PagesAndLinks from '../../Banners/PagesAndLinks';
 import CurrentlyListening from '../../Banners/CurrentlyListening';
 import LocationAndTime from '../../Banners/LocationAndTime';
+import PagesAndLinks from '../../Banners/PagesAndLinks';
 
 const Banners = () => {
   return (
