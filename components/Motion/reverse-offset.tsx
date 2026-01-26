@@ -19,7 +19,7 @@ const ReverseOffsetTransition = (props: Props) => {
     // Use negative translateY to move UP when scrolling down
     ref.current.style.transform = `translateY(${(1 - ratio) * -50 || 0}%)`;
     ref.current.style.opacity = `${ratio}`;
-    
+
     // Completely hide when ratio is 0 to allow pointer events on the title
     ref.current.style.visibility = ratio === 0 ? 'hidden' : 'visible';
     ref.current.style.pointerEvents = ratio < 0.5 ? 'none' : 'auto';
