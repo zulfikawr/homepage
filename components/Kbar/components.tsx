@@ -300,46 +300,69 @@ export function KbarContent() {
       .filter((section) => section.items.length > 0);
 
     if (dbResults.length > 0) {
-      const dbItemsWithScore = dbResults.map((res) => {
-        let title = '';
-        let secondary = '';
-        if (res.type === 'post') {
-          title = res.data.title;
-          secondary = res.data.excerpt || res.data.content || '';
-        } else if (res.type === 'project') {
-          title = res.data.name;
-          secondary = res.data.description || res.data.readme || '';
-        } else if (res.type === 'book') {
-          title = res.data.title;
-          secondary = res.data.author || '';
-        } else if (res.type === 'publication') {
-          title = res.data.title;
-          secondary = res.data.publisher || res.data.excerpt || '';
-        }
+      const dbItemsWithScore = dbResults
+        .map((res) => {
+          let title = '';
+          let secondary = '';
+          if (res.type === 'post') {
+            title = res.data.title;
+            secondary = res.data.excerpt || res.data.content || '';
+          } else if (res.type === 'project') {
+            title = res.data.name;
+            secondary = res.data.description || res.data.readme || '';
+          } else if (res.type === 'book') {
+            title = res.data.title;
+            secondary = res.data.author || '';
+          } else if (res.type === 'publication') {
+            title = res.data.title;
+            secondary = res.data.publisher || res.data.excerpt || '';
+          }
 
-        return {
-          res,
-          score: calculateRank(title, secondary, search),
-        };
-      });
+          return {
+            res,
+            score: calculateRank(title, secondary, search),
+          };
+        })
+        .filter((item) => item.score > 0);
 
-      const sortedDbResults = dbItemsWithScore
-        .filter((item) => item.score > 0)
-        .sort((a, b) => b.score - a.score);
+      if (dbItemsWithScore.length > 0) {
+        const typeMetadata: Record<string, { label: string; icon: IconName }> =
+          {
+            post: { label: 'Posts', icon: 'note' },
+            project: { label: 'Projects', icon: 'package' },
+            book: { label: 'Reading List', icon: 'bookOpen' },
+            publication: { label: 'Publications', icon: 'newspaper' },
+          };
 
-      if (sortedDbResults.length > 0) {
-        const dbSection: KbarSection = {
-          label: 'Database Results',
-          icon: 'database' as IconName,
-          isDb: true,
-          items: sortedDbResults.map(({ res }) => ({
-            key: `db-${res.type}-${res.data.id}`,
-            type: res.type,
-            data: res.data,
-            action: () => {},
-          })),
-        };
-        return [dbSection, ...staticSections];
+        const grouped = dbItemsWithScore.reduce(
+          (acc, item) => {
+            const type = item.res.type;
+            if (!acc[type]) acc[type] = [];
+            acc[type].push(item);
+            return acc;
+          },
+          {} as Record<string, typeof dbItemsWithScore>,
+        );
+
+        const dbSections: KbarSection[] = Object.entries(grouped)
+          .map(([type, items]) => ({
+            label: typeMetadata[type].label,
+            icon: typeMetadata[type].icon,
+            isDb: true,
+            items: items
+              .sort((a, b) => b.score - a.score)
+              .map(({ res }) => ({
+                key: `db-${res.type}-${res.data.id}`,
+                type: res.type,
+                data: res.data,
+                action: () => {},
+              })),
+            maxScore: Math.max(...items.map((i) => i.score)),
+          }))
+          .sort((a, b) => b.maxScore - a.maxScore)
+          .map(({ maxScore, ...section }) => section);
+
+        return [...dbSections, ...staticSections];
       }
     }
 
