@@ -6,7 +6,9 @@
     "dev": "rm -rf .next && next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --fix && bunx prettier --write ."
+    "lint": "eslint . --fix && bunx prettier --write .",
+    "analyze": "bash scripts/analyze-performance.sh",
+    "clean": "rm -rf .next node_modules && npm install"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
