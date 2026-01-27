@@ -1,17 +1,15 @@
-import AudioPlayer from 'react-h5-audio-player';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card } from 'components/Card';
 import { Post } from 'types/post';
 import { trimStr } from 'utilities/string';
 
+import AudioPlayer from '@/components/AudioPlayer';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Icon, Label } from '@/components/UI';
 import { TimeAgo } from '@/components/UI';
 import { Hover } from '@/components/Visual';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
-
-import 'react-h5-audio-player/lib/styles.css';
 
 interface PostCardProps {
   post: Post;
@@ -82,12 +80,7 @@ export default function PostCard({
     if (post.audio) {
       return (
         <div className='px-4 pb-4 lg:px-6 lg:pb-6'>
-          <AudioPlayer
-            className='rhap_container focus:outline-none'
-            autoPlayAfterSrcChange={false}
-            src={post.audio}
-            preload='metadata'
-          />
+          <AudioPlayer src={post.audio} />
         </div>
       );
     }
