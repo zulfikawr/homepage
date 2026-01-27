@@ -24,7 +24,9 @@ export default async function proxy(request: NextRequest) {
 
   const isAdmin =
     pb.authStore.isValid &&
-    (!!record?.role || record?.email?.includes('zulfikawr'));
+    (pb.authStore.isSuperuser ||
+      !!record?.role ||
+      record?.email?.includes('zulfikawr'));
 
   const isDatabaseRoute = req.nextUrl.pathname.startsWith('/database');
   const isLoginRoute = req.nextUrl.pathname === '/login';
