@@ -315,7 +315,9 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     const svg = d3.select(svgRef.current);
     const container = containerRef.current;
     const width = container.clientWidth;
-    const height = container.clientHeight || 400;
+    // Use container clientHeight, but fallback to width/2 for very short containers to preserve aspect
+    const height =
+      container.clientHeight || Math.max(400, Math.round(width / 2));
 
     svg.selectAll('*').remove();
 
@@ -390,7 +392,7 @@ export default function WorldMap({ data, className }: WorldMapProps) {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full min-h-[400px] ${className}`}
+      className={`relative w-full h-full min-h-[200px] ${className}`}
     >
       <svg ref={svgRef} className='w-full h-full' />
       <div className='absolute bottom-4 right-4'>

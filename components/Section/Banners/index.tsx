@@ -7,6 +7,7 @@ import GitHubHeatmap from '../../Banners/GitHubHeatmap';
 import PagesAndLinks from '../../Banners/PagesAndLinks';
 import TopLanguages from '../../Banners/TopLanguages';
 import Weather from '../../Banners/Weather';
+import WorldMap from '../../Banners/WorldMap';
 
 const Banners = () => {
   return (
@@ -18,6 +19,12 @@ const Banners = () => {
         <ViewTransition key='heatmap'>
           <GitHubHeatmap />
         </ViewTransition>
+        <ViewTransition key='worldmap'>
+          <WorldMap />
+        </ViewTransition>
+        <ViewTransition key='languages'>
+          <TopLanguages />
+        </ViewTransition>
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
           <StaggerContainer initialDelay={0.2}>
             <ViewTransition key='listening' className='h-full'>
@@ -28,9 +35,6 @@ const Banners = () => {
             </ViewTransition>
           </StaggerContainer>
         </div>
-        <ViewTransition key='languages'>
-          <TopLanguages />
-        </ViewTransition>
       </StaggerContainer>
     </div>
   );

@@ -2,12 +2,12 @@
 
 import { useMemo } from 'react';
 
+import WorldMapBanner from '@/components/Banners/WorldMap';
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { Icon, Skeleton } from '@/components/UI';
-import WorldMap from '@/components/Visual/WorldMap';
 import { useCollection } from '@/hooks';
 import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { AnalyticsEvent } from '@/types/analytics';
@@ -332,19 +332,7 @@ export default function AnalyticsContent() {
         <div className='lg:col-span-2 space-y-8'>
           <StaggerContainer>
             <ViewTransition>
-              {/* World Map */}
-              <Card isPreview className='overflow-hidden'>
-                <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
-                  <h3 className='text-sm font-semibold flex items-center gap-2 text-foreground'>
-                    <Icon name='globe' size={16} className='text-gruv-aqua' />
-                    Visitor Geography
-                  </h3>
-                </div>
-
-                <div className='h-[400px] w-full relative bg-card/50'>
-                  <WorldMap data={stats.countries} />
-                </div>
-              </Card>
+              <WorldMapBanner />
             </ViewTransition>
 
             <ViewTransition>
