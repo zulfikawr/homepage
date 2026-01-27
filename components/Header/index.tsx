@@ -123,8 +123,13 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
 const HeaderTitle = () => {
   const { headerTitle } = useTitle();
+  const [mounted, setMounted] = React.useState(false);
 
-  if (!headerTitle) return null;
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !headerTitle) return null;
 
   return (
     <h3 className='w-full max-w-full text-center overflow-hidden text-ellipsis whitespace-nowrap font-medium text-sm md:text-base'>

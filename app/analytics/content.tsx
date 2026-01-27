@@ -415,7 +415,7 @@ export default function AnalyticsContent() {
                       <div key={route.path} className='group'>
                         <div className='flex justify-between text-sm mb-1.5'>
                           <span
-                            className='text-muted-foreground truncate max-w-[180px] group-hover:text-foreground transition-colors'
+                            className='text-muted-foreground truncate max-w-[180px]'
                             title={route.path}
                           >
                             {route.path}
@@ -510,10 +510,10 @@ export default function AnalyticsContent() {
                       key={referrer.name}
                       className='flex justify-between items-center text-sm group'
                     >
-                      <span className='text-muted-foreground group-hover:text-gruv-green transition-colors'>
+                      <span className='text-muted-foreground'>
                         {referrer.name}
                       </span>
-                      <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-gruv-fg'>
+                      <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-foreground dark:text-gruv-fg'>
                         {referrer.count.toLocaleString()}
                       </span>
                     </div>

@@ -331,14 +331,14 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     );
     const maxCount = d3.max(memoizedData, (d) => d.count) || 1;
 
-    // Helper to get discrete intensity level based on count
+    // Helper to get discrete intensity level based on count with adjusted percentage thresholds
     const getIntensity = (count: number) => {
       if (count === 0) return 0;
-      if (count <= maxCount * 0.16) return 1;
-      if (count <= maxCount * 0.33) return 2;
-      if (count <= maxCount * 0.5) return 3;
-      if (count <= maxCount * 0.66) return 4;
-      if (count <= maxCount * 0.83) return 5;
+      if (count <= maxCount * 0.1) return 1;
+      if (count <= maxCount * 0.2) return 2;
+      if (count <= maxCount * 0.35) return 3;
+      if (count <= maxCount * 0.55) return 4;
+      if (count <= maxCount * 0.75) return 5;
       return 6;
     };
 
