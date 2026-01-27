@@ -7,7 +7,7 @@ import { Card } from '@/components/Card';
 import CommentCard from '@/components/Card/Comment';
 import { Editor } from '@/components/Editor';
 import { toast } from '@/components/Toast';
-import { Button, Icon } from '@/components/UI';
+import { Button, Icon, Skeleton } from '@/components/UI';
 import { useAuth } from '@/contexts/authContext';
 import {
   addComment,
@@ -25,13 +25,17 @@ import ImageWithFallback from '../ImageWithFallback';
 
 interface CommentSectionProps {
   postId: string;
+  isLoading?: boolean;
 }
 
-export default function CommentSection({ postId }: CommentSectionProps) {
+export default function CommentSection({
+  postId,
+  isLoading: externalLoading = false,
+}: CommentSectionProps) {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const { handleGithubLogin, handleLogout: authLogout } = useAuthActions();
 
   const githubUsername = user
@@ -42,7 +46,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     : '';
 
   // Use the new generic collection hook
-  const { data: comments, loading: isLoading } = useCollection<Comment>(
+  const { data: comments, loading: dataLoading } = useCollection<Comment>(
     'comments',
     mapRecordToComment,
     useMemo(
@@ -53,6 +57,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       [postId],
     ),
   );
+
+  const isLoading = dataLoading || externalLoading;
 
   // Set author from user profile
   useEffect(() => {
@@ -148,17 +154,34 @@ export default function CommentSection({ postId }: CommentSectionProps) {
   return (
     <section className='mt-12 space-y-8'>
       <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-x-3'>
+        <div className='flex items-center gap-x-3 h-8'>
           <h2 className='text-2xl font-bold dark:text-foreground'>Comments</h2>
-          <span className='rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-muted-foreground dark:bg-card dark:text-muted-foreground'>
-            {comments?.length || 0}
-          </span>
+          <div className='flex items-center justify-center min-w-[32px] h-6 rounded-full bg-muted dark:bg-card px-2.5'>
+            {isLoading ? (
+              <Skeleton width={16} height={12} />
+            ) : (
+              <span className='text-sm font-medium text-muted-foreground'>
+                {comments?.length || 0}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Comment Input */}
       <Card className='p-4 sm:p-6'>
-        {user ? (
+        {authLoading ? (
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center gap-x-3'>
+                <Skeleton width={32} height={32} variant='circle' />
+                <Skeleton width={100} height={16} />
+              </div>
+              <Skeleton width={60} height={24} className='rounded-md' />
+            </div>
+            <Skeleton width='100%' height={100} className='rounded-md' />
+          </div>
+        ) : user ? (
           <div className='space-y-4'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-x-3'>
@@ -217,9 +240,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
       {/* Comments List */}
       <div className='space-y-6'>
         {isLoading ? (
-          <div className='flex justify-center py-12'>
-            <div className='h-8 w-8 animate-spin rounded-full border-4 border-primary/10 border-t-primary' />
-          </div>
+          Array.from({ length: 3 }).map((_, i) => (
+            <CommentCard key={i} isLoading={true} />
+          ))
         ) : comments && comments.length > 0 ? (
           comments
             .filter((c) => !c.parentId) // Only show top-level comments

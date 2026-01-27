@@ -389,7 +389,7 @@ export default function SpotifyMusicContent() {
                       className='flex flex-col items-center space-y-2 p-3'
                     >
                       <Skeleton width={96} height={96} variant='circle' />
-                      <Skeleton width='75%' height={16} />
+                      <Skeleton width='75%' height={16} as='span' />
                     </div>
                   ))
               ) : displayData.topArtists.length > 0 ? (

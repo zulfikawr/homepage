@@ -15,8 +15,14 @@ export { Separator } from './Separator';
 export { Skeleton } from './Skeleton';
 export { Slider } from './Slider';
 export { Switch } from './Switch';
-export { Table, TableBody, TableCell, TableHeader, TableRow } from './Table';
-export { TableSkeleton } from './Table/loading';
+export {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+  TableSkeleton,
+} from './Table';
 export { Textarea } from './Textarea';
 export { TimeAgo } from './TimeAgo';
 export { Toggle } from './Toggle';

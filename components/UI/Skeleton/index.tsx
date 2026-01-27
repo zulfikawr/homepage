@@ -10,6 +10,8 @@ interface SkeletonProps {
   variant?: 'rectangle' | 'circle' | 'text';
   width?: string | number;
   height?: string | number;
+  style?: React.CSSProperties;
+  as?: keyof React.JSX.IntrinsicElements;
 }
 
 const Skeleton: React.FC<SkeletonProps> = ({
@@ -17,6 +19,8 @@ const Skeleton: React.FC<SkeletonProps> = ({
   variant = 'rectangle',
   width,
   height,
+  style,
+  as: Component = 'div',
 }) => {
   const { radius } = useRadius();
 
@@ -28,16 +32,17 @@ const Skeleton: React.FC<SkeletonProps> = ({
     text: 'h-4 w-full rounded',
   };
 
-  const style: React.CSSProperties = {
+  const combinedStyle: React.CSSProperties = {
     width: width,
     height: height,
     borderRadius: variant === 'circle' ? '9999px' : `${radius}px`,
+    ...style,
   };
 
   return (
-    <div
+    <Component
       className={twMerge(baseStyles, variantStyles[variant], className)}
-      style={style}
+      style={combinedStyle}
     />
   );
 };

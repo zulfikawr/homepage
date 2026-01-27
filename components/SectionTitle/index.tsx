@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { Icon } from '@/components/UI';
+import { Icon, Skeleton } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
@@ -52,13 +52,17 @@ const SectionTitle = ({
           effectEnabled
             ? 'border-primary/10 dark:border-primary/5 bg-card/50 dark:bg-card/30 backdrop-blur-md'
             : 'border-border bg-card'
-        } ${loading ? 'animate-pulse' : ''}`}
+        }`}
         style={{ borderRadius: `${radius}px` }}
       >
         {loading ? (
           <>
-            <div className='mr-1.5 h-6 w-6 rounded bg-muted dark:bg-muted' />
-            <div className='h-6 w-32 rounded bg-muted dark:bg-muted' />
+            <span className='mr-1.5 flex h-5 w-5 items-center justify-center'>
+              <Skeleton width={20} height={20} as='span' />
+            </span>
+            <span className='block uppercase cursor-default'>
+              <Skeleton width={128} height={16} as='span' />
+            </span>
           </>
         ) : (
           <>

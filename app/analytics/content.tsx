@@ -156,7 +156,7 @@ export default function AnalyticsContent() {
               className='p-5 flex flex-col justify-between h-32'
             >
               <div className='flex items-center justify-between'>
-                <Skeleton width={80} height={12} />
+                <Skeleton width={80} height={12} as='span' />
 
                 <Skeleton
                   width={18}
@@ -184,13 +184,13 @@ export default function AnalyticsContent() {
             </Card>
 
             <Card isPreview className='p-6'>
-              <Skeleton width={150} height={20} className='mb-6' />
+              <Skeleton width={150} height={20} className='mb-6' as='span' />
               <div className='space-y-5'>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className='space-y-2'>
                     <div className='flex justify-between'>
-                      <Skeleton width={100} height={14} />
-                      <Skeleton width={40} height={14} />
+                      <Skeleton width={100} height={14} as='span' />
+                      <Skeleton width={40} height={14} as='span' />
                     </div>
                     <Skeleton
                       width='100%'
@@ -206,13 +206,13 @@ export default function AnalyticsContent() {
           {/* Right Column Skeleton */}
           <div className='space-y-8'>
             <Card isPreview className='p-6'>
-              <Skeleton width={120} height={20} className='mb-6' />
+              <Skeleton width={120} height={20} className='mb-6' as='span' />
               <div className='space-y-4'>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div key={i} className='space-y-2'>
                     <div className='flex justify-between'>
-                      <Skeleton width={120} height={14} />
-                      <Skeleton width={30} height={14} />
+                      <Skeleton width={120} height={14} as='span' />
+                      <Skeleton width={30} height={14} as='span' />
                     </div>
                     <Skeleton
                       width='100%'
@@ -225,15 +225,15 @@ export default function AnalyticsContent() {
             </Card>
 
             <Card isPreview className='p-6'>
-              <Skeleton width={100} height={20} className='mb-6' />
+              <Skeleton width={100} height={20} className='mb-6' as='span' />
               <div className='space-y-6'>
                 {[1, 2].map((i) => (
                   <div key={i} className='flex items-center gap-4'>
                     <Skeleton width={40} height={40} className='rounded-lg' />
                     <div className='flex-1 space-y-2'>
                       <div className='flex justify-between'>
-                        <Skeleton width={60} height={14} />
-                        <Skeleton width={30} height={14} />
+                        <Skeleton width={60} height={14} as='span' />
+                        <Skeleton width={30} height={14} as='span' />
                       </div>
                       <Skeleton
                         width='100%'

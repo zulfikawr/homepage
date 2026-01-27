@@ -6,7 +6,7 @@ import { Card } from '@/components/Card';
 import { Editor } from '@/components/Editor';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { toast } from '@/components/Toast';
-import { Button, Icon } from '@/components/UI';
+import { Button, Icon, Skeleton } from '@/components/UI';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import { Comment } from '@/types/comment';
 import { escapeHtml } from '@/utilities/escapeHtml';
@@ -16,9 +16,9 @@ import { getTimeAgo } from '@/utilities/timeAgo';
 const MAX_CHARS = 5000;
 
 interface CommentCardProps {
-  comment: Comment;
-  onReply: (author: string, content: string) => Promise<void>;
-  onLike: () => Promise<void>;
+  comment?: Comment;
+  onReply?: (author: string, content: string) => Promise<void>;
+  onLike?: () => Promise<void>;
   onDelete?: () => Promise<void>;
   onEdit?: (newContent: string) => Promise<void>;
   level?: number;
@@ -26,6 +26,7 @@ interface CommentCardProps {
   currentUserId?: string;
   isAdmin?: boolean;
   replies?: Comment[];
+  isLoading?: boolean;
 }
 
 export default function CommentCard({
@@ -39,16 +40,17 @@ export default function CommentCard({
   currentUserId,
   isAdmin,
   replies = [],
+  isLoading = false,
 }: CommentCardProps) {
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [replyAuthor, setReplyAuthor] = useState(
     currentUserName || 'Anonymous',
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(comment.content);
+  const [editContent, setEditContent] = useState(comment?.content || '');
   const [isUpdating, setIsUpdating] = useState(false);
 
   const handleReplyChange = (val: string) => {
@@ -60,14 +62,14 @@ export default function CommentCard({
   };
 
   const handleSubmitReply = async () => {
-    if (!replyContent.trim()) return;
+    if (!replyContent.trim() || !onReply) return;
 
     if (replyContent.length > MAX_CHARS) {
       toast.error(`Reply cannot exceed ${MAX_CHARS} characters.`);
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitLoading(true);
     try {
       const safeContent = escapeHtml(replyContent.trim());
       const safeAuthor = escapeHtml(replyAuthor.trim());
@@ -79,7 +81,7 @@ export default function CommentCard({
     } catch {
       toast.error('Failed to post reply.');
     } finally {
-      setIsLoading(false);
+      setIsSubmitLoading(false);
     }
   };
 
@@ -104,6 +106,7 @@ export default function CommentCard({
   };
 
   const handleLike = async () => {
+    if (!onLike) return;
     setIsLiking(true);
     try {
       await onLike();
@@ -121,55 +124,71 @@ export default function CommentCard({
       <Card className='p-4'>
         <div className='flex items-start justify-between'>
           <div className='flex items-center gap-x-3'>
-            <ImageWithFallback
-              src={comment.avatarUrl || ''}
-              alt={comment.author}
-              width={32}
-              height={32}
-              className='rounded-full'
-            />
-            <div>
-              <div className='flex items-center gap-x-2'>
-                <span className='font-medium dark:text-foreground'>
-                  {comment.author}
-                </span>
-                {comment.parentId && (
-                  <span className='text-xs text-muted-foreground'>
-                    replying
-                  </span>
+            {isLoading ? (
+              <Skeleton width={32} height={32} variant='circle' />
+            ) : (
+              <ImageWithFallback
+                src={comment?.avatarUrl || ''}
+                alt={comment?.author || ''}
+                width={32}
+                height={32}
+                className='rounded-full'
+              />
+            )}
+            <div className='flex flex-col gap-y-1'>
+              <div className='flex items-center gap-x-2 h-5'>
+                {isLoading ? (
+                  <Skeleton width={100} height={14} />
+                ) : (
+                  <>
+                    <span className='font-medium dark:text-foreground'>
+                      {comment?.author}
+                    </span>
+                    {comment?.parentId && (
+                      <span className='text-xs text-muted-foreground'>
+                        replying
+                      </span>
+                    )}
+                  </>
                 )}
               </div>
-              <span className='text-xs text-muted-foreground'>
-                {comment.createdAt ? getTimeAgo(comment.createdAt) : ''}
+              <span className='text-xs text-muted-foreground h-4'>
+                {isLoading ? (
+                  <Skeleton width={60} height={10} />
+                ) : (
+                  comment?.createdAt && getTimeAgo(comment.createdAt)
+                )}
               </span>
             </div>
           </div>
 
-          <div className='flex items-center gap-x-1'>
-            {onDelete && (currentUserId === comment.author || isAdmin) && (
-              <Dropdown
-                trigger={
-                  <Button type='outline' className='p-1 h-8 w-8'>
-                    <Icon name='dotsThree' className='size-4' />
-                  </Button>
-                }
-              >
-                <DropdownItem
-                  onClick={() => setIsEditing(true)}
-                  icon='pencilSimpleLine'
+          {!isLoading &&
+            onDelete &&
+            (currentUserId === comment?.author || isAdmin) && (
+              <div className='flex items-center gap-x-1'>
+                <Dropdown
+                  trigger={
+                    <Button type='outline' className='p-1 h-8 w-8'>
+                      <Icon name='dotsThree' className='size-4' />
+                    </Button>
+                  }
                 >
-                  Edit
-                </DropdownItem>
-                <DropdownItem
-                  onClick={onDelete}
-                  icon='trashSimple'
-                  className='text-destructive'
-                >
-                  Delete
-                </DropdownItem>
-              </Dropdown>
+                  <DropdownItem
+                    onClick={() => setIsEditing(true)}
+                    icon='pencilSimpleLine'
+                  >
+                    Edit
+                  </DropdownItem>
+                  <DropdownItem
+                    onClick={onDelete}
+                    icon='trashSimple'
+                    className='text-destructive'
+                  >
+                    Delete
+                  </DropdownItem>
+                </Dropdown>
+              </div>
             )}
-          </div>
         </div>
 
         <div className='mt-4'>
@@ -190,38 +209,55 @@ export default function CommentCard({
               </div>
             </div>
           ) : (
-            <div
-              className='prose prose-sm dark:prose-invert max-w-none'
-              dangerouslySetInnerHTML={{
-                __html: renderMarkdown(comment.content),
-              }}
-            />
+            <div className='prose prose-sm dark:prose-invert max-w-none'>
+              {isLoading ? (
+                <div className='space-y-2'>
+                  <Skeleton width='100%' height={14} />
+                  <Skeleton width='90%' height={14} />
+                </div>
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: renderMarkdown(comment?.content || ''),
+                  }}
+                />
+              )}
+            </div>
           )}
         </div>
 
-        <div className='mt-4 flex items-center gap-x-4'>
-          <button
-            onClick={handleLike}
-            disabled={isLiking}
-            className={`flex items-center gap-x-1 text-sm font-medium transition-colors ${
-              isLiking
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-primary'
-            }`}
-          >
-            <Icon
-              name={comment.likes && comment.likes > 0 ? 'heart' : 'heart'}
-              className='size-4'
-            />
-            <span>{comment.likes || 0}</span>
-          </button>
+        <div className='mt-4 flex items-center gap-x-4 h-5'>
+          {isLoading ? (
+            <>
+              <Skeleton width={40} height={14} />
+              <Skeleton width={40} height={14} />
+            </>
+          ) : (
+            <>
+              <button
+                onClick={handleLike}
+                disabled={isLiking}
+                className={`flex items-center gap-x-1 text-sm font-medium transition-colors ${
+                  isLiking
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-primary'
+                }`}
+              >
+                <Icon
+                  name={comment?.likes && comment.likes > 0 ? 'heart' : 'heart'}
+                  className='size-4'
+                />
+                <span>{comment?.likes || 0}</span>
+              </button>
 
-          <button
-            onClick={() => setIsReplying(!isReplying)}
-            className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'
-          >
-            Reply
-          </button>
+              <button
+                onClick={() => setIsReplying(!isReplying)}
+                className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'
+              >
+                Reply
+              </button>
+            </>
+          )}
         </div>
 
         {isReplying && (
@@ -233,24 +269,24 @@ export default function CommentCard({
               </Button>
               <Button
                 onClick={handleSubmitReply}
-                disabled={isLoading || !replyContent.trim()}
+                disabled={isSubmitLoading || !replyContent.trim()}
                 type='primary'
               >
-                {isLoading ? 'Posting...' : 'Post Reply'}
+                {isSubmitLoading ? 'Posting...' : 'Post Reply'}
               </Button>
             </div>
           </div>
         )}
       </Card>
 
-      {replies.length > 0 && (
+      {!isLoading && replies.length > 0 && (
         <div className='space-y-4'>
           {replies.map((reply) => (
             <CommentCard
               key={reply.id}
               comment={reply}
-              onReply={onReply}
-              onLike={onLike}
+              onReply={onReply!}
+              onLike={onLike!}
               onDelete={onDelete}
               onEdit={onEdit}
               level={level + 1}

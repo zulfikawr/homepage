@@ -3,12 +3,10 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 
 import { Card } from '@/components/Card';
-import { Icon } from '@/components/UI';
+import { Icon, Skeleton } from '@/components/UI';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useWeather, WeatherType } from '@/contexts/weatherContext';
-
-import LoadingSkeleton from './loading';
 
 const WeatherStyles = () => (
   <style jsx global>{`
@@ -463,9 +461,11 @@ const emptySubscribe = () => () => {};
 const FlipNumber = ({
   number,
   isDaytime,
+  isLoading = false,
 }: {
-  number: string;
+  number?: string;
   isDaytime: boolean;
+  isLoading?: boolean;
 }) => {
   const { radius } = useRadius();
 
@@ -475,23 +475,167 @@ const FlipNumber = ({
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
-        <span
-          className={`text-xl font-mono font-bold ${isDaytime ? 'text-gruv-bg drop-shadow-sm' : 'text-gruv-fg'}`}
-        >
-          {number}
-        </span>
+        {isLoading ? (
+          <Skeleton width='100%' height='100%' />
+        ) : (
+          <span
+            className={`text-xl font-mono font-bold ${isDaytime ? 'text-gruv-bg drop-shadow-sm' : 'text-gruv-fg'}`}
+          >
+            {number}
+          </span>
+        )}
       </div>
     </div>
   );
 };
 
-const Separator = ({ isDaytime }: { isDaytime: boolean }) => (
+const WeatherSeparator = ({
+  isDaytime,
+  isLoading = false,
+}: {
+  isDaytime: boolean;
+  isLoading?: boolean;
+}) => (
   <div
     className={`mx-1 text-xl font-bold z-30 ${isDaytime ? 'text-gruv-bg/80' : 'text-gruv-fg/80'}`}
   >
-    :
+    {isLoading ? (
+      <div className='animate-pulse text-muted opacity-50'>:</div>
+    ) : (
+      ':'
+    )}
   </div>
 );
+
+const WeatherLayout = ({
+  className,
+  isLoading,
+  isDaytime,
+  currentType,
+  timeData,
+  weatherData,
+  weatherLabels,
+}: {
+  className?: string;
+  isLoading: boolean;
+  isDaytime: boolean;
+  currentType: Exclude<WeatherType, 'auto'>;
+  timeData: { hours: string; minutes: string; seconds: string; date: string };
+  weatherData: { temp: number; code: number; isDay: boolean } | null;
+  weatherLabels: Record<Exclude<WeatherType, 'auto'>, string>;
+}) => {
+  const getBgGradient = () => {
+    if (isLoading) return 'from-muted/20 to-muted/10';
+    if (currentType === 'storm') return 'from-[#3c3836] to-[#1d2021]';
+    if (currentType === 'rain')
+      return isDaytime
+        ? 'from-[#458588] to-[#83a598]'
+        : 'from-[#1d2021] to-[#282828]';
+    if (currentType === 'snow')
+      return isDaytime
+        ? 'from-[#d5c4a1] to-[#ebdbb2]'
+        : 'from-[#282828] to-[#3c3836]';
+    if (!isDaytime) return 'from-[#1d2021] to-[#282828]';
+    return 'from-[#8ec07c] to-[#fabd2f]';
+  };
+
+  return (
+    <Card
+      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 px-4 py-3 min-h-[120px]`}
+      isPreview
+    >
+      {!isLoading && (
+        <WeatherVisuals type={currentType} isDaytime={isDaytime} />
+      )}
+
+      <div className='relative h-full flex flex-col z-30 gap-y-4'>
+        {/* Header */}
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground h-7 leading-7'>
+            {isLoading ? (
+              <>
+                <Skeleton width={28} height={28} className='rounded-md' />
+                <Skeleton width={80} height={20} />
+              </>
+            ) : (
+              <>
+                <Icon
+                  name='mapPin'
+                  className={`size-7 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-aqua'}`}
+                />
+                <h2
+                  className={`font-bold tracking-wide ${isDaytime ? 'text-gruv-bg' : 'text-[#ebdbb2]'}`}
+                >
+                  Jakarta, ID
+                </h2>
+              </>
+            )}
+          </div>
+
+          <div
+            className={`font-bold text-[12px] h-4 leading-4 ${isDaytime ? 'text-gruv-bg/80' : 'text-[#83a598]'}`}
+          >
+            {isLoading ? <Skeleton width={70} height={14} /> : timeData.date}
+          </div>
+        </div>
+
+        {/* Center: Time Display */}
+        <div className='flex-1 flex items-center justify-center w-full pointer-events-none'>
+          <div className='flex items-center'>
+            <FlipNumber
+              number={timeData.hours}
+              isDaytime={isDaytime}
+              isLoading={isLoading}
+            />
+            <WeatherSeparator isDaytime={isDaytime} isLoading={isLoading} />
+            <FlipNumber
+              number={timeData.minutes}
+              isDaytime={isDaytime}
+              isLoading={isLoading}
+            />
+            <WeatherSeparator isDaytime={isDaytime} isLoading={isLoading} />
+            <FlipNumber
+              number={timeData.seconds}
+              isDaytime={isDaytime}
+              isLoading={isLoading}
+            />
+          </div>
+        </div>
+
+        {/* Footer: Weather Info */}
+        <div className='flex justify-center pointer-events-none h-6 leading-6'>
+          <div
+            className={`text-xs font-bold px-3 py-1 rounded-full bg-gruv-bg/20 backdrop-blur-md shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
+          >
+            {isLoading ? (
+              <>
+                <Skeleton width={64} height={12} />
+                <span className='opacity-50 text-muted'>|</span>
+                <Skeleton width={32} height={12} />
+              </>
+            ) : (
+              <>
+                <span className='drop-shadow-sm'>
+                  {weatherLabels[currentType]}
+                </span>
+                {weatherData && (
+                  <>
+                    <span className='opacity-50'>|</span>
+                    <span className='drop-shadow-sm'>
+                      {Math.round(weatherData.temp)}°C
+                    </span>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/10 to-transparent pointer-events-none z-[1]' />
+    </Card>
+  );
+};
 
 const Weather = ({ className }: { className?: string }) => {
   const mounted = useSyncExternalStore(
@@ -572,8 +716,7 @@ const Weather = ({ className }: { className?: string }) => {
     };
   }, [mounted]);
 
-  if (!mounted || forceLoading)
-    return <LoadingSkeleton className={className} />;
+  const isLoading = !mounted || forceLoading;
 
   const isDaytime =
     isDaytimeOverride === 'auto'
@@ -609,86 +752,16 @@ const Weather = ({ className }: { className?: string }) => {
     storm: 'Stormy',
   };
 
-  const getBgGradient = () => {
-    if (currentType === 'storm') return 'from-[#3c3836] to-[#1d2021]';
-    if (currentType === 'rain')
-      return isDaytime
-        ? 'from-[#458588] to-[#83a598]'
-        : 'from-[#1d2021] to-[#282828]';
-    if (currentType === 'snow')
-      return isDaytime
-        ? 'from-[#d5c4a1] to-[#ebdbb2]'
-        : 'from-[#282828] to-[#3c3836]';
-    if (!isDaytime) return 'from-[#1d2021] to-[#282828]';
-    return 'from-[#8ec07c] to-[#fabd2f]';
-  };
-
   return (
-    <Card
-      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 px-4 py-3`}
-      isPreview
-    >
-      <WeatherVisuals type={currentType} isDaytime={isDaytime} />
-
-      <div className='relative h-full flex flex-col z-30 gap-y-4'>
-        {/* Header */}
-        <div className='flex w-full items-center justify-between'>
-          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-            <Icon
-              name='mapPin'
-              className={`size-7 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-aqua'}`}
-            />
-            <h2
-              className={`font-bold tracking-wide ${isDaytime ? 'text-gruv-bg' : 'text-[#ebdbb2]'}`}
-            >
-              Jakarta, ID
-            </h2>
-          </div>
-
-          <div
-            className={`font-bold text-[12px] ${isDaytime ? 'text-gruv-bg/80' : 'text-[#83a598]'}`}
-          >
-            {timeData.date}
-          </div>
-        </div>
-
-        {/* Center: Time Display */}
-        <div className='flex-1 flex items-center justify-center w-full pointer-events-none'>
-          <div className='flex items-center'>
-            <FlipNumber number={timeData.hours} isDaytime={isDaytime} />
-
-            <Separator isDaytime={isDaytime} />
-
-            <FlipNumber number={timeData.minutes} isDaytime={isDaytime} />
-
-            <Separator isDaytime={isDaytime} />
-
-            <FlipNumber number={timeData.seconds} isDaytime={isDaytime} />
-
-            
-          </div>
-        </div>
-
-        {/* Footer: Weather Info */}
-        <div className='flex justify-center pointer-events-none'>
-          <div
-            className={`text-xs font-bold px-3 py-1 rounded-full bg-gruv-bg/20 backdrop-blur-md shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
-          >
-            <span className='drop-shadow-sm'>{weatherLabels[currentType]}</span>
-            {weatherData && (
-              <>
-                <span className='opacity-50'>|</span>
-                <span className='drop-shadow-sm'>
-                  {Math.round(weatherData.temp)}°C
-                </span>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/10 to-transparent pointer-events-none z-[1]' />
-    </Card>
+    <WeatherLayout
+      className={className}
+      isLoading={isLoading}
+      isDaytime={isDaytime}
+      currentType={currentType}
+      timeData={timeData}
+      weatherData={weatherData}
+      weatherLabels={weatherLabels}
+    />
   );
 };
 

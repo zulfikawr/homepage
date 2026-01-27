@@ -4,7 +4,14 @@ import Link from 'next/link';
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Icon, Separator, TimeAgo } from '@/components/UI';
+import {
+  Button,
+  Icon,
+  Separator,
+  Skeleton,
+  TimeAgo,
+  Tooltip,
+} from '@/components/UI';
 import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
@@ -14,9 +21,6 @@ import {
   getSpotifyAuthUrl,
 } from '@/lib/spotify';
 import { SpotifyTrack } from '@/types/spotify';
-
-import BannerHeader from './header';
-import LoadingSkeleton from './loading';
 
 const apiCache: {
   currentTrack: SpotifyTrack | null;
@@ -35,8 +39,178 @@ interface CurrentlyListeningProps {
   className?: string;
 }
 
+const BannerHeader = ({
+  isPlaying,
+  isLoading = false,
+}: {
+  isPlaying?: boolean;
+  isLoading?: boolean;
+}) => {
+  const GoToMusicButton = (
+    <Link href='/music'>
+      <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+        {isLoading ? (
+          <Skeleton width={20} height={20} />
+        ) : (
+          <Icon name='caretRight' className='size-5' />
+        )}
+      </Button>
+    </Link>
+  );
+
+  return (
+    <div className='flex w-full items-center justify-between px-4 py-3'>
+      <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
+        {isLoading ? (
+          <>
+            <Skeleton width={28} height={28} className='rounded-md' />
+            <Skeleton width={160} height={20} />
+          </>
+        ) : (
+          <>
+            <Icon name='musicNotes' className='size-7 text-gruv-green' />
+            <span>{isPlaying ? 'Currently Listening' : 'Recently Played'}</span>
+          </>
+        )}
+      </div>
+
+      <div className='hidden md:block'>
+        <Tooltip text='Music Stats'>{GoToMusicButton}</Tooltip>
+      </div>
+
+      <div className='block md:hidden'>{GoToMusicButton}</div>
+    </div>
+  );
+};
+
+const CurrentlyListeningLayout = ({
+  className,
+  isPlaying,
+  isLoading,
+  currentTrack,
+  lastPlayedAt,
+  progress,
+}: {
+  className?: string;
+  isPlaying?: boolean;
+  isLoading?: boolean;
+  currentTrack?: SpotifyTrack | null;
+  lastPlayedAt?: string | null;
+  progress?: number;
+}) => {
+  const content = (
+    <div className='group relative flex items-center gap-x-4 p-4'>
+      {isPlaying && !isLoading && currentTrack && (
+        <div className='absolute inset-0 overflow-hidden rounded-b-md pointer-events-none'>
+          <div className='absolute bottom-0 left-0 right-0 h-1 bg-muted/50 dark:bg-muted/50'>
+            <div
+              className='h-full bg-gruv-green'
+              style={{
+                width: `${Math.min(100, (progress! / currentTrack.duration_ms) * 100)}%`,
+                background: 'linear-gradient(90deg, #1DB954, #1ED760)',
+                boxShadow: '0 0 8px rgba(29, 185, 84, 0.6)',
+                transition: 'width 0.5s linear',
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      <Hover
+        perspective={1000}
+        max={25}
+        scale={1.01}
+        className='relative h-16 w-16 flex-shrink-0'
+      >
+        {isLoading ? (
+          <Skeleton width='100%' height='100%' className='rounded-md' />
+        ) : (
+          <ImageWithFallback
+            src={currentTrack?.album.images[0]?.url}
+            alt={currentTrack?.album.name || ''}
+            width={200}
+            height={200}
+            className='object-cover'
+            type='square'
+          />
+        )}
+      </Hover>
+
+      <div className='flex-col min-w-0 space-y-1 flex-1'>
+        <h3 className='font-bold text-md text-gruv-aqua truncate leading-6 h-6 flex items-center'>
+          {isLoading ? (
+            <Skeleton width='60%' height={16} as='span' />
+          ) : (
+            currentTrack?.name
+          )}
+        </h3>
+        <p className='text-sm text-gruv-yellow font-medium truncate leading-5 h-5 flex items-center'>
+          {isLoading ? (
+            <Skeleton width='40%' height={14} as='span' />
+          ) : (
+            currentTrack?.artists.map((artist) => artist.name).join(', ')
+          )}
+        </p>
+        <div className='flex items-center gap-x-2 leading-4 h-4'>
+          {isLoading ? (
+            <>
+              <Skeleton width='30%' height={12} as='span' />
+              <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
+                |
+              </span>
+              <Skeleton width='25%' height={12} as='span' />
+            </>
+          ) : (
+            <>
+              <span className='text-xs text-gruv-blue truncate'>
+                {currentTrack?.album.name}
+              </span>
+              <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
+                |
+              </span>
+              {isPlaying ? (
+                <span className='flex items-center gap-x-1 text-xs text-gruv-green font-medium'>
+                  <span className='size-2 rounded-full bg-gruv-green animate-pulse' />
+                  <span className='truncate'>Playing now</span>
+                </span>
+              ) : lastPlayedAt ? (
+                <TimeAgo
+                  date={lastPlayedAt}
+                  prefix='Played'
+                  className='text-xs text-muted-foreground flex-shrink-0'
+                />
+              ) : (
+                <span className='text-xs text-muted-foreground flex-shrink-0'>
+                  Played just now
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Card isPreview className={className}>
+      <BannerHeader isPlaying={isPlaying} isLoading={isLoading} />
+      <Separator margin='0' />
+      {!isLoading && currentTrack ? (
+        <Link
+          href={currentTrack.external_urls.spotify}
+          target='_blank'
+          className='block hover:bg-muted/50 transition-colors'
+        >
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
+    </Card>
+  );
+};
+
 const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
-  showMoreButton = true,
   className,
 }) => {
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
@@ -52,7 +226,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
   const { forceLoading, forceEmpty } = useLoadingToggle();
   const isLoading = dataLoading || forceLoading;
 
-  const [showSkeleton, setShowSkeleton] = useState(false);
   const [progress, setProgress] = useState(0);
   const { isAdmin, loading: authLoading } = useAuth();
   const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
@@ -127,7 +300,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
         // Only set unauthorized if we are explicitly not authorized (status 401)
         // or if we have no tokens at all. For transient errors, we keep current state.
         setDataLoading(false);
-        setShowSkeleton(false);
         return;
       }
 
@@ -137,7 +309,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
           setIsAuthorized(false);
         }
         setDataLoading(false);
-        setShowSkeleton(false);
         return;
       }
 
@@ -153,7 +324,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
         retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
         setDataLoading(false);
-        setShowSkeleton(false);
         return;
       }
 
@@ -179,7 +349,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
           setIsPlaying(data.is_playing);
           setLastPlayedAt(null);
           setDataLoading(false);
-          setShowSkeleton(false);
           retryDelay.current = 1000;
         }
       }
@@ -211,7 +380,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
         }
 
         setDataLoading(false);
-        setShowSkeleton(false);
       }
     } catch {
       // Set a retry with backoff
@@ -221,7 +389,6 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
       retryDelay.current = Math.min(retryDelay.current * 2, 60000);
 
       setDataLoading(false);
-      setShowSkeleton(false);
     }
   }, []);
 
@@ -256,13 +423,17 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
   if (error || forceEmpty)
     return <CardEmpty message='No data' className={className} />;
 
-  if (isLoading || showSkeleton || (isPlaying && !currentTrack)) {
-    return <LoadingSkeleton className={className} />;
+  if (isLoading || authLoading) {
+    return (
+      <CurrentlyListeningLayout
+        className={className}
+        isLoading={true}
+        isPlaying={isPlaying}
+      />
+    );
   }
 
   if (!isAuthorized) {
-    if (authLoading) return <LoadingSkeleton className={className} />;
-
     return (
       <Card isPreview className={className}>
         <div className='flex w-full items-center justify-between px-4 py-3'>
@@ -299,82 +470,14 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     return <CardEmpty message='No data' className={className} />;
 
   return (
-    <Card isPreview className={className}>
-      <BannerHeader isPlaying={isPlaying} />
-
-      <Separator margin='0' />
-
-      <Link
-        href={currentTrack.external_urls.spotify}
-        target='_blank'
-        className='group relative flex items-center gap-x-4 p-4 hover:bg-muted/50 hover:bg-muted'
-      >
-        {isPlaying && (
-          <div className='absolute inset-0 overflow-hidden rounded-b-md'>
-            <div className='absolute bottom-0 left-0 right-0 h-1 bg-muted/50 dark:bg-muted/50'>
-              <div
-                className='h-full bg-gruv-green'
-                style={{
-                  width: `${Math.min(100, (progress / currentTrack.duration_ms) * 100)}%`,
-                  background: 'linear-gradient(90deg, #1DB954, #1ED760)',
-                  boxShadow: '0 0 8px rgba(29, 185, 84, 0.6)',
-                  transition: 'width 0.5s linear',
-                }}
-              />
-            </div>
-          </div>
-        )}
-
-        <Hover
-          perspective={1000}
-          max={25}
-          scale={1.01}
-          className='relative h-16 w-16 flex-shrink-0'
-        >
-          <ImageWithFallback
-            src={currentTrack.album.images[0]?.url}
-            alt={currentTrack.album.name}
-            width={200}
-            height={200}
-            className='object-cover'
-            type='square'
-          />
-        </Hover>
-
-        <div className='flex-col min-w-0 space-y-1'>
-          <h3 className='font-bold text-md text-gruv-aqua truncate'>
-            {currentTrack.name}
-          </h3>
-          <p className='text-sm text-gruv-yellow font-medium truncate'>
-            {currentTrack.artists.map((artist) => artist.name).join(', ')}
-          </p>
-          <div className='flex items-center gap-x-2'>
-            <span className='text-xs text-gruv-blue truncate'>
-              {currentTrack.album.name}
-            </span>
-            <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
-              |
-            </span>
-            {isPlaying ? (
-              <span className='flex items-center gap-x-1 text-xs text-gruv-green font-medium'>
-                <span className='size-2 rounded-full bg-gruv-green animate-pulse' />
-                <span className='truncate'>Playing now</span>
-              </span>
-            ) : lastPlayedAt ? (
-              <TimeAgo
-                date={lastPlayedAt}
-                prefix='Played'
-                className='text-xs text-muted-foreground flex-shrink-0'
-              />
-            ) : (
-              <span className='text-xs text-muted-foreground flex-shrink-0'>
-                Played just now
-              </span>
-            )}
-          </div>
-        </div>
-      </Link>
-    </Card>
+    <CurrentlyListeningLayout
+      className={className}
+      isPlaying={isPlaying}
+      isLoading={false}
+      currentTrack={currentTrack}
+      lastPlayedAt={lastPlayedAt}
+      progress={progress}
+    />
   );
 };
 
