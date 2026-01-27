@@ -1,17 +1,19 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import * as d3 from 'd3';
 import {
   Feature,
   FeatureCollection,
   GeoJsonProperties,
   Geometry,
+  MultiPolygon,
+  Polygon,
 } from 'geojson';
 
-import { HeatmapLegend } from '@/components/UI';
+import { HeatmapLegend, Portal } from '@/components/UI';
+import { useRadius } from '@/contexts/radiusContext';
 
-// Helper to get CSS variable value for heatmap intensity (for SVG paths)
+// Helper to get CSS variable value for heatmap intensity
 const getHeatmapIntensityValue = (intensity: number) => {
   switch (intensity) {
     case 1:
@@ -38,7 +40,7 @@ interface WorldMapProps {
 
 type WorldFeature = Feature<Geometry, GeoJsonProperties>;
 
-// Map of Alpha-2 to Alpha-3 codes (most GeoJSONs use Alpha-3 or numeric)
+// Map of Alpha-2 to Alpha-3 codes
 const alpha2To3: Record<string, string> = {
   AF: 'AFG',
   AX: 'ALA',
@@ -291,6 +293,59 @@ const alpha2To3: Record<string, string> = {
   ZW: 'ZWE',
 };
 
+// Mercator projection implementation
+function mercatorProjection(
+  lon: number,
+  lat: number,
+  scale: number,
+  translateX: number,
+  translateY: number,
+): [number, number] {
+  const x = scale * ((lon * Math.PI) / 180);
+  const y = scale * Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 180 / 2));
+  return [x + translateX, translateY - y];
+}
+
+// Convert GeoJSON geometry to SVG path string
+function geometryToPath(
+  geometry: Geometry,
+  project: (lon: number, lat: number) => [number, number],
+): string {
+  const pathParts: string[] = [];
+
+  if (geometry.type === 'Polygon') {
+    const polygon = geometry as Polygon;
+    polygon.coordinates.forEach((ring) => {
+      ring.forEach((coord, index) => {
+        const [x, y] = project(coord[0], coord[1]);
+        if (index === 0) {
+          pathParts.push(`M${x.toFixed(2)},${y.toFixed(2)}`);
+        } else {
+          pathParts.push(`L${x.toFixed(2)},${y.toFixed(2)}`);
+        }
+      });
+      pathParts.push('Z');
+    });
+  } else if (geometry.type === 'MultiPolygon') {
+    const multiPolygon = geometry as MultiPolygon;
+    multiPolygon.coordinates.forEach((polygon) => {
+      polygon.forEach((ring) => {
+        ring.forEach((coord, index) => {
+          const [x, y] = project(coord[0], coord[1]);
+          if (index === 0) {
+            pathParts.push(`M${x.toFixed(2)},${y.toFixed(2)}`);
+          } else {
+            pathParts.push(`L${x.toFixed(2)},${y.toFixed(2)}`);
+          }
+        });
+        pathParts.push('Z');
+      });
+    });
+  }
+
+  return pathParts.join(' ');
+}
+
 export default function WorldMap({ data, className }: WorldMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -298,6 +353,12 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     Geometry,
     GeoJsonProperties
   > | null>(null);
+  const [hoveredCountry, setHoveredCountry] = useState<{
+    name: string;
+    count: number;
+  } | null>(null);
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
+  const { radius } = useRadius();
 
   useEffect(() => {
     fetch(
@@ -312,28 +373,32 @@ export default function WorldMap({ data, className }: WorldMapProps) {
   useEffect(() => {
     if (!worldData || !svgRef.current || !containerRef.current) return;
 
-    const svg = d3.select(svgRef.current);
+    const svg = svgRef.current;
     const container = containerRef.current;
     const width = container.clientWidth;
-    // Use container clientHeight, but fallback to width/2 for very short containers to preserve aspect
     const height =
       container.clientHeight || Math.max(400, Math.round(width / 2));
 
-    svg.selectAll('*').remove();
+    // Clear previous content
+    while (svg.firstChild) {
+      svg.removeChild(svg.firstChild);
+    }
 
-    const projection = d3
-      .geoMercator()
-      .scale(width / 2 / Math.PI)
-      .translate([width / 2, height / 1.5]);
+    // Setup projection parameters
+    const scale = width / 2 / Math.PI;
+    const translateX = width / 2;
+    const translateY = height / 1.5;
 
-    const path = d3.geoPath().projection(projection);
+    const project = (lon: number, lat: number) =>
+      mercatorProjection(lon, lat, scale, translateX, translateY);
 
+    // Create counts map
     const counts = new Map(
       memoizedData.map((d) => [alpha2To3[d.code] || d.code, d.count]),
     );
-    const maxCount = d3.max(memoizedData, (d) => d.count) || 1;
+    const maxCount = Math.max(...memoizedData.map((d) => d.count), 1);
 
-    // Helper to get discrete intensity level based on count with adjusted percentage thresholds
+    // Helper to get discrete intensity level
     const getIntensity = (count: number) => {
       if (count === 0) return 0;
       if (count <= maxCount * 0.1) return 1;
@@ -344,49 +409,49 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       return 6;
     };
 
-    const g = svg.append('g');
+    // Create group element
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    svg.appendChild(g);
 
-    // Tooltip
-    const tooltip = d3
-      .select('body')
-      .append('div')
-      .attr(
+    // Render paths
+    worldData.features.forEach((feature: WorldFeature) => {
+      if (!feature.geometry) return;
+
+      const path = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'path',
+      );
+      const count = counts.get(feature.id as string) || 0;
+      const intensity = getIntensity(count);
+      const pathData = geometryToPath(feature.geometry, project);
+
+      path.setAttribute('d', pathData);
+      path.setAttribute('fill', getHeatmapIntensityValue(intensity));
+      path.setAttribute('stroke', 'var(--border)');
+      path.setAttribute('stroke-width', '0.5');
+      path.setAttribute(
         'class',
-        'absolute hidden bg-card/95 border border-primary/20 p-2 rounded shadow-lg text-xs z-[100] text-foreground backdrop-blur-md',
-      )
-      .style('pointer-events', 'none');
+        'transition-colors hover:opacity-80 cursor-pointer',
+      );
 
-    g.selectAll('path')
-      .data(worldData.features)
-      .enter()
-      .append('path')
-      .attr('d', (d) => path(d as d3.GeoPermissibleObjects))
-      .attr('fill', (d) => {
-        const count = counts.get(d.id as string) || 0;
-        const intensity = getIntensity(count);
-        return getHeatmapIntensityValue(intensity);
-      })
-      .attr('stroke', 'var(--border)')
-      .attr('stroke-width', 0.5)
-      .attr('class', 'transition-colors hover:opacity-80 cursor-pointer')
-      .on('mouseover', (event: MouseEvent, d: WorldFeature) => {
-        const count = counts.get(d.id as string) || 0;
-        tooltip
-          .classed('hidden', false)
-          .html(`<strong>${d.properties?.name}</strong><br/>${count} visitors`);
-      })
-      .on('mousemove', (event: MouseEvent) => {
-        tooltip
-          .style('top', event.pageY - 10 + 'px')
-          .style('left', event.pageX + 10 + 'px');
-      })
-      .on('mouseout', () => {
-        tooltip.classed('hidden', true);
+      // Event listeners
+      path.addEventListener('mouseover', (event: MouseEvent) => {
+        setHoveredCountry({
+          name: feature.properties?.name || 'Unknown',
+          count,
+        });
+        setTooltipPos({
+          top: (event as MouseEvent).clientY - 10,
+          left: (event as MouseEvent).clientX,
+        });
       });
 
-    return () => {
-      tooltip.remove();
-    };
+      path.addEventListener('mouseout', () => {
+        setHoveredCountry(null);
+      });
+
+      g.appendChild(path);
+    });
   }, [worldData, memoizedData]);
 
   return (
@@ -395,6 +460,25 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       className={`relative w-full h-full min-h-[200px] ${className}`}
     >
       <svg ref={svgRef} className='w-full h-full' />
+
+      {hoveredCountry && (
+        <Portal>
+          <div
+            className='fixed z-[10000] px-3 py-1.5 text-xs font-medium text-popover-foreground bg-popover border border-border shadow-lg whitespace-nowrap pointer-events-none'
+            style={{
+              top: tooltipPos.top,
+              left: tooltipPos.left,
+              transform: 'translate(-50%, -100%)',
+              borderRadius: `${radius}px`,
+            }}
+          >
+            <strong>{hoveredCountry.name}</strong>
+            <br />
+            {hoveredCountry.count} visitors
+          </div>
+        </Portal>
+      )}
+
       <div className='absolute bottom-4 right-4'>
         <HeatmapLegend />
       </div>
