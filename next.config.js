@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
   reactCompiler: true,
-  cacheComponents: true, 
+  cacheComponents: true,
 
   experimental: {
     turbopackFileSystemCacheForDev: true,
@@ -23,7 +23,7 @@ const NextConfigs = {
   compress: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
-  
+
   allowedDevOrigins: ['dev.zulfikar.site'],
 
   webpack: (config, { isServer }) => {

@@ -6,11 +6,13 @@ import { toast } from '@/components/Toast';
 import { Button, Icon, Slider, Switch, ToggleGroup } from '@/components/UI';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import type { IconName } from '@/components/UI/Icon';
+import { useAuth } from '@/contexts/authContext';
 import { useBackground } from '@/contexts/backgroundContext';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useWeather, WeatherType } from '@/contexts/weatherContext';
+import { getSpotifyAuthUrl } from '@/lib/spotify';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },
@@ -62,6 +64,7 @@ export default function Settings() {
   } = useWeather();
   const { forceLoading, toggleForceLoading, forceEmpty, toggleForceEmpty } =
     useLoadingToggle();
+  const { isAdmin } = useAuth();
   const [resettingSpotify, setResettingSpotify] = useState(false);
 
   const handleResetSpotify = async () => {
@@ -106,7 +109,7 @@ export default function Settings() {
         </Button>
       }
     >
-      <div className='p-3 space-y-3'>
+      <div className='p-3 space-y-3 max-h-[68vh] overflow-auto'>
         <div className={sectionTitleClass}>Background</div>
         <Dropdown
           trigger={
@@ -220,18 +223,32 @@ export default function Settings() {
                 </DropdownItem>
               ))}
             </Dropdown>
+
+            {isAdmin && (
+              <>
+                <div className={sectionTitleClass}>Spotify</div>
+                <Button
+                  icon='spotifyLogo'
+                  className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760] w-full mb-2'
+                  onClick={() => {
+                    const url = getSpotifyAuthUrl();
+                    window.location.href = url;
+                  }}
+                >
+                  Connect with Spotify
+                </Button>
+                <Button
+                  onClick={handleResetSpotify}
+                  disabled={resettingSpotify}
+                  className='w-full'
+                  type='default'
+                >
+                  {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
+                </Button>
+              </>
+            )}
           </>
         )}
-
-        <div className={sectionTitleClass}>Spotify</div>
-        <Button
-          onClick={handleResetSpotify}
-          disabled={resettingSpotify}
-          className='w-full'
-          type='default'
-        >
-          {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
-        </Button>
       </div>
     </Dropdown>
   );

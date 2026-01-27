@@ -12,6 +12,7 @@ import React, {
 import { Portal } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
+import { useBodyScroll } from '@/hooks';
 
 import { Icon, type IconName } from '../Icon';
 
@@ -38,6 +39,8 @@ const Dropdown = ({
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [, setBodyScrollable] = useBodyScroll();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -79,6 +82,7 @@ const Dropdown = ({
       requestAnimationFrame(() => {
         if (isIntentOpenRef.current) {
           setIsOpen(true);
+          setIsVisible(true);
           onOpenChange?.(true);
         }
       });
@@ -88,6 +92,7 @@ const Dropdown = ({
   const handleClose = useCallback(() => {
     isIntentOpenRef.current = false;
     setIsOpen(false);
+    setIsVisible(false);
     onOpenChange?.(false);
   }, [onOpenChange]);
 
@@ -101,6 +106,10 @@ const Dropdown = ({
       };
     }
   }, [isOpen, calculatePosition]);
+
+  useEffect(() => {
+    setBodyScrollable(!isVisible);
+  }, [isVisible, setBodyScrollable]);
 
   useEffect(() => {
     if (!isOpen && shouldRender) {
