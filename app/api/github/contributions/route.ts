@@ -41,6 +41,11 @@ export async function GET() {
                 }
               }
             }
+            commitContributionsByRepository(maxRepositories: 100) {
+              repository {
+                nameWithOwner
+              }
+            }
           }
         }
       }
@@ -86,6 +91,9 @@ export async function GET() {
 
     const data =
       result.data?.user?.contributionsCollection?.contributionCalendar;
+    const contributedRepos =
+      result.data?.user?.contributionsCollection
+        ?.commitContributionsByRepository || [];
 
     if (!data) {
       return NextResponse.json(
@@ -95,7 +103,10 @@ export async function GET() {
     }
 
     // Process the contribution calendar data
-    const contributionData = processContributionCalendar(data);
+    const contributionData = processContributionCalendar(
+      data,
+      contributedRepos.length,
+    );
 
     return NextResponse.json(contributionData);
   } catch (error) {
@@ -124,7 +135,10 @@ export async function GET() {
   }
 }
 
-function processContributionCalendar(data: GitHubGraphQLData) {
+function processContributionCalendar(
+  data: GitHubGraphQLData,
+  repositoryCount: number,
+) {
   const weeks = data.weeks || [];
   const totalContributions = data.totalContributions || 0;
 
@@ -151,6 +165,7 @@ function processContributionCalendar(data: GitHubGraphQLData) {
 
   return {
     totalContributions,
+    repositoryCount,
     dailyContributions,
     weeks: weeks.map((week: GitHubGraphQLWeek) =>
       week.contributionDays.map((day: GitHubGraphQLDay) => ({

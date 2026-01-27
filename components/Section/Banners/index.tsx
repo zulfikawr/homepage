@@ -5,6 +5,7 @@ import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import CurrentlyListening from '../../Banners/CurrentlyListening';
 import GitHubHeatmap from '../../Banners/GitHubHeatmap';
 import PagesAndLinks from '../../Banners/PagesAndLinks';
+import TopLanguages from '../../Banners/TopLanguages';
 import Weather from '../../Banners/Weather';
 
 const Banners = () => {
@@ -27,6 +28,9 @@ const Banners = () => {
             </ViewTransition>
           </StaggerContainer>
         </div>
+        <ViewTransition key='languages'>
+          <TopLanguages />
+        </ViewTransition>
       </StaggerContainer>
     </div>
   );
