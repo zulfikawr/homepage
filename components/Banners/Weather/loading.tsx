@@ -32,11 +32,6 @@ const LoadingSkeleton = ({ className }: { className?: string }) => {
             </div>
             {/* SS */}
             <div className='w-8 h-12 bg-muted rounded-md animate-pulse mx-0.5' />
-
-            <div className='ml-2 flex flex-col justify-between h-12 py-0.5'>
-              <div className='h-3 w-4 bg-muted rounded animate-pulse' />
-              <div className='h-3 w-4 bg-muted rounded animate-pulse' />
-            </div>
           </div>
         </div>
 

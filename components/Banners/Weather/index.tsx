@@ -507,7 +507,7 @@ const Weather = ({ className }: { className?: string }) => {
     hours: '00',
     minutes: '00',
     seconds: '00',
-    ampm: 'AM',
+    ampm: '',
     date: '',
   });
 
@@ -545,16 +545,15 @@ const Weather = ({ className }: { className?: string }) => {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: true,
+        hour12: false,
         timeZone: 'Asia/Jakarta',
       });
-      const [time, ampm] = timeStr.split(' ');
-      const [hrs, mins, secs] = time.split(':');
+      const [hrs, mins, secs] = timeStr.split(':');
       setTimeData({
         hours: hrs,
         minutes: mins,
         seconds: secs,
-        ampm,
+        ampm: '',
         date: now.toLocaleDateString('en-GB', {
           day: '2-digit',
           month: '2-digit',
@@ -666,18 +665,7 @@ const Weather = ({ className }: { className?: string }) => {
 
             <FlipNumber number={timeData.seconds} isDaytime={isDaytime} />
 
-            <div className='ml-2 flex flex-col justify-between h-12 py-0.5'>
-              <span
-                className={`text-[10px] font-bold leading-none drop-shadow-sm ${timeData.ampm === 'AM' ? (isDaytime ? 'text-gruv-bg' : 'text-[#fabd2f]') : isDaytime ? 'text-gruv-bg/30' : 'text-gruv-fg/30'}`}
-              >
-                AM
-              </span>
-              <span
-                className={`text-[10px] font-bold leading-none drop-shadow-sm ${timeData.ampm === 'PM' ? (isDaytime ? 'text-gruv-bg' : 'text-[#83a598]') : isDaytime ? 'text-gruv-bg/30' : 'text-gruv-fg/30'}`}
-              >
-                PM
-              </span>
-            </div>
+            
           </div>
         </div>
 
