@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { Portal } from '@/components/UI';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
-import { useBodyScroll } from '@/hooks';
+import { useBodyScroll, useHotkeys } from '@/hooks';
 
 type DrawerInstance = {
   isOpen: boolean;

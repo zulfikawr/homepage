@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 import { Portal } from '@/components/UI';
-import { useBodyScroll } from '@/hooks';
+import { useBodyScroll, useHotkeys } from '@/hooks';
 
 type ModalInstance = {
   isOpen: boolean;

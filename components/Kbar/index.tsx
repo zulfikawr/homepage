@@ -1,7 +1,6 @@
-import { useHotkeys } from 'react-hotkeys-hook';
-
 import { drawer } from '@/components/Drawer';
 import { Input } from '@/components/UI';
+import { useHotkeys } from '@/hooks';
 
 import { KbarContent } from './components';
 

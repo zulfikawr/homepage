@@ -3,6 +3,7 @@
 import { useAuthActions } from './useAuthActions';
 import { useBodyPointerEvents, useBodyScroll } from './useBodyEffects';
 import { useCollection } from './useCollection';
+import { useHotkeys } from './useHotkeys';
 import { useRouteInfo } from './useRouteInfo';
 
 export {
@@ -10,5 +11,6 @@ export {
   useBodyPointerEvents,
   useBodyScroll,
   useCollection,
+  useHotkeys,
   useRouteInfo,
 };
