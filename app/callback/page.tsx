@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { toast } from '@/components/Toast';
 import { Skeleton } from '@/components/UI';
-import { saveSpotifyTokens } from '@/lib/spotify';
 
 function CallbackContent() {
   const router = useRouter();
@@ -20,38 +19,18 @@ function CallbackContent() {
 
       const exchangeToken = async () => {
         try {
-          const origin =
-            typeof window !== 'undefined'
-              ? window.location.origin
-              : 'https://dev.zulfikar.site';
-          const redirectUri = `${origin}/callback/`;
-
-          const response = await fetch(
-            'https://accounts.spotify.com/api/token',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Basic ${btoa(
-                  `${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}:${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET}`,
-                )}`,
-              },
-              body: new URLSearchParams({
-                grant_type: 'authorization_code',
-                code,
-                redirect_uri: redirectUri,
-              }),
-            },
-          );
+          // Call server-side endpoint to exchange code for tokens
+          const response = await fetch('/api/spotify/exchange-token/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code }),
+          });
 
           const data = await response.json();
 
-          if (data.error) {
-            throw new Error(data.error_description || data.error);
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to exchange token');
           }
-
-          // Save tokens using abstracted function
-          await saveSpotifyTokens(data.access_token, data.refresh_token);
 
           toast.success('Spotify connected successfully!');
           router.push('/');

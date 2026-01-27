@@ -15,13 +15,6 @@ import { Skeleton } from '@/components/UI';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
-import {
-  getAccessToken,
-  getPlaylists,
-  getRecentlyPlayed,
-  getTopArtists,
-  getTopTracks,
-} from '@/lib/spotify';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 import { getTimeAgo } from '@/utilities/timeAgo';
 
@@ -86,18 +79,26 @@ export default function SpotifyMusicContent() {
   const loadData = useCallback(async () => {
     try {
       setError(null);
-      const accessToken = await getAccessToken();
 
-      if (!accessToken) {
-        throw new Error('No access token available');
+      const [recentRes, topRes, artistsRes, playlistsRes] = await Promise.all([
+        fetch('/api/spotify/recently-played?limit=10'),
+        fetch(`/api/spotify/top-tracks?limit=10&time_range=${tracksTimeRange}`),
+        fetch(
+          `/api/spotify/top-artists?limit=10&time_range=${artistsTimeRange}`,
+        ),
+        fetch('/api/spotify/playlists?limit=10'),
+      ]);
+
+      if (!recentRes.ok || !topRes.ok || !artistsRes.ok || !playlistsRes.ok) {
+        throw new Error('Failed to fetch some Spotify data');
       }
 
       const [recentData, topData, artistsData, playlistsData] =
         await Promise.all([
-          getRecentlyPlayed(),
-          getTopTracks(tracksTimeRange),
-          getTopArtists(artistsTimeRange),
-          getPlaylists(),
+          recentRes.json(),
+          topRes.json(),
+          artistsRes.json(),
+          playlistsRes.json(),
         ]);
 
       setRecentTracks(recentData?.items || []);
@@ -106,8 +107,6 @@ export default function SpotifyMusicContent() {
       setPlaylists(playlistsData?.items || []);
 
       if (recentData?.items?.[0]?.played_at) {
-        // Pass the raw ISO timestamp directly to getTimeAgo
-        // Don't format it first, as getTimeAgo can parse ISO timestamps correctly
         setLastPlayedAt(recentData.items[0].played_at);
       }
 

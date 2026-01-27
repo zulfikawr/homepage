@@ -1,6 +1,8 @@
 'use client';
+import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
+import { toast } from '@/components/Toast';
 import { Button, Icon, Slider, Switch, ToggleGroup } from '@/components/UI';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import type { IconName } from '@/components/UI/Icon';
@@ -60,6 +62,23 @@ export default function Settings() {
   } = useWeather();
   const { forceLoading, toggleForceLoading, forceEmpty, toggleForceEmpty } =
     useLoadingToggle();
+  const [resettingSpotify, setResettingSpotify] = useState(false);
+
+  const handleResetSpotify = async () => {
+    setResettingSpotify(true);
+    try {
+      const response = await fetch('/api/spotify/reset', { method: 'POST' });
+      if (response.ok) {
+        toast.success('Spotify data reset successfully');
+      } else {
+        toast.error('Failed to reset Spotify data');
+      }
+    } catch {
+      toast.error('Error resetting Spotify data');
+    } finally {
+      setResettingSpotify(false);
+    }
+  };
 
   const sectionTitleClass = 'text-left text-md text-muted-foreground';
 
@@ -203,6 +222,16 @@ export default function Settings() {
             </Dropdown>
           </>
         )}
+
+        <div className={sectionTitleClass}>Spotify</div>
+        <Button
+          onClick={handleResetSpotify}
+          disabled={resettingSpotify}
+          className='w-full'
+          type='default'
+        >
+          {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
+        </Button>
       </div>
     </Dropdown>
   );

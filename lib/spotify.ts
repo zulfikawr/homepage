@@ -1,4 +1,8 @@
-import pb from './pocketbase';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase(
+  process.env.NEXT_PUBLIC_POCKETBASE_URL || 'https://pocketbase.zulfikar.site',
+);
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
@@ -9,185 +13,128 @@ const SCOPES = [
 ].join(' ');
 
 export const getSpotifyAuthUrl = () => {
-  // Use the current origin dynamically to avoid cached 'localhost' from ENV
-  const origin =
-    typeof window !== 'undefined'
+  const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+
+  if (!clientId) {
+    console.error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not set');
+    throw new Error('Spotify client ID is not configured');
+  }
+
+  // Use consistent base URL from environment or fallback
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    (typeof window !== 'undefined'
       ? window.location.origin
-      : 'https://dev.zulfikar.site';
-  const redirectUri = `${origin}/callback/`;
+      : 'https://dev.zulfikar.site');
+  const redirectUri = `${baseUrl}/callback`;
 
   const params = new URLSearchParams({
-    client_id: process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID!,
+    client_id: clientId,
     response_type: 'code',
     redirect_uri: redirectUri,
     scope: SCOPES,
   });
 
-  return `${SPOTIFY_AUTH_URL}?${params.toString()}`;
+  const authUrl = `${SPOTIFY_AUTH_URL}?${params.toString()}`;
+  console.log('Generated Spotify Auth URL:', authUrl);
+  console.log('Redirect URI being used:', redirectUri);
+  return authUrl;
 };
 
-export const saveSpotifyTokens = async (
-  accessToken: string,
-  refreshToken: string,
-) => {
-  return await pb.collection('spotify_tokens').update('spotify', {
-    access_token: accessToken,
-    refresh_token: refreshToken,
-    timestamp: Date.now(),
-  });
-};
+export async function getAccessToken() {
+  const tokens = await pb
+    .collection('spotify_tokens')
+    .getOne('spotify', { requestKey: null });
 
-export const getAccessToken = async () => {
-  try {
-    const tokens = await pb
-      .collection('spotify_tokens')
-      .getOne('spotify', { requestKey: null });
+  if (!tokens) {
+    throw new Error('No tokens found');
+  }
 
-    if (!tokens) {
-      throw new Error('No tokens found');
-    }
+  let accessToken = tokens.access_token;
+  const isExpired = Date.now() - tokens.timestamp > 3600000;
 
-    // Check if token is expired (1 hour)
-    const isExpired = Date.now() - tokens.timestamp > 3600000;
+  if (isExpired && tokens.refresh_token) {
+    const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
+    const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
 
-    if (isExpired && tokens.refresh_token) {
-      // Refresh token
-      const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
-      const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
+    const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString(
+      'base64',
+    );
 
-      const authHeader =
-        typeof btoa !== 'undefined'
-          ? btoa(`${clientId}:${clientSecret}`)
-          : Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${authHeader}`,
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: tokens.refresh_token,
+      }),
+      cache: 'no-store',
+    });
 
-      const response = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Basic ${authHeader}`,
-        },
-        body: new URLSearchParams({
-          grant_type: 'refresh_token',
-          refresh_token: tokens.refresh_token,
-        }),
-      });
+    const data = await response.json();
 
-      const data = await response.json();
+    if (data.access_token) {
+      accessToken = data.access_token;
 
-      if (data.access_token) {
-        // Update token in PocketBase
-        await pb.collection('spotify_tokens').update('spotify', {
-          access_token: data.access_token,
-          refresh_token: tokens.refresh_token,
-          timestamp: Date.now(),
-        });
+      const adminEmail = process.env.PB_ADMIN_EMAIL;
+      const adminPass = process.env.PB_ADMIN_PASSWORD;
 
-        return data.access_token;
+      if (adminEmail && adminPass) {
+        try {
+          const adminPb = new PocketBase(
+            process.env.NEXT_PUBLIC_POCKETBASE_URL,
+          );
+          await adminPb
+            .collection('_superusers')
+            .authWithPassword(adminEmail, adminPass);
+          await adminPb.collection('spotify_tokens').update('spotify', {
+            access_token: data.access_token,
+            refresh_token: data.refresh_token || tokens.refresh_token,
+            timestamp: Date.now(),
+          });
+        } catch (pbError) {
+          console.error('Failed to update PB with admin credentials:', pbError);
+        }
       }
     }
-
-    return tokens.access_token;
-  } catch (error) {
-    console.error('Spotify token error:', error);
-    return null;
-  }
-};
-
-export const getCurrentTrack = async () => {
-  const access_token = await getAccessToken();
-  if (!access_token) return null;
-
-  return fetch('https://api.spotify.com/v1/me/player/currently-playing', {
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  });
-};
-
-export const getRecentlyPlayed = async (limit = 10) => {
-  const access_token = await getAccessToken();
-  if (!access_token) return null;
-
-  const response = await fetch(
-    `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch recent tracks');
   }
 
-  return response.json();
-};
+  return accessToken;
+}
 
-export const getTopTracks = async (
-  timeRange: string = 'short_term',
-  limit = 10,
-) => {
-  const access_token = await getAccessToken();
-  if (!access_token) return null;
+export async function saveSpotifyTokens(
+  accessToken: string,
+  refreshToken: string,
+) {
+  const adminEmail = process.env.PB_ADMIN_EMAIL;
+  const adminPass = process.env.PB_ADMIN_PASSWORD;
 
-  const response = await fetch(
-    `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error?.message || 'Failed to fetch top tracks');
+  if (!adminEmail || !adminPass) {
+    throw new Error('Admin credentials not configured');
   }
 
-  return response.json();
-};
+  const adminPb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
+  await adminPb
+    .collection('_superusers')
+    .authWithPassword(adminEmail, adminPass);
 
-export const getTopArtists = async (
-  timeRange: string = 'short_term',
-  limit = 10,
-) => {
-  const access_token = await getAccessToken();
-  if (!access_token) return null;
-
-  const response = await fetch(
-    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${timeRange}`,
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error?.message || 'Failed to fetch top artists');
+  try {
+    // Try to update existing record
+    return await adminPb.collection('spotify_tokens').update('spotify', {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      timestamp: Date.now(),
+    });
+  } catch {
+    // If record doesn't exist, create it
+    return await adminPb.collection('spotify_tokens').create({
+      id: 'spotify',
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      timestamp: Date.now(),
+    });
   }
-
-  return response.json();
-};
-
-export const getPlaylists = async (limit = 10) => {
-  const access_token = await getAccessToken();
-  if (!access_token) return null;
-
-  const response = await fetch(
-    `https://api.spotify.com/v1/me/playlists?limit=${limit}`,
-    {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch playlists');
-  }
-
-  return response.json();
-};
+}

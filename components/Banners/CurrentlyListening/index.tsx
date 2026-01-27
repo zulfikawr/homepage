@@ -15,11 +15,7 @@ import {
 import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import {
-  getCurrentTrack,
-  getRecentlyPlayed,
-  getSpotifyAuthUrl,
-} from '@/lib/spotify';
+import { getSpotifyAuthUrl } from '@/lib/spotify';
 import { SpotifyTrack } from '@/types/spotify';
 
 const apiCache: {
@@ -293,18 +289,11 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     if (!isMounted.current) return;
 
     try {
-      // First attempt to get the currently playing track
-      const currentResponse = await getCurrentTrack();
+      // Use internal API routes to handle token refresh server-side
+      const currentResponse = await fetch('/api/spotify/current-track');
 
-      if (!currentResponse) {
-        // Only set unauthorized if we are explicitly not authorized (status 401)
-        // or if we have no tokens at all. For transient errors, we keep current state.
-        setDataLoading(false);
-        return;
-      }
-
-      if (currentResponse.status === 401) {
-        // Explicitly unauthorized (token expired or invalid and refresh failed)
+      if (currentResponse.status === 401 || currentResponse.status === 404) {
+        // Token issues
         if (!apiCache.currentTrack) {
           setIsAuthorized(false);
         }
@@ -312,8 +301,13 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
         return;
       }
 
-      // If we got any response (200, 204, etc), we are authorized
-      setIsAuthorized(true);
+      // Only mark as authorized if we got a successful response
+      if (currentResponse.ok) {
+        setIsAuthorized(true);
+      } else {
+        // Mark as not authorized for any other error responses
+        setIsAuthorized(false);
+      }
 
       if (currentResponse.status === 429) {
         const retryAfter = currentResponse.headers.get('Retry-After') || '1';
@@ -356,24 +350,26 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
       // If we don't have a current track playing, ALWAYS check recently played
       if (!foundCurrentTrack) {
         try {
-          const recentlyPlayed = await getRecentlyPlayed();
+          const recentRes = await fetch('/api/spotify/recently-played?limit=1');
+          if (recentRes.ok) {
+            const recentlyPlayed = await recentRes.json();
 
-          // Check if we have recent tracks
-          if (
-            recentlyPlayed &&
-            recentlyPlayed.items &&
-            recentlyPlayed.items.length > 0
-          ) {
-            const newTrack = recentlyPlayed.items[0].track;
+            // Check if we have recent tracks
+            if (
+              recentlyPlayed &&
+              recentlyPlayed.items &&
+              recentlyPlayed.items.length > 0
+            ) {
+              const newTrack = recentlyPlayed.items[0].track;
 
-            setCurrentTrack(newTrack);
-            prevTrackId.current = newTrack.id;
-            setIsPlaying(false);
-            updateProgress(0);
+              setCurrentTrack(newTrack);
+              prevTrackId.current = newTrack.id;
+              setIsPlaying(false);
+              updateProgress(0);
 
-            // Pass the raw ISO timestamp directly to TimeAgo
-            // Don't format it first, as TimeAgo can parse ISO timestamps correctly
-            setLastPlayedAt(recentlyPlayed.items[0].played_at);
+              // Pass the raw ISO timestamp directly to TimeAgo
+              setLastPlayedAt(recentlyPlayed.items[0].played_at);
+            }
           }
         } catch {
           // Ignored
@@ -445,17 +441,18 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
         <Separator margin='0' />
 
-        <div className='p-4'>
+        <div className='flex items-center justify-center min-h-[100px] p-4'>
           {isAdmin ? (
-            <div className='flex gap-2'>
-              <button
-                onClick={() => (window.location.href = getSpotifyAuthUrl())}
-                className='flex-1 flex items-center justify-center gap-2 bg-[#1DB954] text-gruv-bg font-bold py-2 px-4 rounded-md hover:bg-[#1ed760] transition-colors'
-              >
-                <Icon name='spotifyLogo' className='size-5' />
-                <span>Connect with Spotify</span>
-              </button>
-            </div>
+            <Button
+              icon='spotifyLogo'
+              className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760]'
+              onClick={() => {
+                const url = getSpotifyAuthUrl();
+                window.location.href = url;
+              }}
+            >
+              Connect with Spotify
+            </Button>
           ) : (
             <div className='text-sm text-muted-foreground text-center'>
               Spotify integration is private.
