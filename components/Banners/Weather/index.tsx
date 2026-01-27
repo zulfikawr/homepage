@@ -626,40 +626,46 @@ const Weather = ({ className }: { className?: string }) => {
 
   return (
     <Card
-      className={`relative w-full min-h-[120px] overflow-hidden ${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000`}
+      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 px-4 py-3`}
       isPreview
     >
       <WeatherVisuals type={currentType} isDaytime={isDaytime} />
 
-      <div className='relative h-full flex flex-col z-30'>
+      <div className='relative h-full flex flex-col z-30 gap-y-4'>
         {/* Header */}
-        <div className='absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-3 pointer-events-none'>
-          <div className='flex items-center gap-1.5'>
+        <div className='flex w-full items-center justify-between'>
+          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
             <Icon
               name='mapPin'
-              className={`size-4 drop-shadow-sm ${isDaytime ? 'text-gruv-bg' : 'text-gruv-aqua'}`}
+              className={`size-7 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-aqua'}`}
             />
             <h2
-              className={`text-[13px] font-bold tracking-wide drop-shadow-sm ${isDaytime ? 'text-gruv-bg' : 'text-[#ebdbb2]'}`}
+              className={`font-bold tracking-wide ${isDaytime ? 'text-gruv-bg' : 'text-[#ebdbb2]'}`}
             >
               Jakarta, ID
             </h2>
           </div>
+
           <div
-            className={`font-bold text-[12px] drop-shadow-sm ${isDaytime ? 'text-gruv-bg/80' : 'text-[#83a598]'}`}
+            className={`font-bold text-[12px] ${isDaytime ? 'text-gruv-bg/80' : 'text-[#83a598]'}`}
           >
             {timeData.date}
           </div>
         </div>
 
         {/* Center: Time Display */}
-        <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
+        <div className='flex-1 flex items-center justify-center w-full pointer-events-none'>
           <div className='flex items-center'>
             <FlipNumber number={timeData.hours} isDaytime={isDaytime} />
+
             <Separator isDaytime={isDaytime} />
+
             <FlipNumber number={timeData.minutes} isDaytime={isDaytime} />
+
             <Separator isDaytime={isDaytime} />
+
             <FlipNumber number={timeData.seconds} isDaytime={isDaytime} />
+
             <div className='ml-2 flex flex-col justify-between h-12 py-0.5'>
               <span
                 className={`text-[10px] font-bold leading-none drop-shadow-sm ${timeData.ampm === 'AM' ? (isDaytime ? 'text-gruv-bg' : 'text-[#fabd2f]') : isDaytime ? 'text-gruv-bg/30' : 'text-gruv-fg/30'}`}
@@ -676,7 +682,7 @@ const Weather = ({ className }: { className?: string }) => {
         </div>
 
         {/* Footer: Weather Info */}
-        <div className='absolute bottom-2 left-0 right-0 px-4 flex justify-center pointer-events-none'>
+        <div className='flex justify-center pointer-events-none'>
           <div
             className={`text-xs font-bold px-3 py-1 rounded-full bg-gruv-bg/20 backdrop-blur-md shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
           >

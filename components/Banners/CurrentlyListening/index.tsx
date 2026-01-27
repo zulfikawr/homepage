@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Button, Icon, Tooltip } from '@/components/UI';
-import { TimeAgo } from '@/components/UI';
+import { Icon, Separator, TimeAgo } from '@/components/UI';
 import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
@@ -16,6 +15,7 @@ import {
 } from '@/lib/spotify';
 import { SpotifyTrack } from '@/types/spotify';
 
+import BannerHeader from './header';
 import LoadingSkeleton from './loading';
 
 const apiCache: {
@@ -265,14 +265,14 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
     return (
       <Card isPreview className={className}>
-        <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
-          <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
-            <span className='size-5'>
-              <Icon name='musicNotes' />
-            </span>
+        <div className='flex w-full items-center justify-between px-4 py-3'>
+          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
+            <Icon name='musicNotes' className='size-7 text-gruv-green' />
             <span>Spotify Integration</span>
           </div>
         </div>
+
+        <Separator margin='0' />
 
         <div className='p-4'>
           {isAdmin ? (
@@ -300,41 +300,14 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
   return (
     <Card isPreview className={className}>
-      <div className='flex w-full items-center justify-between px-4 py-2.5 border-b border-border'>
-        <div className='flex items-center gap-x-2 text-[15px] font-medium tracking-wide text-foreground'>
-          <Icon name='musicNotes' className='size-5 text-gruv-green' />
-          <span>{isPlaying ? 'Currently Listening' : 'Last Played'}</span>
-        </div>
-        {showMoreButton && (
-          <>
-            <div className='hidden md:block'>
-              <Tooltip text='Music Stats'>
-                <Link href='/music'>
-                  <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-                    <span className='size-5'>
-                      <Icon name='caretRight' />
-                    </span>
-                  </Button>
-                </Link>
-              </Tooltip>
-            </div>
-            <div className='block md:hidden'>
-              <Link href='/music'>
-                <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-                  <span className='size-5'>
-                    <Icon name='caretRight' />
-                  </span>
-                </Button>
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
+      <BannerHeader isPlaying={isPlaying} />
+
+      <Separator margin='0' />
 
       <Link
         href={currentTrack.external_urls.spotify}
         target='_blank'
-        className='group relative flex items-center gap-4 p-4 hover:bg-muted/50 hover:bg-muted'
+        className='group relative flex items-center gap-x-4 p-4 hover:bg-muted/50 hover:bg-muted'
       >
         {isPlaying && (
           <div className='absolute inset-0 overflow-hidden rounded-b-md'>
@@ -368,7 +341,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
           />
         </Hover>
 
-        <div className='flex-1 min-w-0 space-y-1'>
+        <div className='flex-col min-w-0 space-y-1'>
           <h3 className='font-bold text-md text-gruv-aqua truncate'>
             {currentTrack.name}
           </h3>

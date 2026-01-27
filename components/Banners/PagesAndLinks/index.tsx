@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/Card';
-import { Button, Icon, Tooltip } from '@/components/UI';
+import { Button, Icon, Separator, Tooltip } from '@/components/UI';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
@@ -19,95 +19,90 @@ const PagesAndLinks = () => {
     return resumeList && resumeList.length > 0 ? resumeList[0] : null;
   }, [resumeList]);
 
+  const ViewAllButton = (
+    <Link href='/pages'>
+      <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+        <Icon name='caretRight' className='size-5' />
+      </Button>
+    </Link>
+  );
+
+  const navLinks = [
+    {
+      label: 'Contacts',
+      href: '/contacts',
+      icon: 'addressBook',
+      color: 'text-gruv-aqua',
+    },
+    {
+      label: 'Résumé',
+      href: resume?.fileUrl || '#',
+      icon: 'filePdf',
+      color: 'text-gruv-red',
+      target: '_blank',
+    },
+    {
+      label: 'Projects',
+      href: '/projects',
+      icon: 'package',
+      color: 'text-gruv-yellow',
+    },
+    {
+      label: 'Publications',
+      href: '/publications',
+      icon: 'newspaper',
+      color: 'text-gruv-green',
+    },
+    {
+      label: 'Music',
+      href: '/music',
+      icon: 'musicNotes',
+      color: 'text-gruv-blue',
+    },
+    {
+      label: 'Feedback',
+      href: '/feedback',
+      icon: 'chatCenteredText',
+      color: 'text-primary',
+    },
+  ];
+
   return (
     <Card isPreview>
-      <div className='flex w-full items-center justify-between px-4 py-2.5 border-b border-border'>
-        <div className='flex items-center gap-x-[7px] text-[15px] font-medium tracking-wide text-foreground'>
-          <span className='size-5 text-gruv-aqua'>
-            <Icon name='cube' />
-          </span>
+      <div className='flex w-full items-center justify-between px-4 py-3'>
+        <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
+          <Icon name='cube' className='size-7 text-gruv-aqua' />
           <span>Pages & Links</span>
         </div>
+
         <div className='hidden md:block'>
-          <Tooltip text='All Pages'>
-            <Link href='/pages'>
-              <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-                <span className='size-5'>
-                  <Icon name='caretRight' />
-                </span>
-              </Button>
-            </Link>
-          </Tooltip>
+          <Tooltip text='All Pages'>{ViewAllButton}</Tooltip>
         </div>
-        <div className='block md:hidden'>
-          <Link href='/pages'>
-            <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-              <span className='size-5'>
-                <Icon name='caretRight' />
-              </span>
-            </Button>
-          </Link>
-        </div>
+
+        <div className='block md:hidden'>{ViewAllButton}</div>
       </div>
+
+      <Separator margin='0' />
+
       <div className='flex items-center justify-between p-4 gap-x-2 overflow-x-auto whitespace-nowrap'>
         <div className='flex items-center gap-x-2.5'>
-          <Link href='/contacts'>
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-gruv-aqua group-hover/btn:text-accent-foreground'>
-                <Icon name='addressBook' />
-              </span>
-              Contacts
-            </Button>
-          </Link>
-
-          <Link
-            href={resume?.fileUrl || '#'}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-gruv-red group-hover/btn:text-accent-foreground'>
-                <Icon name='filePdf' />
-              </span>
-              Résumé
-            </Button>
-          </Link>
-
-          <Link href='/projects'>
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-gruv-yellow group-hover/btn:text-accent-foreground'>
-                <Icon name='package' />
-              </span>
-              Projects
-            </Button>
-          </Link>
-
-          <Link href='/publications'>
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-gruv-green group-hover/btn:text-accent-foreground'>
-                <Icon name='newspaper' />
-              </span>
-              Publications
-            </Button>
-          </Link>
-
-          <Link href='/music'>
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-gruv-blue group-hover/btn:text-accent-foreground'>
-                <Icon name='musicNotes' />
-              </span>
-              Music
-            </Button>
-          </Link>
-
-          <Link href='/feedback'>
-            <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
-              <span className='size-5 flex-shrink-0 text-primary group-hover/btn:text-accent-foreground'>
-                <Icon name='chatCenteredText' />
-              </span>
-              Feedback
-            </Button>
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              target={link.target}
+              rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
+            >
+              <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
+                <span
+                  className={`size-5 flex-shrink-0 ${link.color} group-hover/btn:text-accent-foreground`}
+                >
+                  <Icon name={link.icon} />
+                </span>
+                {link.label}
+              </Button>
+            </Link>
+          ))}
         </div>
       </div>
     </Card>
