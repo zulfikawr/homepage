@@ -65,6 +65,7 @@ export default function MovieCard({
                   className='h-full w-full object-cover'
                   loading='lazy'
                   type='portrait'
+                  sizes='35px'
                 />
               </div>
             </div>
@@ -102,6 +103,7 @@ export default function MovieCard({
                 width={133}
                 height={200}
                 type='portrait'
+                sizes='(max-width: 768px) 100vw, 133px'
               />
             </div>
 

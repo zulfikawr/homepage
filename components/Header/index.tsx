@@ -51,6 +51,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   width={24}
                   loading='lazy'
                   type='square'
+                  sizes='24px'
                 />
               </div>
               <div className='text-base font-medium text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground'>

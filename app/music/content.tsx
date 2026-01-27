@@ -271,6 +271,7 @@ export default function SpotifyMusicContent() {
                             width={48}
                             height={48}
                             type='square'
+                            sizes='48px'
                           />
                         </Tooltip>
                       </div>
@@ -336,6 +337,7 @@ export default function SpotifyMusicContent() {
                             width={48}
                             height={48}
                             type='square'
+                            sizes='48px'
                           />
                         </Tooltip>
                       </div>
@@ -408,6 +410,7 @@ export default function SpotifyMusicContent() {
                           height={96}
                           className='object-cover aspect-square'
                           type='square'
+                          sizes='96px'
                         />
                         <h3 className='font-medium text-center'>
                           {artist.name}

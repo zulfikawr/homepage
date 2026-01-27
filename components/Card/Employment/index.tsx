@@ -66,6 +66,7 @@ export default function EmploymentCard({
               alt={`${employment.organization} logo`}
               className='rounded-full border bg-muted dark:border-border'
               type='square'
+              sizes='24px'
             />
           )}
           <p>{employment.organization}</p>

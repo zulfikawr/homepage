@@ -52,6 +52,7 @@ export const PersonalInfoLayout = ({
             preload
             className='bg-muted shadow-sm dark:border dark:border-border aspect-square object-cover'
             type='square'
+            sizes='105px'
           />
         )}
       </Hover>

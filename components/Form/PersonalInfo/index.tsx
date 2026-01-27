@@ -98,6 +98,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               preload
               className='aspect-square object-cover rounded-xl bg-muted shadow-sm dark:border dark:border-border'
               type='square'
+              sizes='105px'
             />
           </Hover>
         </section>

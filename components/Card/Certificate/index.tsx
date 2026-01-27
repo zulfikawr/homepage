@@ -45,6 +45,7 @@ export default function CertificateCard({
               alt={certificate.title}
               className='w-full h-full rounded-t-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none object-cover'
               loading='lazy'
+              sizes='100vw'
             />
           </div>
           <div className='flex w-full border-b border-border px-4 py-3 dark:border-border dark:text-muted-foreground'>
@@ -62,6 +63,7 @@ export default function CertificateCard({
                   alt={certificate.title}
                   loading='lazy'
                   type='square'
+                  sizes='14px'
                 />
               )}
               <p className='text-xs font-light text-muted-foreground'>
@@ -88,6 +90,7 @@ export default function CertificateCard({
             alt={certificate.title}
             className='rounded-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none object-cover'
             loading='lazy'
+            sizes='(max-width: 768px) 100vw, 200px'
           />
         </div>
         <div className='col-span-3 space-y-2'>
@@ -104,6 +107,7 @@ export default function CertificateCard({
                 alt={certificate.title}
                 loading='lazy'
                 type='square'
+                sizes='14px'
               />
             )}
             <p className='text-xs font-light text-muted-foreground'>

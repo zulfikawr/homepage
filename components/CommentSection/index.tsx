@@ -198,6 +198,7 @@ export default function CommentSection({
                   width={32}
                   height={32}
                   className='rounded-full'
+                  sizes='32px'
                 />
                 <span className='font-medium dark:text-foreground'>
                   {githubUsername}

@@ -20,6 +20,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                     height={30}
                     className='rounded-full border bg-white dark:border-border'
                     type='square'
+                    sizes='30px'
                   />
                 )}
               </span>
@@ -53,6 +54,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                           height={24}
                           className='rounded-full border bg-white dark:border-border'
                           type='square'
+                          sizes='24px'
                         />
                       )}
                       {employment.organization}

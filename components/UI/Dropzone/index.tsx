@@ -128,6 +128,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
               alt='Preview'
               fill
               className='object-cover transition-transform group-hover/dropzone:scale-105'
+              sizes='100vw'
               unoptimized={
                 previewUrl.startsWith('blob:') || previewUrl.startsWith('http')
               }

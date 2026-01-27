@@ -296,6 +296,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                                 className='h-full w-full object-cover'
                                 loading='lazy'
                                 type='portrait'
+                                sizes='44px'
                               />
                             </div>
                           ) : (

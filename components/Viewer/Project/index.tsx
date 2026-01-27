@@ -32,6 +32,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
                     height={30}
                     width={30}
                     type='square'
+                    sizes='30px'
                   />
                 </span>
               )}
@@ -65,6 +66,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
                 alt={project.name}
                 className='object-cover'
                 fill
+                sizes='100vw'
               />
             </div>
           </section>

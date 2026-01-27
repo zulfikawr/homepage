@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
-  cacheComponents: true,
   reactCompiler: true,
+  cacheComponents: true, 
+
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
+
   images: {
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 14400,
@@ -16,13 +18,14 @@ const NextConfigs = {
       },
     ],
   },
+
   trailingSlash: true,
-  allowedDevOrigins: ['dev.zulfikar.site'],
   compress: true,
-  swcMinify: true,
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
-  optimizeFonts: true,
+  
+  allowedDevOrigins: ['dev.zulfikar.site'],
+
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.optimization = {

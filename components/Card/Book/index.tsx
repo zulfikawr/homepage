@@ -49,6 +49,7 @@ export default function BookCard({
               className='h-full w-full object-cover'
               loading='lazy'
               type='portrait'
+              sizes='35px'
             />
           </div>
         </div>

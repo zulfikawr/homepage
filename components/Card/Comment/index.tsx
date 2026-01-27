@@ -133,6 +133,7 @@ export default function CommentCard({
                 width={32}
                 height={32}
                 className='rounded-full'
+                sizes='32px'
               />
             )}
             <div className='flex flex-col gap-y-1'>

@@ -76,6 +76,7 @@ const PageTitle = ({
                     className='rounded-md object-cover'
                     loading='lazy'
                     type='portrait'
+                    sizes='(max-width: 640px) 120px, 150px'
                   />
                 )}
               </Hover>

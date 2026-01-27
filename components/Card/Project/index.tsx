@@ -50,6 +50,7 @@ export default function ProjectCard({
             loading='lazy'
             height={480}
             width={640}
+            sizes='100vw'
           />
         </Hover>
       </div>
@@ -66,6 +67,7 @@ export default function ProjectCard({
               width={640}
               className='rounded-md object-cover dark:brightness-[95%]'
               loading='lazy'
+              sizes='(max-width: 768px) 100vw, 224px'
             />
           </Hover>
         </div>
@@ -83,6 +85,7 @@ export default function ProjectCard({
                     height={20}
                     width={20}
                     type='square'
+                    sizes='20px'
                   />
                 </span>
               )}

@@ -126,7 +126,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
       {previewUrl && (
         <div className='relative group size-12 rounded-md overflow-hidden border border-border flex-shrink-0'>
-          <Image src={previewUrl} alt='Preview' fill className='object-cover' />
+          <Image src={previewUrl} alt='Preview' fill className='object-cover' sizes='48px' />
           <button
             onClick={handleRemove}
             className='absolute inset-0 bg-card/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'

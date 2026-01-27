@@ -126,6 +126,7 @@ const CurrentlyListeningLayout = ({
             alt={currentTrack?.album.name || ''}
             width={200}
             height={200}
+            sizes='(max-width: 768px) 64px, 64px'
             className='object-cover'
             type='square'
           />

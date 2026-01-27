@@ -25,6 +25,7 @@ export default function PlaylistCard({ playlist }: PlaylistCardProps) {
             className='rounded-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none'
             loading='lazy'
             type='square'
+            sizes='80px'
           />
         </div>
         <div className='col-span-3 space-y-1'>
