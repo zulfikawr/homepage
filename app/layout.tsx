@@ -41,6 +41,8 @@ export default function RootLayout({
   return (
     <html lang='en-us' suppressHydrationWarning>
       <head>
+        <link rel='preconnect' href='https://api.iconify.design' />
+        <link rel='preconnect' href='https://pocketbase.zulfikar.site' />
         <link
           rel='apple-touch-icon'
           sizes='180x180'
