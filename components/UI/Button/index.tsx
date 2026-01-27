@@ -41,20 +41,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const { radius } = useRadius();
 
     const getButtonClasses = () => {
-      switch (type) {
-        case 'primary':
-          return 'py-2 px-5 h-9 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-inner';
-        case 'destructive':
-          return 'w-max py-2 px-5 h-9 shadow-sm bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-inner';
-        case 'outline':
-          return 'w-max py-2 px-5 h-9 shadow-sm border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground hover:shadow-inner';
-        case 'ghost':
-          return 'w-max py-2 px-5 h-9 hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground';
-        case 'link':
-          return 'w-max py-2 px-5 h-9 hover:underline bg-transparent text-primary';
+      const variants: Record<ButtonVariant, string> = {
+        primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive:
+          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline:
+          'border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
+        ghost:
+          'hover:bg-accent hover:text-accent-foreground bg-transparent text-muted-foreground',
+        link: 'hover:underline bg-transparent text-primary',
         default:
-          return 'w-max py-2 px-5 h-9 shadow-sm border border-border bg-card text-foreground hover:bg-accent hover:text-accent-foreground hover:shadow-inner';
-      }
+          'border border-border bg-card text-foreground hover:bg-accent hover:text-accent-foreground',
+      };
+
+      return twMerge(
+        'py-2 px-5 h-9',
+        type !== 'primary' && 'w-max',
+        !['ghost', 'link'].includes(type) && 'shadow-sm hover:shadow-inner',
+        variants[type],
+      );
     };
 
     return (
@@ -64,7 +69,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={twMerge(
           'cursor-pointer focus:outline-none justify-center items-center text-sm lg:text-md tracking-wider flex select-none effect-pressing transition-color duration-100',
           getButtonClasses(),
-          icon ? 'flex items-center gap-2' : '',
+          icon && 'flex items-center gap-2',
           className,
         )}
         style={{ borderRadius: `${radius}px` }}
