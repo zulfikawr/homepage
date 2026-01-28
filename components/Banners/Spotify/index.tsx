@@ -85,14 +85,12 @@ const SpotifyLayout = ({
   isLoading,
   currentTrack,
   lastPlayedAt,
-  progress,
 }: {
   className?: string;
   isPlaying?: boolean;
   isLoading?: boolean;
   currentTrack?: SpotifyTrack | null;
   lastPlayedAt?: string | null;
-  progress?: number;
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
@@ -151,9 +149,9 @@ const SpotifyLayout = ({
               </span>
               {isPlaying ? (
                 <span className='flex items-center gap-x-2 text-xs text-gruv-green font-medium'>
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-aqua opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-gruv-aqua"></span>
+                  <span className='relative flex h-1.5 w-1.5'>
+                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-aqua opacity-75'></span>
+                    <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-gruv-aqua'></span>
                   </span>
                   <span className='truncate'>Playing now</span>
                 </span>
@@ -208,11 +206,8 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
   const { forceLoading, forceEmpty } = useLoadingToggle();
   const isLoading = dataLoading || forceLoading;
 
-  const [progress, setProgress] = useState(0);
   const { isAdmin, loading: authLoading } = useAuth();
   const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
-  const progressInterval = useRef<NodeJS.Timeout | null>(null);
-  const lastUpdateTime = useRef<number>(0);
   const retryDelay = useRef(1000);
   const isMounted = useRef(false);
 
@@ -221,9 +216,6 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
     isMounted.current = true;
     return () => {
       isMounted.current = false;
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
     };
   }, []);
 
@@ -234,40 +226,6 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
     apiCache.lastPlayedAt = lastPlayedAt;
     apiCache.isAuthorized = isAuthorized;
   }, [currentTrack, isPlaying, lastPlayedAt, isAuthorized]);
-
-  // Handle progress updates
-  const updateProgress = (newProgress: number) => {
-    setProgress(newProgress);
-    lastUpdateTime.current = Date.now();
-  };
-
-  // Start or stop progress tracking based on playback state
-  useEffect(() => {
-    if (progressInterval.current) {
-      clearInterval(progressInterval.current);
-      progressInterval.current = null;
-    }
-
-    if (isPlaying && currentTrack) {
-      progressInterval.current = setInterval(() => {
-        // Only increment if we haven't received a server update in the last 2 seconds
-        if (Date.now() - lastUpdateTime.current > 2000) {
-          setProgress((prev) => {
-            const newProgress = prev + 1000;
-            return newProgress >= (currentTrack?.duration_ms || 0)
-              ? 0
-              : newProgress;
-          });
-        }
-      }, 1000);
-    }
-
-    return () => {
-      if (progressInterval.current) {
-        clearInterval(progressInterval.current);
-      }
-    };
-  }, [isPlaying, currentTrack]);
 
   const fetchTracksRef = useRef<() => Promise<void>>(null);
 
@@ -321,9 +279,6 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
           if (data.item.id !== prevTrackId.current) {
             setCurrentTrack(data.item);
             prevTrackId.current = data.item.id || null;
-            updateProgress(data.progress_ms);
-          } else {
-            updateProgress(data.progress_ms);
           }
 
           setIsPlaying(data.is_playing);
@@ -351,7 +306,6 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
               setCurrentTrack(newTrack);
               prevTrackId.current = newTrack.id;
               setIsPlaying(false);
-              updateProgress(0);
 
               // Pass the raw ISO timestamp directly to TimeAgo
               setLastPlayedAt(recentlyPlayed.items[0].played_at);
@@ -459,7 +413,6 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
       isLoading={false}
       currentTrack={currentTrack}
       lastPlayedAt={lastPlayedAt}
-      progress={progress}
     />
   );
 };

@@ -323,7 +323,7 @@ body::-webkit-scrollbar {
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 @keyframes fade-in {

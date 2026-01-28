@@ -3,12 +3,12 @@
 import { useEffect } from 'react';
 
 import GitHubCard from '@/components/Card/GitHub';
+import ProjectCard from '@/components/Card/Project';
 import { ViewTransition } from '@/components/Motion';
 import { Separator } from '@/components/UI/Separator';
 import { useTitle } from '@/contexts/titleContext';
 import { Project } from '@/types/project';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
-import ProjectCard from '@/components/Card/Project';
 
 const ProjectContent = ({
   project,
@@ -25,22 +25,9 @@ const ProjectContent = ({
     }
   }, [project?.name, setHeaderTitle]);
 
-  const formatPeriod = () => {
-    if (!project) return '';
-    const ds = project.dateString || '';
-    if (!ds) return '';
-    if (ds.includes(' - ')) {
-      const [start, end] = ds.split(' - ');
-      if (end === 'Present') return `${start} - Present`;
-      if (start === end) return start;
-      return `${start} - ${end}`;
-    }
-    return ds;
-  };
-
   if (isLoading || !project) {
     return (
-      <div className='max-w-4xl mx-auto pt-24 lg:pt-20 px-4 pb-12'>
+      <div className='max-w-4xl mx-auto pt-24 lg:pt-20 px-4 pb-12 min-h-screen'>
         <div className='animate-pulse space-y-8'>
           <div className='h-8 bg-muted rounded w-1/3'></div>
           <div className='aspect-video w-full bg-muted rounded-xl'></div>

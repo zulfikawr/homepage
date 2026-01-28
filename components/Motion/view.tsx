@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+
 import { useScrollDirection } from '@/hooks';
 
 interface Props {
@@ -43,7 +44,10 @@ const ViewTransition = ({
       // Fallback: if element is already in viewport
       const rect = currentRef.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        setIsVisible(true);
+        // Use requestAnimationFrame to defer setState call outside effect
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
       }
     }
 

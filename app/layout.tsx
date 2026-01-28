@@ -6,7 +6,6 @@ import Drawer from '@/components/Drawer';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import Modal from '@/components/Modal';
-import { PageTransition } from '@/components/Motion';
 import Toast from '@/components/Toast';
 import DynamicBackground from '@/components/Visual/Background';
 
@@ -88,9 +87,7 @@ export default function RootLayout({
               <Header />
             </Suspense>
             <main className='w-full lg:w-content mx-auto min-h-main px-4 lg:px-0 pt-0 lg:pt-20'>
-              <Suspense fallback={null}>
-                <PageTransition>{children}</PageTransition>
-              </Suspense>
+              <Suspense fallback={null}>{children}</Suspense>
             </main>
             <Footer />
           </div>

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Icon, Label, Separator, Skeleton } from '@/components/UI';
+import { Button, Icon, Separator, Skeleton } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 
@@ -52,15 +52,16 @@ const PageTitle = ({
           <div
             className={`flex flex-1 items-start ${image || isLoading ? 'gap-6' : 'gap-3'}`}
           >
-            {emoji || isLoading && (
-              <div className='text-[35px] drop-shadow-lg -rotate-6 h-[52px] flex items-center'>
-                {isLoading ? (
-                  <Skeleton width={40} height={40} as='span' />
-                ) : (
-                  emoji
-                )}
-              </div>
-            )}
+            {emoji ||
+              (isLoading && (
+                <div className='text-[35px] drop-shadow-lg -rotate-6 h-[52px] flex items-center'>
+                  {isLoading ? (
+                    <Skeleton width={40} height={40} as='span' />
+                  ) : (
+                    emoji
+                  )}
+                </div>
+              ))}
             <div className='flex flex-col flex-1'>
               <h2 className='flex items-center gap-x-2 text-[28px] font-medium tracking-wide text-foreground leading-tight min-h-[35px]'>
                 {isLoading ? (
@@ -76,22 +77,23 @@ const PageTitle = ({
                   </>
                 )}
               </h2>
-              {subtitle || isLoading && (
-                <div className='text-sm text-muted-foreground'>
-                  {isLoading ? (
-                    <div className='space-y-2 mt-2'>
-                      <Skeleton width='100%' height={14} as='span' />
-                      <Skeleton width='60%' height={14} as='span' />
-                    </div>
-                  ) : (
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: renderMarkdown(subtitle || ''),
-                      }}
-                    />
-                  )}
-                </div>
-              )}
+              {subtitle ||
+                (isLoading && (
+                  <div className='text-sm text-muted-foreground'>
+                    {isLoading ? (
+                      <div className='space-y-2 mt-2'>
+                        <Skeleton width='100%' height={14} as='span' />
+                        <Skeleton width='60%' height={14} as='span' />
+                      </div>
+                    ) : (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: renderMarkdown(subtitle || ''),
+                        }}
+                      />
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
           {!isLoading && (

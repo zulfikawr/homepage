@@ -29,7 +29,7 @@ export default function BlogPostContent({
 
   if (isLoading || !post) {
     return (
-      <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
+      <div className='mt-0 pt-24 lg:mt-20 lg:pt-0 min-h-screen'>
         <div className='animate-pulse space-y-8 px-4 max-w-4xl mx-auto'>
           <div className='h-[200px] bg-muted rounded-lg'></div>
           <div className='space-y-3'>
