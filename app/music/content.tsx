@@ -127,6 +127,50 @@ export default function SpotifyMusicContent() {
     }
   }, [tracksTimeRange, artistsTimeRange]);
 
+  const loadTopTracks = useCallback(async () => {
+    try {
+      setError(null);
+      setDataLoading((prev) => ({ ...prev, topTracks: true }));
+
+      const res = await fetch(
+        `/api/spotify/top-tracks?limit=10&time_range=${tracksTimeRange}`,
+      );
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch top tracks');
+      }
+
+      const data = await res.json();
+      setTopTracks(data?.items || []);
+      setDataLoading((prev) => ({ ...prev, topTracks: false }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setDataLoading((prev) => ({ ...prev, topTracks: false }));
+    }
+  }, [tracksTimeRange]);
+
+  const loadTopArtists = useCallback(async () => {
+    try {
+      setError(null);
+      setDataLoading((prev) => ({ ...prev, topArtists: true }));
+
+      const res = await fetch(
+        `/api/spotify/top-artists?limit=10&time_range=${artistsTimeRange}`,
+      );
+
+      if (!res.ok) {
+        throw new Error('Failed to fetch top artists');
+      }
+
+      const data = await res.json();
+      setTopArtists(data?.items || []);
+      setDataLoading((prev) => ({ ...prev, topArtists: false }));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      setDataLoading((prev) => ({ ...prev, topArtists: false }));
+    }
+  }, [artistsTimeRange]);
+
   useEffect(() => {
     loadData();
   }, [loadData]);
@@ -310,7 +354,7 @@ export default function SpotifyMusicContent() {
                 value={tracksTimeRange}
                 onChange={(range) => {
                   setTracksTimeRange(range);
-                  loadData();
+                  loadTopTracks();
                 }}
               />
             </div>
@@ -376,7 +420,7 @@ export default function SpotifyMusicContent() {
                 value={artistsTimeRange}
                 onChange={(range) => {
                   setArtistsTimeRange(range);
-                  loadData();
+                  loadTopArtists();
                 }}
               />
             </div>
