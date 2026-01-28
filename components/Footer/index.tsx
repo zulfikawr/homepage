@@ -17,14 +17,14 @@ const FooterLink = ({
   children: React.ReactNode;
 }) => (
   <Link href={href} target='_blank' rel='noreferrer'>
-    <Button type='ghostLink' className='h-auto px-0 py-0'>
+    <Button type='ghostLink' className='h-auto px-0 py-0 text-xs md:text-sm'>
       {children}
     </Button>
   </Link>
 );
 
 const FooterContent = () => (
-  <div className='text-xs md:text-sm tracking-wide text-muted-foreground select-none text-center'>
+  <div className='flex justify-center items-center gap-2'>
     <FooterLink href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>
       CC BY-NC-SA 4.0
     </FooterLink>
