@@ -54,31 +54,13 @@ const PageTitle = ({
             {isLoading && <Skeleton width={32} height={32} as='span' />}
 
             <div className='relative inline-block'>
-              <h1 className='relative text-2xl lg:text-3xl font-bold tracking-tight text-foreground leading-tight pb-2'>
+              <h1 className='relative text-2xl lg:text-3xl font-bold tracking-tight text-foreground squiggly-underline leading-tight pb-2'>
                 {isLoading ? (
                   <Skeleton width={200} height={32} as='span' />
                 ) : (
                   title
                 )}
               </h1>
-              {!isLoading && (
-                <svg
-                  className='absolute bottom-0 left-0 w-full pointer-events-none'
-                  height='8'
-                  xmlns='http://www.w3.org/2000/svg'
-                  preserveAspectRatio='none'
-                  viewBox='0 0 100 8'
-                >
-                  <path
-                    d='M 0,4 Q 2,2 4,4 T 8,4 T 12,4 T 16,4 T 20,4 T 24,4 T 28,4 T 32,4 T 36,4 T 40,4 T 44,4 T 48,4 T 52,4 T 56,4 T 60,4 T 64,4 T 68,4 T 72,4 T 76,4 T 80,4 T 84,4 T 88,4 T 92,4 T 96,4 Q 98,2 100,4'
-                    fill='none'
-                    stroke='var(--primary)'
-                    strokeWidth='2.5'
-                    strokeLinecap='round'
-                    opacity='0.8'
-                  />
-                </svg>
-              )}
             </div>
 
             {badge && !isLoading && (

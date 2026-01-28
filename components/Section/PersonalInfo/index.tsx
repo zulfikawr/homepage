@@ -27,7 +27,7 @@ export const PersonalInfoLayout = ({
             personalInfo?.name
           )}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-muted-foreground lg:text-lg h-7 lg:h-8 leading-7 lg:leading-8'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-muted-foreground squiggly-underline lg:text-lg h-7 lg:h-8 leading-7 lg:leading-8'>
           {isLoading ? (
             <Skeleton width={256} height={20} as='span' />
           ) : (
