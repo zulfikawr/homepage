@@ -12,7 +12,7 @@ import {
   HeaderTransition,
 } from '@/components/Motion';
 import ScrollWrapper from '@/components/Motion/scroll';
-import { Button } from '@/components/UI/Button';
+import { Button, Icon } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { useRouteInfo } from '@/hooks';
 
@@ -47,7 +47,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             prefetch={true}
             className='relative z-10 select-none hidden lg:block'
           >
-            <div className='group flex items-center space-x-3 flex-shrink-0 z-10'>
+            <Button
+              type='ghostLink'
+              className='h-auto py-0 px-0 gap-2'
+            >
               <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                 <ImageWithFallback
                   className='rounded-full'
@@ -60,10 +63,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   sizes='24px'
                 />
               </div>
-              <div className='text-base font-medium text-muted-foreground group-hover:text-foreground dark:group-hover:text-foreground'>
+              <div className='text-base font-medium'>
                 Zulfikar
               </div>
-            </div>
+            </Button>
           </Link>
 
           {/* Mobile Logo/Title - cycles with logo */}
@@ -136,25 +139,25 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
           <div className='ml-auto flex items-center space-x-2'>
             {!isPagesPage ? (
-              <Button
-                type='ghost'
-                icon='folder'
-                className='hidden lg:flex items-center space-x-2'
-              >
-                <Link href='/pages' prefetch={true}>
+              <Link href='/pages' prefetch={true}>
+                <Button
+                  type='ghostLink'
+                  className='hidden lg:flex items-center gap-2 text-base px-0 py-0'
+                >
+                  <Icon name='folder' size={18} />
                   Pages
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             ) : (
-              <Button
-                type='ghost'
-                icon='folder'
-                className='hidden lg:flex items-center space-x-2'
-              >
-                <Link href='/home' prefetch={true}>
+              <Link href='/home' prefetch={true}>
+                <Button
+                  type='ghostLink'
+                  className='hidden lg:flex items-center gap-2 text-base px-0 py-0'
+                >
+                  <Icon name='folder' size={18} />
                   Home
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             )}
             <Button
               type='ghost'

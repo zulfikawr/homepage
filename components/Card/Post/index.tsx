@@ -7,7 +7,7 @@ import { trimStr } from 'utilities/string';
 
 import AudioPlayer from '@/components/AudioPlayer';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Icon, Label } from '@/components/UI';
+import { Button, Icon, Label } from '@/components/UI';
 import { TimeAgo } from '@/components/UI';
 import { Hover } from '@/components/Visual';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
@@ -182,13 +182,14 @@ export default function PostCard({
               <TimeAgo date={post.dateString} prefix='Posted' />
             </span>
             <span className='flex items-center'>
-              <button
-                className='effect-pressing flex items-center gap-x-2 cursor-pointer transition-colors hover:text-primary'
+              <Button
+                type='ghostLink'
+                className='h-auto py-0 px-0 gap-1'
                 onClick={handleShare}
               >
-                <Icon name='share' size={15} />
+                <Icon name='share' size={14} />
                 Share
-              </button>
+              </Button>
             </span>
           </div>
         </div>

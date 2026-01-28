@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { Icon, Skeleton } from '@/components/UI';
+import { Button, Icon, Skeleton } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
@@ -79,12 +79,14 @@ const SectionTitle = ({
         <Link
           href={link.href}
           target='_blank'
-          className='flex items-center gap-x-2 text-muted-foreground hover:text-primary transition-colors'
         >
-          {link.label}
-          <span className='h-5 w-5'>
-            <Icon name='arrowSquareOut' />
-          </span>
+          <Button
+            type='ghostLink'
+            className='h-auto py-0 px-0 gap-1.5 text-sm'
+          >
+            {link.label}
+            <Icon name='arrowSquareOut' size={14} />
+          </Button>
         </Link>
       )}
     </div>
