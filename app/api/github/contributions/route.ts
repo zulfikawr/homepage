@@ -108,7 +108,11 @@ export async function GET() {
       contributedRepos.length,
     );
 
-    return NextResponse.json(contributionData);
+    return NextResponse.json(contributionData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+      },
+    });
   } catch (error) {
     console.error('Error fetching GitHub contributions:', error);
 
