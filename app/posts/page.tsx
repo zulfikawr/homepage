@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { getPosts } from '@/database/posts';
+
 import PostsContent from './content';
 
 export const metadata: Metadata = {
@@ -8,5 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function PostsPage() {
-  return <PostsContent />;
+  const posts = await getPosts();
+  return <PostsContent initialData={posts} />;
 }

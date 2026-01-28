@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { getCertificates } from '@/database/certificates';
+
 import CertificatesContent from './content';
 
 export const metadata: Metadata = {
@@ -8,5 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CertificatesPage() {
-  return <CertificatesContent />;
+  const certificates = await getCertificates();
+  return <CertificatesContent initialData={certificates} />;
 }

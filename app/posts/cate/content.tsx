@@ -1,21 +1,48 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { Label } from '@/components/UI';
-
-interface CategoryData {
-  name: string;
-  count: number;
-}
+import { useCollection } from '@/hooks';
+import { mapRecordToPost } from '@/lib/mappers';
+import { Post } from '@/types/post';
 
 interface Props {
-  categories: CategoryData[];
+  initialPosts: Post[];
 }
 
-export default function CategoriesContent({ categories }: Props) {
+export default function CategoriesContent({ initialPosts }: Props) {
+  const { data: posts } = useCollection<Post>(
+    'posts',
+    mapRecordToPost,
+    {},
+    initialPosts,
+  );
+
+  const categories = useMemo(() => {
+    if (!posts) return [];
+    const categoryMap = new Map<string, number>();
+
+    posts.forEach((post) => {
+      if (post.categories && Array.isArray(post.categories)) {
+        post.categories.forEach((category) => {
+          const currentCount = categoryMap.get(category) || 0;
+          categoryMap.set(category, currentCount + 1);
+        });
+      }
+    });
+
+    return Array.from(categoryMap.entries())
+      .map(([name, count]) => ({
+        name,
+        count,
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [posts]);
+
   return (
     <div>
       <PageTitle

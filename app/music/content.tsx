@@ -37,17 +37,37 @@ const formatDuration = (ms: number) => {
   return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 };
 
-export default function SpotifyMusicContent() {
-  const [recentTracks, setRecentTracks] = useState<RecentlyPlayedItem[]>([]);
-  const [topTracks, setTopTracks] = useState<SpotifyTrack[]>([]);
-  const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
+interface SpotifyMusicContentProps {
+  initialRecent?: RecentlyPlayedItem[];
+  initialTopTracks?: SpotifyTrack[];
+  initialTopArtists?: SpotifyArtist[];
+  initialPlaylists?: SpotifyPlaylist[];
+}
+
+export default function SpotifyMusicContent({
+  initialRecent,
+  initialTopTracks,
+  initialTopArtists,
+  initialPlaylists,
+}: SpotifyMusicContentProps) {
+  const [recentTracks, setRecentTracks] = useState<RecentlyPlayedItem[]>(
+    initialRecent || [],
+  );
+  const [topTracks, setTopTracks] = useState<SpotifyTrack[]>(
+    initialTopTracks || [],
+  );
+  const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>(
+    initialPlaylists || [],
+  );
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
-  const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
+  const [topArtists, setTopArtists] = useState<SpotifyArtist[]>(
+    initialTopArtists || [],
+  );
   const [dataLoading, setDataLoading] = useState({
-    recentTracks: true,
-    topTracks: true,
-    topArtists: true,
-    playlists: true,
+    recentTracks: !initialRecent,
+    topTracks: !initialTopTracks,
+    topArtists: !initialTopArtists,
+    playlists: !initialPlaylists,
   });
 
   const { forceLoading, forceEmpty } = useLoadingToggle();
@@ -127,6 +147,8 @@ export default function SpotifyMusicContent() {
     }
   }, [tracksTimeRange, artistsTimeRange]);
 
+  // ... loadTopTracks and loadTopArtists ...
+
   const loadTopTracks = useCallback(async () => {
     try {
       setError(null);
@@ -172,8 +194,20 @@ export default function SpotifyMusicContent() {
   }, [artistsTimeRange]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (
+      !initialRecent &&
+      !initialTopTracks &&
+      !initialTopArtists &&
+      !initialPlaylists
+    ) {
+      loadData();
+    } else {
+      if (initialRecent?.[0]?.played_at) {
+        setLastPlayedAt(initialRecent[0].played_at);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (error) {
     return (

@@ -138,3 +138,55 @@ export async function saveSpotifyTokens(
     });
   }
 }
+
+export async function getRecentlyPlayed(limit = 10) {
+  const accessToken = await getAccessToken();
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      next: { revalidate: 300 },
+    },
+  );
+  if (!res.ok) throw new Error('Failed to fetch recently played');
+  return res.json();
+}
+
+export async function getTopTracks(limit = 10, time_range = 'short_term') {
+  const accessToken = await getAccessToken();
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${time_range}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      next: { revalidate: 3600 },
+    },
+  );
+  if (!res.ok) throw new Error('Failed to fetch top tracks');
+  return res.json();
+}
+
+export async function getTopArtists(limit = 10, time_range = 'short_term') {
+  const accessToken = await getAccessToken();
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      next: { revalidate: 3600 },
+    },
+  );
+  if (!res.ok) throw new Error('Failed to fetch top artists');
+  return res.json();
+}
+
+export async function getPlaylists(limit = 10) {
+  const accessToken = await getAccessToken();
+  const res = await fetch(
+    `https://api.spotify.com/v1/me/playlists?limit=${limit}`,
+    {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      next: { revalidate: 3600 },
+    },
+  );
+  if (!res.ok) throw new Error('Failed to fetch playlists');
+  return res.json();
+}

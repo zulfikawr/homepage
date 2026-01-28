@@ -12,7 +12,13 @@ import { useCollection } from '@/hooks';
 import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { AnalyticsEvent } from '@/types/analytics';
 
-export default function AnalyticsContent() {
+interface AnalyticsContentProps {
+  initialData?: AnalyticsEvent[];
+}
+
+export default function AnalyticsContent({
+  initialData,
+}: AnalyticsContentProps) {
   const {
     data: events,
     loading,
@@ -20,6 +26,8 @@ export default function AnalyticsContent() {
   } = useCollection<AnalyticsEvent>(
     'analytics_events',
     mapRecordToAnalyticsEvent,
+    {},
+    initialData,
   );
 
   const stats = useMemo(() => {

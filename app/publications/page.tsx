@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { getPublications } from '@/database/publications';
+
 import PublicationsContent from './content';
 
 export const metadata: Metadata = {
@@ -8,5 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function PublicationsPage() {
-  return <PublicationsContent />;
+  const publications = await getPublications();
+  return <PublicationsContent initialData={publications} />;
 }

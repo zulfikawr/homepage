@@ -9,12 +9,23 @@ import { useCollection } from '@/hooks';
 import { mapRecordToCertificate } from '@/lib/mappers';
 import { Certificate } from '@/types/certificate';
 
-export default function CertificatesContent() {
+interface CertificatesContentProps {
+  initialData?: Certificate[];
+}
+
+export default function CertificatesContent({
+  initialData,
+}: CertificatesContentProps) {
   const {
     data: certificates,
     loading,
     error,
-  } = useCollection<Certificate>('certificates', mapRecordToCertificate);
+  } = useCollection<Certificate>(
+    'certificates',
+    mapRecordToCertificate,
+    {},
+    initialData,
+  );
 
   if (error) return <CardEmpty message='Failed to load certificates' />;
 

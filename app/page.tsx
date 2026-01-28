@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { getSections } from '@/database/sections';
+
 import Home from './home';
 
 export const metadata: Metadata = {
@@ -8,5 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  return <Home />;
+  const sections = await getSections();
+  return <Home initialData={sections} />;
 }

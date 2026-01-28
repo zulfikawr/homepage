@@ -13,12 +13,17 @@ import { useCollection } from '@/hooks';
 import { mapRecordToSection } from '@/lib/mappers';
 import { Section } from '@/types/section';
 
-export default function Home() {
+interface HomeProps {
+  initialData?: Section[];
+}
+
+export default function Home({ initialData }: HomeProps) {
   const options = React.useMemo(() => ({ sort: 'order' }), []);
   const { data: sections } = useCollection<Section>(
     'sections',
     mapRecordToSection,
     options,
+    initialData,
   );
 
   const sectionMap: Record<string, React.ReactNode> = {

@@ -1,10 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { RecordModel } from 'pocketbase';
 
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import pb from '@/lib/pocketbase';
+
+interface BaseRecord {
+  id: string;
+}
 
 /**
  * A generic hook to fetch and subscribe to any PocketBase collection.
@@ -24,6 +28,7 @@ export function useCollection<T>(
   const [dataLoading, setDataLoading] = useState(!initialData);
   const [error, setError] = useState<Error | null>(null);
   const { forceEmpty, forceLoading } = useLoadingToggle();
+  const isFirstMount = useRef(true);
 
   // Memoize options to prevent unnecessary refetches
   const optionsKey = JSON.stringify(options);
@@ -53,14 +58,45 @@ export function useCollection<T>(
     let isMounted = true;
     let unsubscribe: () => void;
 
-    queueMicrotask(() => {
-      if (isMounted) fetchData();
-    });
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      if (!initialData) {
+        queueMicrotask(() => {
+          if (isMounted) fetchData();
+        });
+      }
+    } else {
+      queueMicrotask(() => {
+        if (isMounted) fetchData();
+      });
+    }
 
     // Subscribe to realtime updates
     pb.collection(collectionName)
-      .subscribe('*', () => {
-        if (isMounted) fetchData();
+      .subscribe('*', (e) => {
+        if (!isMounted) return;
+
+        if (e.action === 'create') {
+          const newItem = mapper(e.record);
+          setData((prev) => [...prev, newItem]);
+        } else if (e.action === 'update') {
+          const updatedItem = mapper(e.record);
+          setData((prev) =>
+            prev.map((item) =>
+              (item as unknown as BaseRecord).id === e.record.id
+                ? updatedItem
+                : item,
+            ),
+          );
+        } else if (e.action === 'delete') {
+          setData((prev) =>
+            prev.filter(
+              (item) => (item as unknown as BaseRecord).id !== e.record.id,
+            ),
+          );
+        } else {
+          fetchData();
+        }
       })
       .then((unsub) => {
         if (isMounted) {
@@ -79,7 +115,7 @@ export function useCollection<T>(
       isMounted = false;
       if (unsubscribe) unsubscribe();
     };
-  }, [collectionName, fetchData]);
+  }, [collectionName, fetchData, initialData, mapper]);
 
   return {
     data: forceEmpty ? [] : data,

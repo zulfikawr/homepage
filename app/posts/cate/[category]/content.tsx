@@ -1,10 +1,13 @@
 'use client';
 
+import { useMemo } from 'react';
 import Link from 'next/link';
 
 import PostCard from '@/components/Card/Post';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { useCollection } from '@/hooks';
+import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 
 interface CategoryContentProps {
@@ -13,9 +16,24 @@ interface CategoryContentProps {
 }
 
 export default function CategoryContent({
-  posts,
+  posts: initialPosts,
   category,
 }: CategoryContentProps) {
+  const options = useMemo(
+    () => ({
+      filter: `categories ~ "${category}"`,
+      sort: '-created',
+    }),
+    [category],
+  );
+
+  const { data: posts } = useCollection<Post>(
+    'posts',
+    mapRecordToPost,
+    options,
+    initialPosts,
+  );
+
   return (
     <div>
       <PageTitle

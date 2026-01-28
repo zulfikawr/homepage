@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import { getAnalyticsEvents } from '@/database/analytics_events';
+
 import AnalyticsContent from './content';
 
 export const metadata: Metadata = {
@@ -7,6 +9,7 @@ export const metadata: Metadata = {
   description: 'Website traffic and visitor statistics.',
 };
 
-export default function AnalyticsPage() {
-  return <AnalyticsContent />;
+export default async function AnalyticsPage() {
+  const events = await getAnalyticsEvents();
+  return <AnalyticsContent initialData={events} />;
 }

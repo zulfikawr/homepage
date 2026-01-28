@@ -12,12 +12,16 @@ import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 import { sortByDate } from '@/utilities/sortByDate';
 
-export default function ProjectsContent() {
+interface ProjectsContentProps {
+  initialData?: Project[];
+}
+
+export default function ProjectsContent({ initialData }: ProjectsContentProps) {
   const {
     data: projects,
     loading,
     error,
-  } = useCollection<Project>('projects', mapRecordToProject);
+  } = useCollection<Project>('projects', mapRecordToProject, {}, initialData);
 
   const sortedProjects = projects ? sortByDate(projects) : [];
 
