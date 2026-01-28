@@ -11,6 +11,7 @@ interface ProjectCardProps {
   openForm?: boolean;
   isInForm?: boolean;
   isActive?: boolean;
+  isPreview?: boolean;
 }
 
 export default function ProjectCard({
@@ -18,6 +19,7 @@ export default function ProjectCard({
   openForm,
   isInForm,
   isActive,
+  isPreview,
 }: ProjectCardProps) {
   const router = useRouter();
 
@@ -38,6 +40,7 @@ export default function ProjectCard({
       isInDrawer={openForm}
       isInForm={isInForm}
       isActive={isActive}
+      isPreview={isPreview}
     >
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
         <Hover perspective={1000} max={25} scale={1.01}>

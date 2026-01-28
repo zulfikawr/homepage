@@ -26,7 +26,8 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const mobileTitleRef = useRef<HTMLDivElement>(null);
 
-  const { isHomePage, nonHomePage } = useRouteInfo();
+  const { nonHomePage } = useRouteInfo();
+  const { isPagesPage } = useRouteInfo();
 
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
@@ -134,7 +135,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
           </div>
 
           <div className='ml-auto flex items-center space-x-2'>
-            {isHomePage ? (
+            {!isPagesPage ? (
               <Button
                 type='ghost'
                 icon='folder'
@@ -145,11 +146,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             ) : (
               <Button
                 type='ghost'
-                icon='magnifyingGlass'
+                icon='folder'
                 className='hidden lg:flex items-center space-x-2'
-                onClick={() => drawer.open(<KbarContent />)}
               >
-                Search
+                <Link href='/home'>Home</Link>
               </Button>
             )}
             <Button

@@ -52,8 +52,6 @@ export default function GitHubCard({
         }
       } catch (error) {
         console.error('Failed to fetch GitHub data:', error);
-      } finally {
-        setLoading(false);
       }
     };
 

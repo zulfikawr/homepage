@@ -96,22 +96,6 @@ const SpotifyLayout = ({
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
-      {isPlaying && !isLoading && currentTrack && (
-        <div className='absolute inset-0 overflow-hidden rounded-b-md pointer-events-none'>
-          <div className='absolute bottom-0 left-0 right-0 h-1 bg-muted/50 dark:bg-muted/50'>
-            <div
-              className='h-full bg-gruv-green'
-              style={{
-                width: `${Math.min(100, (progress! / currentTrack.duration_ms) * 100)}%`,
-                background: 'linear-gradient(90deg, #1DB954, #1ED760)',
-                boxShadow: '0 0 8px rgba(29, 185, 84, 0.6)',
-                transition: 'width 0.5s linear',
-              }}
-            />
-          </div>
-        </div>
-      )}
-
       <Hover
         perspective={1000}
         max={25}
@@ -166,8 +150,11 @@ const SpotifyLayout = ({
                 |
               </span>
               {isPlaying ? (
-                <span className='flex items-center gap-x-1 text-xs text-gruv-green font-medium'>
-                  <span className='size-2 rounded-full bg-gruv-green animate-pulse' />
+                <span className='flex items-center gap-x-2 text-xs text-gruv-green font-medium'>
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-aqua opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-gruv-aqua"></span>
+                  </span>
                   <span className='truncate'>Playing now</span>
                 </span>
               ) : lastPlayedAt ? (
