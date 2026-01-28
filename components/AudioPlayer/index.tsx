@@ -83,7 +83,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <audio ref={audioRef} src={src} preload='metadata' />
+      <audio ref={audioRef} src={src} preload='none' />
 
       {/* Controls */}
       <div className='flex items-center gap-2 flex-nowrap'>

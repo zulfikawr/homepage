@@ -60,12 +60,21 @@ export const PersonalInfoLayout = ({
   );
 };
 
-const PersonalInfoSection = () => {
+const PersonalInfoSection = ({
+  initialData,
+}: {
+  initialData?: PersonalInfo[];
+}) => {
   const {
     data: personalInfoList,
     loading,
     error,
-  } = useCollection<PersonalInfo>('profile', mapRecordToPersonalInfo);
+  } = useCollection<PersonalInfo>(
+    'profile',
+    mapRecordToPersonalInfo,
+    {},
+    initialData,
+  );
 
   const personalInfo = useMemo(() => {
     return personalInfoList && personalInfoList.length > 0

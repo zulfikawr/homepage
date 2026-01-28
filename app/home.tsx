@@ -15,9 +15,10 @@ import { Section } from '@/types/section';
 
 interface HomeProps {
   initialData?: Section[];
+  initialPersonalInfo?: PersonalInfo;
 }
 
-export default function Home({ initialData }: HomeProps) {
+export default function Home({ initialData, initialPersonalInfo }: HomeProps) {
   const options = React.useMemo(() => ({ sort: 'order' }), []);
   const { data: sections } = useCollection<Section>(
     'sections',
@@ -27,7 +28,11 @@ export default function Home({ initialData }: HomeProps) {
   );
 
   const sectionMap: Record<string, React.ReactNode> = {
-    'personal-info': <PersonalInfoSection />,
+    'personal-info': (
+      <PersonalInfoSection
+        initialData={initialPersonalInfo ? [initialPersonalInfo] : undefined}
+      />
+    ),
     banners: <Banners />,
     interests: <InterestsAndObjectivesSection />,
     projects: <ProjectSection />,
