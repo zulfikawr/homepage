@@ -21,14 +21,21 @@ const ViewTransition = ({
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        // Clear any pending timeout
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+        // Use debounce to avoid rapid state updates
+        timeoutRef.current = setTimeout(() => {
+          setIsVisible(entry.isIntersecting);
+        }, 0);
       },
       {
-        threshold: 0.01, // Lower threshold for faster detection
+        threshold: 0.01,
       },
     );
 
@@ -36,8 +43,7 @@ const ViewTransition = ({
     if (currentRef) {
       observer.observe(currentRef);
 
-      // Fallback: if element is already in viewport, make it visible immediately
-      // This handles cases where IntersectionObserver doesn't trigger properly
+      // Fallback: if element is already in viewport
       const rect = currentRef.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         requestAnimationFrame(() => {
@@ -50,6 +56,7 @@ const ViewTransition = ({
       if (currentRef) {
         observer.unobserve(currentRef);
       }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -79,7 +86,7 @@ const ViewTransition = ({
         opacity: isVisible ? 1 : 0,
         transform: getTransform(),
         transition: `opacity ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
-        willChange: 'opacity, transform',
+        willChange: isVisible ? 'auto' : 'opacity, transform',
       }}
     >
       {children}
