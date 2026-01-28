@@ -14,7 +14,6 @@
     "@iconify/react": "^6.0.2",
     "@phosphor-icons/react": "^2.1.10",
     "babel-plugin-react-compiler": "^1.0.0",
-    "d3": "^7.9.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
@@ -29,7 +28,6 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
-    "@types/d3": "^7.4.3",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^25.0.9",
     "@types/react": "^19.2.8",
