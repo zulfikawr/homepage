@@ -12,7 +12,7 @@ export async function GET() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        cache: 'no-store',
+        next: { revalidate: 60 },
       },
     );
 

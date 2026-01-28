@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${time_range}`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: 'no-store',
+        next: { revalidate: 300 },
       },
     );
 

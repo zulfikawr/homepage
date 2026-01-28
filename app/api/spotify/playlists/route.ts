@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       `https://api.spotify.com/v1/me/playlists?limit=${limit}`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       },
     );
 
