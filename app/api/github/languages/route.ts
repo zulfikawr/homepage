@@ -143,14 +143,18 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({
-      languages: languagesWithPercentage,
-      totalBytes,
-    }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
+    return NextResponse.json(
+      {
+        languages: languagesWithPercentage,
+        totalBytes,
       },
-    });
+      {
+        headers: {
+          'Cache-Control':
+            'public, s-maxage=86400, stale-while-revalidate=604800',
+        },
+      },
+    );
   } catch (error) {
     console.error('Error fetching GitHub languages:', error);
 

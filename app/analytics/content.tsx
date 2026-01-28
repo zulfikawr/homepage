@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import WorldMapBanner from '@/components/Banners/WorldMap';
+import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
 import { Card } from '@/components/Card';
 import CardEmpty from '@/components/Card/Empty';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
@@ -332,7 +332,7 @@ export default function AnalyticsContent() {
         <div className='lg:col-span-2 space-y-8'>
           <StaggerContainer>
             <ViewTransition>
-              <WorldMapBanner />
+              <VisitorGeographyBanner />
             </ViewTransition>
 
             <ViewTransition>

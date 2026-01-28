@@ -50,7 +50,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 };
 
-const WorldMapBannerLayout = ({
+const VisitorGeographyLayout = ({
   isLoading,
   data,
   error,
@@ -84,7 +84,7 @@ const WorldMapBannerLayout = ({
   );
 };
 
-const WorldMapBanner = ({ className }: { className?: string }) => {
+const VisitorGeographyBanner = ({ className }: { className?: string }) => {
   const {
     data: events,
     loading: eventsLoading,
@@ -119,7 +119,7 @@ const WorldMapBanner = ({ className }: { className?: string }) => {
 
   return (
     <div className={className}>
-      <WorldMapBannerLayout
+      <VisitorGeographyLayout
         isLoading={isLoading}
         data={forceEmpty ? null : countries}
         error={error}
@@ -128,4 +128,4 @@ const WorldMapBanner = ({ className }: { className?: string }) => {
   );
 };
 
-export default WorldMapBanner;
+export default VisitorGeographyBanner;

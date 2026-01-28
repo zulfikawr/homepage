@@ -1,37 +1,36 @@
 'use client';
 
+import GitHubContributionsBanner from '@/components/Banners/GitHubContributions';
+import PagesAndLinksBanner from '@/components/Banners/PagesAndLinks';
+import SpotifyBanner from '@/components/Banners/Spotify';
+import TopLanguagesBanner from '@/components/Banners/TopLanguages';
+import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
+import WeatherBanner from '@/components/Banners/Weather';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
-
-import CurrentlyListening from '../../Banners/CurrentlyListening';
-import GitHubHeatmap from '../../Banners/GitHubHeatmap';
-import PagesAndLinks from '../../Banners/PagesAndLinks';
-import TopLanguages from '../../Banners/TopLanguages';
-import Weather from '../../Banners/Weather';
-import WorldMap from '../../Banners/WorldMap';
 
 const Banners = () => {
   return (
     <div className='space-y-6'>
       <StaggerContainer>
         <ViewTransition key='pages'>
-          <PagesAndLinks />
+          <PagesAndLinksBanner />
         </ViewTransition>
-        <ViewTransition key='heatmap'>
-          <GitHubHeatmap />
+        <ViewTransition key='contributions'>
+          <GitHubContributionsBanner />
         </ViewTransition>
-        <ViewTransition key='worldmap'>
-          <WorldMap />
+        <ViewTransition key='geography'>
+          <VisitorGeographyBanner />
         </ViewTransition>
         <ViewTransition key='languages'>
-          <TopLanguages />
+          <TopLanguagesBanner />
         </ViewTransition>
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
           <StaggerContainer initialDelay={0.2}>
-            <ViewTransition key='listening' className='h-full'>
-              <CurrentlyListening className='h-full' />
+            <ViewTransition key='spotify' className='h-full'>
+              <SpotifyBanner className='h-full' />
             </ViewTransition>
-            <ViewTransition key='location' className='h-full'>
-              <Weather className='h-full' />
+            <ViewTransition key='weather' className='h-full'>
+              <WeatherBanner className='h-full' />
             </ViewTransition>
           </StaggerContainer>
         </div>

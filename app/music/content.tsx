@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import CurrentlyListening from '@/components/Banners/CurrentlyListening';
+import SpotifyBanner from '@/components/Banners/Spotify';
 import CardEmpty from '@/components/Card/Empty';
 import { CardLoading } from '@/components/Card/Loading';
 import PlaylistCard from '@/components/Card/Playlist/Spotify';
@@ -235,7 +235,7 @@ export default function SpotifyMusicContent() {
 
       {/* Currently Playing Section */}
       <div className='mt-8'>
-        <CurrentlyListening showMoreButton={false} />
+        <SpotifyBanner showMoreButton={false} />
       </div>
 
       {/* Tabs Navigation */}

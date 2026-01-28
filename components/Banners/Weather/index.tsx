@@ -637,7 +637,7 @@ const WeatherLayout = ({
   );
 };
 
-const Weather = ({ className }: { className?: string }) => {
+const WeatherBanner = ({ className }: { className?: string }) => {
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -765,4 +765,4 @@ const Weather = ({ className }: { className?: string }) => {
   );
 };
 
-export default Weather;
+export default WeatherBanner;

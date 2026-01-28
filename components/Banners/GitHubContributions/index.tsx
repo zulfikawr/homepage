@@ -76,7 +76,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 };
 
-const GitHubHeatmapLayout = ({
+const GitHubContributionsLayout = ({
   isLoading,
   data,
 }: {
@@ -167,7 +167,7 @@ const GitHubHeatmapLayout = ({
   );
 };
 
-const GitHubHeatmap = () => {
+const GitHubContributionsBanner = () => {
   const [data, setData] = useState<GitHubContributionData | null>(
     apiCache.data,
   );
@@ -213,7 +213,7 @@ const GitHubHeatmap = () => {
   if (error || forceEmpty)
     return <CardEmpty message='No data - Check GITHUB_TOKEN' />;
 
-  return <GitHubHeatmapLayout isLoading={isLoading} data={data} />;
+  return <GitHubContributionsLayout isLoading={isLoading} data={data} />;
 };
 
-export default GitHubHeatmap;
+export default GitHubContributionsBanner;

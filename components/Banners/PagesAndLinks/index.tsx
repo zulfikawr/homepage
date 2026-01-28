@@ -9,7 +9,7 @@ import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
 
-const PagesAndLinks = () => {
+const PagesAndLinksBanner = () => {
   const { data: resumeList } = useCollection<Resume>(
     'resume',
     mapRecordToResume,
@@ -109,4 +109,4 @@ const PagesAndLinks = () => {
   );
 };
 
-export default PagesAndLinks;
+export default PagesAndLinksBanner;

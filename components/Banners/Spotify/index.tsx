@@ -30,7 +30,7 @@ const apiCache: {
   isAuthorized: true,
 };
 
-interface CurrentlyListeningProps {
+interface SpotifyBannerProps {
   showMoreButton?: boolean;
   className?: string;
 }
@@ -79,7 +79,7 @@ const BannerHeader = ({
   );
 };
 
-const CurrentlyListeningLayout = ({
+const SpotifyLayout = ({
   className,
   isPlaying,
   isLoading,
@@ -207,9 +207,7 @@ const CurrentlyListeningLayout = ({
   );
 };
 
-const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
-  className,
-}) => {
+const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
     apiCache.currentTrack,
   );
@@ -422,7 +420,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
 
   if (isLoading || authLoading) {
     return (
-      <CurrentlyListeningLayout
+      <SpotifyLayout
         className={className}
         isLoading={true}
         isPlaying={isPlaying}
@@ -468,7 +466,7 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
     return <CardEmpty message='No data' className={className} />;
 
   return (
-    <CurrentlyListeningLayout
+    <SpotifyLayout
       className={className}
       isPlaying={isPlaying}
       isLoading={false}
@@ -479,4 +477,4 @@ const CurrentlyListening: React.FC<CurrentlyListeningProps> = ({
   );
 };
 
-export default CurrentlyListening;
+export default SpotifyBanner;
