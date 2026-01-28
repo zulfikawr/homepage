@@ -39,7 +39,7 @@ const WeatherStyles = () => (
         opacity: 1;
       }
       100% {
-        transform: translateY(140px) scaleY(1);
+        transform: translateY(160px) scaleY(1);
         opacity: 0;
       }
     }
@@ -127,15 +127,14 @@ const Sun = ({ className = '' }: { className?: string }) => (
       className='relative w-14 h-14 rounded-full z-10
       bg-gradient-to-br from-[#fabd2f] to-[#d79921]
       shadow-[inset_-4px_-4px_8px_rgba(180,100,20,0.4)]
-      border border-[#fabd2f]/50
-      blur-[1px]'
+      border border-[#fabd2f]/50'
     >
-      <div className='absolute top-2 left-2 w-4 h-2 rounded-[100%] bg-white/40 -rotate-45 blur-[1px]' />
+      <div className='absolute top-2 left-2 w-4 h-2 rounded-[100%] bg-white/40 -rotate-45' />
     </div>
 
-    <div className='absolute inset-0 w-14 h-14 rounded-full bg-[#fabd2f] opacity-50 blur-[6px] animate-pulse' />
+    <div className='absolute inset-0 w-14 h-14 rounded-full bg-[#fabd2f] opacity-50 animate-pulse' />
 
-    <div className='absolute -inset-8 rounded-full bg-[#fabd2f] opacity-30 blur-[20px] animate-sun' />
+    <div className='absolute -inset-8 rounded-full bg-[#fabd2f] opacity-30 animate-sun shadow-[0_0_40px_rgba(250,189,47,0.4)]' />
   </div>
 );
 
@@ -145,8 +144,7 @@ const Moon = ({ className = '' }: { className?: string }) => (
       className='relative w-14 h-14 rounded-full overflow-hidden
       bg-gradient-to-br from-[#ebdbb2] to-[#928374]
       shadow-[inset_-4px_-4px_10px_rgba(0,0,0,0.5)]
-      border border-[#ebdbb2]/20
-      blur-[1px]'
+      border border-[#ebdbb2]/20'
     >
       <div className='absolute top-3 left-3 w-3 h-3 rounded-full bg-[#7c6f64] opacity-20' />
       <div className='absolute top-8 left-2 w-2 h-2 rounded-full bg-[#7c6f64] opacity-20' />
@@ -154,7 +152,7 @@ const Moon = ({ className = '' }: { className?: string }) => (
       <div className='absolute top-2 right-3 w-1.5 h-1.5 rounded-full bg-[#7c6f64] opacity-30' />
     </div>
 
-    <div className='absolute inset-0 w-14 h-14 rounded-full bg-[#ebdbb2] opacity-10 blur-xl' />
+    <div className='absolute inset-0 w-14 h-14 rounded-full bg-[#ebdbb2] opacity-10 shadow-[0_0_20px_rgba(235,219,178,0.2)]' />
   </div>
 );
 
@@ -182,9 +180,7 @@ const Cloud = ({
   <div
     className={`absolute flex items-end ${
       isFront ? 'animate-cloud-fast' : 'animate-cloud-slow'
-    } ${isDaytime ? 'text-white/90' : 'text-[#a89984]'} ${
-      blur ? 'blur-[5px]' : 'blur-[3px]'
-    }`}
+    } ${isDaytime ? 'text-white/90' : 'text-[#a89984]'}`}
     style={{
       top: `${top}%`,
       zIndex: zIndex,
@@ -271,8 +267,9 @@ const RainDrops = ({
             backgroundColor: color,
             animationDelay: `${drop.delay}s`,
             animationDuration: `${drop.duration}s`,
-            top: -20,
-            opacity: 0.6,
+            top: type === 'rain' ? -30 : -10,
+            opacity: 0,
+            animationFillMode: 'both',
           }}
         />
       ))}
@@ -362,7 +359,6 @@ const WeatherVisuals = ({
             opacity={0.4}
             scale={2}
             isDaytime={isDaytime}
-            blur
           />
         </div>
       )}
@@ -471,7 +467,7 @@ const FlipNumber = ({
 
   return (
     <div
-      className={`relative w-8 h-12 overflow-hidden mx-0.5 backdrop-blur-sm z-30 ${isDaytime ? 'bg-gruv-bg/20 border border-gruv-bg/10' : 'bg-gruv-bg/60 border border-gruv-fg/10'}`}
+      className={`relative w-8 h-12 overflow-hidden mx-0.5 z-30 ${isDaytime ? 'bg-[#fbf1c7]/40 border border-[#282828]/10' : 'bg-[#282828]/80 border border-[#ebdbb2]/10'}`}
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
@@ -479,7 +475,7 @@ const FlipNumber = ({
           <Skeleton width='100%' height='100%' />
         ) : (
           <span
-            className={`text-xl font-mono font-bold ${isDaytime ? 'text-gruv-bg drop-shadow-sm' : 'text-gruv-fg'}`}
+            className={`text-xl font-mono font-bold ${isDaytime ? 'text-[#282828]' : 'text-[#ebdbb2]'}`}
           >
             {number}
           </span>
@@ -497,7 +493,7 @@ const WeatherSeparator = ({
   isLoading?: boolean;
 }) => (
   <div
-    className={`mx-1 text-xl font-bold z-30 ${isDaytime ? 'text-gruv-bg/80' : 'text-gruv-fg/80'}`}
+    className={`mx-1 text-xl font-bold z-30 drop-shadow-sm ${isDaytime ? 'text-[#282828]/90' : 'text-[#ebdbb2]/90'}`}
   >
     {isLoading ? (
       <div className='animate-pulse text-muted opacity-50'>:</div>
@@ -550,30 +546,33 @@ const WeatherLayout = ({
 
       <div className='relative h-full flex flex-col z-30 gap-y-4'>
         {/* Header */}
-        <div className='flex w-full items-center justify-between'>
-          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground h-7 leading-7'>
+        <div className='flex w-full items-center justify-between pointer-events-none'>
+          <div
+            className={`flex items-center gap-x-2 px-3 py-1.5 rounded-full shadow-sm border border-white/10 transition-colors ${
+              isDaytime
+                ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                : 'bg-[#282828]/80 text-[#ebdbb2]'
+            }`}
+          >
             {isLoading ? (
               <>
-                <Skeleton width={28} height={28} className='rounded-md' />
-                <Skeleton width={80} height={20} />
+                <Skeleton width={20} height={20} className='rounded-full' />
+                <Skeleton width={80} height={16} />
               </>
             ) : (
               <>
-                <Icon
-                  name='mapPin'
-                  className={`size-7 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-aqua'}`}
-                />
-                <h2
-                  className={`font-bold tracking-wide ${isDaytime ? 'text-gruv-bg' : 'text-[#ebdbb2]'}`}
-                >
-                  Jakarta, ID
-                </h2>
+                <Icon name='mapPin' className='size-5' />
+                <h2 className='font-bold text-sm tracking-wide'>Jakarta, ID</h2>
               </>
             )}
           </div>
 
           <div
-            className={`font-bold text-[12px] h-4 leading-4 ${isDaytime ? 'text-gruv-bg/80' : 'text-[#83a598]'}`}
+            className={`flex items-center px-3 py-1.5 rounded-full shadow-sm border border-white/10 text-xs font-bold transition-colors ${
+              isDaytime
+                ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                : 'bg-[#282828]/80 text-[#ebdbb2]'
+            }`}
           >
             {isLoading ? <Skeleton width={70} height={14} /> : timeData.date}
           </div>
@@ -605,7 +604,7 @@ const WeatherLayout = ({
         {/* Footer: Weather Info */}
         <div className='flex justify-center pointer-events-none h-6 leading-6'>
           <div
-            className={`text-xs font-bold px-3 py-1 rounded-full bg-gruv-bg/20 backdrop-blur-md shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'text-gruv-bg' : 'text-gruv-fg'}`}
+            className={`text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'bg-[#fbf1c7]/40 text-[#282828]' : 'bg-[#282828]/80 text-[#ebdbb2]'}`}
           >
             {isLoading ? (
               <>
