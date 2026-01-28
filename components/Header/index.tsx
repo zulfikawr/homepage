@@ -91,16 +91,17 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             </CyclingHideTransition>
 
             {(nonHomePage || isHomePage) && (
-              <div className='absolute left-0 top-0 h-full flex items-center'>
-                <CyclingShowTransition
-                  disabled={!(nonHomePage || isHomePage)}
-                  componentRef={mobileTitleRef}
+              <CyclingShowTransition
+                disabled={!(nonHomePage || isHomePage)}
+                componentRef={mobileTitleRef}
+              >
+                <div
+                  ref={mobileTitleRef}
+                  className='absolute left-0 top-0 h-full flex items-center'
                 >
-                  <div ref={mobileTitleRef} className='pointer-events-auto'>
-                    <MobileHeaderTitle />
-                  </div>
-                </CyclingShowTransition>
-              </div>
+                  <MobileHeaderTitle />
+                </div>
+              </CyclingShowTransition>
             )}
           </div>
 

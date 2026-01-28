@@ -128,71 +128,71 @@ export default function PostCard({
         isActive={isActive}
         isPreview={isPreview}
       >
-      <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
-        {renderMedia()}
+        <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
+          {renderMedia()}
 
-        <div className='flex flex-col space-y-4 flex-1'>
-          <div className='flex items-center'>
-            {post.categories &&
-              (isInForm ? (
-                <Label type='secondary' icon='tag'>
-                  {post.categories[0]}
-                </Label>
-              ) : (
-                <div className='flex flex-wrap gap-3'>
-                  {post.categories?.map((category) =>
-                    isInForm ? (
-                      <Label key={category} type='secondary' icon='tag'>
-                        {category}
-                      </Label>
-                    ) : (
-                      <Link
-                        key={category}
-                        href={`/posts/cate/${category}`}
-                        prefetch={true}
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <Label type='secondary' icon='tag'>
+          <div className='flex flex-col space-y-4 flex-1'>
+            <div className='flex items-center'>
+              {post.categories &&
+                (isInForm ? (
+                  <Label type='secondary' icon='tag'>
+                    {post.categories[0]}
+                  </Label>
+                ) : (
+                  <div className='flex flex-wrap gap-3'>
+                    {post.categories?.map((category) =>
+                      isInForm ? (
+                        <Label key={category} type='secondary' icon='tag'>
                           {category}
                         </Label>
-                      </Link>
-                    ),
-                  )}
-                </div>
-              ))}
+                      ) : (
+                        <Link
+                          key={category}
+                          href={`/posts/cate/${category}`}
+                          prefetch={true}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Label type='secondary' icon='tag'>
+                            {category}
+                          </Label>
+                        </Link>
+                      ),
+                    )}
+                  </div>
+                ))}
+            </div>
+
+            <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-foreground'>
+              {post.title}
+            </h1>
+
+            <div
+              className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-muted-foreground line-clamp-3'
+              dangerouslySetInnerHTML={{
+                __html: trimStr(renderMarkdown(post.excerpt), 150),
+              }}
+            />
           </div>
-
-          <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-foreground'>
-            {post.title}
-          </h1>
-
-          <div
-            className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-muted-foreground line-clamp-3'
-            dangerouslySetInnerHTML={{
-              __html: trimStr(renderMarkdown(post.excerpt), 150),
-            }}
-          />
         </div>
-      </div>
-      {renderAudio()}
+        {renderAudio()}
 
-      <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
-        <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
-          <span className='flex items-center gap-x-2'>
-            <TimeAgo date={post.dateString} prefix='Posted' />
-          </span>
-          <span className='flex items-center'>
-            <button
-              className='effect-pressing flex items-center gap-x-2 cursor-pointer transition-colors hover:text-primary'
-              onClick={handleShare}
-            >
-              <Icon name='share' size={15} />
-              Share
-            </button>
-          </span>
+        <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
+          <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
+            <span className='flex items-center gap-x-2'>
+              <TimeAgo date={post.dateString} prefix='Posted' />
+            </span>
+            <span className='flex items-center'>
+              <button
+                className='effect-pressing flex items-center gap-x-2 cursor-pointer transition-colors hover:text-primary'
+                onClick={handleShare}
+              >
+                <Icon name='share' size={15} />
+                Share
+              </button>
+            </span>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
     </div>
   );
 }

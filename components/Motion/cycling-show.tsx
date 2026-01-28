@@ -14,6 +14,18 @@ const CyclingShowTransition = (props: Props) => {
   const { componentRef: ref, children } = props;
   const scrollDirection = useScrollDirection();
 
+  // Set initial hidden state on mount
+  useEffect(() => {
+    if (!ref?.current || props.disabled) return;
+
+    // Initialize as hidden
+    ref.current.style.transform = `translateY(50%)`;
+    ref.current.style.opacity = '0';
+    ref.current.style.visibility = 'hidden';
+    ref.current.style.pointerEvents = 'none';
+    ref.current.style.transition = 'all 300ms ease-in-out';
+  }, [ref, props.disabled]);
+
   useEffect(() => {
     if (!ref?.current || props.disabled) return;
 
