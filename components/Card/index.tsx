@@ -42,7 +42,7 @@ const Card: React.FC<CardProps> = ({
   const interactiveStyles =
     isInForm || isPreview
       ? ''
-      : `cursor-pointer transition-all duration-300 ${!isActive ? 'hover:-translate-y-0.5 hover:shadow-xl' : ''}`;
+      : `cursor-pointer transition-all duration-300 ${!isActive ? 'hover:-translate-y-0.5 hover:shadow-2xl hover:border-primary' : ''}`;
 
   return (
     <div

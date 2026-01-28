@@ -42,27 +42,25 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       >
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
           {/* Desktop Logo */}
-          <Link
-            href='/'
-            prefetch={true}
-            className='relative z-10 select-none hidden lg:block'
-          >
-            <Button type='ghostLink' className='h-auto py-0 px-0 gap-2'>
-              <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
-                <ImageWithFallback
-                  className='rounded-full'
-                  src='/favicon/android-chrome-192x192.png'
-                  alt='Zulfikar'
-                  height={24}
-                  width={24}
-                  loading='lazy'
-                  type='square'
-                  sizes='24px'
-                />
-              </div>
-              <div className='text-base font-medium'>Zulfikar</div>
-            </Button>
-          </Link>
+          <div className='hidden lg:flex relative z-10 select-none'>
+            <Link href='/' prefetch={true}>
+              <Button type='ghostLink' className='h-auto py-0 px-0 gap-2 !flex !flex-row items-center'>
+                <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
+                  <ImageWithFallback
+                    className='rounded-full'
+                    src='/favicon/android-chrome-192x192.png'
+                    alt='Zulfikar'
+                    height={24}
+                    width={24}
+                    loading='lazy'
+                    type='square'
+                    sizes='24px'
+                  />
+                </div>
+                <div className='text-base font-medium'>Zulfikar</div>
+              </Button>
+            </Link>
+          </div>
 
           {/* Mobile Logo/Title - cycles with logo */}
           <div className='lg:hidden relative z-10 flex-shrink-0'>
@@ -134,25 +132,29 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
           <div className='ml-auto flex items-center space-x-2'>
             {!isPagesPage ? (
-              <Link href='/pages' prefetch={true}>
-                <Button
-                  type='ghostLink'
-                  className='hidden lg:flex items-center gap-2 text-base px-0 py-0'
-                >
-                  <Icon name='folder' size={18} />
-                  Pages
-                </Button>
-              </Link>
+              <div className='hidden lg:flex'>
+                <Link href='/pages' prefetch={true}>
+                  <Button
+                    type='ghostLink'
+                    className='!flex !flex-row items-center gap-2 text-base px-0 py-0'
+                  >
+                    <Icon name='folder' size={18} />
+                    Pages
+                  </Button>
+                </Link>
+              </div>
             ) : (
-              <Link href='/home' prefetch={true}>
-                <Button
-                  type='ghostLink'
-                  className='hidden lg:flex items-center gap-2 text-base px-0 py-0'
-                >
-                  <Icon name='folder' size={18} />
-                  Home
-                </Button>
-              </Link>
+              <div className='hidden lg:flex'>
+                <Link href='/home' prefetch={true}>
+                  <Button
+                    type='ghostLink'
+                    className='!flex !flex-row items-center gap-2 text-base px-0 py-0'
+                  >
+                    <Icon name='folder' size={18} />
+                    Home
+                  </Button>
+                </Link>
+              </div>
             )}
             <Button
               type='ghost'
