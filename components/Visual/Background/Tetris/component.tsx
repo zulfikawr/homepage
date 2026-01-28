@@ -207,7 +207,6 @@ export class TetrisGame {
   private update() {
     if (!this.checkMovement(this.curPiece, 0, 1)) {
       if (this.curPiece.y < -1) {
-        // you lose
         this.loseScreen();
         return;
       } else {
@@ -228,7 +227,11 @@ export class TetrisGame {
 
     this.render();
 
-    this.animationFrameId = requestAnimationFrame(() => this.update());
+    if (!document.hidden) {
+      this.animationFrameId = requestAnimationFrame(() => this.update());
+    } else {
+      this.animationFrameId = requestAnimationFrame(() => this.update());
+    }
   }
 
   private renderBoard() {

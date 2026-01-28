@@ -361,23 +361,25 @@ const Waves: React.FC<WavesProps> = ({
 
     function tick(t: number) {
       if (!container) return;
-      const mouse = mouseRef.current;
-      mouse.sx += (mouse.x - mouse.sx) * 0.1;
-      mouse.sy += (mouse.y - mouse.sy) * 0.1;
-      const dx = mouse.x - mouse.lx,
-        dy = mouse.y - mouse.ly;
-      const d = Math.hypot(dx, dy);
-      mouse.v = d;
-      mouse.vs += (d - mouse.vs) * 0.1;
-      mouse.vs = Math.min(100, mouse.vs);
-      mouse.lx = mouse.x;
-      mouse.ly = mouse.y;
-      mouse.a = Math.atan2(dy, dx);
-      container.style.setProperty('--x', `${mouse.sx}px`);
-      container.style.setProperty('--y', `${mouse.sy}px`);
+      if (!document.hidden) {
+        const mouse = mouseRef.current;
+        mouse.sx += (mouse.x - mouse.sx) * 0.1;
+        mouse.sy += (mouse.y - mouse.sy) * 0.1;
+        const dx = mouse.x - mouse.lx,
+          dy = mouse.y - mouse.ly;
+        const d = Math.hypot(dx, dy);
+        mouse.v = d;
+        mouse.vs += (d - mouse.vs) * 0.1;
+        mouse.vs = Math.min(100, mouse.vs);
+        mouse.lx = mouse.x;
+        mouse.ly = mouse.y;
+        mouse.a = Math.atan2(dy, dx);
+        container.style.setProperty('--x', `${mouse.sx}px`);
+        container.style.setProperty('--y', `${mouse.sy}px`);
 
-      movePoints(t);
-      drawLines();
+        movePoints(t);
+        drawLines();
+      }
       frameIdRef.current = requestAnimationFrame(tick);
     }
 
@@ -406,17 +408,27 @@ const Waves: React.FC<WavesProps> = ({
       }
     }
 
+    const handleVisibilityChange = () => {
+      if (document.hidden && frameIdRef.current !== null) {
+        cancelAnimationFrame(frameIdRef.current);
+      } else if (!document.hidden) {
+        frameIdRef.current = requestAnimationFrame(tick);
+      }
+    };
+
     setSize();
     setLines();
     frameIdRef.current = requestAnimationFrame(tick);
     window.addEventListener('resize', onResize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (frameIdRef.current !== null) {
         cancelAnimationFrame(frameIdRef.current);
       }
@@ -445,4 +457,4 @@ const Waves: React.FC<WavesProps> = ({
   );
 };
 
-export default Waves;
+export default React.memo(Waves);

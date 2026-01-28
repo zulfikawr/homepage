@@ -83,20 +83,34 @@ const DigitalRain: FC<DigitalRainProps> = ({
     };
 
     const animate = () => {
-      draw();
-      animationRef.current = requestAnimationFrame(animate);
+      if (!document.hidden) {
+        draw();
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      } else if (!document.hidden) {
+        animate();
+      }
     };
 
     resize();
     animate();
 
     window.addEventListener('resize', resize);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
       window.removeEventListener('resize', resize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -107,4 +121,4 @@ const DigitalRain: FC<DigitalRainProps> = ({
   );
 };
 
-export default DigitalRain;
+export default React.memo(DigitalRain);

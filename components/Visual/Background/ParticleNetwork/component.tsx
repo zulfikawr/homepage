@@ -134,7 +134,7 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
       const particles = [
         ...particlesRef.current,
         { x: mouseRef.current.x, y: mouseRef.current.y },
-      ]; // Add mouse as a particle
+      ];
 
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -156,12 +156,14 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
     };
 
     const animate = () => {
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      particlesRef.current.forEach((p) => {
-        p.update();
-        p.draw();
-      });
-      connect();
+      if (!document.hidden) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        particlesRef.current.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        connect();
+      }
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -175,12 +177,21 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
       mouseRef.current.y = -1000;
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden && animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      } else if (!document.hidden) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
     init();
     animate();
 
     window.addEventListener('resize', init);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseout', onMouseOut);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       if (animationRef.current) {
@@ -189,6 +200,7 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
       window.removeEventListener('resize', init);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseout', onMouseOut);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -199,4 +211,4 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
   );
 };
 
-export default ParticleNetwork;
+export default React.memo(ParticleNetwork);

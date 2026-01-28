@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { TetrisGame } from './component';
 
-export default function TetrisBackground() {
+const TetrisBackground = React.memo(function TetrisBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<TetrisGame | null>(null);
 
@@ -27,10 +27,18 @@ export default function TetrisBackground() {
       }
     };
 
+    const handleVisibilityChange = () => {
+      if (document.hidden && gameRef.current?.cleanup) {
+        gameRef.current.cleanup();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (gameRef.current) {
         gameRef.current.cleanup();
       }
@@ -42,4 +50,6 @@ export default function TetrisBackground() {
       <canvas ref={canvasRef} className='absolute inset-0' />
     </div>
   );
-}
+});
+
+export default TetrisBackground;
