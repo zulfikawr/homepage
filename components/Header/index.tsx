@@ -44,7 +44,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
           {/* Desktop Logo */}
           <Link
             href='/'
-            passHref
+            prefetch={true}
             className='relative z-10 select-none hidden lg:block'
           >
             <div className='group flex items-center space-x-3 flex-shrink-0 z-10'>
@@ -69,7 +69,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
           {/* Mobile Logo/Title - cycles with logo */}
           <div className='lg:hidden relative z-10 flex-shrink-0'>
             <CyclingHideTransition>
-              <Link href='/' passHref className='select-none'>
+              <Link href='/' prefetch={true} className='select-none'>
                 <div className='group flex items-center space-x-3 flex-shrink-0'>
                   <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                     <ImageWithFallback
@@ -140,7 +140,9 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                 icon='folder'
                 className='hidden lg:flex items-center space-x-2'
               >
-                <Link href='/pages'>Pages</Link>
+                <Link href='/pages' prefetch={true}>
+                  Pages
+                </Link>
               </Button>
             ) : (
               <Button
@@ -148,7 +150,9 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                 icon='folder'
                 className='hidden lg:flex items-center space-x-2'
               >
-                <Link href='/home'>Home</Link>
+                <Link href='/home' prefetch={true}>
+                  Home
+                </Link>
               </Button>
             )}
             <Button

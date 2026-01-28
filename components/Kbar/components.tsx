@@ -29,7 +29,8 @@ type StaticKbarItem = {
   key: string;
   label: string;
   desc: string;
-  action: () => void;
+  action?: () => void;
+  href?: string;
   icon: IconName;
   hidden?: boolean;
 };
@@ -106,70 +107,70 @@ export function KbarContent() {
             key: 'analytics',
             label: 'Analytics',
             desc: 'Page views and analytics',
-            action: () => router.push('/analytics'),
+            href: '/analytics',
             icon: 'chartLine',
           },
           {
             key: 'certifications',
             label: 'Certifications',
             desc: 'View my certs and license',
-            action: () => router.push('/certs'),
+            href: '/certs',
             icon: 'certificate',
           },
           {
             key: 'contacts',
             label: 'Contacts',
             desc: 'View my contact information',
-            action: () => router.push('/contacts'),
+            href: '/contacts',
             icon: 'addressBook',
           },
           {
             key: 'feedback',
             label: 'Feedback',
             desc: 'Share your thoughts',
-            action: () => router.push('/feedback'),
+            href: '/feedback',
             icon: 'chatCenteredText',
           },
           {
             key: 'movies',
             label: 'Movies',
             desc: 'Browse my watched movies',
-            action: () => router.push('/movies'),
+            href: '/movies',
             icon: 'playCircle',
           },
           {
             key: 'music',
             label: 'Music',
             desc: 'Browse my spotify stats',
-            action: () => router.push('/music'),
+            href: '/music',
             icon: 'musicNotes',
           },
           {
             key: 'post',
             label: 'Post',
             desc: 'Read my latest posts',
-            action: () => router.push('/posts'),
+            href: '/posts',
             icon: 'note',
           },
           {
             key: 'projects',
             label: 'Projects',
             desc: 'Explore my projects',
-            action: () => router.push('/projects'),
+            href: '/projects',
             icon: 'package',
           },
           {
             key: 'publications',
             label: 'Publications',
             desc: 'Read my publications',
-            action: () => router.push('/publications'),
+            href: '/publications',
             icon: 'newspaper',
           },
           {
             key: 'reading-list',
             label: 'Reading List',
             desc: 'My recommended reads',
-            action: () => router.push('/reading-list'),
+            href: '/reading-list',
             icon: 'bookOpen',
           },
           {
@@ -187,7 +188,7 @@ export function KbarContent() {
             key: 'ui',
             label: 'UI Components',
             desc: 'View UI components',
-            action: () => router.push('/ui'),
+            href: '/ui',
             icon: 'layout',
           },
         ],
@@ -241,7 +242,7 @@ export function KbarContent() {
                 key: 'database',
                 label: 'Database',
                 desc: 'View database content',
-                action: () => router.push('/database'),
+                href: '/database',
                 icon: 'database',
               },
               {
@@ -267,13 +268,13 @@ export function KbarContent() {
                   key: 'login',
                   label: 'Login',
                   desc: 'Sign in to your account',
-                  action: () => router.push('/login'),
+                  href: '/login',
                   icon: 'signIn',
                 },
               ],
       },
     ],
-    [isAdmin, user, router, confirmLogout, resume],
+    [isAdmin, user, confirmLogout, resume],
   );
 
   const filteredSections = useMemo((): KbarSection[] => {
@@ -396,9 +397,14 @@ export function KbarContent() {
     }
   }, []);
 
-  const handleAction = (action: () => void) => {
-    action();
-    drawer.close();
+  const handleAction = (item: StaticKbarItem) => {
+    if (item.action) {
+      item.action();
+      drawer.close();
+    } else if (item.href) {
+      router.push(item.href);
+      drawer.close();
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -429,7 +435,7 @@ export function KbarContent() {
             }
           }
         } else {
-          handleAction((selectedItem as StaticKbarItem).action);
+          handleAction(selectedItem as StaticKbarItem);
         }
       }
     }
@@ -533,9 +539,12 @@ export function KbarContent() {
                             title={(item as StaticKbarItem).label}
                             desc={(item as StaticKbarItem).desc}
                             icon={(item as StaticKbarItem).icon}
+                            href={(item as StaticKbarItem).href}
                             isActive={isSelected}
-                            action={() =>
-                              handleAction((item as StaticKbarItem).action)
+                            action={
+                              (item as StaticKbarItem).action
+                                ? () => handleAction(item as StaticKbarItem)
+                                : undefined
                             }
                           />
                         )}

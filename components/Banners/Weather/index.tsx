@@ -164,7 +164,6 @@ const Cloud = ({
   scale = 1,
   isDaytime,
   isFront = false,
-  blur = false,
   zIndex = 10,
 }: {
   top: number;
@@ -174,7 +173,6 @@ const Cloud = ({
   scale?: number;
   isDaytime: boolean;
   isFront?: boolean;
-  blur?: boolean;
   zIndex?: number;
 }) => (
   <div

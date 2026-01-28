@@ -11,8 +11,8 @@ import PostSection from '@/components/Section/Post';
 import ProjectSection from '@/components/Section/Project';
 import { useCollection } from '@/hooks';
 import { mapRecordToSection } from '@/lib/mappers';
-import { Section } from '@/types/section';
 import { PersonalInfo } from '@/types/personalInfo';
+import { Section } from '@/types/section';
 
 interface HomeProps {
   initialData?: Section[];

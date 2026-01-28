@@ -20,7 +20,7 @@ const PagesAndLinksBanner = () => {
   }, [resumeList]);
 
   const ViewAllButton = (
-    <Link href='/pages'>
+    <Link href='/pages' prefetch={true}>
       <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
         <Icon name='caretRight' className='size-5' />
       </Button>
@@ -90,6 +90,7 @@ const PagesAndLinksBanner = () => {
             <Link
               key={link.label}
               href={link.href}
+              prefetch={!link.target}
               target={link.target}
               rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
             >

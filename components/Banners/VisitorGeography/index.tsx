@@ -14,7 +14,12 @@ import { AnalyticsEvent } from '@/types/analytics';
 
 const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   const ViewAnalyticsButton = (
-    <Link href='/analytics' target='_blank' rel='noopener noreferrer'>
+    <Link
+      href='/analytics'
+      prefetch={true}
+      target='_blank'
+      rel='noopener noreferrer'
+    >
       <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />

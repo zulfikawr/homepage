@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card } from 'components/Card';
@@ -27,19 +28,46 @@ export default function PostCard({
   isPreview,
 }: PostCardProps) {
   const router = useRouter();
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  if (!post) return null;
+  const identifier = post?.slug || post?.id;
+  const href = openForm
+    ? `/database/posts/${identifier}/edit`
+    : `/posts/${identifier}`;
 
   const handleCardClick = () => {
     if (isInForm) return;
-
-    const identifier = post.slug || post.id;
-    if (openForm) {
-      router.push(`/database/posts/${identifier}/edit`);
-    } else {
-      router.push(`/posts/${identifier}`);
-    }
+    router.push(href);
   };
+
+  // Prefetch the post page when card is in viewport
+  useEffect(() => {
+    if (isInForm || isPreview || !post) return;
+
+    const currentRef = cardRef.current;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            router.prefetch(href);
+          }
+        });
+      },
+      { rootMargin: '50px' },
+    );
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [router, href, isInForm, isPreview, post]);
+
+  if (!post) return null;
 
   const handleShare = async (e: React.MouseEvent) => {
     if (isInForm) return;
@@ -92,13 +120,14 @@ export default function PostCard({
   };
 
   return (
-    <Card
-      onClick={handleCardClick}
-      openForm={openForm}
-      isInForm={isInForm}
-      isActive={isActive}
-      isPreview={isPreview}
-    >
+    <div ref={cardRef}>
+      <Card
+        onClick={isInForm ? undefined : handleCardClick}
+        openForm={openForm}
+        isInForm={isInForm}
+        isActive={isActive}
+        isPreview={isPreview}
+      >
       <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
         {renderMedia()}
 
@@ -117,7 +146,12 @@ export default function PostCard({
                         {category}
                       </Label>
                     ) : (
-                      <Link key={category} href={`/posts/cate/${category}`}>
+                      <Link
+                        key={category}
+                        href={`/posts/cate/${category}`}
+                        prefetch={true}
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <Label type='secondary' icon='tag'>
                           {category}
                         </Label>
@@ -159,5 +193,6 @@ export default function PostCard({
         </div>
       </div>
     </Card>
+    </div>
   );
 }

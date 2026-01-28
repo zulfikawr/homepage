@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Card } from '@/components/Card';
@@ -40,10 +41,12 @@ export default function NavigationCard({
     }
   };
 
-  return (
+  const isInternalLink = href && href.indexOf('http') === -1 && !action;
+
+  const cardContent = (
     <Card
       className='relative px-2 md:px-4 pb-4 pt-3'
-      onClick={handleClick}
+      onClick={isInternalLink ? undefined : handleClick}
       isActive={isActive}
     >
       <div className='relative z-10 flex items-center overflow-hidden'>
@@ -69,4 +72,14 @@ export default function NavigationCard({
       </div>
     </Card>
   );
+
+  if (isInternalLink) {
+    return (
+      <Link href={href} prefetch={true} className='block'>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }

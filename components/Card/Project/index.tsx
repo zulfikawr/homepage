@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Card } from '@/components/Card';
@@ -23,20 +24,19 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const router = useRouter();
 
+  const identifier = project.slug || project.id;
+  const href = openForm
+    ? `/database/projects/${identifier}/edit`
+    : `/projects/${identifier}`;
+
   const handleCardClick = () => {
     if (isInForm) return;
-
-    const identifier = project.slug || project.id;
-    if (openForm) {
-      router.push(`/database/projects/${identifier}/edit`);
-    } else {
-      router.push(`/projects/${identifier}`);
-    }
+    router.push(href);
   };
 
-  return (
+  const cardContent = (
     <Card
-      onClick={handleCardClick}
+      onClick={isInForm ? undefined : handleCardClick}
       isInDrawer={openForm}
       isInForm={isInForm}
       isActive={isActive}
@@ -119,6 +119,16 @@ export default function ProjectCard({
         </div>
       </div>
     </Card>
+  );
+
+  if (isInForm || isPreview) {
+    return cardContent;
+  }
+
+  return (
+    <Link href={href} prefetch={true} className='block'>
+      {cardContent}
+    </Link>
   );
 }
 
