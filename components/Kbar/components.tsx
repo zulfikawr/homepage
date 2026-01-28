@@ -426,7 +426,7 @@ export function KbarContent() {
             router.push(`/posts/${res.data.slug || res.data.id}`);
             drawer.close();
           } else if (res.type === 'project') {
-            router.push(`/projects`);
+            router.push(`/projects/${res.data.slug || res.data.id}`);
             drawer.close();
           } else if (res.type === 'book' || res.type === 'publication') {
             if ('link' in res.data) {
@@ -506,6 +506,7 @@ export function KbarContent() {
                         key={item.key}
                         data-selected={isSelected}
                         className='scroll-mt-4'
+                        onClick={() => drawer.close()}
                       >
                         {'type' in item ? (
                           <>
@@ -541,11 +542,7 @@ export function KbarContent() {
                             icon={(item as StaticKbarItem).icon}
                             href={(item as StaticKbarItem).href}
                             isActive={isSelected}
-                            action={
-                              (item as StaticKbarItem).action
-                                ? () => handleAction(item as StaticKbarItem)
-                                : undefined
-                            }
+                            action={() => handleAction(item as StaticKbarItem)}
                           />
                         )}
                       </div>
