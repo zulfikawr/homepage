@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import PostCard from '@/components/Card/Post';
 import CommentSection from '@/components/CommentSection';
 import { ViewTransition } from '@/components/Motion';
@@ -7,7 +9,6 @@ import PostContent from '@/components/PostContent';
 import { Separator } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { Post } from '@/types/post';
-import { useEffect } from 'react';
 
 interface BlogPostContentProps {
   post?: Post;

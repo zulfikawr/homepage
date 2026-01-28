@@ -5,6 +5,7 @@ import { useBodyPointerEvents, useBodyScroll } from './useBodyEffects';
 import { useCollection } from './useCollection';
 import { useHotkeys } from './useHotkeys';
 import { useRouteInfo } from './useRouteInfo';
+import { useScrollDirection } from './useScrollDirection';
 
 export {
   useAuthActions,
@@ -13,4 +14,5 @@ export {
   useCollection,
   useHotkeys,
   useRouteInfo,
+  useScrollDirection,
 };

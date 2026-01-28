@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Icon } from '@/components/UI';
+
 import { Card } from '@/components/Card';
+import { Icon } from '@/components/UI';
 
 interface GitHubCardProps {
   repoUrl: string;
@@ -27,7 +28,6 @@ export default function GitHubCard({
     stars: 0,
     forks: 0,
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
