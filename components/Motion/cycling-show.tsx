@@ -21,10 +21,12 @@ const CyclingShowTransition = (props: Props) => {
       ref.current.style.transform = `translateY(0%)`;
       ref.current.style.opacity = '1';
       ref.current.style.visibility = 'visible';
+      ref.current.style.pointerEvents = 'auto';
     } else {
       ref.current.style.transform = `translateY(50%)`;
       ref.current.style.opacity = '0';
       ref.current.style.visibility = 'hidden';
+      ref.current.style.pointerEvents = 'none';
     }
 
     // Add transition for smoothness
