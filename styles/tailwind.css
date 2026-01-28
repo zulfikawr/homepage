@@ -378,14 +378,14 @@ html {
 
 .hover\:squiggly-underline {
   position: relative;
-  display: inline-block;
+  display: flex;
   width: fit-content;
 }
 
 .hover\:squiggly-underline::after {
   content: '';
   position: absolute;
-  bottom: -3px;
+  bottom: -2px;
   left: 0;
   width: 100%;
   height: 4px;

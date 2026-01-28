@@ -184,7 +184,7 @@ export default function PostCard({
             <span className='flex items-center'>
               <Button
                 type='ghostLink'
-                className='h-auto py-0 px-0 gap-1'
+                className='h-auto py-0 px-0 gap-1.5'
                 onClick={handleShare}
               >
                 <Icon name='share' size={14} />
