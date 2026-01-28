@@ -68,7 +68,6 @@ function cleanProjectData(
  * Fetches all projects from the database.
  */
 export async function getProjects(): Promise<Project[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('projects')
@@ -241,7 +240,6 @@ export async function deleteProject(
  * Fetches a single project by ID or slug.
  */
 export async function getProjectById(id: string): Promise<Project | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

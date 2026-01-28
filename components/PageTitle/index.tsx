@@ -101,7 +101,7 @@ const PageTitle = ({
                       as='span'
                     />
                   ) : (
-                    <Link href={`/post/cate/${category}`}>
+                    <Link href={`/posts/cate/${category}`}>
                       <Label type='primary' icon='tag'>
                         {category}
                       </Label>

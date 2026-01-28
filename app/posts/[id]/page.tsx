@@ -5,7 +5,6 @@ import { notFound } from 'next/navigation';
 import { getPostById } from '@/database/posts';
 
 import BlogPostContent from './content';
-import LoadingSkeleton from './loading';
 
 type Props = {
   params: Promise<{
@@ -40,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function PostPage({ params }: Props) {
   return (
-    <Suspense fallback={<LoadingSkeleton />}>
+    <Suspense fallback={<BlogPostContent isLoading={true} />}>
       <PostLoader params={params} />
     </Suspense>
   );

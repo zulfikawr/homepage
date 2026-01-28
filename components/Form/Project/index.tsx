@@ -43,6 +43,7 @@ const initialProjectState: Project = {
   status: 'inProgress',
   pinned: false,
   slug: '',
+  githubRepoUrl: '',
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
@@ -117,6 +118,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
         name: data.name || prev.name,
         description: data.description || prev.description,
         link: data.homepage || data.html_url || prev.link,
+        githubRepoUrl: data.html_url || prev.githubRepoUrl,
         tools: data.language ? [data.language] : prev.tools,
         image: prev.image, // Keep existing image by default
       }));
@@ -553,6 +555,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               value={project.link}
               onChange={(e) => handleChange('link', e.target.value)}
               placeholder='https://project-link.com'
+            />
+          </div>
+          <div>
+            <FormLabel htmlFor='githubRepoUrl'>GitHub Repository URL</FormLabel>
+            <Input
+              type='text'
+              value={project.githubRepoUrl || ''}
+              onChange={(e) => handleChange('githubRepoUrl', e.target.value)}
+              placeholder='https://github.com/username/repo'
             />
           </div>
           <div>

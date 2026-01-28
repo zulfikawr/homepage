@@ -13,4 +13,5 @@ export interface Project {
   favicon_url?: string;
   pinned?: boolean;
   slug: string;
+  githubRepoUrl?: string;
 }

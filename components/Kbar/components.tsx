@@ -148,7 +148,7 @@ export function KbarContent() {
             key: 'post',
             label: 'Post',
             desc: 'Read my latest posts',
-            action: () => router.push('/post'),
+            action: () => router.push('/posts'),
             icon: 'note',
           },
           {
@@ -417,7 +417,7 @@ export function KbarContent() {
         if ('type' in selectedItem) {
           const res = selectedItem as DbKbarItem;
           if (res.type === 'post') {
-            router.push(`/post/${res.data.slug || res.data.id}`);
+            router.push(`/posts/${res.data.slug || res.data.id}`);
             drawer.close();
           } else if (res.type === 'project') {
             router.push(`/projects`);

@@ -12,10 +12,11 @@ import { Hover } from '@/components/Visual';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PostCardProps {
-  post: Post;
+  post?: Post;
   openForm?: boolean;
   isInForm?: boolean;
   isActive?: boolean;
+  isPreview?: boolean;
 }
 
 export default function PostCard({
@@ -23,8 +24,11 @@ export default function PostCard({
   openForm,
   isInForm,
   isActive,
+  isPreview,
 }: PostCardProps) {
   const router = useRouter();
+
+  if (!post) return null;
 
   const handleCardClick = () => {
     if (isInForm) return;
@@ -33,7 +37,7 @@ export default function PostCard({
     if (openForm) {
       router.push(`/database/posts/${identifier}/edit`);
     } else {
-      router.push(`/post/${identifier}`);
+      router.push(`/posts/${identifier}`);
     }
   };
 
@@ -42,7 +46,7 @@ export default function PostCard({
     e.stopPropagation();
     try {
       const identifier = post.slug || post.id;
-      const shareUrl = `${window.location.origin}/post/${identifier}`;
+      const shareUrl = `${window.location.origin}/posts/${identifier}`;
       await navigator.share({
         title: post.title,
         url: shareUrl,
@@ -93,6 +97,7 @@ export default function PostCard({
       openForm={openForm}
       isInForm={isInForm}
       isActive={isActive}
+      isPreview={isPreview}
     >
       <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
         {renderMedia()}
@@ -112,7 +117,7 @@ export default function PostCard({
                         {category}
                       </Label>
                     ) : (
-                      <Link key={category} href={`/post/cate/${category}`}>
+                      <Link key={category} href={`/posts/cate/${category}`}>
                         <Label type='secondary' icon='tag'>
                           {category}
                         </Label>

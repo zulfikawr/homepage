@@ -28,7 +28,7 @@ const PostSection = () => {
         title='Latest Posts'
         loading={loading}
         link={{
-          href: '/post',
+          href: '/posts',
           label: 'All Posts',
         }}
       />

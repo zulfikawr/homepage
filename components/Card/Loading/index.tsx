@@ -250,6 +250,46 @@ const PublicationCardLoading = () => (
   </BaseCardLoading>
 );
 
+// GitHub: Exact mirror of GitHubCard
+const GitHubCardLoading = () => (
+  <BaseCardLoading>
+    <div className='flex flex-col h-full p-4 sm:p-5 gap-3'>
+      {/* Header with icon and name */}
+      <div className='flex items-start justify-between gap-3'>
+        <div className='flex items-center gap-2 flex-1'>
+          <Skeleton width={20} height={20} variant='circle' as='span' />
+          <Skeleton width='70%' height={18} as='span' />
+        </div>
+        <Skeleton width={16} height={16} variant='circle' as='span' />
+      </div>
+
+      {/* Description */}
+      <div className='space-y-1'>
+        <Skeleton width='100%' height={14} as='span' />
+        <Skeleton width='85%' height={14} as='span' />
+      </div>
+
+      {/* Language badge */}
+      <div className='flex items-center gap-1.5'>
+        <Skeleton width={8} height={8} variant='circle' as='span' />
+        <Skeleton width='40%' height={12} as='span' />
+      </div>
+
+      {/* Stats footer */}
+      <div className='flex items-center gap-4 mt-auto pt-3 border-t border-border'>
+        <div className='flex items-center gap-1.5'>
+          <Skeleton width={16} height={16} variant='circle' as='span' />
+          <Skeleton width={30} height={12} as='span' />
+        </div>
+        <div className='flex items-center gap-1.5'>
+          <Skeleton width={16} height={16} variant='circle' as='span' />
+          <Skeleton width={30} height={12} as='span' />
+        </div>
+      </div>
+    </div>
+  </BaseCardLoading>
+);
+
 // Track: Mirror of the inline track layout in app/music/content.tsx
 const TrackCardLoading = () => (
   <div className='flex items-center gap-4 py-4 px-2 md:px-6'>
@@ -336,7 +376,8 @@ type CardLoadingProps = {
     | 'certificate'
     | 'publication'
     | 'track'
-    | 'movie';
+    | 'movie'
+    | 'github';
   isInForm?: boolean;
 };
 
@@ -360,6 +401,8 @@ const CardLoading = ({ type, isInForm }: CardLoadingProps) => {
       return <TrackCardLoading />;
     case 'movie':
       return <MovieCardLoading isInForm={isInForm} />;
+    case 'github':
+      return <GitHubCardLoading />;
     default:
       return <ProjectCardLoading />;
   }

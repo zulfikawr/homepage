@@ -152,7 +152,7 @@ export default function CommentSection({
   };
 
   return (
-    <section className='mt-12 space-y-8'>
+    <section className='space-y-8'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-x-3 h-8'>
           <h2 className='text-2xl font-bold dark:text-foreground'>Comments</h2>
@@ -169,7 +169,7 @@ export default function CommentSection({
       </div>
 
       {/* Comment Input */}
-      <Card className='p-4 sm:p-6'>
+      <Card className='p-4 sm:p-6' isPreview>
         {authLoading ? (
           <div className='space-y-4'>
             <div className='flex items-center justify-between'>

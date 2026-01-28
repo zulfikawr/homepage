@@ -35,7 +35,7 @@ export default function CategoriesContent({ categories }: Props) {
               {categories.map((category) => (
                 <ViewTransition key={category.name}>
                   <Link
-                    href={`/post/cate/${category.name}`}
+                    href={`/posts/cate/${category.name}`}
                     className='transform transition-transform hover:scale-105 block h-full'
                   >
                     <div className='flex flex-col h-full rounded-lg border p-6 shadow-sm hover:shadow-md dark:border-border bg-card'>

@@ -1,10 +1,8 @@
 import { useRouter } from 'next/navigation';
 
 import { Card } from '@/components/Card';
-import { drawer } from '@/components/Drawer';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Badge } from '@/components/UI';
-import ProjectViewer from '@/components/Viewer/Project';
 import { Hover } from '@/components/Visual';
 import { Project } from '@/types/project';
 
@@ -30,7 +28,7 @@ export default function ProjectCard({
     if (openForm) {
       router.push(`/database/projects/${identifier}/edit`);
     } else {
-      drawer.open(<ProjectViewer project={project} />);
+      router.push(`/projects/${identifier}`);
     }
   };
 

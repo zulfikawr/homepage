@@ -31,7 +31,7 @@ export default function CategoryContent({
           </p>
           <div className='flex justify-center space-x-4'>
             <Link
-              href='/post/cate'
+              href='/posts/cate'
               className='rounded-md bg-primary px-4 py-2 text-sm text-white hover:bg-primary/90'
             >
               View All Categories

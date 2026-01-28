@@ -159,6 +159,7 @@ export function mapRecordToProject(record: RecordModel): Project {
     ),
     pinned: record.pinned,
     slug: record.slug,
+    githubRepoUrl: record.githubRepoUrl,
   };
 }
 

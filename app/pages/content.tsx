@@ -62,7 +62,7 @@ export default function PagesContent() {
         title: 'Posts',
         desc: 'Browse my posts',
         icon: 'note',
-        href: '/post',
+        href: '/posts',
       },
       {
         title: 'Projects',

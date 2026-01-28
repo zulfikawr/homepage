@@ -25,7 +25,6 @@ async function ensureAuth() {
  * Fetches all posts from the database.
  */
 export async function getPosts(): Promise<Post[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('posts')
@@ -40,7 +39,6 @@ export async function getPosts(): Promise<Post[]> {
  * Fetches a single post by ID or slug.
  */
 export async function getPostById(id: string): Promise<Post | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {
@@ -77,7 +75,7 @@ export async function addPost(
     const record = await pb.collection('posts').create<RecordModel>(data);
     const post = mapRecordToPost(record);
 
-    revalidatePath('/post');
+    revalidatePath('/posts');
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
 
@@ -120,8 +118,8 @@ export async function updatePost(
       .update<RecordModel>(recordId, data);
     const post = mapRecordToPost(record);
 
-    revalidatePath('/post');
-    revalidatePath(`/post/${post.slug}`);
+    revalidatePath('/posts');
+    revalidatePath(`/posts/${post.slug}`);
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
 
@@ -160,7 +158,7 @@ export async function deletePost(
     }
     await pb.collection('posts').delete(recordId);
 
-    revalidatePath('/post');
+    revalidatePath('/posts');
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
 
