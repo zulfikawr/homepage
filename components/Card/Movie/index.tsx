@@ -56,7 +56,7 @@ export default function MovieCard({
         <>
           <div className='flex flex-1 items-center'>
             <div className='flex-shrink-0 px-4.5 py-4'>
-              <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
+              <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
                 <ImageWithFallback
                   width={35}
                   height={52}

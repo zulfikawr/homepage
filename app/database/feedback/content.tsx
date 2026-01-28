@@ -70,25 +70,25 @@ export default function FeedbackResponsesContent() {
               <TableRow>
                 <TableCell
                   isHeader
-                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                  className='bg-muted dark:bg-muted font-medium border-b border'
                 >
                   Date
                 </TableCell>
                 <TableCell
                   isHeader
-                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                  className='bg-muted dark:bg-muted font-medium border-b border'
                 >
                   Feedback
                 </TableCell>
                 <TableCell
                   isHeader
-                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                  className='bg-muted dark:bg-muted font-medium border-b border'
                 >
                   Contact
                 </TableCell>
                 <TableCell
                   isHeader
-                  className='bg-muted dark:bg-muted font-medium border-b border-border dark:border-border'
+                  className='bg-muted dark:bg-muted font-medium border-b border'
                 >
                   Actions
                 </TableCell>

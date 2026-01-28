@@ -43,12 +43,12 @@ export default function CertificateCard({
               height={200}
               src={certificate.imageUrl}
               alt={certificate.title}
-              className='w-full h-full rounded-t-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none object-cover'
+              className='w-full h-full rounded-t-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
               loading='lazy'
               sizes='100vw'
             />
           </div>
-          <div className='flex w-full border-b border-border px-4 py-3 dark:border-border dark:text-muted-foreground'>
+          <div className='flex w-full border-b border-border px-4 py-3  dark:text-muted-foreground'>
             <p className='line-clamp-1 text-ellipsis text-md font-medium leading-tight tracking-wider dark:text-foreground'>
               {certificate.title}
             </p>
@@ -88,7 +88,7 @@ export default function CertificateCard({
             height={150}
             src={certificate.imageUrl}
             alt={certificate.title}
-            className='rounded-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none object-cover'
+            className='rounded-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
             loading='lazy'
             sizes='(max-width: 768px) 100vw, 200px'
           />
@@ -127,7 +127,7 @@ export default function CertificateCard({
       </div>
 
       {/* Footer */}
-      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-medium text-muted-foreground dark:border-border dark:text-muted-foreground'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-medium text-muted-foreground  dark:text-muted-foreground'>
         <span className='text-gruv-aqua'>Certificate</span>
         <span className='text-gruv-blue hover:underline cursor-pointer'>
           View

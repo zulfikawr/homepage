@@ -95,8 +95,8 @@ export default function UIComponentsContent() {
         <StaggerContainer>
           {/* Button Component */}
           <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm dark:border-border'>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='w-full rounded-md border shadow-sm '>
+              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                 <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                   <span>Buttons</span>
                 </div>
@@ -120,8 +120,8 @@ export default function UIComponentsContent() {
 
           {/* Icon Component */}
           <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm dark:border-border'>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='w-full rounded-md border shadow-sm '>
+              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                 <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                   <span>Icons</span>
                 </div>
@@ -154,8 +154,8 @@ export default function UIComponentsContent() {
 
           {/* Dropdown Component */}
           <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm dark:border-border'>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='w-full rounded-md border shadow-sm '>
+              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                 <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                   <span>Dropdown</span>
                 </div>
@@ -202,8 +202,8 @@ export default function UIComponentsContent() {
           <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
             {/* Modal Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>Modal</span>
                   </div>
@@ -218,8 +218,8 @@ export default function UIComponentsContent() {
 
             {/* Drawer Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>Drawer</span>
                   </div>
@@ -236,8 +236,8 @@ export default function UIComponentsContent() {
           <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
             {/* Badge Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>Badge</span>
                   </div>
@@ -261,8 +261,8 @@ export default function UIComponentsContent() {
 
             {/* Checkbox Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>Checkbox</span>
                   </div>
@@ -282,8 +282,8 @@ export default function UIComponentsContent() {
           <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
             {/* Tooltip Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>Tooltip</span>
                   </div>
@@ -298,8 +298,8 @@ export default function UIComponentsContent() {
 
             {/* Toggle Component */}
             <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm dark:border-border'>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+              <div className='w-full rounded-md border shadow-sm '>
+                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                   <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                     <span>
                       Toggle{' '}
@@ -343,8 +343,8 @@ export default function UIComponentsContent() {
 
           {/* Toast Component */}
           <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm dark:border-border'>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 dark:border-border'>
+            <div className='w-full rounded-md border shadow-sm '>
+              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
                 <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
                   <span>Toast</span>
                 </div>

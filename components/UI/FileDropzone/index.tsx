@@ -88,7 +88,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
     <div className={twMerge('group/dropzone space-y-3', className)}>
       <div
         className={twMerge(
-          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-6 shadow-sm focus:outline-none dark:border-border dark:bg-muted min-h-[200px]',
+          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-6 shadow-sm focus:outline-none  dark:bg-muted min-h-[200px]',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
             : 'hover:bg-muted/50 dark:hover:bg-primary/10',
@@ -135,7 +135,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           </div>
         ) : (
           <div className='flex flex-col items-center gap-3 text-muted-foreground dark:text-muted-foreground'>
-            <div className='size-14 rounded-full bg-muted dark:bg-card flex items-center justify-center border border-border dark:border-border'>
+            <div className='size-14 rounded-full bg-muted dark:bg-card flex items-center justify-center border border'>
               <Icon name='plus' className='size-7' />
             </div>
             <div className='text-center px-4'>

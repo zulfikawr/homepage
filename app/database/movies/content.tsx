@@ -38,7 +38,7 @@ export default function MoviesContent() {
         ) : (
           <>
             <ViewTransition>
-              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm  dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
                 <Button type='primary' icon='plus' onClick={handleAdd} />
               </div>
             </ViewTransition>

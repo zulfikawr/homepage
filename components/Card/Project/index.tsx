@@ -76,7 +76,7 @@ export default function ProjectCard({
         {/* Main content container */}
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           {/* Name at the top */}
-          <div className='border-b border-border pb-2 text-lg text-foreground font-semibold dark:border-border'>
+          <div className='border-b border-border pb-2'>
             <div className='flex items-center'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
@@ -90,7 +90,9 @@ export default function ProjectCard({
                   />
                 </span>
               )}
-              {project.name}
+              <h1 className='text-lg text-foreground group-hover:text-primary transition-color duration-200 font-semibold'>
+                {project.name}
+              </h1>
             </div>
           </div>
 
@@ -98,7 +100,7 @@ export default function ProjectCard({
           <p className='text-sm text-muted-foreground'>{project.description}</p>
 
           {/* Tools at the bottom */}
-          <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 dark:border-border'>
+          <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 '>
             {project.tools.map((tool, index) => {
               const colors: (
                 | 'aqua'

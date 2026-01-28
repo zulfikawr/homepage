@@ -48,21 +48,21 @@ const Badge = ({
   const getBadgeClasses = () => {
     switch (type) {
       case 'primary':
-        return 'bg-primary text-primary-foreground hover:bg-primary/80';
+        return 'bg-primary text-primary-foreground';
       case 'aqua':
-        return 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20 hover:bg-gruv-aqua/20';
+        return 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20';
       case 'green':
-        return 'bg-gruv-green/10 text-gruv-green border-gruv-green/20 hover:bg-gruv-green/20';
+        return 'bg-gruv-green/10 text-gruv-green border-gruv-green/20';
       case 'yellow':
-        return 'bg-gruv-yellow/10 text-gruv-yellow border-gruv-yellow/20 hover:bg-gruv-yellow/20';
+        return 'bg-gruv-yellow/10 text-gruv-yellow border-gruv-yellow/20';
       case 'blue':
-        return 'bg-gruv-blue/10 text-gruv-blue border-gruv-blue/20 hover:bg-gruv-blue/20';
+        return 'bg-gruv-blue/10 text-gruv-blue border-gruv-blue/20';
       case 'red':
-        return 'bg-gruv-red/10 text-gruv-red border-gruv-red/20 hover:bg-gruv-red/20';
+        return 'bg-gruv-red/10 text-gruv-red border-gruv-red/20';
       case 'outline':
-        return 'bg-transparent text-foreground border border-border';
+        return 'bg-transparent text-foreground border';
       default:
-        return 'bg-muted text-muted-foreground border border-border';
+        return 'bg-muted text-muted-foreground border';
     }
   };
 

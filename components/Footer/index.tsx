@@ -16,18 +16,15 @@ const FooterLink = ({
   href: string;
   children: React.ReactNode;
 }) => (
-  <Link
-    href={href}
-    target='_blank'
-    rel='noreferrer'
-    className='hover:underline'
-  >
-    {children}
+  <Link href={href} target='_blank' rel='noreferrer'>
+    <Button type='ghostLink' className='h-auto px-0 py-0'>
+      {children}
+    </Button>
   </Link>
 );
 
 const FooterContent = () => (
-  <div className='text-xs md:text-sm tracking-wide text-muted-foreground select-none'>
+  <div className='text-xs md:text-sm tracking-wide text-muted-foreground select-none text-center'>
     <FooterLink href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>
       CC BY-NC-SA 4.0
     </FooterLink>
@@ -59,7 +56,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className='mt-20 border-b border-t border-border bg-card py-4 text-center dark:border-border dark:bg-card'>
+    <footer className='mt-20 border-b border-t border-border bg-card py-4 text-center dark:bg-card'>
       {/* Settings Button */}
       <div className='fixed bottom-4 left-4 lg:bottom-8 lg:left-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
         <Settings />
@@ -77,7 +74,7 @@ export default function Footer() {
             <Icon
               name='caretUp'
               size={20}
-              className='text-primary group-hover/btn:text-accent-foreground transition-colors'
+              className='text-gruv-orange group-hover/btn:text-gruv-aqua transition-colors'
             />
           </Button>
         </OffsetTransition>

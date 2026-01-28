@@ -167,7 +167,7 @@ export default function SectionDatabase() {
                   onDragStart={(e) => onDragStart(e, section)}
                   onDragOver={(e) => onDragOver(e, index)}
                   onDragEnd={onDragEnd}
-                  className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all dark:border-border dark:bg-card ${
+                  className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card ${
                     draggedItem?.id === section.id
                       ? 'opacity-50 scale-95 border-gruv-blue'
                       : 'opacity-100'

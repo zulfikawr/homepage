@@ -28,6 +28,7 @@
   --color-gruv-bg: #282828;
   --color-gruv-bg-soft: #32302f;
   --color-gruv-bg-dark: #1d2021;
+  --color-gruv-bg-light: #3c3836;
   --color-gruv-fg: #ebdbb2;
   --color-gruv-fg-dim: #a89984;
   --color-gruv-orange: #fe8019;
@@ -36,6 +37,8 @@
   --color-gruv-blue: #83a598;
   --color-gruv-red: #fb4934;
   --color-gruv-aqua: #8ec07c;
+  --color-gruv-purple: #d3869b;
+  --color-gruv-purple-dim: #b16286;
 
   --color-heatmap-0: var(--heatmap-0);
   --color-heatmap-1: var(--heatmap-1);
@@ -378,7 +381,7 @@ html {
 
 .hover\:squiggly-underline {
   position: relative;
-  display: flex;
+  display: inline-flex;
   width: fit-content;
 }
 

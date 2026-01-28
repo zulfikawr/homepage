@@ -43,7 +43,7 @@ export default function PostDatabase() {
         ) : (
           <>
             <ViewTransition>
-              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:border-border dark:bg-card p-5'>
+              <div className='w-full rounded-md border bg-white text-center shadow-sm  dark:bg-card p-5'>
                 <Button
                   type='primary'
                   icon='plus'

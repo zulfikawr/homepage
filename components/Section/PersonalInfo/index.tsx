@@ -24,14 +24,14 @@ export const PersonalInfoLayout = ({
           {isLoading ? (
             <Skeleton width={192} height={32} as='span' />
           ) : (
-            personalInfo?.name
+            <span className='text-gruv-orange'>{personalInfo?.name}</span>
           )}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light leading-relaxed text-muted-foreground dark:text-muted-foreground squiggly-underline lg:text-lg h-7 lg:h-8 leading-7 lg:leading-8'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg'>
           {isLoading ? (
             <Skeleton width={256} height={20} as='span' />
           ) : (
-            <p>{personalInfo?.title}</p>
+            <p className='text-gruv-aqua/80'>{personalInfo?.title}</p>
           )}
         </div>
       </div>
@@ -50,7 +50,7 @@ export const PersonalInfoLayout = ({
             width={105}
             alt={personalInfo?.name || ''}
             preload
-            className='bg-muted shadow-sm dark:border dark:border-border aspect-square object-cover'
+            className='bg-muted shadow-sm border-1 aspect-square object-cover'
             type='square'
             sizes='105px'
           />

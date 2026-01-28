@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 
 const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
-  <div className='relative flex w-full flex-col rounded-md border border-border bg-card shadow-sm dark:border-border'>
+  <div className='relative flex w-full flex-col rounded-md border border-border bg-card shadow-sm '>
     {children}
   </div>
 );
@@ -12,7 +12,7 @@ const BookCardLoading = () => (
   <BaseCardLoading>
     <div className='flex flex-1 items-center'>
       <div className='flex-shrink-0 px-4.5 py-4'>
-        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
+        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
           <Skeleton width='100%' height='100%' />
         </div>
       </div>
@@ -25,7 +25,7 @@ const BookCardLoading = () => (
         </div>
       </div>
     </div>
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 dark:border-border'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
       <Skeleton width={60} height={10} as='span' />
       <Skeleton width={40} height={10} as='span' />
     </div>
@@ -36,7 +36,7 @@ const BookCardLoading = () => (
 const EmploymentCardLoading = () => (
   <BaseCardLoading>
     <div className='min-w-[18rem] lg:min-w-[25rem]'>
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden border-b border-border px-4.5 py-2.5 dark:border-border'>
+      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden border-b border-border px-4.5 py-2.5 '>
         <div className='flex items-center gap-x-2'>
           <Skeleton width={24} height={24} variant='circle' as='span' />
           <Skeleton width={100} height={16} as='span' />
@@ -47,7 +47,7 @@ const EmploymentCardLoading = () => (
         <Skeleton width={120} height={16} as='span' />
         <Skeleton width={80} height={14} as='span' />
       </div>
-      <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5 dark:border-border w-full'>
+      <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5  w-full'>
         <Skeleton width={100} height={14} as='span' />
         <Skeleton width={60} height={18} className='rounded-full' as='span' />
       </div>
@@ -72,7 +72,7 @@ const ProjectCardLoading = () => (
 
       {/* Main content container */}
       <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
-        <div className='border-b border-border pb-2 dark:border-border'>
+        <div className='border-b border-border pb-2 '>
           <div className='flex items-center h-7'>
             <Skeleton width={20} height={20} className='mr-3' as='span' />
             <Skeleton width='50%' height={20} as='span' />
@@ -84,7 +84,7 @@ const ProjectCardLoading = () => (
           <Skeleton width='80%' height={14} as='span' />
         </div>
 
-        <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 dark:border-border'>
+        <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 '>
           {[1, 2, 3].map((i) => (
             <Skeleton
               key={i}
@@ -104,7 +104,7 @@ const ProjectCardLoading = () => (
 const PostCardLoading = () => (
   <BaseCardLoading>
     <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
-      <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-border dark:border-border'>
+      <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border'>
         <Skeleton width='100%' height='100%' />
       </div>
 
@@ -127,7 +127,7 @@ const PostCardLoading = () => (
       </div>
     </div>
 
-    <div className='h-auto w-full border-t border-border px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
+    <div className='h-auto w-full border-t border-border px-6 py-2 lg:px-8 lg:py-3 '>
       <div className='flex items-center justify-between h-8'>
         <Skeleton width={120} height={14} as='span' />
         <Skeleton width={60} height={14} as='span' />
@@ -141,7 +141,7 @@ const PlaylistCardLoading = () => (
   <BaseCardLoading>
     <div className='grid grid-cols-4 items-center gap-4 p-4'>
       <div className='col-span-1 flex justify-center aspect-square'>
-        <div className='w-20 h-20 rounded-md border border-border dark:border-border'>
+        <div className='w-20 h-20 rounded-md border border'>
           <Skeleton width='100%' height='100%' className='rounded-md' />
         </div>
       </div>
@@ -157,7 +157,7 @@ const PlaylistCardLoading = () => (
         </div>
       </div>
     </div>
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 dark:border-border'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
       <div className='flex items-center space-x-1'>
         <Skeleton width={18} height={18} variant='circle' as='span' />
         <Skeleton width={40} height={10} as='span' />
@@ -175,7 +175,7 @@ const CertificateCardLoading = () => (
         <div className='w-full aspect-video'>
           <Skeleton width='100%' height='100%' className='rounded-t-md' />
         </div>
-        <div className='flex w-full border-b border-border px-4 py-3 dark:border-border'>
+        <div className='flex w-full border-b border-border px-4 py-3 '>
           <Skeleton width='75%' height={20} as='span' />
         </div>
         <div className='p-4 space-y-1'>
@@ -210,7 +210,7 @@ const CertificateCardLoading = () => (
       </div>
     </div>
 
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 dark:border-border'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
       <Skeleton width={60} height={10} as='span' />
       <Skeleton width={30} height={10} as='span' />
     </div>
@@ -240,7 +240,7 @@ const PublicationCardLoading = () => (
       </div>
     </div>
 
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 dark:border-border'>
+    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
       <Skeleton width={80} height={10} as='span' />
       <div className='flex items-center gap-2'>
         <Skeleton width={18} height={18} variant='circle' as='span' />
@@ -320,7 +320,7 @@ const MovieCardLoading = ({ isInForm = false }: { isInForm?: boolean }) => {
       <BaseCardLoading>
         <div className='flex flex-1 items-center'>
           <div className='flex-shrink-0 px-4.5 py-4'>
-            <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
+            <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
               <Skeleton width='100%' height='100%' />
             </div>
           </div>

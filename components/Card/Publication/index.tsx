@@ -64,7 +64,7 @@ export default function PublicationCard({
         </div>
       </div>
 
-      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-light text-muted-foreground  dark:text-muted-foreground'>
         <span>{publication.publisher}</span>
         <span>
           {publication.openAccess ? (

@@ -285,7 +285,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                   <Card key={i} onClick={() => handleSelectResult(r)}>
                     <div className='flex flex-1 items-center'>
                       <div className='flex-shrink-0 px-4.5 py-4'>
-                        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none dark:border-border'>
+                        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
                           {poster ? (
                             <div className='h-16 w-11 flex-shrink-0 overflow-hidden rounded-md bg-muted dark:bg-card border border-border'>
                               <ImageWithFallback

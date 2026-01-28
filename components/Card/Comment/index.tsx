@@ -119,7 +119,7 @@ export default function CommentCard({
 
   return (
     <div
-      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border-border dark:border-border pl-4 sm:pl-6' : ''}`}
+      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border pl-4 sm:pl-6' : ''}`}
     >
       <Card className='p-4'>
         <div className='flex items-start justify-between'>

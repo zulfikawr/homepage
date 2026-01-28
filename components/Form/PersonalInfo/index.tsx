@@ -96,7 +96,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               width={105}
               alt={personalInfo.name}
               preload
-              className='aspect-square object-cover rounded-xl bg-muted shadow-sm dark:border dark:border-border'
+              className='aspect-square object-cover rounded-xl bg-muted shadow-sm dark:border '
               type='square'
               sizes='105px'
             />

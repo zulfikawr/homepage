@@ -47,7 +47,7 @@ const Label = ({
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary:
       'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:animate-pulse',
-    aqua: 'bg-gruv-aqua text-gruv-bg hover:opacity-90',
+    aqua: 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20 hover:bg-gruv-aqua/20',
     green: 'bg-gruv-green text-gruv-bg hover:opacity-90',
     yellow: 'bg-gruv-yellow text-gruv-bg hover:opacity-90',
     blue: 'bg-gruv-blue text-gruv-bg hover:opacity-90',

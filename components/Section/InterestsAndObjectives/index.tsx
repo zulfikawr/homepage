@@ -54,8 +54,10 @@ export const InterestsAndObjectivesLayout = ({
                 </li>
               ))
             : data?.objectives.map((objective, index) => (
-                <li key={index} className='pl-3'>
-                  {objective}
+                <li key={index} className='pl-3 text-gruv-aqua'>
+                  <span className='text-muted-foreground font-light'>
+                    {objective}
+                  </span>
                 </li>
               ))}
         </ul>

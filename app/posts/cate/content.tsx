@@ -51,7 +51,7 @@ export default function CategoriesContent({ initialPosts }: Props) {
         subtitle='Posts organized by category'
       />
 
-      <div className='bg-white p-5 dark:border-border dark:bg-card lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>
+      <div className='bg-white p-5  dark:bg-card lg:rounded-xl lg:border lg:p-20 lg:pt-20 lg:shadow-sm'>
         {categories.length === 0 ? (
           <div className='text-center py-8'>
             <p className='text-muted-foreground'>No categories found.</p>
@@ -65,7 +65,7 @@ export default function CategoriesContent({ initialPosts }: Props) {
                     href={`/posts/cate/${category.name}`}
                     className='transform transition-transform hover:scale-105 block h-full'
                   >
-                    <div className='flex flex-col h-full rounded-lg border p-6 shadow-sm hover:shadow-md dark:border-border bg-card'>
+                    <div className='flex flex-col h-full rounded-lg border p-6 shadow-sm hover:shadow-md  bg-card'>
                       <Label
                         type='primary'
                         icon='folder'

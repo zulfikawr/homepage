@@ -22,7 +22,7 @@ export default function PlaylistCard({ playlist }: PlaylistCardProps) {
             height={80}
             src={playlist.images[0]?.url}
             alt={playlist.name}
-            className='rounded-md border border-border dark:border-border shadow-sm shadow-muted dark:shadow-none'
+            className='rounded-md border border shadow-sm shadow-muted dark:shadow-none'
             loading='lazy'
             type='square'
             sizes='80px'
@@ -42,7 +42,7 @@ export default function PlaylistCard({ playlist }: PlaylistCardProps) {
           </p>
         </div>
       </div>
-      <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 text-xs font-light text-muted-foreground dark:border-border dark:text-muted-foreground'>
+      <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 text-xs font-light text-muted-foreground  dark:text-muted-foreground'>
         <div className='flex items-center space-x-1'>
           <Icon name='spotifyLogo' className='size-4.5' />
           <span>Spotify</span>

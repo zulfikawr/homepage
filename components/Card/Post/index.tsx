@@ -142,7 +142,7 @@ export default function PostCard({
                   <div className='flex flex-wrap gap-3'>
                     {post.categories?.map((category) =>
                       isInForm ? (
-                        <Label key={category} type='secondary' icon='tag'>
+                        <Label key={category} type='aqua' icon='tag'>
                           {category}
                         </Label>
                       ) : (
@@ -152,7 +152,7 @@ export default function PostCard({
                           prefetch={true}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Label type='secondary' icon='tag'>
+                          <Label type='aqua' icon='tag'>
                             {category}
                           </Label>
                         </Link>
@@ -162,7 +162,7 @@ export default function PostCard({
                 ))}
             </div>
 
-            <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-foreground'>
+            <h1 className='text-xl lg:text-2xl font-medium tracking-wider text-foreground group-hover:text-primary transition-color duration-200'>
               {post.title}
             </h1>
 
@@ -176,7 +176,7 @@ export default function PostCard({
         </div>
         {renderAudio()}
 
-        <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 dark:border-border'>
+        <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 '>
           <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
             <span className='flex items-center gap-x-2'>
               <TimeAgo date={post.dateString} prefix='Posted' />
@@ -184,7 +184,7 @@ export default function PostCard({
             <span className='flex items-center'>
               <Button
                 type='ghostLink'
-                className='h-auto py-0 px-0 gap-1.5'
+                className='h-auto py-0 px-0 gap-1.5 text-xs lg:text-sm'
                 onClick={handleShare}
               >
                 <Icon name='share' size={14} />

@@ -18,7 +18,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                     alt={employment.organization}
                     width={30}
                     height={30}
-                    className='rounded-full border bg-white dark:border-border'
+                    className='rounded-full border bg-white '
                     type='square'
                     sizes='30px'
                   />
@@ -41,7 +41,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border w-1/3'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border w-1/3'>
                     Organization
                   </TableCell>
                   <TableCell>
@@ -52,7 +52,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                           alt={employment.organization}
                           width={24}
                           height={24}
-                          className='rounded-full border bg-white dark:border-border'
+                          className='rounded-full border bg-white '
                           type='square'
                           sizes='24px'
                         />
@@ -62,31 +62,31 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Position
                   </TableCell>
                   <TableCell>{employment.jobTitle}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Type
                   </TableCell>
                   <TableCell>{employment.jobType}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Location
                   </TableCell>
                   <TableCell>{employment.organizationLocation}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Duration
                   </TableCell>
                   <TableCell>{employment.dateString}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border-border dark:border-border'>
+                  <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Industry
                   </TableCell>
                   <TableCell>{employment.organizationIndustry}</TableCell>

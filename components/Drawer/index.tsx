@@ -206,7 +206,7 @@ const Drawer = () => {
           ${
             effectEnabled
               ? 'bg-background/80 dark:bg-background/70 border-primary/10 dark:border-primary/5 backdrop-blur-xl shadow-2xl'
-              : 'bg-background border-border dark:border-border'
+              : 'bg-background border'
           }`}
           style={{
             borderRadius: `${radius}px ${radius}px 0 0`,
