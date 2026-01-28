@@ -26,8 +26,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const mobileTitleRef = useRef<HTMLDivElement>(null);
 
-  const { nonHomePage } = useRouteInfo();
-  const { isPagesPage } = useRouteInfo();
+  const { nonHomePage, isHomePage, isPagesPage } = useRouteInfo();
 
   const scrollHandler = (position: number) => {
     if (!headerRef?.current) return;
@@ -91,10 +90,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               </Link>
             </CyclingHideTransition>
 
-            {nonHomePage && (
+            {(nonHomePage || isHomePage) && (
               <div className='absolute left-0 top-0 h-full flex items-center'>
                 <CyclingShowTransition
-                  disabled={!nonHomePage}
+                  disabled={!(nonHomePage || isHomePage)}
                   componentRef={mobileTitleRef}
                 >
                   <div ref={mobileTitleRef} className='pointer-events-auto'>
@@ -184,17 +183,23 @@ const HeaderTitle = () => {
 
 const MobileHeaderTitle = () => {
   const { headerTitle } = useTitle();
+  const { isHomePage } = useRouteInfo();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !headerTitle) return null;
+  if (!mounted) return null;
+
+  // Show "Home" on home page, otherwise show headerTitle
+  const displayTitle = isHomePage ? 'Home' : headerTitle;
+
+  if (!displayTitle) return null;
 
   return (
     <div className='text-base font-medium text-muted-foreground overflow-hidden text-ellipsis whitespace-nowrap'>
-      {headerTitle}
+      {displayTitle}
     </div>
   );
 };
