@@ -297,7 +297,6 @@ const WeatherVisuals = ({
             opacity={isDaytime ? 0.6 : 0.3}
             scale={0.9}
             isDaytime={isDaytime}
-            blur
             zIndex={10}
           />
           <Cloud
@@ -307,7 +306,6 @@ const WeatherVisuals = ({
             opacity={isDaytime ? 0.5 : 0.2}
             scale={0.7}
             isDaytime={isDaytime}
-            blur
             zIndex={10}
           />
         </>

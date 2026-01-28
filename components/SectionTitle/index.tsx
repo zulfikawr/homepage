@@ -76,14 +76,8 @@ const SectionTitle = ({
         )}
       </div>
       {link && !loading && (
-        <Link
-          href={link.href}
-          target='_blank'
-        >
-          <Button
-            type='ghostLink'
-            className='h-auto py-0 px-0 gap-1.5 text-sm'
-          >
+        <Link href={link.href} target='_blank'>
+          <Button type='ghostLink' className='h-auto py-0 px-0 gap-1.5 text-sm'>
             {link.label}
             <Icon name='arrowSquareOut' size={14} />
           </Button>

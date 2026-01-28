@@ -60,7 +60,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return twMerge(
         'py-2 px-5 h-9',
         type !== 'primary' && 'w-max',
-        !['ghost', 'link', 'ghostLink'].includes(type) && 'shadow-sm hover:shadow-inner',
+        !['ghost', 'link', 'ghostLink'].includes(type) &&
+          'shadow-sm hover:shadow-inner',
         variants[type],
       );
     };

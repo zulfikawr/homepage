@@ -47,10 +47,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             prefetch={true}
             className='relative z-10 select-none hidden lg:block'
           >
-            <Button
-              type='ghostLink'
-              className='h-auto py-0 px-0 gap-2'
-            >
+            <Button type='ghostLink' className='h-auto py-0 px-0 gap-2'>
               <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                 <ImageWithFallback
                   className='rounded-full'
@@ -63,9 +60,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   sizes='24px'
                 />
               </div>
-              <div className='text-base font-medium'>
-                Zulfikar
-              </div>
+              <div className='text-base font-medium'>Zulfikar</div>
             </Button>
           </Link>
 
