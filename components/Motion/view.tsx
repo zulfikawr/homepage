@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useScrollDirection } from '@/hooks';
 
 interface Props {
   children: React.ReactNode;
@@ -21,21 +22,17 @@ const ViewTransition = ({
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const scrollDirection = useScrollDirection();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Clear any pending timeout
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-        // Use debounce to avoid rapid state updates
-        timeoutRef.current = setTimeout(() => {
-          setIsVisible(entry.isIntersecting);
-        }, 0);
+        // Fire immediately without debounce for snappier response
+        setIsVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.01,
+        threshold: 0,
+        rootMargin: '50px',
       },
     );
 
@@ -46,9 +43,7 @@ const ViewTransition = ({
       // Fallback: if element is already in viewport
       const rect = currentRef.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        requestAnimationFrame(() => {
-          setIsVisible(true);
-        });
+        setIsVisible(true);
       }
     }
 
@@ -56,13 +51,23 @@ const ViewTransition = ({
       if (currentRef) {
         observer.unobserve(currentRef);
       }
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
   const getTransform = () => {
     if (isVisible) return 'translate(0, 0)';
-    switch (direction) {
+
+    // Use opposite direction when scrolling up for smoother appearance
+    const effectiveDirection =
+      direction !== 'none' && scrollDirection === 'up'
+        ? scrollDirection === 'up' && direction === 'up'
+          ? 'down'
+          : direction === 'down'
+            ? 'up'
+            : direction
+        : direction;
+
+    switch (effectiveDirection) {
       case 'up':
         return `translateY(${distance}px)`;
       case 'down':
@@ -85,8 +90,10 @@ const ViewTransition = ({
       style={{
         opacity: isVisible ? 1 : 0,
         transform: getTransform(),
-        transition: `opacity ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
+        transition: `opacity ${duration}s cubic-bezier(0.32, 0.72, 0.36, 1) ${delay}s, transform ${duration}s cubic-bezier(0.32, 0.72, 0.36, 1) ${delay}s`,
         willChange: isVisible ? 'auto' : 'opacity, transform',
+        backfaceVisibility: 'hidden',
+        WebkitFontSmoothing: 'antialiased',
       }}
     >
       {children}
