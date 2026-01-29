@@ -1,5 +1,6 @@
 'use client';
 
+import AIKnowledgeAssistantBanner from '@/components/Banners/AIKnowledgeAssistant';
 import GitHubContributionsBanner from '@/components/Banners/GitHubContributions';
 import PagesAndLinksBanner from '@/components/Banners/PagesAndLinks';
 import SpotifyBanner from '@/components/Banners/Spotify';
@@ -34,6 +35,9 @@ const Banners = () => {
             </ViewTransition>
           </StaggerContainer>
         </div>
+        <ViewTransition key='ai-assistant'>
+          <AIKnowledgeAssistantBanner />
+        </ViewTransition>
       </StaggerContainer>
     </div>
   );

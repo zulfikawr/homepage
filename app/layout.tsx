@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import Script from 'next/script';
 
 import Drawer from '@/components/Drawer';
 import Footer from '@/components/Footer';
@@ -78,6 +79,7 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative transition-all duration-300`}
       >
         <Providers>
+          <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
           {/* Background layer */}
           <DynamicBackground />
 

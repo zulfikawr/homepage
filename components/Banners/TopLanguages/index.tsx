@@ -108,10 +108,10 @@ const TopLanguagesLayout = ({
             {isLoading ? (
               <Skeleton width={64} height={64} className='rounded-lg' />
             ) : topLanguage ? (
-              <div className='w-16 h-16 rounded-lg bg-gruv-bg-light dark:bg-gruv-bg-soft flex items-center justify-center'>
+              <div className='w-16 h-16 rounded-lg bg-transparent flex items-center justify-center'>
                 <Icon
                   name={getLanguageIcon(topLanguage.name)}
-                  className='size-10'
+                  className='size-12'
                 />
               </div>
             ) : null}
@@ -175,7 +175,7 @@ const TopLanguagesLayout = ({
                     </span>
                   </div>
                 </div>
-                <div className='w-full h-2 bg-gruv-bg-light dark:bg-gruv-bg-soft rounded-full overflow-hidden'>
+                <div className='w-full h-2 bg-muted rounded-full overflow-hidden'>
                   <div
                     className='h-full transition-all duration-500 ease-out rounded-full'
                     style={{
