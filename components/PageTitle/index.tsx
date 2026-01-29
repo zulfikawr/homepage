@@ -44,7 +44,7 @@ const PageTitle = ({
   return (
     <>
       <section className='mt-18 lg:mt-20'>
-        <div className='mb-6 flex flex-col gap-3'>
+        <div className='mb-6 flex flex-col gap-3 select-none'>
           <div className='flex items-center gap-2.5 flex-wrap'>
             {emoji && !isLoading && (
               <span className='text-2xl lg:text-3xl flex items-center justify-center'>

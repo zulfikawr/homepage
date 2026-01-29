@@ -145,7 +145,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               </div>
             ) : (
               <div className='hidden lg:flex'>
-                <Link href='/home' prefetch={true}>
+                <Link href='/' prefetch={true}>
                   <Button
                     variant='ghostLink'
                     icon='houseLine'

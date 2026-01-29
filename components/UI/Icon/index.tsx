@@ -151,7 +151,8 @@ export const iconifyMap: Record<string, string> = {
   css: 'vscode-icons:file-type-css',
   react: 'vscode-icons:file-type-reactjs',
   nextjs: 'vscode-icons:file-type-next',
-  vue: 'vscode-icons:file-type-vue',
+  vue: 'logos:vue',
+  vuejs: 'logos:vue',
   angular: 'vscode-icons:file-type-angular',
   svelte: 'vscode-icons:file-type-svelte',
   tailwindcss: 'vscode-icons:file-type-tailwind',
@@ -206,7 +207,8 @@ export const iconifyMap: Record<string, string> = {
   flutter: 'vscode-icons:file-type-flutter',
   neon: 'logos:neon-icon',
   resend: 'logos:resend-icon',
-  d3js: 'vscode-icons:file-type-d3',
+  d3js: 'logos:d3',
+  d3: 'logos:d3',
 };
 
 export type IconName = keyof typeof iconMap | keyof typeof iconifyMap;

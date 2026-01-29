@@ -42,21 +42,21 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const getBadgeClasses = () => {
       switch (variant) {
         case 'primary':
-          return 'bg-primary text-primary-foreground';
+          return 'bg-primary text-primary-foreground hover:brightness-110 hover:shadow-md';
         case 'aqua':
-          return 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20';
+          return 'bg-gruv-aqua/15 text-gruv-aqua border-gruv-aqua/30 hover:bg-gruv-aqua/25 hover:border-gruv-aqua/60';
         case 'green':
-          return 'bg-gruv-green/10 text-gruv-green border-gruv-green/20';
+          return 'bg-gruv-green/15 text-gruv-green border-gruv-green/30 hover:bg-gruv-green/25 hover:border-gruv-green/60';
         case 'yellow':
-          return 'bg-gruv-yellow/10 text-gruv-yellow border-gruv-yellow/20';
+          return 'bg-gruv-yellow/15 text-gruv-yellow border-gruv-yellow/30 hover:bg-gruv-yellow/25 hover:border-gruv-yellow/60';
         case 'blue':
-          return 'bg-gruv-blue/10 text-gruv-blue border-gruv-blue/20';
+          return 'bg-gruv-blue/15 text-gruv-blue border-gruv-blue/30 hover:bg-gruv-blue/25 hover:border-gruv-blue/60';
         case 'red':
-          return 'bg-gruv-red/10 text-gruv-red border-gruv-red/20';
+          return 'bg-gruv-red/15 text-gruv-red border-gruv-red/30 hover:bg-gruv-red/25 hover:border-gruv-red/60';
         case 'outline':
-          return 'bg-transparent text-foreground border';
+          return 'bg-transparent text-foreground border-border hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-sm';
         default:
-          return 'bg-muted text-muted-foreground border';
+          return 'bg-muted text-muted-foreground border-border hover:bg-muted/80 hover:border-muted-foreground/30';
       }
     };
 
@@ -75,7 +75,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={twMerge(
-          'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm',
+          'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm select-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]',
           hasValidIcon && 'gap-1.5',
           getBadgeClasses(),
           className,
