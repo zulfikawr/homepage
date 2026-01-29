@@ -1,11 +1,11 @@
 'use client';
 
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import ProjectCard from '@/components/Card/Project';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import ProjectCard from '@/components/UI/Card/variants/Project';
 import { Separator } from '@/components/UI/Separator';
 import { useCollection } from '@/hooks';
 import { mapRecordToProject } from '@/lib/mappers';
@@ -56,7 +56,7 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
           {loading ? (
             Array(8)
               .fill(0)
-              .map((_, index) => <CardLoading key={index} type='project' />)
+              .map((_, index) => <CardLoading key={index} variant='project' />)
           ) : wipProjects.length > 0 ? (
             <StaggerContainer>
               {wipProjects.map((project) => (
@@ -84,7 +84,7 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
           {loading ? (
             Array(8)
               .fill(0)
-              .map((_, index) => <CardLoading key={index} type='project' />)
+              .map((_, index) => <CardLoading key={index} variant='project' />)
           ) : doneProjects.length > 0 ? (
             <StaggerContainer>
               {doneProjects.map((project) => (
@@ -112,7 +112,7 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
           {loading ? (
             Array(8)
               .fill(0)
-              .map((_, index) => <CardLoading key={index} type='project' />)
+              .map((_, index) => <CardLoading key={index} variant='project' />)
           ) : upcomingProjects.length > 0 ? (
             <StaggerContainer>
               {upcomingProjects.map((project) => (

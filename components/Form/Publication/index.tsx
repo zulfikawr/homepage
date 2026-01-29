@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import PublicationCard from '@/components/Card/Publication';
-import { modal } from '@/components/Modal';
-import { toast } from '@/components/Toast';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, Checkbox, FormLabel, Input } from '@/components/UI';
+import PublicationCard from '@/components/UI/Card/variants/Publication';
 import { Separator } from '@/components/UI/Separator';
 import {
   addPublication,
@@ -197,11 +197,11 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
           <PublicationCard publication={currentPreviewPublication} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
           <Button
-            type='destructive'
+            variant='destructive'
             onClick={() => {
               handleDelete();
               modal.close();
@@ -249,7 +249,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                     required
                   />
                   <Button
-                    type='destructive'
+                    variant='destructive'
                     icon='trashSimple'
                     onClick={() => handleRemoveAuthor(index)}
                   />
@@ -262,7 +262,11 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                   onChange={(e) => setNewAuthor(e.target.value)}
                   placeholder='Add an author'
                 />
-                <Button type='primary' icon='plus' onClick={handleAddAuthor} />
+                <Button
+                  variant='primary'
+                  icon='plus'
+                  onClick={handleAddAuthor}
+                />
               </div>
             </div>
           </div>
@@ -299,7 +303,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                     onChange={(e) => handleKeywordChange(index, e.target.value)}
                   />
                   <Button
-                    type='destructive'
+                    variant='destructive'
                     icon='trashSimple'
                     onClick={() => handleRemoveKeyword(index)}
                   />
@@ -312,7 +316,11 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                   onChange={(e) => setNewKeyword(e.target.value)}
                   placeholder='Add a keyword'
                 />
-                <Button type='primary' icon='plus' onClick={handleAddKeyword} />
+                <Button
+                  variant='primary'
+                  icon='plus'
+                  onClick={handleAddKeyword}
+                />
               </div>
             </div>
           </div>
@@ -344,7 +352,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
       {publicationToEdit ? (
         <div className='flex space-x-4'>
           <Button
-            type='destructive'
+            variant='destructive'
             icon='trash'
             onClick={confirmDelete}
             className='w-full'
@@ -352,7 +360,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
             Delete
           </Button>
           <Button
-            type='primary'
+            variant='primary'
             icon='floppyDisk'
             onClick={handleSubmit}
             className='w-full'
@@ -362,7 +370,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
         </div>
       ) : (
         <Button
-          type='primary'
+          variant='primary'
           icon='plus'
           onClick={handleSubmit}
           className='w-full'

@@ -2,12 +2,12 @@
 
 import { useMemo, useState } from 'react';
 
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import PostCard from '@/components/Card/Post';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { Icon, Toggle } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import PostCard from '@/components/UI/Card/variants/Post';
 import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
@@ -90,7 +90,7 @@ export default function PostsContent({ initialData }: PostsContentProps) {
           {Array(8)
             .fill(0)
             .map((_, index) => (
-              <CardLoading key={index} type='post' />
+              <CardLoading key={index} variant='post' />
             ))}
         </div>
       ) : filteredPosts.length === 0 ? (

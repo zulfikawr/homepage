@@ -2,12 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import PublicationCard from '@/components/Card/Publication';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { Button } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import PublicationCard from '@/components/UI/Card/variants/Publication';
 import { useCollection } from '@/hooks';
 import { mapRecordToPublication } from '@/lib/mappers';
 import { Publication } from '@/types/publication';
@@ -39,13 +39,15 @@ export default function PublicationsDatabase() {
         {loading ? (
           Array(8)
             .fill(0)
-            .map((_, index) => <CardLoading key={index} type='publication' />)
+            .map((_, index) => (
+              <CardLoading key={index} variant='publication' />
+            ))
         ) : (
           <>
             <ViewTransition>
               <div className='w-full rounded-md border bg-white text-center shadow-sm  dark:bg-card p-5'>
                 <Button
-                  type='primary'
+                  variant='primary'
                   icon='plus'
                   onClick={handleAddPublication}
                   className='mx-auto'

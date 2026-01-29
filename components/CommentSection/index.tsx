@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { RecordModel } from 'pocketbase';
 
-import { Card } from '@/components/Card';
-import CommentCard from '@/components/Card/Comment';
 import { Editor } from '@/components/Editor';
-import { toast } from '@/components/Toast';
+import { Card } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, Icon, Skeleton } from '@/components/UI';
+import CommentCard from '@/components/UI/Card/variants/Comment';
 import { useAuth } from '@/contexts/authContext';
 import {
   addComment,
@@ -204,7 +204,11 @@ export default function CommentSection({
                   {githubUsername}
                 </span>
               </div>
-              <Button onClick={handleLogout} className='text-xs' type='outline'>
+              <Button
+                onClick={handleLogout}
+                className='text-xs'
+                variant='outline'
+              >
                 Logout
               </Button>
             </div>
@@ -213,7 +217,7 @@ export default function CommentSection({
               <Button
                 onClick={handleSubmitComment}
                 disabled={isSubmitting || !content.trim()}
-                type='primary'
+                variant='primary'
               >
                 {isSubmitting ? 'Posting...' : 'Post Comment'}
               </Button>

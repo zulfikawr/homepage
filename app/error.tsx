@@ -20,7 +20,7 @@ export default function Error({
         </p>
         <div className='mt-4 flex justify-center gap-2'>
           <Button
-            type='primary'
+            variant='primary'
             onClick={() => {
               reset();
             }}
@@ -28,7 +28,7 @@ export default function Error({
             Try Again
           </Button>
           <Button
-            type='default'
+            variant='default'
             onClick={() => {
               window.location.href = '/';
             }}

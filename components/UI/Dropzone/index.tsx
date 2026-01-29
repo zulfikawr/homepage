@@ -135,7 +135,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             />
             <div className='absolute inset-0 bg-card/60 opacity-0 group-hover/dropzone:opacity-100 transition-opacity flex items-center justify-center gap-3'>
               <Button
-                type='destructive'
+                variant='destructive'
                 icon='trash'
                 onClick={handleRemove}
                 className='h-10 px-4'

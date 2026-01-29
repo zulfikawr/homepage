@@ -42,7 +42,7 @@ const ProjectViewer = ({ project }: { project: Project }) => {
           <div className='flex gap-4'>
             {project.link && (
               <Button
-                type='primary'
+                variant='primary'
                 icon='arrowSquareOut'
                 onClick={() => window.open(project.link, '_blank')}
               >

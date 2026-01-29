@@ -2,11 +2,11 @@
 
 import { useEffect } from 'react';
 
-import PostCard from '@/components/Card/Post';
 import CommentSection from '@/components/CommentSection';
 import { ViewTransition } from '@/components/Motion';
 import PostContent from '@/components/PostContent';
 import { Separator } from '@/components/UI';
+import PostCard from '@/components/UI/Card/variants/Post';
 import { useTitle } from '@/contexts/titleContext';
 import { Post } from '@/types/post';
 

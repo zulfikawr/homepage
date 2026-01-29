@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { Card } from '@/components/Card';
-import CardEmpty from '@/components/Card/Empty';
+import { Card } from '@/components/UI';
 import { Button, Icon, Separator, Skeleton, Tooltip } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 
 interface Language {

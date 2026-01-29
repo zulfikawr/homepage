@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
 
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import { Button, Icon } from '@/components/UI';
 import { uploadFile } from '@/database/files';
 
@@ -144,7 +144,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       )}
 
       <Button
-        type='default'
+        variant='default'
         onClick={handleButtonClick}
         disabled={isUploading}
         icon={

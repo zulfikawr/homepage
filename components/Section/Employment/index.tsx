@@ -2,11 +2,11 @@
 
 import { useRef } from 'react';
 
-import { EmploymentCard } from '@/components/Card/Employment';
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
+import { EmploymentCard } from '@/components/UI/Card/variants/Employment';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import { useCollection } from '@/hooks';
 import { mapRecordToEmployment } from '@/lib/mappers';
 import { Employment } from '@/types/employment';
@@ -55,7 +55,7 @@ const EmploymentSection = () => {
             {Array(8)
               .fill(0)
               .map((_, index) => (
-                <CardLoading key={index} type='employment' />
+                <CardLoading key={index} variant='employment' />
               ))}
           </div>
         ) : sortedEmployments.length === 0 ? (

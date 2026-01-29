@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { Card } from '@/components/Card';
-import CardEmpty from '@/components/Card/Empty';
+import { Card } from '@/components/UI';
 import {
   Button,
   HeatmapLegend,
@@ -11,6 +10,7 @@ import {
   Skeleton,
   Tooltip,
 } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { getGitHubContributions } from '@/lib/github';

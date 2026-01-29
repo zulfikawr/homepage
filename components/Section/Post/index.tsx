@@ -1,10 +1,10 @@
 'use client';
 
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import PostCard from '@/components/Card/Post';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import PostCard from '@/components/UI/Card/variants/Post';
 import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
@@ -37,7 +37,7 @@ const PostSection = () => {
           {Array(8)
             .fill(0)
             .map((_, index) => (
-              <CardLoading key={index} type='post' />
+              <CardLoading key={index} variant='post' />
             ))}
         </div>
       ) : posts.length === 0 ? (

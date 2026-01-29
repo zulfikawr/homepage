@@ -10,7 +10,6 @@ import React, {
 } from 'react';
 
 import { Portal } from '@/components/UI';
-import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useBodyScroll } from '@/hooks';
 
@@ -48,7 +47,6 @@ const Dropdown = ({
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
   const isIntentOpenRef = useRef(false);
 
-  const { effectEnabled } = useEffectToggle();
   const { radius } = useRadius();
 
   const calculatePosition = useCallback(() => {
@@ -145,9 +143,7 @@ const Dropdown = ({
     }
   };
 
-  const effectStyles = effectEnabled
-    ? 'bg-popover/50 dark:bg-card/30 border border-primary/10 dark:border-primary/5 backdrop-blur-md'
-    : 'bg-popover border border-border backdrop-blur-none';
+  const effectStyles = 'bg-popover border border-border backdrop-blur-none';
 
   return (
     <DropdownContext.Provider value={{ setIsOpen: handleClose }}>

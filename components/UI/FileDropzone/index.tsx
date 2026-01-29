@@ -125,7 +125,7 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
               </p>
             </div>
             <Button
-              type='destructive'
+              variant='destructive'
               icon='trash'
               onClick={handleRemove}
               className='h-9 px-4'

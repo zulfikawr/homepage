@@ -1,11 +1,11 @@
 'use client';
 
-import BookCard from '@/components/Card/Book';
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
+import BookCard from '@/components/UI/Card/variants/Book';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import { Separator } from '@/components/UI/Separator';
 import { useCollection } from '@/hooks';
 import { mapRecordToBook } from '@/lib/mappers';
@@ -54,7 +54,7 @@ export default function ReadingListContent({
             {loading ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='book' />)
+                .map((_, index) => <CardLoading key={index} variant='book' />)
             ) : booksArray.filter((book) => book.type === 'currentlyReading')
                 .length > 0 ? (
               <StaggerContainer>
@@ -89,7 +89,7 @@ export default function ReadingListContent({
             {loading ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='book' />)
+                .map((_, index) => <CardLoading key={index} variant='book' />)
             ) : booksArray.filter((book) => book.type === 'read').length > 0 ? (
               <StaggerContainer>
                 {booksArray
@@ -123,7 +123,7 @@ export default function ReadingListContent({
             {loading ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='book' />)
+                .map((_, index) => <CardLoading key={index} variant='book' />)
             ) : booksArray.filter((book) => book.type === 'toRead').length >
               0 ? (
               <StaggerContainer>

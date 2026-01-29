@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import PostCard from '@/components/Card/Post';
 import DateSelect from '@/components/DateSelect';
 import { Editor } from '@/components/Editor';
-import { modal } from '@/components/Modal';
-import { toast } from '@/components/Toast';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import {
   Button,
   FileUpload,
@@ -15,6 +14,7 @@ import {
   Input,
   Textarea,
 } from '@/components/UI';
+import PostCard from '@/components/UI/Card/variants/Post';
 import { Separator } from '@/components/UI/Separator';
 import { addPost, deletePost, updatePost } from '@/database/posts';
 import { Post } from '@/types/post';
@@ -208,11 +208,11 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
           undone.
         </p>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
           <Button
-            type='destructive'
+            variant='destructive'
             onClick={() => {
               handleDelete();
               modal.close();
@@ -343,7 +343,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       {postToEdit ? (
         <div className='flex space-x-4'>
           <Button
-            type='destructive'
+            variant='destructive'
             icon='trash'
             onClick={confirmDelete}
             className='w-full'
@@ -351,7 +351,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
             Delete
           </Button>
           <Button
-            type='primary'
+            variant='primary'
             icon='floppyDisk'
             onClick={handleSubmit}
             className='w-full'
@@ -361,7 +361,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
         </div>
       ) : (
         <Button
-          type='primary'
+          variant='primary'
           icon='plus'
           onClick={handleSubmit}
           className='w-full'

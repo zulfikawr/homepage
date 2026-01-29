@@ -8,7 +8,7 @@ import { useRadius } from '@/contexts/radiusContext';
 
 import { Icon, iconifyMap, iconMap } from '../Icon';
 
-type BadgeTypes =
+type BadgeVariant =
   | 'default'
   | 'primary'
   | 'outline'
@@ -19,14 +19,13 @@ type BadgeTypes =
   | 'red';
 
 interface Props {
-  type?: BadgeTypes;
+  variant?: BadgeVariant;
   icon?: IconName | boolean;
   className?: string;
   children?: React.ReactNode;
 }
 
-type NativeAttrs = Omit<React.HTMLAttributes<HTMLSpanElement>, keyof Props>;
-export type BadgeProps = Props & NativeAttrs;
+export type BadgeProps = Props & React.HTMLAttributes<HTMLSpanElement>;
 
 const getIconName = (toolName: string): IconName => {
   return toolName
@@ -36,67 +35,64 @@ const getIconName = (toolName: string): IconName => {
     .replace('#', 'sharp') as IconName;
 };
 
-const Badge = ({
-  type = 'default',
-  icon,
-  className,
-  children,
-  ...rest
-}: BadgeProps) => {
-  const { radius } = useRadius();
+const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+  ({ variant = 'default', icon, className, children, ...rest }, ref) => {
+    const { radius } = useRadius();
 
-  const getBadgeClasses = () => {
-    switch (type) {
-      case 'primary':
-        return 'bg-primary text-primary-foreground';
-      case 'aqua':
-        return 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20';
-      case 'green':
-        return 'bg-gruv-green/10 text-gruv-green border-gruv-green/20';
-      case 'yellow':
-        return 'bg-gruv-yellow/10 text-gruv-yellow border-gruv-yellow/20';
-      case 'blue':
-        return 'bg-gruv-blue/10 text-gruv-blue border-gruv-blue/20';
-      case 'red':
-        return 'bg-gruv-red/10 text-gruv-red border-gruv-red/20';
-      case 'outline':
-        return 'bg-transparent text-foreground border';
-      default:
-        return 'bg-muted text-muted-foreground border';
+    const getBadgeClasses = () => {
+      switch (variant) {
+        case 'primary':
+          return 'bg-primary text-primary-foreground';
+        case 'aqua':
+          return 'bg-gruv-aqua/10 text-gruv-aqua border-gruv-aqua/20';
+        case 'green':
+          return 'bg-gruv-green/10 text-gruv-green border-gruv-green/20';
+        case 'yellow':
+          return 'bg-gruv-yellow/10 text-gruv-yellow border-gruv-yellow/20';
+        case 'blue':
+          return 'bg-gruv-blue/10 text-gruv-blue border-gruv-blue/20';
+        case 'red':
+          return 'bg-gruv-red/10 text-gruv-red border-gruv-red/20';
+        case 'outline':
+          return 'bg-transparent text-foreground border';
+        default:
+          return 'bg-muted text-muted-foreground border';
+      }
+    };
+
+    let iconName: IconName | undefined;
+    if (typeof icon === 'string') {
+      iconName = icon as IconName;
+    } else if (icon === true && typeof children === 'string') {
+      iconName = getIconName(children);
     }
-  };
 
-  let iconName: IconName | undefined;
-  if (typeof icon === 'string') {
-    iconName = icon as IconName;
-  } else if (icon === true && typeof children === 'string') {
-    iconName = getIconName(children);
-  }
+    // Check if the icon actually exists in our mapping
+    const hasValidIcon =
+      iconName && (iconName in iconMap || iconName in iconifyMap);
 
-  // Check if the icon actually exists in our mapping
-  const hasValidIcon =
-    iconName && (iconName in iconMap || iconName in iconifyMap);
-
-  return (
-    <span
-      className={twMerge(
-        'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm',
-        hasValidIcon && 'gap-1.5',
-        getBadgeClasses(),
-        className,
-      )}
-      style={{ borderRadius: `${radius}px` }}
-      {...rest}
-    >
-      {hasValidIcon && (
-        <span className='size-[12px] flex-shrink-0 flex items-center justify-center'>
-          <Icon name={iconName!} size={12} />
-        </span>
-      )}
-      {children}
-    </span>
-  );
-};
+    return (
+      <span
+        ref={ref}
+        className={twMerge(
+          'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm',
+          hasValidIcon && 'gap-1.5',
+          getBadgeClasses(),
+          className,
+        )}
+        style={{ borderRadius: `${radius}px` }}
+        {...rest}
+      >
+        {hasValidIcon && (
+          <span className='size-[12px] flex-shrink-0 flex items-center justify-center'>
+            <Icon name={iconName!} size={12} />
+          </span>
+        )}
+        {children}
+      </span>
+    );
+  },
+);
 
 Badge.displayName = 'Badge';
 

@@ -1,4 +1,4 @@
-import { drawer } from '@/components/Drawer';
+import { drawer } from '@/components/UI';
 import { Input } from '@/components/UI';
 import { useHotkeys } from '@/hooks';
 

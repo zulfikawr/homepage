@@ -18,7 +18,7 @@ export default function NotFound() {
         </p>
         <div className='mt-4 inline-block justify-center'>
           <Button
-            type='primary'
+            variant='primary'
             onClick={() => {
               router.push('/');
             }}

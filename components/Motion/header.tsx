@@ -1,7 +1,4 @@
 import React from 'react';
-import { useTheme } from 'next-themes';
-
-import { useEffectToggle } from '@/contexts/effectContext';
 
 import ScrollWrapper from './scroll';
 
@@ -11,9 +8,6 @@ interface Props {
 }
 
 const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
-  const { resolvedTheme } = useTheme();
-  const { effectEnabled } = useEffectToggle();
-
   const handler = (position: number) => {
     if (!ref?.current) return;
 
@@ -25,23 +19,10 @@ const BoxShadowTransition = ({ componentRef: ref, children }: Props) => {
       return;
     }
 
-    const ratio = Math.min(position / 40, 1);
-
-    if (effectEnabled) {
-      ref.current.style.backdropFilter = 'blur(12px)';
-      ref.current.style.borderBottom = `1px solid var(--border)`;
-      ref.current.style.background =
-        resolvedTheme === 'dark'
-          ? `rgba(50, 48, 47, ${0.8 * ratio})` // bg-card (dark) with opacity
-          : `rgba(249, 245, 215, ${0.8 * ratio})`; // bg-card (light) with opacity
-
-      ref.current.style.boxShadow = 'var(--shadow-header)';
-    } else {
-      ref.current.style.backdropFilter = '';
-      ref.current.style.borderBottom = `1px solid var(--border)`;
-      ref.current.style.boxShadow = '';
-      ref.current.style.background = 'var(--card)';
-    }
+    ref.current.style.backdropFilter = '';
+    ref.current.style.borderBottom = `1px solid var(--border)`;
+    ref.current.style.boxShadow = '';
+    ref.current.style.background = 'var(--card)';
   };
 
   return (

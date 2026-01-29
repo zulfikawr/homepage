@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import Script from 'next/script';
 
-import Drawer from '@/components/Drawer';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import Modal from '@/components/Modal';
-import Toast from '@/components/Toast';
+import { Drawer } from '@/components/UI';
+import { Modal } from '@/components/UI';
+import { Toast } from '@/components/UI';
 import DynamicBackground from '@/components/Visual/Background';
 
 import Providers from './providers';

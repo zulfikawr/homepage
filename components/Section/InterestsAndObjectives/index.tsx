@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 
-import CardEmpty from '@/components/Card/Empty';
 import SectionTitle from '@/components/SectionTitle';
 import { Skeleton } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { Separator } from '@/components/UI/Separator';
 import { useCollection } from '@/hooks';
 import { mapRecordToInterests } from '@/lib/mappers';

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { updateInterestsAndObjectives } from '@/database/interestsAndObjectives';
@@ -114,7 +114,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                     }
                   />
                   <Button
-                    type='destructive'
+                    variant='destructive'
                     icon='trashSimple'
                     onClick={() => handleRemoveObjective(index)}
                   />
@@ -128,7 +128,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                   placeholder='Add an objective'
                 />
                 <Button
-                  type='primary'
+                  variant='primary'
                   icon='plus'
                   onClick={handleAddObjective}
                 />
@@ -152,7 +152,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
       <Separator margin='5' />
 
       <Button
-        type='primary'
+        variant='primary'
         icon='floppyDisk'
         onClick={handleSubmit}
         className='w-full'

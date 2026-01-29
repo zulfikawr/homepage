@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { Card } from '@/components/Card';
+import { Card } from '@/components/UI';
 import { Button, Icon, Separator, Tooltip } from '@/components/UI';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
@@ -94,9 +94,9 @@ const PagesAndLinksBanner = () => {
               target={link.target}
               rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
             >
-              <Button className='group/btn h-7 px-3 dark:bg-muted tracking-normal gap-2'>
+              <Button className='group/btn px-3 dark:bg-muted tracking-normal gap-2'>
                 <span
-                  className={`size-5 flex-shrink-0 ${link.color} group-hover/btn:text-accent-foreground`}
+                  className={`${link.color} group-hover/btn:text-accent-foreground`}
                 >
                   <Icon name={link.icon} />
                 </span>

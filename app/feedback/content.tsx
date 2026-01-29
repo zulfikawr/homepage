@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 
-import { Card } from '@/components/Card';
 import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { toast } from '@/components/Toast';
+import { Card } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { createFeedback } from '@/database/feedback';
@@ -118,7 +118,7 @@ export default function FeedbackContent() {
 
             <div className='flex justify-end pt-4'>
               <Button
-                type='primary'
+                variant='primary'
                 disabled={isSubmitting || !feedback.trim()}
                 onClick={handleSubmit}
               >

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
-import { Card } from '@/components/Card';
-import CardEmpty from '@/components/Card/Empty';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { Card } from '@/components/UI';
 import {
   Button,
   Icon,
@@ -12,6 +11,7 @@ import {
   TimeAgo,
   Tooltip,
 } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';

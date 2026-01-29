@@ -2,8 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 
-import CardEmpty from '@/components/Card/Empty';
-import { drawer } from '@/components/Drawer';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import Banners from '@/components/Section/Banners';
@@ -13,8 +11,10 @@ import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObje
 import PersonalInfoSection from '@/components/Section/PersonalInfo';
 import PostSection from '@/components/Section/Post';
 import ProjectSection from '@/components/Section/Project';
-import { toast } from '@/components/Toast';
+import { drawer } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, Icon, Skeleton, Switch } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { updateSection } from '@/database/sections';
 import { useCollection } from '@/hooks';
 import { mapRecordToSection } from '@/lib/mappers';
@@ -138,7 +138,7 @@ export default function SectionDatabase() {
       <PageTitle emoji='🧱' title='Sections' subtitle='Drag to reorder' />
 
       <div className='flex justify-end'>
-        <Button type='primary' icon='eye' onClick={openPreview}>
+        <Button variant='primary' icon='eye' onClick={openPreview}>
           Live Preview
         </Button>
       </div>

@@ -3,15 +3,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import BookCard from '@/components/Card/Book';
-import NavigationCard from '@/components/Card/Navigation';
-import PostCard from '@/components/Card/Post';
-import ProjectCard from '@/components/Card/Project';
-import { PublicationCard } from '@/components/Card/Publication';
-import { drawer } from '@/components/Drawer';
 import SectionTitle from '@/components/SectionTitle';
+import { drawer } from '@/components/UI';
 import { Input } from '@/components/UI';
 import { Icon } from '@/components/UI';
+import BookCard from '@/components/UI/Card/variants/Book';
+import NavigationCard from '@/components/UI/Card/variants/Navigation';
+import PostCard from '@/components/UI/Card/variants/Post';
+import ProjectCard from '@/components/UI/Card/variants/Project';
+import { PublicationCard } from '@/components/UI/Card/variants/Publication';
 import { IconName } from '@/components/UI/Icon';
 import { useAuth } from '@/contexts/authContext';
 import { searchDatabase, SearchResult } from '@/database/search';

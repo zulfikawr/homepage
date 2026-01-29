@@ -71,7 +71,7 @@ export default function LoginContent() {
         <div className='max-w-md mx-auto mt-12 flex flex-col space-y-8'>
           <Button
             onClick={handleGithubLogin}
-            type='outline'
+            variant='outline'
             icon='githubLogo'
             className='w-full h-12'
           >
@@ -131,7 +131,7 @@ export default function LoginContent() {
             )}
 
             <Button
-              type='primary'
+              variant='primary'
               nativeType='submit'
               className='w-full h-12 bg-gruv-orange hover:bg-gruv-orange/90 text-gruv-bg-dark font-bold'
               icon='signIn'

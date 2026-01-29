@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 
-import { Card } from '@/components/Card';
+import { Card } from '@/components/UI';
 import { Icon, Skeleton } from '@/components/UI';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';

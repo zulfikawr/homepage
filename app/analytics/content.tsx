@@ -3,11 +3,11 @@
 import { useMemo } from 'react';
 
 import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
-import { Card } from '@/components/Card';
-import CardEmpty from '@/components/Card/Empty';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { Card } from '@/components/UI';
 import { Icon, Skeleton } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { useCollection } from '@/hooks';
 import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { AnalyticsEvent } from '@/types/analytics';

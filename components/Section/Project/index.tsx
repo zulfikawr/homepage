@@ -1,10 +1,10 @@
 'use client';
 
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import { ProjectCard } from '@/components/Card/Project';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import { ProjectCard } from '@/components/UI/Card/variants/Project';
 import { useCollection } from '@/hooks';
 import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
@@ -48,7 +48,7 @@ const ProjectSection = () => {
         {loading ? (
           Array(8)
             .fill(0)
-            .map((_, index) => <CardLoading key={index} type='project' />)
+            .map((_, index) => <CardLoading key={index} variant='project' />)
         ) : sortedProjects.length > 0 ? (
           <div className='flex flex-col gap-y-4'>
             <StaggerContainer>

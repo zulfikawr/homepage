@@ -89,7 +89,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
       <div className='flex items-center gap-2 flex-nowrap'>
         {/* Play/Pause Button */}
         <Button
-          type='outline'
+          variant='outline'
           onClick={togglePlay}
           className='flex-shrink-0 p-0 w-8 h-8'
           aria-label={isPlaying ? 'Pause' : 'Play'}
@@ -99,7 +99,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
 
         {/* Mute Button */}
         <Button
-          type='outline'
+          variant='outline'
           onClick={toggleMute}
           className='flex-shrink-0 p-0 w-8 h-8'
           aria-label={isMuted ? 'Unmute' : 'Mute'}

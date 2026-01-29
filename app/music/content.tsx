@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import SpotifyBanner from '@/components/Banners/Spotify';
-import CardEmpty from '@/components/Card/Empty';
-import { CardLoading } from '@/components/Card/Loading';
-import PlaylistCard from '@/components/Card/Playlist/Spotify';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import { Button, Icon, Tooltip } from '@/components/UI';
 import { Skeleton } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
+import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import PlaylistCard from '@/components/UI/Card/variants/Playlist/Spotify';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
@@ -231,7 +231,7 @@ export default function SpotifyMusicContent({
       <Dropdown
         trigger={
           <Button
-            type='ghost'
+            variant='ghost'
             className='w-fit flex items-center gap-2 text-sm px-0 hover:bg-transparent group/time'
           >
             <span className='group-hover/time:text-primary transition-colors'>
@@ -329,7 +329,7 @@ export default function SpotifyMusicContent({
             {loading.recentTracks ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='track' />)
+                .map((_, index) => <CardLoading key={index} variant='track' />)
             ) : displayData.recentTracks.length > 0 ? (
               <StaggerContainer>
                 {displayData.recentTracks.map((item, index) => (
@@ -395,7 +395,7 @@ export default function SpotifyMusicContent({
             {loading.topTracks ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='track' />)
+                .map((_, index) => <CardLoading key={index} variant='track' />)
             ) : displayData.topTracks.length > 0 ? (
               <StaggerContainer>
                 {displayData.topTracks.map((track, index) => (
@@ -511,7 +511,9 @@ export default function SpotifyMusicContent({
             {loading.playlists ? (
               Array(8)
                 .fill(0)
-                .map((_, index) => <CardLoading key={index} type='playlist' />)
+                .map((_, index) => (
+                  <CardLoading key={index} variant='playlist' />
+                ))
             ) : displayData.playlists.length > 0 ? (
               <StaggerContainer>
                 {displayData.playlists.map((playlist) => (

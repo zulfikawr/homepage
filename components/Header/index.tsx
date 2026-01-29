@@ -3,7 +3,6 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 
-import { drawer } from '@/components/Drawer';
 import { Kbar } from '@/components/Kbar';
 import { KbarContent } from '@/components/Kbar/components';
 import {
@@ -12,7 +11,8 @@ import {
   HeaderTransition,
 } from '@/components/Motion';
 import ScrollWrapper from '@/components/Motion/scroll';
-import { Button, Icon } from '@/components/UI';
+import { drawer } from '@/components/UI';
+import { Button } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
 import { useRouteInfo } from '@/hooks';
 
@@ -38,13 +38,13 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       <header
         ref={headerRef}
         id='header'
-        className='header fixed top-0 z-50 w-full pl-2 py-2 lg:pl-0 lg:py-6 duration-300'
+        className='header fixed top-0 z-50 w-full pl-2 py-2 lg:pl-0 lg:py-4 duration-300'
       >
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
           {/* Desktop Logo */}
           <div className='hidden lg:flex relative z-10 select-none'>
             <Link href='/' prefetch={true}>
-              <Button type='ghostLink' className='h-auto py-0 px-0 gap-2'>
+              <Button variant='ghostLink' className='py-0 px-0 gap-2'>
                 <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                   <ImageWithFallback
                     className='rounded-full'
@@ -135,10 +135,10 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               <div className='hidden lg:flex'>
                 <Link href='/pages' prefetch={true}>
                   <Button
-                    type='ghostLink'
-                    className='gap-2 text-base px-0 py-0 h-auto'
+                    variant='ghostLink'
+                    icon='folder'
+                    className='px-0 py-0 text-base'
                   >
-                    <Icon name='folder' size={18} />
                     Pages
                   </Button>
                 </Link>
@@ -147,17 +147,17 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               <div className='hidden lg:flex'>
                 <Link href='/home' prefetch={true}>
                   <Button
-                    type='ghostLink'
-                    className='gap-2 text-base px-0 py-0 h-auto'
+                    variant='ghostLink'
+                    icon='houseLine'
+                    className='px-0 py-0 text-base'
                   >
-                    <Icon name='folder' size={18} />
                     Home
                   </Button>
                 </Link>
               </div>
             )}
             <Button
-              type='ghost'
+              variant='ghost'
               icon='list'
               className='flex lg:hidden -mr-4'
               onClick={() => drawer.open(<KbarContent />)}

@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { modal } from '@/components/Modal';
-import { LogoutConfirm } from '@/components/Modal/LogoutConfirm';
-import { toast } from '@/components/Toast';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
+import { LogoutConfirm } from '@/components/UI/Modal/LogoutConfirm';
 import pb from '@/lib/pocketbase';
 
 export function useAuthActions() {

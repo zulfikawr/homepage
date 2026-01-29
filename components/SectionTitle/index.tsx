@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import { Button, Icon, Skeleton } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
-import { useEffectToggle } from '@/contexts/effectContext';
 import { useRadius } from '@/contexts/radiusContext';
 
 interface SectionTitleProps {
@@ -24,7 +23,6 @@ const SectionTitle = ({
   loading = false,
   iconClassName = '',
 }: SectionTitleProps) => {
-  const { effectEnabled } = useEffectToggle();
   const { radius } = useRadius();
 
   const iconColor = useMemo(() => {
@@ -48,11 +46,7 @@ const SectionTitle = ({
       className={`flex items-center relative z-10 mb-5 select-none ${link && !loading ? 'justify-between' : 'justify-start'}`}
     >
       <div
-        className={`inline-flex items-center border shadow-md px-4 py-[4px] font-medium tracking-wider ${
-          effectEnabled
-            ? 'border-primary/10 dark:border-primary/5 bg-card/50 dark:bg-card/30 backdrop-blur-md'
-            : 'border-border bg-card'
-        }`}
+        className='inline-flex items-center bg-card border shadow-md px-4 py-[4px] font-medium tracking-wider'
         style={{ borderRadius: `${radius}px` }}
       >
         {loading ? (
@@ -77,7 +71,10 @@ const SectionTitle = ({
       </div>
       {link && !loading && (
         <Link href={link.href} target='_blank'>
-          <Button type='ghostLink' className='h-auto py-0 px-0 gap-1.5 text-sm'>
+          <Button
+            variant='ghostLink'
+            className='h-auto py-0 px-0 gap-1.5 text-sm'
+          >
             {link.label}
             <Icon name='arrowSquareOut' size={14} />
           </Button>

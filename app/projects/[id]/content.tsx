@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import GitHubCard from '@/components/Card/GitHub';
-import ProjectCard from '@/components/Card/Project';
 import { ViewTransition } from '@/components/Motion';
+import GitHubCard from '@/components/UI/Card/variants/GitHub';
+import ProjectCard from '@/components/UI/Card/variants/Project';
 import { Separator } from '@/components/UI/Separator';
 import { useTitle } from '@/contexts/titleContext';
 import { Project } from '@/types/project';

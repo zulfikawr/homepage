@@ -1,8 +1,8 @@
 'use client';
 
 import AIChat from '@/components/AIChat';
-import { Card } from '@/components/Card';
-import { drawer } from '@/components/Drawer';
+import { Card } from '@/components/UI';
+import { drawer } from '@/components/UI';
 import { Badge, Button, Icon } from '@/components/UI';
 
 const AIKnowledgeAssistantBanner = () => {
@@ -34,7 +34,7 @@ const AIKnowledgeAssistantBanner = () => {
             <h3 className='text-lg md:text-xl font-bold tracking-tight text-foreground'>
               Ask My Site
             </h3>
-            <Badge type='primary'>Beta</Badge>
+            <Badge variant='primary'>Beta</Badge>
           </div>
           <p className='text-xs md:text-sm text-muted-foreground max-w-xl leading-relaxed'>
             Have questions about my projects, articles, or experience? Ask my AI

@@ -4,7 +4,6 @@ import { ThemeProvider } from 'next-themes';
 
 import { AuthProvider } from '@/contexts/authContext';
 import { BackgroundProvider } from '@/contexts/backgroundContext';
-import { EffectProvider } from '@/contexts/effectContext';
 import { LoadingProvider } from '@/contexts/loadingContext';
 import { RadiusProvider } from '@/contexts/radiusContext';
 import { TitleProvider } from '@/contexts/titleContext';
@@ -21,11 +20,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <BackgroundProvider>
           <LoadingProvider>
             <TitleProvider>
-              <EffectProvider>
-                <WeatherProvider>
-                  <RadiusProvider>{children}</RadiusProvider>
-                </WeatherProvider>
-              </EffectProvider>
+              <WeatherProvider>
+                <RadiusProvider>{children}</RadiusProvider>
+              </WeatherProvider>
             </TitleProvider>
           </LoadingProvider>
         </BackgroundProvider>

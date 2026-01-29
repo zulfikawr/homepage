@@ -2,10 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
-import CardEmpty from '@/components/Card/Empty';
 import { ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import {
   Button,
   Table,
@@ -15,6 +14,7 @@ import {
   TableRow,
   TableSkeleton,
 } from '@/components/UI';
+import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { useAuth } from '@/contexts/authContext';
 import { deleteFeedback } from '@/database/feedback';
 import { useCollection } from '@/hooks';
@@ -104,7 +104,7 @@ export default function FeedbackResponsesContent() {
                   <TableCell>{entry.contact}</TableCell>
                   <TableCell>
                     <Button
-                      type='destructive'
+                      variant='destructive'
                       icon='trashSimple'
                       onClick={() => handleDelete(entry.id)}
                     />

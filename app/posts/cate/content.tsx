@@ -67,7 +67,7 @@ export default function CategoriesContent({ initialPosts }: Props) {
                   >
                     <div className='flex flex-col h-full rounded-lg border p-6 shadow-sm hover:shadow-md  bg-card'>
                       <Label
-                        type='primary'
+                        variant='primary'
                         icon='folder'
                         className='self-start'
                       >

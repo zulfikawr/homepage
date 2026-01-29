@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import { Button, FileDropzone, FormLabel } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { updateResume } from '@/database/resume';
@@ -90,13 +90,13 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
             rel='noopener noreferrer'
             className='flex-1'
           >
-            <Button type='default' icon='filePdf' className='w-full'>
+            <Button variant='default' icon='filePdf' className='w-full'>
               Download
             </Button>
           </a>
         )}
         <Button
-          type='primary'
+          variant='primary'
           icon='floppyDisk'
           onClick={handleSubmit}
           className='flex-1'

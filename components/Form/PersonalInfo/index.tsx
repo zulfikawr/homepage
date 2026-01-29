@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import { Button, FileUpload, FormLabel, Input } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { Hover } from '@/components/Visual';
@@ -148,7 +148,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
       <Separator margin='5' />
 
       <Button
-        type='primary'
+        variant='primary'
         icon='floppyDisk'
         onClick={handleSubmit}
         className='w-full'

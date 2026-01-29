@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { Icon, iconifyMap, iconMap, IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
 
-type LabelTypes =
+type LabelVariant =
   | 'primary'
   | 'secondary'
   | 'aqua'
@@ -16,7 +16,7 @@ type LabelTypes =
   | 'red';
 
 interface Props {
-  type: LabelTypes;
+  variant: LabelVariant;
   icon?: IconName;
   children?: React.ReactNode;
 }
@@ -29,7 +29,7 @@ type NativeAttrs = Omit<
 type LabelProps = Props & NativeAttrs;
 
 const Label = ({
-  type = 'primary',
+  variant = 'primary',
   icon,
   children = 'Label',
   ...props
@@ -43,7 +43,7 @@ const Label = ({
   const baseClassName =
     'cursor-pointer justify-center font-medium items-center inline-flex w-auto lg:px-4 lg:py-1 px-2 py-1 text-center text-sm align-middle effect-pressing';
 
-  const typeClassNames = {
+  const variantClassNames = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary:
       'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground focus:animate-pulse',
@@ -57,7 +57,7 @@ const Label = ({
   return (
     <label
       {...props}
-      className={twMerge(baseClassName, typeClassNames[type])}
+      className={twMerge(baseClassName, variantClassNames[variant])}
       style={{ borderRadius: `${radius}px` }}
     >
       {validIconName && (

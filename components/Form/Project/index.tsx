@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { ProjectCard } from '@/components/Card/Project';
 import DateSelect from '@/components/DateSelect';
 import { Editor } from '@/components/Editor';
-import { modal } from '@/components/Modal';
-import { toast } from '@/components/Toast';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import {
   Button,
   Checkbox,
@@ -19,6 +18,7 @@ import {
   Input,
   Textarea,
 } from '@/components/UI';
+import { ProjectCard } from '@/components/UI/Card/variants/Project';
 import { IconName } from '@/components/UI/Icon';
 import { Separator } from '@/components/UI/Separator';
 import { addProject, deleteProject, updateProject } from '@/database/projects';
@@ -346,11 +346,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           <ProjectCard project={currentPreviewProject} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
           <Button
-            type='destructive'
+            variant='destructive'
             onClick={() => {
               handleDelete();
               modal.close();
@@ -399,7 +399,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               }}
             />
             <Button
-              type='primary'
+              variant='primary'
               onClick={fetchGitHubData}
               disabled={githubLoading}
             >
@@ -462,7 +462,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                     onChange={(e) => handleToolChange(index, e.target.value)}
                   />
                   <Button
-                    type='destructive'
+                    variant='destructive'
                     icon='trashSimple'
                     onClick={() => handleRemoveTool(index)}
                   />
@@ -475,7 +475,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   onChange={(e) => setNewTool(e.target.value)}
                   placeholder='Add a keyword'
                 />
-                <Button type='primary' icon='plus' onClick={handleAddTool} />
+                <Button variant='primary' icon='plus' onClick={handleAddTool} />
               </div>
             </div>
           </div>
@@ -589,7 +589,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           {projectToEdit ? (
             <div className='flex space-x-4'>
               <Button
-                type='destructive'
+                variant='destructive'
                 icon='trash'
                 onClick={(e) => {
                   e.preventDefault();
@@ -625,7 +625,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               )}
 
               <Button
-                type='primary'
+                variant='primary'
                 nativeType='submit'
                 icon='floppyDisk'
                 className='w-full'
@@ -659,7 +659,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 </Button>
               )}
               <Button
-                type='primary'
+                variant='primary'
                 nativeType='submit'
                 icon='plus'
                 className='w-full'

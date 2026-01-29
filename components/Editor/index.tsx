@@ -8,7 +8,7 @@ import React, {
 import hljs from 'highlight.js';
 import { twMerge } from 'tailwind-merge';
 
-import { drawer } from '@/components/Drawer';
+import { drawer } from '@/components/UI';
 import { Button, Icon, Toggle, Tooltip } from '@/components/UI';
 import { IconName } from '@/components/UI/Icon';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
@@ -300,7 +300,7 @@ const Editor: React.FC<EditorProps> = ({
         <div className='flex items-center px-2 py-1 border-l border bg-muted dark:bg-card ml-auto shrink-0 sticky right-0 z-10'>
           <Tooltip text='Preview' position='top'>
             <Button
-              type='ghost'
+              variant='ghost'
               icon='eye'
               onClick={(e) => {
                 e.preventDefault();

@@ -2,13 +2,12 @@
 import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
-import { toast } from '@/components/Toast';
+import { toast } from '@/components/UI';
 import { Button, Icon, Slider, Switch, ToggleGroup } from '@/components/UI';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
 import type { IconName } from '@/components/UI/Icon';
 import { useAuth } from '@/contexts/authContext';
 import { useBackground } from '@/contexts/backgroundContext';
-import { useEffectToggle } from '@/contexts/effectContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useWeather, WeatherType } from '@/contexts/weatherContext';
@@ -54,7 +53,6 @@ const dayNightOptions: {
 export default function Settings() {
   const { setTheme, theme } = useTheme();
   const { background, setBackground } = useBackground();
-  const { effectEnabled, toggleEffect } = useEffectToggle();
   const { radius, setRadius } = useRadius();
   const {
     weatherOverride,
@@ -97,7 +95,7 @@ export default function Settings() {
     <Dropdown
       trigger={
         <Button
-          type='default'
+          variant='default'
           aria-label='Open settings'
           className='bg-card w-10 h-10 p-0 transition-colors group/btn'
         >
@@ -114,7 +112,7 @@ export default function Settings() {
         <Dropdown
           trigger={
             <Button
-              type='default'
+              variant='default'
               aria-label='Select background'
               className='w-full flex items-center justify-between gap-2 px-4'
             >
@@ -142,14 +140,6 @@ export default function Settings() {
             </DropdownItem>
           ))}
         </Dropdown>
-
-        <div className={sectionTitleClass}>Transparency</div>
-        <Switch
-          id='effect-switch'
-          checked={effectEnabled}
-          onChange={toggleEffect}
-          label={effectEnabled ? 'Disable Transparency' : 'Enable Transparency'}
-        />
 
         <div className={sectionTitleClass}>Border Radius</div>
         <Slider
@@ -195,7 +185,7 @@ export default function Settings() {
             <Dropdown
               trigger={
                 <Button
-                  type='default'
+                  variant='default'
                   aria-label='Select weather'
                   className='w-full flex items-center justify-between gap-2 px-4'
                 >
@@ -241,7 +231,7 @@ export default function Settings() {
                   onClick={handleResetSpotify}
                   disabled={resettingSpotify}
                   className='w-full'
-                  type='default'
+                  variant='default'
                 >
                   {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
                 </Button>

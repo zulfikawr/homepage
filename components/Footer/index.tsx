@@ -17,7 +17,7 @@ const FooterLink = ({
   children: React.ReactNode;
 }) => (
   <Link href={href} target='_blank' rel='noreferrer'>
-    <Button type='ghostLink' className='h-auto px-0 py-0 text-xs md:text-sm'>
+    <Button variant='ghostLink' className='h-auto px-0 py-0 text-xs md:text-sm'>
       {children}
     </Button>
   </Link>
@@ -65,7 +65,7 @@ export default function Footer() {
       <div className='fixed bottom-4 right-4 lg:bottom-8 lg:right-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
         <OffsetTransition componentRef={backToTopRef}>
           <Button
-            type='default'
+            variant='default'
             ref={backToTopRef}
             aria-label='scroll to top'
             onClick={handleScrollToTop}

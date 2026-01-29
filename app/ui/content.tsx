@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { drawer } from '@/components/Drawer';
-import { modal } from '@/components/Modal';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { toast } from '@/components/Toast';
+import { drawer } from '@/components/UI';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import {
   Badge,
   Button,
@@ -45,10 +45,10 @@ export default function UIComponentsContent() {
         <h2 className='text-xl font-semibold mb-4'>This is a modal</h2>
         <p className='mb-6'>This is a modal description</p>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
-          <Button type='primary' onClick={() => modal.close()}>
+          <Button variant='primary' onClick={() => modal.close()}>
             Confirm
           </Button>
         </div>
@@ -104,15 +104,15 @@ export default function UIComponentsContent() {
               <div className='flex flex-wrap justify-center gap-4 my-6 px-4'>
                 {/* Top Row - 3 Buttons */}
                 <div className='flex gap-4 w-full justify-center'>
-                  <Button type='primary'>Primary</Button>
-                  <Button type='default'>Default</Button>
-                  <Button type='outline'>Outline</Button>
+                  <Button variant='primary'>Primary</Button>
+                  <Button variant='default'>Default</Button>
+                  <Button variant='outline'>Outline</Button>
                 </div>
                 {/* Bottom Row - 3 Buttons */}
                 <div className='flex gap-4 w-full justify-center'>
-                  <Button type='destructive'>Destructive</Button>
-                  <Button type='ghost'>Ghost</Button>
-                  <Button type='link'>Link</Button>
+                  <Button variant='destructive'>Destructive</Button>
+                  <Button variant='ghost'>Ghost</Button>
+                  <Button variant='link'>Link</Button>
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function UIComponentsContent() {
               </div>
               <div className='my-6 flex justify-center gap-x-4'>
                 <Dropdown
-                  trigger={<Button type='ghost'>{currentHeading}</Button>}
+                  trigger={<Button variant='ghost'>{currentHeading}</Button>}
                 >
                   <div className='p-1 flex flex-col w-32'>
                     {HEADING_OPTIONS.map((heading) => (
@@ -183,14 +183,14 @@ export default function UIComponentsContent() {
                   </div>
                 </Dropdown>
 
-                <Dropdown trigger={<Button type='link'>Link</Button>}>
+                <Dropdown trigger={<Button variant='link'>Link</Button>}>
                   <div className='p-2'>
                     <input
                       type='text'
                       placeholder='Enter URL'
                       className='w-fit p-3 text-sm border border-border rounded-md mb-2 focus:outline-none'
                     />
-                    <Button type='primary' className='w-full'>
+                    <Button variant='primary' className='w-full'>
                       Submit
                     </Button>
                   </div>
@@ -209,7 +209,7 @@ export default function UIComponentsContent() {
                   </div>
                 </div>
                 <div className='flex justify-center my-6 px-4.5'>
-                  <Button type='primary' onClick={openModal}>
+                  <Button variant='primary' onClick={openModal}>
                     Open Modal
                   </Button>
                 </div>
@@ -225,7 +225,7 @@ export default function UIComponentsContent() {
                   </div>
                 </div>
                 <div className='flex justify-center my-6 px-4.5'>
-                  <Button type='primary' onClick={openDrawer}>
+                  <Button variant='primary' onClick={openDrawer}>
                     Open Drawer
                   </Button>
                 </div>
@@ -245,12 +245,12 @@ export default function UIComponentsContent() {
                 <div className='my-6 px-4.5'>
                   <div className='flex items-center justify-center space-x-3'>
                     <div className='flex w-auto'>
-                      <Badge type='default' icon='nextjs'>
+                      <Badge variant='default' icon='nextjs'>
                         Next.js
                       </Badge>
                     </div>
                     <div className='flex w-auto'>
-                      <Badge type='outline' icon='firebase'>
+                      <Badge variant='outline' icon='firebase'>
                         Firebase
                       </Badge>
                     </div>
@@ -354,13 +354,13 @@ export default function UIComponentsContent() {
                   Default
                 </Button>
                 <Button
-                  type='primary'
+                  variant='primary'
                   onClick={() => toast.success('This is a success toast!')}
                 >
                   Success
                 </Button>
                 <Button
-                  type='destructive'
+                  variant='destructive'
                   onClick={() => toast.error('This is an error toast!')}
                 >
                   Error

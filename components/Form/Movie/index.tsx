@@ -5,13 +5,13 @@ import { useCallback } from 'react';
 import { useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Card } from '@/components/Card';
-import MovieCard from '@/components/Card/Movie';
 import DateSelect from '@/components/DateSelect';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { modal } from '@/components/Modal';
-import { toast } from '@/components/Toast';
+import { Card } from '@/components/UI';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, FormLabel, Input } from '@/components/UI';
+import MovieCard from '@/components/UI/Card/variants/Movie';
 import { Icon } from '@/components/UI/Icon';
 import { Separator } from '@/components/UI/Separator';
 import { addMovie, deleteMovie, updateMovie } from '@/database/movies';
@@ -221,11 +221,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
           <MovieCard movie={currentPreview} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
           <Button
-            type='destructive'
+            variant='destructive'
             onClick={() => {
               handleDelete();
               modal.close();
@@ -264,7 +264,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                 }
               }}
             />
-            <Button type='primary' onClick={() => performSearch(query)}>
+            <Button variant='primary' onClick={() => performSearch(query)}>
               {searchLoading ? 'Searching...' : 'Search'}
             </Button>
           </div>
@@ -403,7 +403,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
       {movieToEdit ? (
         <div className='flex space-x-4'>
           <Button
-            type='destructive'
+            variant='destructive'
             icon='trash'
             onClick={confirmDelete}
             className='w-full'
@@ -411,7 +411,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
             Delete
           </Button>
           <Button
-            type='primary'
+            variant='primary'
             icon='floppyDisk'
             onClick={handleSubmit}
             className='w-full'
@@ -421,7 +421,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
         </div>
       ) : (
         <Button
-          type='primary'
+          variant='primary'
           icon='plus'
           onClick={handleSubmit}
           className='w-full'

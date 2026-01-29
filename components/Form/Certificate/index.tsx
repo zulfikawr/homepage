@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import CertificateCard from '@/components/Card/Certificate';
 import DateSelect from '@/components/DateSelect';
-import { modal } from '@/components/Modal';
-import { toast } from '@/components/Toast';
+import { modal } from '@/components/UI';
+import { toast } from '@/components/UI';
 import { Button, FileUpload, FormLabel, Input } from '@/components/UI';
+import CertificateCard from '@/components/UI/Card/variants/Certificate';
 import { Separator } from '@/components/UI/Separator';
 import {
   addCertificate,
@@ -192,11 +192,11 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           <CertificateCard certificate={currentPreviewCertificate} isInForm />
         </div>
         <div className='flex justify-end space-x-4'>
-          <Button type='default' onClick={() => modal.close()}>
+          <Button variant='default' onClick={() => modal.close()}>
             Cancel
           </Button>
           <Button
-            type='destructive'
+            variant='destructive'
             onClick={() => {
               handleDelete();
               modal.close();
@@ -349,7 +349,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
       {certificateToEdit ? (
         <div className='flex space-x-4'>
           <Button
-            type='destructive'
+            variant='destructive'
             icon='trash'
             onClick={confirmDelete}
             className='w-full'
@@ -357,7 +357,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             Delete
           </Button>
           <Button
-            type='primary'
+            variant='primary'
             icon='floppyDisk'
             onClick={handleSubmit}
             className='w-full'
@@ -367,7 +367,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
         </div>
       ) : (
         <Button
-          type='primary'
+          variant='primary'
           icon='plus'
           onClick={handleSubmit}
           className='w-full'

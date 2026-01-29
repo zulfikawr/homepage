@@ -3,9 +3,10 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Icon } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
 import { useRadius } from '@/contexts/radiusContext';
+
+import { Icon } from '../Icon';
 
 type ButtonVariant =
   | 'default'
@@ -17,7 +18,7 @@ type ButtonVariant =
   | 'ghostLink';
 
 interface Props {
-  type?: ButtonVariant;
+  variant?: ButtonVariant;
   nativeType?: 'button' | 'submit' | 'reset';
   icon?: IconName;
   className?: string;
@@ -30,7 +31,7 @@ export type ButtonProps = Props &
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      type = 'default',
+      variant = 'default',
       nativeType = 'button',
       icon,
       className,
@@ -58,11 +59,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       };
 
       return twMerge(
-        'py-2 px-5 h-9',
-        type !== 'primary' && 'w-max',
-        !['ghost', 'link', 'ghostLink'].includes(type) &&
+        'py-2 px-5 h-8',
+        variant !== 'primary' && 'w-max',
+        !['ghost', 'link', 'ghostLink'].includes(variant) &&
           'shadow-sm hover:shadow-inner',
-        variants[type],
+        variants[variant],
       );
     };
 
@@ -71,21 +72,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={nativeType}
         className={twMerge(
-          'cursor-pointer focus:outline-none justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing transition-color duration-100',
+          'cursor-pointer focus:outline-none inline-flex justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing transition-color duration-100',
           getButtonClasses(),
-          icon && 'inline-flex items-center gap-2',
-          type === 'link' && 'squiggly-underline',
-          type === 'ghostLink' && 'hover:squiggly-underline',
+          icon && 'gap-2',
+          variant === 'link' && 'squiggly-underline',
+          variant === 'ghostLink' && 'hover:squiggly-underline',
           className,
         )}
         style={{ borderRadius: `${radius}px` }}
         {...rest}
       >
-        {icon && (
-          <span className='size-5 flex-shrink-0'>
-            <Icon name={icon} />
-          </span>
-        )}
+        {icon && <Icon name={icon} size={20} />}
         {children}
       </button>
     );

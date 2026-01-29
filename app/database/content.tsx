@@ -1,8 +1,8 @@
 'use client';
 
-import NavigationCard from '@/components/Card/Navigation';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import NavigationCard from '@/components/UI/Card/variants/Navigation';
 import { IconName } from '@/components/UI/Icon';
 
 export default function DatabaseContent() {
