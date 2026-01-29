@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import ProjectAnalytics from '@/components/Banners/ProjectAnalytics';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
@@ -100,6 +101,8 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
         title='Projects'
         subtitle='A collection of my projects, categorized by their status.'
       />
+
+      <ProjectAnalytics projects={projects || []} loading={loading} />
 
       {/* Controls Section */}
       <div className='-mx-4 px-4 pb-4 pt-2 md:mx-0 md:p-0 space-y-4'>
