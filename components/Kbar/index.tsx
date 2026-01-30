@@ -16,12 +16,12 @@ export function Kbar() {
         aria-label='Command + K to open the command palette'
         role='button'
         onClick={() => drawer.open(<KbarContent />)}
-        className='absolute left-3 top-[7px] z-10 rounded-md border border-gruv-orange/30 bg-gruv-orange/10 px-1.5 py-0.5 text-xs text-gruv-orange dark:bg-gruv-orange/20 dark:text-gruv-orange font-bold cursor-pointer hover:bg-gruv-orange/20 transition-colors'
+        className='absolute left-3 top-[7px] z-10 rounded-md border bg-gruv-orange/10 px-1.5 py-0.5 text-xs text-gruv-orange dark:bg-gruv-orange/20 dark:text-gruv-orange font-bold cursor-pointer hover:bg-gruv-orange/20 transition-colors'
       >
         ⌘+K
       </div>
       <Input
-        className='w-full bg-muted/50 dark:bg-card hover:bg-muted dark:hover:bg-muted rounded-md cursor-pointer px-3 py-2 pl-14 text-sm text-muted-foreground outline-none transition-all duration-200 border-primary/10'
+        className='w-full bg-muted/50 dark:bg-card hover:bg-muted dark:hover:bg-muted rounded-md cursor-pointer px-3 py-2 pl-14 text-sm text-muted-foreground outline-none transition-all duration-200'
         placeholder='Type your command or search...'
         onFocus={() => drawer.open(<KbarContent />)}
       />

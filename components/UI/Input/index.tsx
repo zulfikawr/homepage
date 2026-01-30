@@ -14,7 +14,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const { radius } = useRadius();
 
     const defaultClassName =
-      'h-9 w-full border border-input bg-background p-2 shadow-sm focus:outline-none text-foreground';
+      'h-9 w-full border bg-background p-2 shadow-sm focus:outline-none text-foreground placeholder:text-muted-foreground hover:bg-card-header focus:bg-card-header transition-all duration-200';
 
     return (
       <input

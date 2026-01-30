@@ -52,7 +52,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 
   return (
-    <div className='flex w-full items-center justify-between px-4 py-3'>
+    <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
       <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
         {isLoading ? (
           <>
@@ -61,7 +61,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
           </>
         ) : (
           <>
-            <Icon name='githubLogo' className='size-7 text-gruv-blue' />
+            <Icon name='githubLogo' className='size-7' />
             <span>GitHub Contributions</span>
           </>
         )}

@@ -31,7 +31,7 @@ export const PersonalInfoLayout = ({
           {isLoading ? (
             <Skeleton width={256} height={20} as='span' />
           ) : (
-            <p className='text-gruv-aqua/80'>{personalInfo?.title}</p>
+            <p className='text-gruv-aqua dark:text-gruv-aqua/80'>{personalInfo?.title}</p>
           )}
         </div>
       </div>

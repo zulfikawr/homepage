@@ -27,7 +27,7 @@ const Checkbox = ({
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
         disabled={disabled}
-        className='rounded border-input text-primary focus:ring-ring cursor-pointer'
+        className='rounded border text-primary focus:ring-ring cursor-pointer'
       />
       <label
         htmlFor={id}
