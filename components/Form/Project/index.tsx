@@ -343,7 +343,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <ProjectCard project={currentPreviewProject} isInForm />
+          <ProjectCard project={currentPreviewProject} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -376,7 +376,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       <div className='space-y-6'>
         {/* Project Preview */}
         <div className='flex justify-center'>
-          <ProjectCard project={currentPreviewProject} isInForm />
+          <ProjectCard project={currentPreviewProject} isPreview />
         </div>
 
         <Separator margin='5' />

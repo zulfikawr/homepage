@@ -12,7 +12,7 @@ import { Card } from '../..';
 interface EmploymentCardProps {
   employment: Employment;
   openForm?: boolean;
-  isInForm?: boolean;
+  isPreview?: boolean;
 }
 
 const JOB_TYPE_LABELS: Record<string, string> = {
@@ -36,12 +36,12 @@ function formatJobType(key?: string) {
 export default function EmploymentCard({
   employment,
   openForm,
-  isInForm,
+  isPreview,
 }: EmploymentCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
 
     if (openForm) {
       router.push(`/database/employments/${employment.id}/edit`);
@@ -54,7 +54,7 @@ export default function EmploymentCard({
     <Card
       onClick={handleCardClick}
       openForm={openForm}
-      isInForm={isInForm}
+      isPreview={isPreview}
       className='min-w-[18rem] lg:min-w-[25rem]'
     >
       <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground  dark:text-foreground'>

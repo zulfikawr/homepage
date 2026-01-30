@@ -9,7 +9,7 @@ import { Card } from '../..';
 interface GitHubCardProps {
   repoUrl: string;
   repoName: string;
-  isInForm?: boolean;
+  isPreview?: boolean;
 }
 
 interface GitHubData {
@@ -19,11 +19,7 @@ interface GitHubData {
   description?: string;
 }
 
-export default function GitHubCard({
-  repoUrl,
-  repoName,
-  isInForm = false,
-}: GitHubCardProps) {
+export default function GitHubCard({ repoUrl, repoName }: GitHubCardProps) {
   const [data, setData] = useState<GitHubData>({
     stars: 0,
     forks: 0,
@@ -59,7 +55,7 @@ export default function GitHubCard({
   }, [repoUrl]);
 
   return (
-    <Card isInForm={isInForm} className='overflow-hidden'>
+    <Card className='overflow-hidden'>
       <Link
         href={repoUrl}
         target='_blank'

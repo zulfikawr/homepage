@@ -218,7 +218,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
           undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <MovieCard movie={currentPreview} isInForm />
+          <MovieCard movie={currentPreview} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -242,7 +242,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
     <>
       <div className='space-y-6'>
         <div className='flex justify-center'>
-          <MovieCard movie={currentPreview} isInForm />
+          <MovieCard movie={currentPreview} isPreview />
         </div>
 
         <Separator margin='5' />

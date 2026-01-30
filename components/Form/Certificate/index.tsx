@@ -189,7 +189,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           action cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <CertificateCard certificate={currentPreviewCertificate} isInForm />
+          <CertificateCard certificate={currentPreviewCertificate} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -213,7 +213,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     <>
       <div className='space-y-6'>
         <div className='flex justify-center'>
-          <CertificateCard certificate={currentPreviewCertificate} isInForm />
+          <CertificateCard certificate={currentPreviewCertificate} isPreview />
         </div>
 
         <Separator margin='5' />

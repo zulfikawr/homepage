@@ -11,7 +11,6 @@ import { Card } from '../..';
 interface ProjectCardProps {
   project: Project;
   openForm?: boolean;
-  isInForm?: boolean;
   isActive?: boolean;
   isPreview?: boolean;
 }
@@ -19,7 +18,6 @@ interface ProjectCardProps {
 export default function ProjectCard({
   project,
   openForm,
-  isInForm,
   isActive,
   isPreview,
 }: ProjectCardProps) {
@@ -31,15 +29,13 @@ export default function ProjectCard({
     : `/projects/${identifier}`;
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
     router.push(href);
   };
 
   const cardContent = (
     <Card
-      onClick={isInForm ? undefined : handleCardClick}
-      isInDrawer={openForm}
-      isInForm={isInForm}
+      onClick={isPreview ? undefined : handleCardClick}
       isActive={isActive}
       isPreview={isPreview}
     >
@@ -124,7 +120,7 @@ export default function ProjectCard({
     </Card>
   );
 
-  if (isInForm || isPreview) {
+  if (isPreview) {
     return cardContent;
   }
 

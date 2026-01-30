@@ -228,7 +228,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <EmploymentCard employment={currentPreviewEmployment} isInForm />
+          <EmploymentCard employment={currentPreviewEmployment} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -282,7 +282,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       <div className='space-y-6'>
         {/* Employment Preview */}
         <div className='flex justify-center'>
-          <EmploymentCard employment={currentPreviewEmployment} isInForm />
+          <EmploymentCard employment={currentPreviewEmployment} isPreview />
         </div>
 
         <Separator margin='5' />

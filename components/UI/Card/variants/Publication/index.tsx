@@ -9,20 +9,20 @@ import { Card } from '../..';
 interface PublicationCardProps {
   publication: Publication;
   openForm?: boolean;
-  isInForm?: boolean;
+  isPreview?: boolean;
   isActive?: boolean;
 }
 
 export default function PublicationCard({
   publication,
   openForm,
-  isInForm,
+  isPreview,
   isActive,
 }: PublicationCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
 
     if (openForm) {
       router.push(`/database/publications/${publication.id}/edit`);
@@ -35,7 +35,7 @@ export default function PublicationCard({
     <Card
       onClick={handleCardClick}
       openForm={openForm}
-      isInForm={isInForm}
+      isPreview={isPreview}
       isActive={isActive}
     >
       <div className='p-4 space-y-2'>

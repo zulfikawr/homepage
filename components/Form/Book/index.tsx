@@ -160,7 +160,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
           be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <BookCard book={currentPreviewBook} isInForm />
+          <BookCard book={currentPreviewBook} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -193,7 +193,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
       <div className='space-y-6'>
         {/* Book Preview */}
         <div className='flex justify-center'>
-          <BookCard book={currentPreviewBook} isInForm />
+          <BookCard book={currentPreviewBook} isPreview />
         </div>
 
         <Separator margin='5' />

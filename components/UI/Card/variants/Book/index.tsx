@@ -9,20 +9,20 @@ import { Card } from '../..';
 interface BookCardProps {
   book: Book;
   openForm?: boolean;
-  isInForm?: boolean;
+  isPreview?: boolean;
   isActive?: boolean;
 }
 
 export default function BookCard({
   book,
   openForm,
-  isInForm,
+  isPreview,
   isActive,
 }: BookCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
 
     if (openForm) {
       router.push(`/database/reading-list/${book.id}/edit`);
@@ -35,7 +35,7 @@ export default function BookCard({
     <Card
       onClick={handleCardClick}
       openForm={openForm}
-      isInForm={isInForm}
+      isPreview={isPreview}
       isActive={isActive}
       className={`${openForm ? 'w-full' : ''}`}
     >

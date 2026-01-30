@@ -16,7 +16,6 @@ import { Card } from '../..';
 interface PostCardProps {
   post?: Post;
   openForm?: boolean;
-  isInForm?: boolean;
   isActive?: boolean;
   isPreview?: boolean;
 }
@@ -24,7 +23,6 @@ interface PostCardProps {
 export default function PostCard({
   post,
   openForm,
-  isInForm,
   isActive,
   isPreview,
 }: PostCardProps) {
@@ -37,13 +35,13 @@ export default function PostCard({
     : `/posts/${identifier}`;
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
     router.push(href);
   };
 
   // Prefetch the post page when card is in viewport
   useEffect(() => {
-    if (isInForm || isPreview || !post) return;
+    if (isPreview || isPreview || !post) return;
 
     const currentRef = cardRef.current;
     const observer = new IntersectionObserver(
@@ -66,12 +64,12 @@ export default function PostCard({
         observer.unobserve(currentRef);
       }
     };
-  }, [router, href, isInForm, isPreview, post]);
+  }, [router, href, isPreview, post]);
 
   if (!post) return null;
 
   const handleShare = async (e: React.MouseEvent) => {
-    if (isInForm) return;
+    if (isPreview) return;
     e.stopPropagation();
     try {
       const identifier = post.slug || post.id;
@@ -123,11 +121,10 @@ export default function PostCard({
   return (
     <div ref={cardRef}>
       <Card
-        onClick={isInForm ? undefined : handleCardClick}
+        onClick={isPreview ? undefined : handleCardClick}
         openForm={openForm}
-        isInForm={isInForm}
-        isActive={isActive}
         isPreview={isPreview}
+        isActive={isActive}
       >
         <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
           {renderMedia()}
@@ -135,14 +132,14 @@ export default function PostCard({
           <div className='flex flex-col space-y-4 flex-1'>
             <div className='flex items-center'>
               {post.categories &&
-                (isInForm ? (
+                (isPreview ? (
                   <Label variant='secondary' icon='tag'>
                     {post.categories[0]}
                   </Label>
                 ) : (
                   <div className='flex flex-wrap gap-3'>
                     {post.categories?.map((category) =>
-                      isInForm ? (
+                      isPreview ? (
                         <Label key={category} variant='aqua' icon='tag'>
                           {category}
                         </Label>

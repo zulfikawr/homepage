@@ -315,8 +315,8 @@ const TrackCardLoading = () => (
 );
 
 // Movie: Exact mirror of MovieCard
-const MovieCardLoading = ({ isInForm = false }: { isInForm?: boolean }) => {
-  if (isInForm) {
+const MovieCardLoading = ({ isPreview = false }: { isPreview?: boolean }) => {
+  if (isPreview) {
     return (
       <BaseCardLoading>
         <div className='flex flex-1 items-center'>
@@ -379,10 +379,10 @@ type CardLoadingProps = {
     | 'track'
     | 'movie'
     | 'github';
-  isInForm?: boolean;
+  isPreview?: boolean;
 };
 
-const CardLoading = ({ variant, isInForm }: CardLoadingProps) => {
+const CardLoading = ({ variant, isPreview }: CardLoadingProps) => {
   switch (variant) {
     case 'book':
       return <BookCardLoading />;
@@ -401,7 +401,7 @@ const CardLoading = ({ variant, isInForm }: CardLoadingProps) => {
     case 'track':
       return <TrackCardLoading />;
     case 'movie':
-      return <MovieCardLoading isInForm={isInForm} />;
+      return <MovieCardLoading isPreview={isPreview} />;
     case 'github':
       return <GitHubCardLoading />;
     default:

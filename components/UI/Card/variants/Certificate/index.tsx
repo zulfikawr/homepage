@@ -12,18 +12,18 @@ import { Card } from '../..';
 interface CertificateCardProps {
   certificate: Certificate;
   openForm?: boolean;
-  isInForm?: boolean;
+  isPreview?: boolean;
 }
 
 export default function CertificateCard({
   certificate,
   openForm,
-  isInForm,
+  isPreview,
 }: CertificateCardProps) {
   const router = useRouter();
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
 
     const identifier = certificate.slug || certificate.id;
     if (openForm) {
@@ -34,7 +34,7 @@ export default function CertificateCard({
   };
 
   return (
-    <Card onClick={handleCardClick} openForm={openForm} isInForm={isInForm}>
+    <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
       <div className='block md:hidden'>
         {/* Mobile layout */}
         <div className='w-full'>

@@ -194,7 +194,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
           cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <PublicationCard publication={currentPreviewPublication} isInForm />
+          <PublicationCard publication={currentPreviewPublication} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -218,7 +218,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     <>
       <div className='space-y-6'>
         <div className='flex justify-center'>
-          <PublicationCard publication={currentPreviewPublication} isInForm />
+          <PublicationCard publication={currentPreviewPublication} isPreview />
         </div>
 
         <Separator margin='5' />

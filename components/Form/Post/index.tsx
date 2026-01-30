@@ -23,7 +23,6 @@ import { generateSlug } from '@/utilities/generateSlug';
 
 interface PostFormProps {
   postToEdit?: Post;
-  isInDrawer?: boolean;
 }
 
 const initialPostState: Post = {
@@ -230,7 +229,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       <div className='space-y-6'>
         {/* Post Preview */}
         <div className='flex justify-center'>
-          <PostCard post={currentPreviewPost} isInForm />
+          <PostCard post={currentPreviewPost} isPreview />
         </div>
 
         <Separator margin='5' />

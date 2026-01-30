@@ -13,19 +13,19 @@ import { Card } from '../..';
 interface MovieCardProps {
   movie: Movie;
   openForm?: boolean;
-  isInForm?: boolean;
+  isPreview?: boolean;
 }
 
 export default function MovieCard({
   movie,
   openForm,
-  isInForm,
+  isPreview,
 }: MovieCardProps) {
   const router = useRouter();
   const rating = movie.rating || 0;
 
   const handleCardClick = () => {
-    if (isInForm) return;
+    if (isPreview) return;
 
     if (openForm) {
       router.push(`/database/movies/${movie.id}/edit`);
@@ -50,10 +50,10 @@ export default function MovieCard({
     <Card
       onClick={handleCardClick}
       openForm={openForm}
-      isInForm={isInForm}
+      isPreview={isPreview}
       className={`${openForm ? 'w-full' : ''}`}
     >
-      {isInForm ? (
+      {isPreview ? (
         <>
           <div className='flex flex-1 items-center'>
             <div className='flex-shrink-0 px-4.5 py-4'>
