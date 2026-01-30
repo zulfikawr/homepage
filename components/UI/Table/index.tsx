@@ -32,7 +32,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <div
-        className='overflow-x-auto border border-border mt-4'
+        className='overflow-x-auto border-2 border-border mt-4 shadow-brutalist'
         style={{ borderRadius: `${radius}px` }}
       >
         <table
@@ -119,7 +119,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
 
   return (
     <div
-      className='overflow-x-auto border border-border mt-4'
+      className='overflow-x-auto border-2 border-border mt-4 shadow-brutalist'
       style={{ borderRadius: `${radius}px` }}
     >
       <table className='w-full border-collapse bg-card'>

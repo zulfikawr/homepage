@@ -96,13 +96,13 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     <div className={twMerge('group/dropzone space-y-3', className)}>
       <div
         className={twMerge(
-          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-2 shadow-sm focus:outline-none dark:bg-muted',
+          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border-2 border-border bg-muted/50 p-2 shadow-brutalist focus:outline-none dark:bg-muted',
           aspectRatio === 'video'
             ? 'aspect-video'
             : 'aspect-square max-w-[200px] mx-auto',
           isDragging
-            ? 'border-primary ring-4 ring-primary/10'
-            : 'hover:bg-muted/50 dark:hover:bg-primary/10',
+            ? 'border-primary shadow-brutalist-lg -translate-y-1 -translate-x-1'
+            : 'hover:bg-muted/50 dark:hover:bg-primary/10 hover:shadow-brutalist-hover',
           previewUrl ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}

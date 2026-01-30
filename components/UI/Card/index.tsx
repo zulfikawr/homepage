@@ -35,14 +35,14 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const isActuallyInteractive = interactive && !isPreview;
 
     const baseStyles = twMerge(
-      'group relative flex flex-col border shadow-md select-none transition-all duration-300 overflow-hidden',
+      'group relative flex flex-col select-none transition-all duration-150 overflow-hidden shadow-brutalist border-2',
       (openForm || isPreview) && 'w-full',
       isActive
         ? 'bg-primary/10 border-primary/50 dark:border-primary/40'
         : 'bg-card border-border backdrop-blur-none',
       isActuallyInteractive &&
         !isActive &&
-        'cursor-pointer hover:-translate-y-0.5 hover:shadow-2xl hover:bg-primary/10 hover:border-primary/50 hover:dark:border-primary/40',
+        'cursor-pointer brutalist-interactive hover:bg-primary/10 hover:border-primary/50 hover:dark:border-primary/40',
       variant === 'ghost' && 'bg-transparent border-transparent shadow-none',
       className,
     );

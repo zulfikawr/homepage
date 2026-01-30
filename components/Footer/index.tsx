@@ -56,7 +56,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className='mt-20 border-b border-t border-border bg-card py-4 text-center dark:bg-card'>
+    <footer className='mt-20 border-t border-border bg-card py-4 text-center'>
       {/* Settings Button */}
       <div className='fixed bottom-4 left-4 lg:bottom-8 lg:left-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
         <Settings />

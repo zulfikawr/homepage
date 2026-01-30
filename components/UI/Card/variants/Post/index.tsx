@@ -90,7 +90,7 @@ export default function PostCard({
           perspective={1000}
           max={25}
           scale={1.01}
-          className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border-border shadow-sm transition-all hover:shadow-md dark:opacity-90'
+          className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90'
         >
           <ImageWithFallback
             src={post.image || '/images/placeholder.png'}
@@ -174,7 +174,7 @@ export default function PostCard({
         </div>
         {renderAudio()}
 
-        <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t border-border px-6 py-2 lg:px-8 lg:py-3 '>
+        <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t-2 border-border px-6 py-2 lg:px-8 lg:py-3 '>
           <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
             <span className='flex items-center gap-x-2'>
               <TimeAgo date={post.dateString} prefix='Posted' />

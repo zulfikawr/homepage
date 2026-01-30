@@ -32,12 +32,12 @@ const PageTitle = ({
   }, [emoji, title, setHeaderTitle, isLoading]);
 
   const badgeStyles = {
-    red: 'rounded-md border border-gruv-red/40 bg-gruv-red/15 px-2.5 py-1 text-xs font-medium text-gruv-red dark:border-gruv-red/50 dark:bg-gruv-red/20',
+    red: 'rounded-md border-2 border-gruv-red/40 bg-gruv-red/15 px-2.5 py-1 text-xs font-medium text-gruv-red dark:border-gruv-red/50 dark:bg-gruv-red/20 shadow-brutalist-sm brutalist-interactive',
     yellow:
-      'rounded-md border border-gruv-yellow/40 bg-gruv-yellow/15 px-2.5 py-1 text-xs font-medium text-gruv-yellow dark:border-gruv-yellow/50 dark:bg-gruv-yellow/20',
+      'rounded-md border-2 border-gruv-yellow/40 bg-gruv-yellow/15 px-2.5 py-1 text-xs font-medium text-gruv-yellow dark:border-gruv-yellow/50 dark:bg-gruv-yellow/20 shadow-brutalist-sm brutalist-interactive',
     green:
-      'rounded-md border border-gruv-green/40 bg-gruv-green/15 px-2.5 py-1 text-xs font-medium text-gruv-green dark:border-gruv-green/50 dark:bg-gruv-green/20',
-    blue: 'rounded-md border border-gruv-blue/40 bg-gruv-blue/15 px-2.5 py-1 text-xs font-medium text-gruv-blue dark:border-gruv-blue/50 dark:bg-gruv-blue/20',
+      'rounded-md border-2 border-gruv-green/40 bg-gruv-green/15 px-2.5 py-1 text-xs font-medium text-gruv-green dark:border-gruv-green/50 dark:bg-gruv-green/20 shadow-brutalist-sm brutalist-interactive',
+    blue: 'rounded-md border-2 border-gruv-blue/40 bg-gruv-blue/15 px-2.5 py-1 text-xs font-medium text-gruv-blue dark:border-gruv-blue/50 dark:bg-gruv-blue/20 shadow-brutalist-sm brutalist-interactive',
   };
 
   return (

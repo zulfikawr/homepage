@@ -38,7 +38,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       <header
         ref={headerRef}
         id='header'
-        className='header fixed top-0 z-50 w-full pl-2 py-2 lg:pl-0 lg:py-4 duration-300'
+        className='header fixed top-0 z-50 w-full pl-2 py-2 lg:pl-0 lg:py-4 duration-300 bg-background border-b-2 border-border shadow-[var(--shadow-brutalist)]'
       >
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center px-4 lg:px-0'>
           {/* Desktop Logo */}

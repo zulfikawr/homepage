@@ -41,7 +41,7 @@ const Label = ({
     icon && (icon in iconMap || icon in iconifyMap) ? icon : null;
 
   const baseClassName =
-    'cursor-pointer justify-center font-medium items-center border inline-flex w-auto lg:px-4 lg:py-1 px-2 py-1 text-center text-sm align-middle effect-pressing';
+    'cursor-pointer justify-center font-medium items-center border-2 inline-flex w-auto lg:px-4 lg:py-1 px-2 py-1 text-center text-sm align-middle shadow-brutalist brutalist-interactive';
 
   const variantClassNames = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',

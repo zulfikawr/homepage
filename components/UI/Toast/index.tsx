@@ -233,7 +233,7 @@ const ToastItem = ({
       style={{ marginTop: `${index * 60}px` }}
     >
       <div
-        className={`${variantProps.bgClass} ${variantProps.textClass} border ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-md flex items-center justify-center cursor-pointer text-sm lg:text-lg whitespace-nowrap`}
+        className={`${variantProps.bgClass} ${variantProps.textClass} border-2 ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-brutalist-lg flex items-center justify-center cursor-pointer text-sm lg:text-lg whitespace-nowrap transition-all duration-150 hover:shadow-brutalist-xl hover:-translate-y-1`}
       >
         {variantProps.icon && (
           <span className='mr-2 size-5'>

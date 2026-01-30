@@ -7,7 +7,7 @@ const Separator: React.FC<SeparatorProps> = ({ margin }) => {
 
   return (
     <div style={{ marginTop: marginValue, marginBottom: marginValue }}>
-      <div className='h-[1px] w-full bg-border' />
+      <div className='h-[2px] w-full bg-border' />
     </div>
   );
 };

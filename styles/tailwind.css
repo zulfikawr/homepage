@@ -60,6 +60,11 @@
   --spacing-20: 60px;
 
   --shadow-header: 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-brutalist: 4px 4px 0px rgba(0, 0, 0, 0.25);
+  --shadow-brutalist-lg: 6px 6px 0px rgba(0, 0, 0, 0.3);
+  --shadow-brutalist-xl: 8px 8px 0px rgba(0, 0, 0, 0.35);
+  --shadow-brutalist-sm: 2px 2px 0px rgba(0, 0, 0, 0.25);
+  --shadow-brutalist-hover: 2px 2px 0px rgba(0, 0, 0, 0.25);
 
   --width-1: 0.25rem;
   --width-2: 0.5rem;
@@ -184,6 +189,13 @@
     --heatmap-4: #fabd2f;
     --heatmap-5: #fe8019;
     --heatmap-6: #fb4934;
+
+    /* Dark mode brutalist shadows */
+    --shadow-brutalist: 4px 4px 0px rgba(0, 0, 0, 0.5);
+    --shadow-brutalist-lg: 6px 6px 0px rgba(0, 0, 0, 0.6);
+    --shadow-brutalist-xl: 8px 8px 0px rgba(0, 0, 0, 0.7);
+    --shadow-brutalist-sm: 2px 2px 0px rgba(0, 0, 0, 0.5);
+    --shadow-brutalist-hover: 2px 2px 0px rgba(0, 0, 0, 0.5);
   }
 
   /* Global Styles */
@@ -202,6 +214,50 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-selector-smoothing: grayscale;
+  }
+
+  /* Brutalist Shadow Utilities */
+  .shadow-brutalist {
+    box-shadow: var(--shadow-brutalist);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-sm {
+    box-shadow: var(--shadow-brutalist-sm);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-lg {
+    box-shadow: var(--shadow-brutalist-lg);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-xl {
+    box-shadow: var(--shadow-brutalist-xl);
+    border: 3px solid var(--border);
+  }
+
+  /* Interaction Utilities */
+  .brutalist-interactive {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Hover: Pop up (translate up-left) and increase shadow */
+  .brutalist-interactive:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-brutalist-lg);
+  }
+
+  /* Active: Press down (translate down-right) and decrease shadow */
+  .brutalist-interactive:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-brutalist-hover);
+  }
+
+  .hover\:shadow-brutalist-hover:hover {
+    box-shadow: var(--shadow-brutalist-lg);
+    transform: translate(-2px, -2px);
+    transition: all 0.15s ease-out;
   }
 }
 
@@ -282,13 +338,23 @@ body::-webkit-scrollbar {
 }
 
 .prose img {
-  @apply mx-auto my-6 max-w-full h-auto rounded-lg border border-border shadow-md;
+  @apply mx-auto my-6 max-w-full h-auto rounded-lg;
   max-height: 500px;
   object-fit: contain;
+  box-shadow: var(--shadow-brutalist-lg);
+  border: 2px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.prose img:hover {
+  transform: scale(1.01) translate(-1px, -1px);
+  box-shadow: var(--shadow-brutalist-xl);
 }
 
 .markdown-table-container {
-  @apply overflow-x-auto my-4 border border-border rounded-md;
+  @apply overflow-x-auto my-4 rounded-md;
+  box-shadow: var(--shadow-brutalist);
+  border: 2px solid var(--border);
 }
 
 .prose table {
@@ -318,11 +384,13 @@ body::-webkit-scrollbar {
 }
 
 .prose pre {
-  @apply rounded-md overflow-hidden my-4 bg-gruv-bg-dark border border-border;
+  @apply rounded-md overflow-hidden my-4 bg-gruv-bg-dark;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.6;
   position: relative;
+  box-shadow: var(--shadow-brutalist);
+  border: 2px solid var(--border);
 }
 
 .prose pre code {
@@ -751,7 +819,19 @@ html {
 }
 
 .markdown-ui-btn {
-  @apply px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all cursor-pointer inline-flex items-center gap-2 my-2 active:scale-95 shadow-sm;
+  @apply px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium cursor-pointer inline-flex items-center gap-2 my-2 transition-all duration-150 ease-out;
+  box-shadow: var(--shadow-brutalist);
+  border: 2px solid var(--border);
+}
+
+.markdown-ui-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-brutalist-lg);
+}
+
+.markdown-ui-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-brutalist-hover);
 }
 
 .markdown-ui-tooltip {

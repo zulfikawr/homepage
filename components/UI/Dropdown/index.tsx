@@ -174,7 +174,7 @@ const Dropdown = ({
               ref={menuRef}
               className={`fixed z-[9999] ${
                 matchTriggerWidth ? '' : 'w-max'
-              } shadow-lg transition-all duration-200 ease-in-out ${
+              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
                 isOpen
                   ? 'opacity-100 scale-y-100'
                   : 'opacity-0 scale-y-95 pointer-events-none'

@@ -62,7 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         'py-2 px-5 h-8',
         variant !== 'primary' && 'w-max',
         !['ghost', 'link', 'ghostLink'].includes(variant) &&
-          'shadow-sm hover:shadow-inner',
+          'shadow-brutalist border-2 brutalist-interactive',
         variants[variant],
       );
     };

@@ -44,7 +44,11 @@ export const PersonalInfoLayout = ({
         className='block flex-shrink-0 pt-1'
       >
         {isLoading ? (
-          <Skeleton width={105} height={105} className='rounded-xl' />
+          <Skeleton
+            width={105}
+            height={105}
+            className='rounded-xl shadow-brutalist border-2 border-border'
+          />
         ) : (
           <ImageWithFallback
             src={personalInfo?.avatarUrl || ''}
@@ -52,7 +56,7 @@ export const PersonalInfoLayout = ({
             width={105}
             alt={personalInfo?.name || ''}
             preload
-            className='bg-muted shadow-sm border-1 aspect-square object-cover'
+            className='bg-muted aspect-square object-cover border-2 border-border shadow-brutalist rounded-xl'
             type='square'
             sizes='105px'
           />

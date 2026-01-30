@@ -118,8 +118,7 @@ const Modal = () => {
 
         <div className='fixed inset-0 flex items-center justify-center p-4'>
           <div
-            className={`w-full max-w-xl bg-card rounded-xl border  
-          shadow-md flex flex-col transition-all duration-400 ease-in-out
+            className={`w-full max-w-xl bg-card rounded-xl border-2 shadow-brutalist-xl flex flex-col transition-all duration-400 ease-in-out
           ${animation === 'in' ? 'scale-100' : 'scale-95'} ${
             animation === 'in' ? 'opacity-100' : 'opacity-0'
           }`}

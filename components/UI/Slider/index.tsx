@@ -79,7 +79,7 @@ const Slider = ({
           background-color: #fe8019;
           border: 2px solid #fe8019;
           border-radius: var(--radius);
-          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+          box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
           transition: background-color 0.2s ease;
         }
 
@@ -109,7 +109,7 @@ const Slider = ({
           background-color: #fe8019;
           border: 2px solid #fe8019;
           border-radius: var(--radius);
-          box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+          box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
         }
 
         input[type='range'].slider-thumb:disabled::-moz-range-thumb {

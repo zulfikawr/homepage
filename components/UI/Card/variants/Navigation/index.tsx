@@ -53,7 +53,7 @@ export default function NavigationCard({
       <div className='relative z-10 flex items-center overflow-hidden'>
         {icon && (
           <div
-            className={`mr-3 flex h-auto w-20 items-center justify-center border-r border-r-neutral-200 pr-1 md:pr-3 dark:border-r-neutral-600 ${
+            className={`mr-3 flex h-auto w-20 items-center justify-center border-r-2 border-border pr-1 md:pr-3 ${
               className ? className : ''
             }`}
           >

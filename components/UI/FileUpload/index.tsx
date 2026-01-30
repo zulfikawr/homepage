@@ -125,7 +125,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       />
 
       {previewUrl && (
-        <div className='relative group size-12 rounded-md overflow-hidden border border-border flex-shrink-0'>
+        <div className='relative group size-12 rounded-md overflow-hidden border-2 border-border shadow-brutalist flex-shrink-0'>
           <Image
             src={previewUrl}
             alt='Preview'

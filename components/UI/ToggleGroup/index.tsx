@@ -27,7 +27,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 
   return (
     <div
-      className='inline-flex items-center overflow-hidden border border-border'
+      className='inline-flex items-center overflow-hidden border-2 border-border shadow-brutalist'
       style={{ borderRadius: `${radius}px` }}
     >
       {options.map((option, index) => {

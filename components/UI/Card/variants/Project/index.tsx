@@ -39,7 +39,7 @@ export default function ProjectCard({
       isActive={isActive}
       isPreview={isPreview}
     >
-      <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md shadow-sm sm:hidden'>
+      <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md border-b-2 border-border sm:hidden'>
         <Hover perspective={1000} max={25} scale={1.01}>
           <ImageWithFallback
             src={project.image}
@@ -56,7 +56,7 @@ export default function ProjectCard({
       {/* Desktop layout */}
       <div className='flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:gap-6'>
         {/* Image container */}
-        <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md shadow-sm transition-all hover:shadow-md dark:opacity-90 sm:block'>
+        <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90 sm:block'>
           <Hover perspective={1000} max={25} scale={1.01}>
             <ImageWithFallback
               src={project.image}
@@ -73,7 +73,7 @@ export default function ProjectCard({
         {/* Main content container */}
         <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
           {/* Name at the top */}
-          <div className='border-b border-border pb-2'>
+          <div className='border-b-2 border-border pb-2'>
             <div className='flex items-center'>
               {project.favicon && (
                 <span className='mr-3 inline-block'>
@@ -97,7 +97,7 @@ export default function ProjectCard({
           <p className='text-sm text-muted-foreground'>{project.description}</p>
 
           {/* Tools at the bottom */}
-          <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 '>
+          <div className='flex flex-wrap gap-2 border-t-2 border-border pt-2.5 '>
             {project.tools.map((tool, index) => {
               const colors: (
                 | 'aqua'

@@ -200,7 +200,7 @@ const Drawer = () => {
         <div
           ref={drawerRef}
           className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
-          border flex flex-col overflow-hidden bg-background border
+          border-2 flex flex-col overflow-hidden bg-background shadow-brutalist-xl
           ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}`}
           style={{
             borderRadius: `${radius}px ${radius}px 0 0`,

@@ -46,7 +46,7 @@ const SectionTitle = ({
       className={`flex items-center relative z-10 mb-5 select-none ${link && !loading ? 'justify-between' : 'justify-start'}`}
     >
       <div
-        className='inline-flex items-center bg-card border shadow-md px-4 py-[4px] font-medium tracking-wider'
+        className='inline-flex items-center bg-card border-2 shadow-brutalist px-4 py-[4px] font-medium tracking-wider brutalist-interactive-lg'
         style={{ borderRadius: `${radius}px` }}
       >
         {loading ? (

@@ -14,7 +14,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const { radius } = useRadius();
 
     const defaultClassName =
-      'w-full border bg-background p-2 shadow-sm focus:outline-none text-foreground placeholder:text-muted-foreground hover:bg-card-header focus:bg-card-header transition-all duration-200';
+      'w-full border-2 bg-background p-2 shadow-brutalist focus:outline-none text-foreground placeholder:text-muted-foreground hover:bg-card-header focus:bg-card-header transition-all duration-150 focus:shadow-brutalist-lg focus:-translate-y-0.5';
 
     return (
       <textarea

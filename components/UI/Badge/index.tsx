@@ -75,7 +75,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={twMerge(
-          'inline-flex items-center border px-2.5 py-0.5 text-xs font-medium shadow-sm select-none transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]',
+          'inline-flex items-center border-2 px-2.5 py-0.5 text-xs font-medium shadow-brutalist-sm select-none brutalist-interactive',
           hasValidIcon && 'gap-1.5',
           getBadgeClasses(),
           className,
