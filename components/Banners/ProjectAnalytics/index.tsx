@@ -81,13 +81,13 @@ export default function ProjectAnalytics({
           </>
         ) : (
           <>
-            <Icon name='chartBar' className='size-7 text-gruv-purple' />
+            <Icon name='chartBar' className='size-7' />
             <span>Tech Stack Radar</span>
           </>
         )}
       </div>
       {!loading && stats && (
-        <div className='text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md'>
+        <div className='text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md border'>
           {stats.totalProjects} Projects Tracked
         </div>
       )}

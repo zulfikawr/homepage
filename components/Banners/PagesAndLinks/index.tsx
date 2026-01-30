@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { Card } from '@/components/UI';
 import { Button, Icon, Separator, Tooltip } from '@/components/UI';
+import Mask from '@/components/Visual/Mask';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
@@ -84,8 +85,8 @@ const PagesAndLinksBanner = () => {
 
       <Separator margin='0' />
 
-      <div className='flex items-center justify-between p-4 gap-x-2 overflow-x-auto whitespace-nowrap'>
-        <div className='flex items-center gap-x-2.5'>
+      <Mask>
+        <div className='inline-flex min-w-full items-center px-4 py-4 gap-x-2.5 whitespace-nowrap'>
           {navLinks.map((link) => (
             <Link
               key={link.label}
@@ -105,7 +106,7 @@ const PagesAndLinksBanner = () => {
             </Link>
           ))}
         </div>
-      </div>
+      </Mask>
     </Card>
   );
 };

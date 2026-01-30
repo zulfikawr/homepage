@@ -64,7 +64,7 @@ const BannerHeader = ({
           </>
         ) : (
           <>
-            <Icon name='musicNotes' className='size-7 text-gruv-green' />
+            <Icon name='musicNotes' className='size-7' />
             <span>{isPlaying ? 'Currently Listening' : 'Recently Played'}</span>
           </>
         )}

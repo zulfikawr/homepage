@@ -16,6 +16,7 @@ import { Icon } from '@/components/UI/Icon';
 import { Input } from '@/components/UI/Input';
 import { Separator } from '@/components/UI/Separator';
 import { ToggleGroup } from '@/components/UI/ToggleGroup';
+import Mask from '@/components/Visual/Mask';
 import { useCollection } from '@/hooks';
 import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
@@ -127,49 +128,55 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
               </button>
             )}
           </div>
-          <div className='overflow-x-auto pb-1 -mb-1 scrollbar-hide'>
-            <ToggleGroup
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v as StatusFilter)}
-              options={[
-                { label: 'All', value: 'all' },
-                { label: 'WIP', value: 'inProgress', icon: 'hammer' },
-                { label: 'Done', value: 'completed', icon: 'checkCircle' },
-                { label: 'Plan', value: 'upcoming', icon: 'calendarPlus' },
-              ]}
-            />
+          <div className='md:w-fit w-full'>
+            <Mask>
+              <div className='pb-1'>
+                <ToggleGroup
+                  value={statusFilter}
+                  onChange={(v) => setStatusFilter(v as StatusFilter)}
+                  options={[
+                    { label: 'All', value: 'all' },
+                    { label: 'WIP', value: 'inProgress', icon: 'hammer' },
+                    { label: 'Done', value: 'completed', icon: 'checkCircle' },
+                    { label: 'Plan', value: 'upcoming', icon: 'calendarPlus' },
+                  ]}
+                />
+              </div>
+            </Mask>
           </div>
         </div>
 
         {/* Tools Filter */}
-        <div className='flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide mask-fade-right'>
-          <Badge
-            variant={selectedTool === null ? 'primary' : 'outline'}
-            className={twMerge(
-              'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-              selectedTool !== null && 'hover:bg-primary/20',
-            )}
-            onClick={() => setSelectedTool(null)}
-          >
-            All Tools
-          </Badge>
-          {allTools.map((tool) => (
+        <Mask>
+          <div className='flex items-center gap-2 pb-2'>
             <Badge
-              key={tool}
-              variant={selectedTool === tool ? 'primary' : 'outline'}
-              icon
+              variant={selectedTool === null ? 'primary' : 'outline'}
               className={twMerge(
                 'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                selectedTool !== tool && 'hover:bg-primary/20',
+                selectedTool !== null && 'hover:bg-primary/20',
               )}
-              onClick={() =>
-                setSelectedTool(selectedTool === tool ? null : tool)
-              }
+              onClick={() => setSelectedTool(null)}
             >
-              {tool}
+              All Tools
             </Badge>
-          ))}{' '}
-        </div>
+            {allTools.map((tool) => (
+              <Badge
+                key={tool}
+                variant={selectedTool === tool ? 'primary' : 'outline'}
+                icon
+                className={twMerge(
+                  'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
+                  selectedTool !== tool && 'hover:bg-primary/20',
+                )}
+                onClick={() =>
+                  setSelectedTool(selectedTool === tool ? null : tool)
+                }
+              >
+                {tool}
+              </Badge>
+            ))}
+          </div>
+        </Mask>
       </div>
 
       <div className='space-y-10 min-h-[50vh]'>
