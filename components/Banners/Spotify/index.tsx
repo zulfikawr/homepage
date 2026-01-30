@@ -181,7 +181,7 @@ const SpotifyLayout = ({
         <Link
           href={currentTrack.external_urls.spotify}
           target='_blank'
-          className='block hover:bg-muted/50 transition-colors'
+          className='block h-full hover:bg-muted/50 transition-colors'
         >
           {content}
         </Link>

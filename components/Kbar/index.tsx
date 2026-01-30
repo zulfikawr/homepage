@@ -14,7 +14,9 @@ export function Kbar() {
     <div className='w-content effect-pressing hidden lg:flex select-none'>
       <div
         aria-label='Command + K to open the command palette'
-        className='absolute left-3 top-[7px] z-10 rounded-md border border-gruv-orange/30 bg-gruv-orange/10 px-1.5 py-0.5 text-xs text-gruv-orange dark:bg-gruv-orange/20 dark:text-gruv-orange font-bold'
+        role='button'
+        onClick={() => drawer.open(<KbarContent />)}
+        className='absolute left-3 top-[7px] z-10 rounded-md border border-gruv-orange/30 bg-gruv-orange/10 px-1.5 py-0.5 text-xs text-gruv-orange dark:bg-gruv-orange/20 dark:text-gruv-orange font-bold cursor-pointer hover:bg-gruv-orange/20 transition-colors'
       >
         ⌘+K
       </div>

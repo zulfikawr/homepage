@@ -66,7 +66,7 @@ export function KbarContent() {
   const [search, setSearch] = useState('');
   const [dbResults, setDbResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -384,7 +384,7 @@ export function KbarContent() {
   );
 
   useEffect(() => {
-    setSelectedIndex(0);
+    setSelectedIndex(-1);
   }, [search, dbResults]);
 
   useEffect(() => {
@@ -415,8 +415,9 @@ export function KbarContent() {
       );
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+      setSelectedIndex((prev) => (prev > -1 ? prev - 1 : prev));
     } else if (e.key === 'Enter') {
+      if (selectedIndex === -1) return;
       e.preventDefault();
       const selectedItem = flattenedItems[selectedIndex];
       if (selectedItem) {

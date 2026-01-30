@@ -11,7 +11,7 @@ import React, {
 
 import { Portal } from '@/components/UI';
 import { useRadius } from '@/contexts/radiusContext';
-import { useBodyScroll } from '@/hooks';
+import { useBodyScroll, useHotkeys } from '@/hooks';
 
 import { Icon, type IconName } from '../Icon';
 
@@ -40,11 +40,16 @@ const Dropdown = ({
   const [shouldRender, setShouldRender] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [, setBodyScrollable] = useBodyScroll();
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [menuCoords, setMenuCoords] = useState({ top: 0, left: 0, width: 0 });
+  const [menuCoords, setMenuCoords] = useState<{
+    top: number;
+    left?: number;
+    right?: number;
+    width: number;
+  }>({ top: 0, width: 0 });
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
+  const [align, setAlign] = useState<'left' | 'right'>('left');
   const isIntentOpenRef = useRef(false);
 
   const { radius } = useRadius();
@@ -54,6 +59,7 @@ const Dropdown = ({
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
 
     const menuHeight = menuRef.current?.offsetHeight || 200;
 
@@ -63,11 +69,16 @@ const Dropdown = ({
         ? 'top'
         : 'bottom';
 
+    const alignRight = triggerRect.left > viewportWidth / 2;
+    const newAlign = alignRight ? 'right' : 'left';
+
     setPosition(newPosition);
+    setAlign(newAlign);
     setMenuCoords({
       top:
         newPosition === 'bottom' ? triggerRect.bottom + 8 : triggerRect.top - 8,
-      left: triggerRect.left,
+      left: alignRight ? undefined : triggerRect.left,
+      right: alignRight ? viewportWidth - triggerRect.right : undefined,
       width: triggerRect.width,
     });
   }, []);
@@ -116,24 +127,7 @@ const Dropdown = ({
     }
   }, [isOpen, shouldRender]);
 
-  const handleClickOutside = useCallback(
-    (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
-        handleClose();
-      }
-    },
-    [handleClose],
-  );
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [handleClickOutside]);
+  useHotkeys('esc', handleClose, { enabled: isOpen });
 
   const toggleDropdown = () => {
     if (isOpen) {
@@ -147,7 +141,7 @@ const Dropdown = ({
 
   return (
     <DropdownContext.Provider value={{ setIsOpen: handleClose }}>
-      <div className={`relative inline-block ${className}`} ref={dropdownRef}>
+      <div className={`relative inline-block ${className}`}>
         {/* Trigger Element */}
         <div
           ref={triggerRef}
@@ -162,10 +156,24 @@ const Dropdown = ({
         {/* Dropdown Menu Portal */}
         {shouldRender && (
           <Portal>
+            {/* Overlay to catch clicks outside and prevent propagation */}
+            {isOpen && (
+              <div
+                className='fixed inset-0 z-[9998] bg-transparent cursor-default'
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  handleClose();
+                }}
+              />
+            )}
             <div
               ref={menuRef}
-              className={`fixed z-[9998] ${
-                matchTriggerWidth ? '' : 'min-w-fit'
+              className={`fixed z-[9999] ${
+                matchTriggerWidth ? '' : 'w-max'
               } shadow-lg transition-all duration-200 ease-in-out ${
                 isOpen
                   ? 'opacity-100 scale-y-100'
@@ -177,8 +185,11 @@ const Dropdown = ({
               style={{
                 top: menuCoords.top,
                 left: menuCoords.left,
+                right: menuCoords.right,
                 width: matchTriggerWidth ? `${menuCoords.width}px` : 'auto',
-                transformOrigin: position === 'top' ? 'bottom' : 'top',
+                transformOrigin: `${position === 'top' ? 'bottom' : 'top'} ${
+                  align === 'right' ? 'right' : 'left'
+                }`,
                 transform: position === 'top' ? 'translateY(-100%)' : 'none',
                 borderRadius: `${radius}px`,
               }}
