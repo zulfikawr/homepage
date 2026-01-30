@@ -97,7 +97,7 @@ export default function Settings() {
         <Button
           variant='default'
           aria-label='Open settings'
-          className='bg-card w-10 h-10 p-0 transition-colors group/btn'
+          className='bg-card w-10 h-10 p-0 group/btn'
         >
           <Icon
             name='gear'

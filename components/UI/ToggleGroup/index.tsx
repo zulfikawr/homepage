@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Icon, Toggle } from '@/components/UI';
 import type { IconName } from '@/components/UI/Icon';
@@ -27,20 +27,32 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
 
   return (
     <div
-      className='inline-flex items-center overflow-hidden border-2 border-border shadow-brutalist'
+      className='inline-flex items-center border-2 border-border shadow-brutalist'
       style={{ borderRadius: `${radius}px` }}
     >
       {options.map((option, index) => {
         const isFirst = index === 0;
-        const baseBorder = !isFirst ? 'border-l border-border' : '';
+        const isLast = index === options.length - 1;
 
         return (
           <Toggle
             key={option.value}
             isActive={value === option.value}
             onChange={() => onChange(option.value)}
-            className={`${baseBorder} p-0 h-9`}
-            style={{ borderRadius: 0 }}
+            className={twMerge(
+              'shadow-none border-0 hover:shadow-none hover:transform-none active:transform-none p-0 h-9',
+              !isFirst && 'border-l-2 border-border',
+            )}
+            style={{
+              borderTopLeftRadius: isFirst ? `${Math.max(0, radius - 2)}px` : 0,
+              borderBottomLeftRadius: isFirst
+                ? `${Math.max(0, radius - 2)}px`
+                : 0,
+              borderTopRightRadius: isLast ? `${Math.max(0, radius - 2)}px` : 0,
+              borderBottomRightRadius: isLast
+                ? `${Math.max(0, radius - 2)}px`
+                : 0,
+            }}
           >
             <div className='flex items-center gap-2 text-sm px-4 py-1.5 cursor-pointer'>
               {option.icon && <Icon name={option.icon} className='size-4.5' />}

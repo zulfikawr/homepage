@@ -41,7 +41,7 @@ export default function Footer() {
     () => true,
     () => false,
   );
-  const backToTopRef = useRef<HTMLButtonElement>(null);
+  const backToTopRef = useRef<HTMLDivElement>(null);
 
   const handleScrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,25 +58,26 @@ export default function Footer() {
   return (
     <footer className='mt-20 border-t border-border bg-card py-4 text-center'>
       {/* Settings Button */}
-      <div className='fixed bottom-4 left-4 lg:bottom-8 lg:left-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
+      <div className='fixed bottom-4 left-4 lg:bottom-8 lg:left-8 z-[9997]'>
         <Settings />
       </div>
       {/* Scroll To Top Button */}
-      <div className='fixed bottom-4 right-4 lg:bottom-8 lg:right-8 z-[9997] text-muted-foreground dark:text-muted-foreground'>
+      <div className='fixed bottom-4 right-4 lg:bottom-8 lg:right-8 z-[9997]'>
         <OffsetTransition componentRef={backToTopRef}>
-          <Button
-            variant='default'
-            ref={backToTopRef}
-            aria-label='scroll to top'
-            onClick={handleScrollToTop}
-            className='bg-card w-10 h-10 p-0 transition-colors group/btn'
-          >
-            <Icon
-              name='caretUp'
-              size={20}
-              className='text-gruv-orange group-hover/btn:text-gruv-aqua transition-colors'
-            />
-          </Button>
+          <div ref={backToTopRef}>
+            <Button
+              variant='default'
+              aria-label='scroll to top'
+              onClick={handleScrollToTop}
+              className='bg-card w-10 h-10 p-0 group/btn'
+            >
+              <Icon
+                name='caretUp'
+                size={20}
+                className='text-primary group-hover/btn:text-accent-foreground transition-colors'
+              />
+            </Button>
+          </div>
         </OffsetTransition>
       </div>
       <FooterContent />

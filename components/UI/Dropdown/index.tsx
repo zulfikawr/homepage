@@ -127,6 +127,33 @@ const Dropdown = ({
     }
   }, [isOpen, shouldRender]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      // Ignore clicks inside the menu
+      if (menuRef.current && menuRef.current.contains(event.target as Node)) {
+        return;
+      }
+      // Ignore clicks on the trigger (let the trigger's onClick handle toggling)
+      if (
+        triggerRef.current &&
+        triggerRef.current.contains(event.target as Node)
+      ) {
+        return;
+      }
+
+      event.stopPropagation();
+      handleClose();
+    };
+
+    document.addEventListener('click', handleClickOutside, true);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, [isOpen, handleClose]);
+
   useHotkeys('esc', handleClose, { enabled: isOpen });
 
   const toggleDropdown = () => {
@@ -156,18 +183,11 @@ const Dropdown = ({
         {/* Dropdown Menu Portal */}
         {shouldRender && (
           <Portal>
-            {/* Overlay to catch clicks outside and prevent propagation */}
+            {/* Overlay to block hover states and interactions on underlying elements */}
             {isOpen && (
               <div
                 className='fixed inset-0 z-[9998] bg-transparent cursor-default'
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  handleClose();
-                }}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                  handleClose();
-                }}
+                aria-hidden='true'
               />
             )}
             <div

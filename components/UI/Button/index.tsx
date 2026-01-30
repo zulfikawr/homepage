@@ -72,7 +72,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={nativeType}
         className={twMerge(
-          'cursor-pointer focus:outline-none inline-flex justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing transition-color duration-100',
+          'cursor-pointer focus:outline-none inline-flex justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing duration-100',
           getButtonClasses(),
           icon && 'gap-2',
           variant === 'link' && 'squiggly-underline',
