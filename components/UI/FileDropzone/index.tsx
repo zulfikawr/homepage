@@ -148,16 +148,16 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
         )}
       </div>
 
-      <div className='relative group/input'>
-        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
-          <Icon name='link' className='size-4' />
-        </div>
+      <div className='relative group/input z-10'>
         <Input
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={placeholder}
-          className='bg-card border-border pl-9 h-11'
+          className='pl-[2.2rem]'
         />
+        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none z-10'>
+          <Icon name='link' size={18} />
+        </div>
       </div>
     </div>
   );

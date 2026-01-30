@@ -2,7 +2,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { useCallback } from 'react';
-import { useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/DateSelect';
@@ -34,16 +33,11 @@ const initialMovieState: Movie = {
   rating: undefined,
 };
 
-const emptySubscribe = () => () => {};
-
 const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
   const [movie, setMovie] = useState<Movie>(movieToEdit || initialMovieState);
 
-  const now = useSyncExternalStore(
-    emptySubscribe,
-    () => new Date(),
-    () => new Date('2025-01-01'),
-  );
+  // Use a stable initial date to avoid infinite loops with useSyncExternalStore
+  const [now] = useState(() => new Date());
 
   const initialDate = useMemo(() => {
     const date = movieToEdit?.releaseDate
@@ -57,7 +51,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
   // Sync state if initialDate change
   useEffect(() => {
     setSelectedDate(initialDate);
-  }, [initialDate]);
+    if (movieToEdit) {
+      setMovie(movieToEdit);
+    }
+  }, [initialDate, movieToEdit]);
 
   const currentPreview: Movie = {
     id: movie.id || 'preview',
@@ -336,6 +333,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
               type='text'
               value={movie.title}
               onChange={(e) => handleChange('title', e.target.value)}
+              placeholder='Titanic'
               required
             />
           </div>
@@ -355,6 +353,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
               type='text'
               value={movie.imdbId || ''}
               onChange={(e) => handleChange('imdbId', e.target.value)}
+              placeholder='e.g. tt0111161'
             />
           </div>
           <div>
@@ -363,6 +362,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
               type='text'
               value={movie.posterUrl || ''}
               onChange={(e) => handleChange('posterUrl', e.target.value)}
+              placeholder='https://example.com/poster.jpg'
             />
           </div>
           <div>
@@ -371,6 +371,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
               type='text'
               value={movie.imdbLink || ''}
               onChange={(e) => handleChange('imdbLink', e.target.value)}
+              placeholder='https://www.imdb.com/title/tt0111161/'
             />
           </div>
           <div>
@@ -384,7 +385,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     type='button'
                     onClick={() => handleChange('rating', i)}
                     onMouseDown={(e) => e.preventDefault()}
-                    className={`p-0.5 focus:outline-none ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
+                    className={`p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
                     aria-label={`${i} star`}
                   >
                     <div className='w-4 h-4'>

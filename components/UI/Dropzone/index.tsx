@@ -1,7 +1,5 @@
 'use client';
 
-'use client';
-
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
@@ -98,10 +96,10 @@ export const Dropzone: React.FC<DropzoneProps> = ({
     <div className={twMerge('group/dropzone space-y-3', className)}>
       <div
         className={twMerge(
-          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-2 shadow-sm focus:outline-none  dark:bg-muted',
+          'relative w-full flex flex-col items-center justify-center transition-all cursor-pointer overflow-hidden border border-border bg-muted/50 p-2 shadow-sm focus:outline-none dark:bg-muted',
           aspectRatio === 'video'
             ? 'aspect-video'
-            : 'aspect-square max-w-[200px]',
+            : 'aspect-square max-w-[200px] mx-auto',
           isDragging
             ? 'border-primary ring-4 ring-primary/10'
             : 'hover:bg-muted/50 dark:hover:bg-primary/10',
@@ -162,16 +160,16 @@ export const Dropzone: React.FC<DropzoneProps> = ({
         )}
       </div>
 
-      <div className='relative group/input'>
-        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground'>
-          <Icon name='link' className='size-4' />
-        </div>
+      <div className='relative group/input z-10'>
         <Input
           value={inputValue}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={placeholder}
-          className='bg-card border-border pl-9 h-11'
+          className='pl-[2.2rem]'
         />
+        <div className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none z-10'>
+          <Icon name='link' size={18} />
+        </div>
       </div>
     </div>
   );

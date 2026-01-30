@@ -121,11 +121,11 @@ export default function ProjectCard({
   );
 
   if (isPreview) {
-    return cardContent;
+    return <div className='w-full'>{cardContent}</div>;
   }
 
   return (
-    <Link href={href} prefetch={true} className='block'>
+    <Link href={href} prefetch={true} className='block w-full'>
       {cardContent}
     </Link>
   );

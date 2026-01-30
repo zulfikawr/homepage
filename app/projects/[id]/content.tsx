@@ -5,10 +5,10 @@ import { useEffect } from 'react';
 import { ViewTransition } from '@/components/Motion';
 import GitHubCard from '@/components/UI/Card/variants/GitHub';
 import ProjectCard from '@/components/UI/Card/variants/Project';
+import { MarkdownRenderer } from '@/components/UI/MarkdownRenderer';
 import { Separator } from '@/components/UI/Separator';
 import { useTitle } from '@/contexts/titleContext';
 import { Project } from '@/types/project';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 const ProjectContent = ({
   project,
@@ -54,11 +54,9 @@ const ProjectContent = ({
             {/* README */}
             {project.readme && (
               <section>
-                <div
+                <MarkdownRenderer
+                  content={project.readme}
                   className='max-w-none prose dark:prose-invert prose-headings:font-medium prose-a:text-primary'
-                  dangerouslySetInnerHTML={{
-                    __html: renderMarkdown(project.readme),
-                  }}
                 />
               </section>
             )}

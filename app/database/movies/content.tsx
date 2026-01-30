@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { Button } from '@/components/UI';
+import { Button, Card } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import MovieCard from '@/components/UI/Card/variants/Movie';
@@ -38,9 +38,26 @@ export default function MoviesContent() {
         ) : (
           <>
             <ViewTransition>
-              <div className='w-full rounded-md border bg-white text-center shadow-sm  dark:bg-card flex items-center justify-center mx-auto min-h-[100px]'>
-                <Button variant='primary' icon='plus' onClick={handleAdd} />
-              </div>
+              <Card
+                className='relative flex flex-col h-full'
+                onClick={handleAdd}
+              >
+                <div className='aspect-[2/3] w-full bg-muted/30' />
+                <div className='flex w-full items-center justify-center py-2'>
+                  {/* Space to match stars height */}
+                  <div className='h-[16px] md:h-[18px]' />
+                </div>
+                <div className='absolute inset-0 flex items-center justify-center'>
+                  <Button
+                    variant='primary'
+                    icon='plus'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAdd();
+                    }}
+                  />
+                </div>
+              </Card>
             </ViewTransition>
 
             {Array.isArray(movies) && movies.length > 0 ? (

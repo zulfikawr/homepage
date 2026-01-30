@@ -521,7 +521,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='w-full flex items-center justify-between gap-2 text-sm md:text-md text-foreground'>
+                <Button className='w-full flex items-center justify-between gap-2 text-sm md:text-md text-foreground px-2'>
                   <div className='flex items-center gap-2'>
                     {currentStatus?.icon && (
                       <Icon name={currentStatus.icon} className='size-4.5' />

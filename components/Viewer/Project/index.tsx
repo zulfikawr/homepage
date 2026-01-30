@@ -1,8 +1,7 @@
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Badge, Button } from '@/components/UI';
+import { Badge, Button, MarkdownRenderer } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { Project } from '@/types/project';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 const ProjectViewer = ({ project }: { project: Project }) => {
   const formatPeriod = () => {
@@ -77,11 +76,9 @@ const ProjectViewer = ({ project }: { project: Project }) => {
                 README.md
               </h2>
               <Separator margin='2' />
-              <div
+              <MarkdownRenderer
+                content={project.readme}
                 className='max-w-none prose dark:prose-invert'
-                dangerouslySetInnerHTML={{
-                  __html: renderMarkdown(project.readme),
-                }}
               />
             </section>
           ) : null}

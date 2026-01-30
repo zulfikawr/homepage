@@ -355,7 +355,7 @@ const MovieCardLoading = ({ isPreview = false }: { isPreview?: boolean }) => {
 
   return (
     <BaseCardLoading>
-      <div className='relative h-auto w-full lg:h-[196px] aspect-[2/3] lg:aspect-auto overflow-hidden'>
+      <div className='relative aspect-[2/3] w-full overflow-hidden'>
         <Skeleton width='100%' height='100%' className='rounded-t-md' />
       </div>
       <div className='flex w-full items-center justify-center px-1 py-2 gap-0.5 h-8'>

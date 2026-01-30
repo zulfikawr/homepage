@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { Editor } from '@/components/Editor';
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { MarkdownRenderer } from '@/components/UI/MarkdownRenderer';
 import { Comment } from '@/types/comment';
 import { escapeHtml } from '@/utilities/escapeHtml';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 import { getTimeAgo } from '@/utilities/timeAgo';
 
 import { toast } from '../../..';
@@ -211,17 +211,16 @@ export default function CommentCard({
               </div>
             </div>
           ) : (
-            <div className='prose prose-sm dark:prose-invert max-w-none'>
+            <div className='max-w-none'>
               {isLoading ? (
                 <div className='space-y-2'>
                   <Skeleton width='100%' height={14} />
                   <Skeleton width='90%' height={14} />
                 </div>
               ) : (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: renderMarkdown(comment?.content || ''),
-                  }}
+                <MarkdownRenderer
+                  content={comment?.content || ''}
+                  className='prose prose-sm dark:prose-invert'
                 />
               )}
             </div>

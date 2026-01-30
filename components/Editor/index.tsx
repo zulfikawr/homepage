@@ -8,10 +8,15 @@ import React, {
 import hljs from 'highlight.js';
 import { twMerge } from 'tailwind-merge';
 
-import { drawer } from '@/components/UI';
-import { Button, Icon, Toggle, Tooltip } from '@/components/UI';
+import {
+  Button,
+  drawer,
+  Icon,
+  MarkdownRenderer,
+  Toggle,
+  Tooltip,
+} from '@/components/UI';
 import { IconName } from '@/components/UI/Icon';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface EditorProps {
   content: string;
@@ -45,10 +50,7 @@ const Editor: React.FC<EditorProps> = ({
   const handlePreview = useCallback(() => {
     drawer.open(
       <div className='flex-1 overflow-y-auto p-6 lg:p-10'>
-        <div
-          className='prose dark:prose-invert max-w-none'
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(markdown) }}
-        />
+        <MarkdownRenderer content={markdown} />
       </div>,
     );
   }, [markdown]);

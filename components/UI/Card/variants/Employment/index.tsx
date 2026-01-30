@@ -51,51 +51,48 @@ export default function EmploymentCard({
   };
 
   return (
-    <Card
-      onClick={handleCardClick}
-      openForm={openForm}
-      isPreview={isPreview}
-      className='min-w-[18rem] lg:min-w-[25rem]'
-    >
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground  dark:text-foreground'>
-        <div className='flex items-center gap-x-2'>
-          {employment.orgLogoUrl && (
-            <ImageWithFallback
-              src={employment.orgLogoUrl}
-              height={24}
-              width={24}
-              alt={`${employment.organization} logo`}
-              className='rounded-full border bg-muted '
-              type='square'
-              sizes='24px'
-            />
-          )}
-          <p>{employment.organization}</p>
-        </div>
-        <Badge variant='yellow' icon='mapPin'>
-          {employment.organizationLocation}
-        </Badge>
-      </div>
-      <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
-        <div className='text-sm font-medium tracking-wide text-foreground'>
-          <p>{employment.jobTitle}</p>
-        </div>
-        <div className='flex flex-col items-start text-xs font-medium text-gruv-blue lg:items-center'>
-          {employment.dateString}
-        </div>
-      </div>
-
-      {employment.organizationIndustry && (
-        <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5  w-full'>
-          <p className='text-sm text-muted-foreground'>
-            {trimStr(employment.organizationIndustry, 25)}
-          </p>
-          <Badge variant='aqua' className='text-[10px] px-1.5 py-0'>
-            {formatJobType(employment.jobType)}
+    <div className={isPreview ? 'w-full' : ''}>
+      <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
+        <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground  dark:text-foreground'>
+          <div className='flex items-center gap-x-2'>
+            {employment.orgLogoUrl && (
+              <ImageWithFallback
+                src={employment.orgLogoUrl}
+                height={24}
+                width={24}
+                alt={`${employment.organization} logo`}
+                className='rounded-full border bg-muted '
+                type='square'
+                sizes='24px'
+              />
+            )}
+            <p>{employment.organization}</p>
+          </div>
+          <Badge variant='yellow' icon='mapPin'>
+            {employment.organizationLocation}
           </Badge>
         </div>
-      )}
-    </Card>
+        <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
+          <div className='text-sm font-medium tracking-wide text-foreground'>
+            <p>{employment.jobTitle}</p>
+          </div>
+          <div className='flex flex-col items-start text-xs font-medium text-gruv-blue lg:items-center'>
+            {employment.dateString}
+          </div>
+        </div>
+
+        {employment.organizationIndustry && (
+          <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5  w-full'>
+            <p className='text-sm text-muted-foreground'>
+              {trimStr(employment.organizationIndustry, 25)}
+            </p>
+            <Badge variant='aqua' className='text-[10px] px-1.5 py-0'>
+              {formatJobType(employment.jobType)}
+            </Badge>
+          </div>
+        )}
+      </Card>
+    </div>
   );
 }
 

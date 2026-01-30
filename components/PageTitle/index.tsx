@@ -2,9 +2,8 @@
 
 import { useEffect } from 'react';
 
-import { Separator, Skeleton } from '@/components/UI';
+import { MarkdownRenderer, Separator, Skeleton } from '@/components/UI';
 import { useTitle } from '@/contexts/titleContext';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PageTitleProps {
   emoji?: string;
@@ -76,11 +75,9 @@ const PageTitle = ({
                   <Skeleton width='65%' height={10} as='span' />
                 </div>
               ) : (
-                <div
+                <MarkdownRenderer
+                  content={subtitle || ''}
                   className='prose-sm [&>p]:my-0 [&>p]:text-muted-foreground/90'
-                  dangerouslySetInnerHTML={{
-                    __html: renderMarkdown(subtitle || ''),
-                  }}
                 />
               )}
             </div>

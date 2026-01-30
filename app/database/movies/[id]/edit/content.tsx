@@ -1,10 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import MovieForm from '@/components/Form/Movie';
 import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
 import { Movie } from '@/types/movie';
 
 interface EditMoviePageProps {
@@ -12,16 +9,13 @@ interface EditMoviePageProps {
 }
 
 export default function EditMoviePage({ movie }: EditMoviePageProps) {
-  const { setHeaderTitle } = useTitle();
-
-  useEffect(() => {
-    setHeaderTitle(`Edit: ${movie.title}`);
-    return () => setHeaderTitle('Movies');
-  }, [movie.title, setHeaderTitle]);
-
   return (
     <div>
-      <PageTitle emoji='🎬' title={`Edit Movie`} subtitle={movie.title} />
+      <PageTitle
+        emoji='🎬'
+        title={`Edit: ${movie.title}`}
+        subtitle={movie.title}
+      />
 
       <MovieForm movieToEdit={movie} />
     </div>

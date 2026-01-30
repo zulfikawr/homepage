@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Button, Icon, Input, Separator } from '@/components/UI';
+import {
+  Button,
+  Icon,
+  Input,
+  MarkdownRenderer,
+  Separator,
+} from '@/components/UI';
 import { useCollection } from '@/hooks';
 import {
   mapRecordToBook,
@@ -23,7 +29,6 @@ import { PersonalInfo } from '@/types/personalInfo';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 interface PuterChatResponse {
   message: {
@@ -444,13 +449,11 @@ Instructions:
                   <div className='size-1.5 bg-foreground/40 rounded-full animate-bounce [animation-delay:0.4s]' />
                 </div>
               ) : (
-                <div
+                <MarkdownRenderer
+                  content={m.content}
                   className={`py-2 ${
                     m.role === 'user' ? 'prose-chat' : 'prose-chat-assistant'
                   }`}
-                  dangerouslySetInnerHTML={{
-                    __html: renderMarkdown(m.content),
-                  }}
                 />
               )}
             </div>

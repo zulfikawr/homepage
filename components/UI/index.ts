@@ -12,6 +12,7 @@ export { default as HeatmapLegend } from './HeatmapLegend';
 export { Icon } from './Icon';
 export { Input } from './Input';
 export { Label } from './Label';
+export { MarkdownRenderer } from './MarkdownRenderer';
 export { default as Modal, modal, useModal } from './Modal';
 export { Portal } from './Portal';
 export { Separator } from './Separator';

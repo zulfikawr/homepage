@@ -79,7 +79,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
         <Dropdown
           trigger={
             <Button
-              className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+              className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
               disabled={disabled}
             >
               {value.getDate()}
@@ -93,7 +93,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
               <DropdownItem
                 key={day}
                 isActive={day === value.getDate()}
-                className='justify-center text-center'
+                className='justify-left text-left'
                 onClick={() => handleDayChange(day)}
               >
                 {day}
@@ -106,7 +106,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+            className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {formatMonth(value.getMonth())}
@@ -120,7 +120,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             <DropdownItem
               key={month}
               isActive={month === value.getMonth()}
-              className='justify-center text-center'
+              className='justify-left text-left'
               onClick={() => handleMonthChange(month)}
             >
               {formatMonth(month)}
@@ -132,7 +132,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+            className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {value.getFullYear()}
@@ -146,7 +146,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             <DropdownItem
               key={year}
               isActive={year === value.getFullYear()}
-              className='justify-center text-center'
+              className='justify-left text-left'
               onClick={() => handleYearChange(year)}
             >
               {year}

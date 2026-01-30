@@ -1,5 +1,4 @@
-import { Skeleton } from '@/components/UI';
-import { renderMarkdown } from '@/utilities/renderMarkdown';
+import { MarkdownRenderer, Skeleton } from '@/components/UI';
 
 export default function PostContent({
   content,
@@ -24,10 +23,5 @@ export default function PostContent({
     );
   }
 
-  return (
-    <div
-      className='max-w-none prose dark:prose-invert'
-      dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
-    />
-  );
+  return <MarkdownRenderer content={content} />;
 }

@@ -119,7 +119,7 @@ export default function PostCard({
   };
 
   return (
-    <div ref={cardRef}>
+    <div ref={cardRef} className={isPreview ? 'w-full' : ''}>
       <Card
         onClick={isPreview ? undefined : handleCardClick}
         openForm={openForm}

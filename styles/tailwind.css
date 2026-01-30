@@ -747,3 +747,20 @@ html {
   border: none;
   color: var(--color-gruv-fg);
 }
+
+.markdown-ui-btn {
+  @apply px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-all cursor-pointer inline-flex items-center gap-2 my-2 active:scale-95 shadow-sm;
+}
+
+.markdown-ui-tooltip {
+  @apply underline decoration-dotted decoration-primary/50 cursor-help inline-block;
+}
+
+.markdown-ui-badge,
+.markdown-ui-label {
+  @apply inline-flex align-middle;
+}
+
+.markdown-ui-icon {
+  @apply inline-flex align-middle mx-1;
+}
