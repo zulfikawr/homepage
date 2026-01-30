@@ -4,7 +4,6 @@ import AIKnowledgeAssistantBanner from '@/components/Banners/AIKnowledgeAssistan
 import GitHubContributionsBanner from '@/components/Banners/GitHubContributions';
 import PagesAndLinksBanner from '@/components/Banners/PagesAndLinks';
 import SpotifyBanner from '@/components/Banners/Spotify';
-// import TerminalBanner from '@/components/Banners/Terminal';
 import TopLanguagesBanner from '@/components/Banners/TopLanguages';
 import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
 import WeatherBanner from '@/components/Banners/Weather';
@@ -36,9 +35,6 @@ const Banners = () => {
             </ViewTransition>
           </StaggerContainer>
         </div>
-        {/* <ViewTransition key='terminal'>
-          <TerminalBanner />
-        </ViewTransition> */}
         <ViewTransition key='ai-assistant'>
           <AIKnowledgeAssistantBanner />
         </ViewTransition>

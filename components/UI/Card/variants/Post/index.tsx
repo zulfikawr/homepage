@@ -6,7 +6,6 @@ import { trimStr } from 'utilities/string';
 
 import AudioPlayer from '@/components/AudioPlayer';
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Hover } from '@/components/Visual';
 import { renderMarkdown } from '@/utilities/renderMarkdown';
 
 import { Button, Icon, Label } from '../../..';
@@ -86,12 +85,7 @@ export default function PostCard({
   const renderMedia = () => {
     if (post.image) {
       return (
-        <Hover
-          perspective={1000}
-          max={25}
-          scale={1.01}
-          className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90'
-        >
+        <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90'>
           <ImageWithFallback
             src={post.image || '/images/placeholder.png'}
             alt={`featured-image-${post.title}`}
@@ -101,7 +95,7 @@ export default function PostCard({
             type='portrait'
             sizes='(max-width: 640px) 120px, 150px'
           />
-        </Hover>
+        </div>
       );
     }
     return null;

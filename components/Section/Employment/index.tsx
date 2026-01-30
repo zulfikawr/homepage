@@ -35,8 +35,8 @@ const EmploymentSection = () => {
       />
       <div className='flex flex-col gap-y-4'>
         {loading ? (
-          <Mask className='-my-1'>
-            <div className='inline-flex min-w-full gap-x-4 py-1'>
+          <Mask className='-m-1'>
+            <div className='inline-flex min-w-full gap-x-4 p-1'>
               {Array(8)
                 .fill(0)
                 .map((_, index) => (
@@ -47,8 +47,8 @@ const EmploymentSection = () => {
         ) : sortedEmployments.length === 0 ? (
           <CardEmpty message='No employments found.' />
         ) : (
-          <Mask className='-my-1'>
-            <div className='inline-flex min-w-full gap-x-4 py-1'>
+          <Mask className='-m-1'>
+            <div className='inline-flex min-w-full gap-x-4 p-1'>
               <StaggerContainer>
                 {sortedEmployments.map((employment) => (
                   <ViewTransition key={employment.id} direction='right'>

@@ -1,9 +1,9 @@
 'use client';
 
-import AIChat from '@/components/AIChat';
 import { Card } from '@/components/UI';
 import { drawer } from '@/components/UI';
 import { Badge, Button, Icon } from '@/components/UI';
+import AIChat from '@/components/Viewer/AIChat';
 
 const AIKnowledgeAssistantBanner = () => {
   const handleOpenChat = () => {

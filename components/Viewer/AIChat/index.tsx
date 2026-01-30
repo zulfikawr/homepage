@@ -493,7 +493,7 @@ Instructions:
             <Button
               nativeType='submit'
               disabled={!input.trim()}
-              className='px-3'
+              className='px-3 h-9'
             >
               <Icon name='arrowRight' />
             </Button>

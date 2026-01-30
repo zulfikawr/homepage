@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Skeleton } from '@/components/UI';
-import { Hover } from '@/components/Visual';
 import { useCollection } from '@/hooks';
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
 import { PersonalInfo } from '@/types/personalInfo';
@@ -37,12 +36,7 @@ export const PersonalInfoLayout = ({
           )}
         </div>
       </div>
-      <Hover
-        perspective={1000}
-        max={25}
-        scale={1.01}
-        className='block flex-shrink-0 pt-1'
-      >
+      <div className='block flex-shrink-0 pt-1'>
         {isLoading ? (
           <Skeleton
             width={105}
@@ -61,7 +55,7 @@ export const PersonalInfoLayout = ({
             sizes='105px'
           />
         )}
-      </Hover>
+      </div>
     </section>
   );
 };

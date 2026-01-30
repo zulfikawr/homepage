@@ -7,7 +7,6 @@ import ImageWithFallback from '@/components/ImageWithFallback';
 import { toast } from '@/components/UI';
 import { Button, FileUpload, FormLabel, Input } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
-import { Hover } from '@/components/Visual';
 import { updatePersonalInfo } from '@/database/personalInfo';
 import { PersonalInfo } from '@/types/personalInfo';
 
@@ -84,12 +83,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               <p>{personalInfo.title}</p>
             </div>
           </div>
-          <Hover
-            perspective={1000}
-            max={25}
-            scale={1.01}
-            className='block flex-shrink-0 pt-1'
-          >
+          <div className='block flex-shrink-0 pt-1'>
             <ImageWithFallback
               src={personalInfo.avatarUrl}
               height={105}
@@ -100,7 +94,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
               type='square'
               sizes='105px'
             />
-          </Hover>
+          </div>
         </section>
         {/* Form */}
         <form onSubmit={handleSubmit} className='space-y-4'>

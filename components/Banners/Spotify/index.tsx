@@ -12,7 +12,6 @@ import {
   Tooltip,
 } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { Hover } from '@/components/Visual';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { getSpotifyAuthUrl } from '@/lib/spotify';
@@ -94,12 +93,7 @@ const SpotifyLayout = ({
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
-      <Hover
-        perspective={1000}
-        max={25}
-        scale={1.01}
-        className='relative h-16 w-16 flex-shrink-0'
-      >
+      <div className='relative h-16 w-16 flex-shrink-0'>
         {isLoading ? (
           <Skeleton width='100%' height='100%' className='rounded-md' />
         ) : (
@@ -113,7 +107,7 @@ const SpotifyLayout = ({
             type='square'
           />
         )}
-      </Hover>
+      </div>
 
       <div className='flex-col min-w-0 space-y-1 flex-1'>
         <h3 className='font-bold text-md text-gruv-aqua truncate leading-6 h-6 flex items-center'>

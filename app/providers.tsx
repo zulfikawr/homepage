@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { ThemeProvider } from 'next-themes';
 
-import { ThemeSync } from '@/components/ThemeSync';
+import { ThemeSync } from '@/components/Visual/ThemeSync';
 import { AuthProvider } from '@/contexts/authContext';
 import { BackgroundProvider } from '@/contexts/backgroundContext';
 import { LoadingProvider } from '@/contexts/loadingContext';

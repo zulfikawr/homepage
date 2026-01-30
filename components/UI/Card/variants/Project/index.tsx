@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import ImageWithFallback from '@/components/ImageWithFallback';
-import { Hover } from '@/components/Visual';
 import { Project } from '@/types/project';
 
 import { Badge } from '../../..';
@@ -40,34 +39,30 @@ export default function ProjectCard({
       isPreview={isPreview}
     >
       <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md border-b-2 border-border sm:hidden'>
-        <Hover perspective={1000} max={25} scale={1.01}>
-          <ImageWithFallback
-            src={project.image}
-            alt={project.name}
-            className='object-cover dark:brightness-[95%]'
-            loading='lazy'
-            height={480}
-            width={640}
-            sizes='100vw'
-          />
-        </Hover>
+        <ImageWithFallback
+          src={project.image}
+          alt={project.name}
+          className='object-cover dark:brightness-[95%]'
+          loading='lazy'
+          height={480}
+          width={640}
+          sizes='100vw'
+        />
       </div>
 
       {/* Desktop layout */}
       <div className='flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:gap-6'>
         {/* Image container */}
         <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90 sm:block'>
-          <Hover perspective={1000} max={25} scale={1.01}>
-            <ImageWithFallback
-              src={project.image}
-              alt={project.name}
-              height={480}
-              width={640}
-              className='rounded-md object-cover dark:brightness-[95%]'
-              loading='lazy'
-              sizes='(max-width: 768px) 100vw, 224px'
-            />
-          </Hover>
+          <ImageWithFallback
+            src={project.image}
+            alt={project.name}
+            height={480}
+            width={640}
+            className='rounded-md object-cover dark:brightness-[95%]'
+            loading='lazy'
+            sizes='(max-width: 768px) 100vw, 224px'
+          />
         </div>
 
         {/* Main content container */}
