@@ -242,22 +242,24 @@
     transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Hover: Pop up (translate up-left) and increase shadow */
-  .brutalist-interactive:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-brutalist-lg);
+  /* Hover: Pop up (translate up-left) and increase shadow - Only on devices with hover */
+  @media (hover: hover) {
+    .brutalist-interactive:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutalist-lg);
+    }
+    
+    .hover\:shadow-brutalist-hover:hover {
+      box-shadow: var(--shadow-brutalist-lg);
+      transform: translate(-2px, -2px);
+      transition: all 0.15s ease-out;
+    }
   }
 
   /* Active: Press down (translate down-right) and decrease shadow */
   .brutalist-interactive:active {
     transform: translate(2px, 2px);
     box-shadow: var(--shadow-brutalist-hover);
-  }
-
-  .hover\:shadow-brutalist-hover:hover {
-    box-shadow: var(--shadow-brutalist-lg);
-    transform: translate(-2px, -2px);
-    transition: all 0.15s ease-out;
   }
 }
 
@@ -346,9 +348,11 @@ body::-webkit-scrollbar {
   transition: all 0.2s ease;
 }
 
-.prose img:hover {
-  transform: scale(1.01) translate(-1px, -1px);
-  box-shadow: var(--shadow-brutalist-xl);
+@media (hover: hover) {
+  .prose img:hover {
+    transform: scale(1.01) translate(-1px, -1px);
+    box-shadow: var(--shadow-brutalist-xl);
+  }
 }
 
 .markdown-table-container {
@@ -516,8 +520,10 @@ html {
     background-color 0.2s ease;
 }
 
-.hover\:squiggly-underline:hover::after {
-  opacity: 1;
+@media (hover: hover) {
+  .hover\:squiggly-underline:hover::after {
+    opacity: 1;
+  }
 }
 
 /* Chat prose - user messages (inherits color for primary bg) */
@@ -824,9 +830,11 @@ html {
   border: 2px solid var(--border);
 }
 
-.markdown-ui-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-brutalist-lg);
+@media (hover: hover) {
+  .markdown-ui-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-brutalist-lg);
+  }
 }
 
 .markdown-ui-btn:active {
