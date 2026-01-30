@@ -53,7 +53,7 @@ export default function RootLayout({
       style={
         isDark
           ? { colorScheme: 'dark', background: '#282828' }
-          : { colorScheme: 'light', background: '#fbf1c7' }
+          : { colorScheme: 'light', background: '#fff9e1' }
       }
     >
       <head>
@@ -61,7 +61,7 @@ export default function RootLayout({
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';d.style.background='#282828';}else{d.classList.remove('dark');d.style.colorScheme='light';d.style.background='#fbf1c7';}}catch(e){}})()",
+              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';d.style.background='#282828';}else{d.classList.remove('dark');d.style.colorScheme='light';d.style.background='#fff9e1';}}catch(e){}})()",
           }}
         />
         <link rel='preconnect' href='https://api.iconify.design' />

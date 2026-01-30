@@ -70,4 +70,4 @@ const Label = ({
 
 Label.displayName = 'Label';
 
-export { Label };
+export { Label, type LabelProps };
