@@ -25,7 +25,6 @@ async function ensureAuth() {
  * Fetches all sections from the database.
  */
 export async function getSections(): Promise<Section[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('sections')

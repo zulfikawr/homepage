@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const NextConfigs = {
   reactCompiler: true,
-  cacheComponents: true,
 
   experimental: {
     turbopackFileSystemCacheForDev: true,

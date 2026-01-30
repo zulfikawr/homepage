@@ -1,6 +1,7 @@
-import { Suspense } from 'react';
+import { Suspense, use } from 'react';
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { cookies } from 'next/headers';
 import Script from 'next/script';
 
 import Footer from '@/components/Footer';
@@ -14,6 +15,8 @@ import Providers from './providers';
 
 import '@/styles/tailwind.css';
 import '@/styles/atom-one-dark.css';
+
+export const dynamic = 'force-dynamic';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -38,9 +41,29 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = use(cookies());
+  const theme = cookieStore.get('theme')?.value;
+  const isDark = theme === 'dark';
+
   return (
-    <html lang='en-us' suppressHydrationWarning>
+    <html
+      lang='en-us'
+      suppressHydrationWarning
+      className={isDark ? 'dark' : ''}
+      style={
+        isDark
+          ? { colorScheme: 'dark', background: '#282828' }
+          : { colorScheme: 'light', background: '#fbf1c7' }
+      }
+    >
       <head>
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';d.style.background='#282828';}else{d.classList.remove('dark');d.style.colorScheme='light';d.style.background='#fbf1c7';}}catch(e){}})()",
+          }}
+        />
         <link rel='preconnect' href='https://api.iconify.design' />
         <link rel='preconnect' href='https://pocketbase.zulfikar.site' />
         <link
@@ -76,7 +99,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative transition-all duration-300`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative`}
       >
         <Providers>
           <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
@@ -88,10 +111,12 @@ export default function RootLayout({
             <Suspense fallback={null}>
               <Header />
             </Suspense>
-            <main className='w-full lg:w-content mx-auto flex-1 px-4 lg:px-0 pt-0 lg:pt-20'>
-              <Suspense fallback={null}>{children}</Suspense>
-            </main>
-            <Footer />
+            <Suspense fallback={null}>
+              <main className='w-full lg:w-content mx-auto flex-1 px-4 lg:px-0 pt-0 lg:pt-20'>
+                {children}
+              </main>
+              <Footer />
+            </Suspense>
           </div>
 
           <Drawer />

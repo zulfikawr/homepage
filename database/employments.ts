@@ -60,7 +60,6 @@ async function ensureAuth() {
  * Fetches all employment records.
  */
 export async function getEmployments(): Promise<Employment[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('employments')
@@ -224,7 +223,6 @@ export async function deleteEmployment(
 export async function getEmploymentById(
   id: string,
 ): Promise<Employment | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

@@ -25,7 +25,6 @@ async function ensureAuth() {
  * Fetches all books from the database.
  */
 export async function getBooks(): Promise<Book[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('reading_list')
@@ -158,7 +157,6 @@ export async function deleteBook(
  * Fetches a single book by ID or slug.
  */
 export async function getBookById(id: string): Promise<Book | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

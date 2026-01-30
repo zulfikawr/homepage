@@ -40,7 +40,6 @@ async function ensureAuth() {
  * @returns Promise with interests and objectives data.
  */
 export async function getInterestsAndObjectives(): Promise<InterestsAndObjectives> {
-  'use cache';
   try {
     const records = await pb.collection(COLLECTION).getFullList<RecordModel>();
 

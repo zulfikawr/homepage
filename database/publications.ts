@@ -25,7 +25,6 @@ async function ensureAuth() {
  * Fetches all publications from the database.
  */
 export async function getPublications(): Promise<Publication[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('publications')
@@ -162,7 +161,6 @@ export async function deletePublication(
 export async function getPublicationById(
   id: string,
 ): Promise<Publication | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

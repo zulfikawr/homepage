@@ -34,7 +34,6 @@ async function ensureAuth() {
  * @returns Promise with personal info data.
  */
 export async function getPersonalInfo(): Promise<PersonalInfo> {
-  'use cache';
   try {
     const record = await pb.collection(COLLECTION).getOne(RECORD_ID);
     return mapRecordToPersonalInfo(record);

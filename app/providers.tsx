@@ -1,7 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
 import { ThemeProvider } from 'next-themes';
 
+import { ThemeSync } from '@/components/ThemeSync';
 import { AuthProvider } from '@/contexts/authContext';
 import { BackgroundProvider } from '@/contexts/backgroundContext';
 import { LoadingProvider } from '@/contexts/loadingContext';
@@ -10,6 +12,12 @@ import { TitleProvider } from '@/contexts/titleContext';
 import { WeatherProvider } from '@/contexts/weatherContext';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    // Clear the background style set by the anti-flash script
+    // to allow CSS/next-themes to take over.
+    document.documentElement.style.background = '';
+  }, []);
+
   return (
     <AuthProvider>
       <ThemeProvider
@@ -17,6 +25,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         defaultTheme='system'
         enableSystem={true}
       >
+        <ThemeSync />
         <BackgroundProvider>
           <LoadingProvider>
             <TitleProvider>

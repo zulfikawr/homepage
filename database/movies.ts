@@ -26,7 +26,6 @@ async function ensureAuth() {
  * @returns Promise with array of movies.
  */
 export async function getMovies(): Promise<Movie[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('movies')
@@ -155,7 +154,6 @@ export async function deleteMovie(
  * Fetches a single movie by ID or slug.
  */
 export async function getMovieById(id: string): Promise<Movie | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

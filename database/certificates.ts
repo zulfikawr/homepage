@@ -26,7 +26,6 @@ async function ensureAuth() {
  * @returns Promise with array of certificates.
  */
 export async function getCertificates(): Promise<Certificate[]> {
-  'use cache';
   try {
     const records = await pb
       .collection('certificates')
@@ -197,7 +196,6 @@ export async function deleteCertificate(
 export async function getCertificateById(
   id: string,
 ): Promise<Certificate | null> {
-  'use cache';
   try {
     if (id.length === 15) {
       try {

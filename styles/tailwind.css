@@ -103,6 +103,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     /* Gruvbox Light Palette as default Light mode */
     --background: #fbf1c7;
     --foreground: #3c3836;
@@ -152,6 +153,7 @@
   }
 
   .dark {
+    color-scheme: dark;
     /* Gruvbox Dark Palette */
     --background: #282828;
     --foreground: #ebdbb2;
@@ -195,7 +197,7 @@
 
   html,
   body {
-    @apply font-sans;
+    @apply font-sans bg-background text-foreground;
     font-optical-sizing: auto;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
