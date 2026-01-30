@@ -39,7 +39,13 @@ const HeatmapLegend = ({ isLoading = false }: { isLoading?: boolean }) => {
           )}
         >
           {isLoading && (
-            <Skeleton width='100%' height='100%' as='span' className='block' />
+            <Skeleton
+              width='100%'
+              height='100%'
+              as='span'
+              className='block'
+              style={{ borderRadius: '2px' }}
+            />
           )}
         </div>
       ))}

@@ -12,6 +12,7 @@ import {
 } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
+import Mask from '@/components/Visual/Mask';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { getGitHubContributions } from '@/lib/github';
 import { GitHubContributionData } from '@/types/github';
@@ -119,7 +120,7 @@ const GitHubContributionsLayout = ({
         </div>
 
         {/* Heatmap */}
-        <div className='overflow-x-auto -m-1 p-1'>
+        <Mask className='-m-1 p-1 scrollbar-hide'>
           <div className='flex gap-1 min-w-max'>
             {isLoading
               ? Array.from({ length: 52 }).map((_, weekIndex) => (
@@ -130,11 +131,10 @@ const GitHubContributionsLayout = ({
                         className='relative inline-flex items-center justify-center'
                       >
                         <Skeleton
-                          width={12}
-                          height={12}
-                          className='rounded-sm'
+                          className='w-3 h-3 rounded-sm'
                           style={{
                             animationDelay: `${(weekIndex + dayIndex) * 0.02}s`,
+                            borderRadius: '2px',
                           }}
                         />
                       </div>
@@ -156,10 +156,10 @@ const GitHubContributionsLayout = ({
                   </div>
                 ))}
           </div>
-        </div>
+        </Mask>
 
         {/* Legend */}
-        <div className='pt-2'>
+        <div className='pt-4'>
           <HeatmapLegend isLoading={isLoading} />
         </div>
       </div>

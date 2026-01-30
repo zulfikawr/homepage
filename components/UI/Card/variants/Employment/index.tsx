@@ -53,7 +53,7 @@ export default function EmploymentCard({
   return (
     <div className={isPreview ? 'w-full' : ''}>
       <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
-        <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground  dark:text-foreground'>
+        <div className='text-normal flex w-full min-w-[22rem] md:min-w-[24rem] items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground'>
           <div className='flex items-center gap-x-2'>
             {employment.orgLogoUrl && (
               <ImageWithFallback

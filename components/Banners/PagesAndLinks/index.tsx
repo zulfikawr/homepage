@@ -85,7 +85,7 @@ const PagesAndLinksBanner = () => {
 
       <Separator margin='0' />
 
-      <Mask>
+      <Mask className='scrollbar-hide'>
         <div className='inline-flex min-w-full items-center px-4 py-4 gap-x-2.5 whitespace-nowrap'>
           {navLinks.map((link) => (
             <Link

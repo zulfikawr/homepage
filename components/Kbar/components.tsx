@@ -476,7 +476,7 @@ export function KbarContent() {
 
       <div
         ref={scrollRef}
-        className='flex-1 overflow-y-auto flex-shrink-0 p-4 sm:px-8 sm:py-6 pt-6'
+        className='flex-1 overflow-y-auto scrollbar-hide flex-shrink-0 p-4 sm:px-8 sm:py-6 pt-6'
       >
         {filteredSections.length === 0 && !isSearching ? (
           <div className='flex flex-col items-center justify-center h-full text-muted-foreground py-12'>
