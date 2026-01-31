@@ -248,7 +248,7 @@
       transform: translate(-2px, -2px);
       box-shadow: var(--shadow-brutalist-lg);
     }
-    
+
     .hover\:shadow-brutalist-hover:hover {
       box-shadow: var(--shadow-brutalist-lg);
       transform: translate(-2px, -2px);

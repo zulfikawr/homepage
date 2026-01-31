@@ -410,7 +410,7 @@ Instructions:
             <Icon
               name='chatCenteredText'
               size={48}
-              className='text-primary/20'
+              className='text-primary/80'
             />
             <div className='space-y-1'>
               <p className='font-medium'>How can I help you today?</p>
@@ -484,7 +484,7 @@ Instructions:
             <Button
               nativeType='button'
               onClick={handleCancel}
-              className='px-3'
+              className='px-3 h-9'
               title='Cancel'
             >
               <Icon name='x' />
