@@ -4,372 +4,407 @@ import { useState } from 'react';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { drawer } from '@/components/UI';
-import { modal } from '@/components/UI';
-import { toast } from '@/components/UI';
-import {
-  Badge,
-  Button,
-  Checkbox,
-  Dropdown,
-  DropdownItem,
-  Icon,
-  Toggle,
-  Tooltip,
-} from '@/components/UI';
+import SectionTitle from '@/components/SectionTitle';
+import { Badge } from '@/components/UI/Badge';
+import { Button } from '@/components/UI/Button';
+import { Card } from '@/components/UI/Card';
+import { Checkbox } from '@/components/UI/Checkbox';
+import { drawer } from '@/components/UI/Drawer';
+import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
+import { Icon } from '@/components/UI/Icon';
+import { Input } from '@/components/UI/Input';
+import { Label } from '@/components/UI/Label';
+import { modal } from '@/components/UI/Modal';
 import { Separator } from '@/components/UI/Separator';
+import { Skeleton } from '@/components/UI/Skeleton';
+import { Slider } from '@/components/UI/Slider';
+import { Switch } from '@/components/UI/Switch';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from '@/components/UI/Table';
+import { Textarea } from '@/components/UI/Textarea';
+import { toast } from '@/components/UI/Toast';
+import { Toggle } from '@/components/UI/Toggle';
+import { ToggleGroup } from '@/components/UI/ToggleGroup';
+import { Tooltip } from '@/components/UI/Tooltip';
 
-export default function UIComponentsContent() {
-  const openDrawer = () => {
-    drawer.open(
-      <div className='flex flex-col h-full overflow-hidden'>
-        <div className='flex-shrink-0 px-4 pt-2 pb-4 sm:px-8 sm:pt-4 sm:pb-6'>
-          <div className='flex flex-row justify-between items-center'>
-            <h1 className='text-xl md:text-2xl font-semibold'>Drawer</h1>
-          </div>
-        </div>
-
-        <Separator margin='0' />
-
-        {/* Scrollable Content */}
-        <div className='grid grid-cols-2 gap-4 overflow-y-auto w-fit p-4 md:p-8'>
-          This is an example of a drawer component.
-        </div>
-      </div>,
-    );
-  };
+export default function UIContent() {
+  const [toggleGroupValue, setToggleGroupValue] = useState('left');
+  const [isChecked, setIsChecked] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [sliderValue, setSliderValue] = useState(50);
+  const [toggleState, setToggleState] = useState(false);
 
   const openModal = () => {
     modal.open(
-      <div className='p-6'>
-        <h2 className='text-xl font-semibold mb-4'>This is a modal</h2>
-        <p className='mb-6'>This is a modal description</p>
-        <div className='flex justify-end space-x-4'>
-          <Button variant='default' onClick={() => modal.close()}>
+      <div className='p-6 space-y-4'>
+        <h2 className='text-xl font-bold'>Example Modal</h2>
+        <p className='text-muted-foreground'>
+          This is a modal component. It overlays the content and focuses user
+          attention.
+        </p>
+        <div className='flex justify-end gap-2'>
+          <Button variant='outline' onClick={() => modal.close()}>
             Cancel
           </Button>
-          <Button variant='primary' onClick={() => modal.close()}>
-            Confirm
+          <Button onClick={() => modal.close()}>Confirm</Button>
+        </div>
+      </div>,
+    );
+  };
+
+  const openDrawer = () => {
+    drawer.open(
+      <div className='p-6 h-full overflow-y-auto space-y-4'>
+        <h2 className='text-xl font-bold'>Example Drawer</h2>
+        <p className='text-muted-foreground'>
+          Drawers are useful for mobile-first menus or complex forms that need
+          more space.
+        </p>
+        <div className='space-y-4 pt-4'>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div
+              key={i}
+              className='p-4 border-2 border-border rounded-md bg-card'
+            >
+              <h3 className='font-bold'>Drawer Item {i}</h3>
+              <p className='text-sm text-muted-foreground'>
+                Some description text here.
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className='pt-4'>
+          <Button className='w-full' onClick={() => drawer.close()}>
+            Close Drawer
           </Button>
         </div>
       </div>,
     );
   };
 
-  const HEADING_OPTIONS: { label: string }[] = [
-    { label: 'H1' },
-    { label: 'H2' },
-    { label: 'H3' },
-  ];
-
-  const [currentHeading, setCurrentHeading] = useState<string>('H1');
-
-  const handleHeadingSelect = (heading: string) => {
-    setCurrentHeading(heading);
-  };
-
-  const [isChecked, setIsChecked] = useState(false);
-
-  const [formats, setFormats] = useState({
-    bold: false,
-    italic: false,
-    underline: false,
-  });
-
-  const toggleFormat = (format: keyof typeof formats) => {
-    setFormats((prev) => ({
-      ...prev,
-      [format]: !prev[format],
-    }));
-  };
-
   return (
-    <div>
+    <div className='space-y-12 pb-20'>
       <PageTitle
         emoji='🎨'
         title='UI Components'
-        subtitle='Explore all available UI components used in this website, in an interactive way.'
+        subtitle='A comprehensive showcase of my custom gruvbox soft brutalist design system and components.'
       />
 
-      <div className='space-y-6'>
-        <StaggerContainer>
-          {/* Button Component */}
-          <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm '>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                  <span>Buttons</span>
-                </div>
-              </div>
-              <div className='flex flex-wrap justify-center gap-4 my-6 px-4'>
-                {/* Top Row - 3 Buttons */}
-                <div className='flex gap-4 w-full justify-center'>
+      {/* Primitives Section */}
+      <section className='space-y-6'>
+        <SectionTitle icon='cube' title='Primitives' />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          <StaggerContainer>
+            <ViewTransition>
+              <Card className='p-6 space-y-4' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Buttons
+                </h3>
+                <div className='flex flex-wrap gap-4'>
                   <Button variant='primary'>Primary</Button>
                   <Button variant='default'>Default</Button>
                   <Button variant='outline'>Outline</Button>
-                </div>
-                {/* Bottom Row - 3 Buttons */}
-                <div className='flex gap-4 w-full justify-center'>
                   <Button variant='destructive'>Destructive</Button>
                   <Button variant='ghost'>Ghost</Button>
                   <Button variant='link'>Link</Button>
                 </div>
-              </div>
-            </div>
-          </ViewTransition>
-
-          {/* Icon Component */}
-          <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm '>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                  <span>Icons</span>
+                <div className='flex flex-wrap gap-4 mt-4'>
+                  <Button icon='plus' variant='primary'>
+                    With Icon
+                  </Button>
+                  <Button icon='trash' variant='destructive'>
+                    Delete
+                  </Button>
                 </div>
-              </div>
-              <div className='flex justify-center gap-4 my-6'>
-                <Tooltip text='addressBook' position='top'>
-                  <Icon name='addressBook' className='size-5' />
-                </Tooltip>
-                <Tooltip text='calendarPlus' position='top'>
-                  <Icon name='calendarPlus' className='size-5' />
-                </Tooltip>
-                <Tooltip text='file' position='top'>
-                  <Icon name='file' className='size-5' />
-                </Tooltip>
-                <Tooltip text='chatCenteredText' position='top'>
-                  <Icon name='chatCenteredText' className='size-5' />
-                </Tooltip>
-                <Tooltip text='houseLine' position='top'>
-                  <Icon name='houseLine' className='size-5' />
-                </Tooltip>
-                <Tooltip text='info' position='top'>
-                  <Icon name='info' className='size-5' />
-                </Tooltip>
-                <Tooltip text='magnifyingGlass' position='top'>
-                  <Icon name='magnifyingGlass' className='size-5' />
-                </Tooltip>
-              </div>
-            </div>
-          </ViewTransition>
+              </Card>
+            </ViewTransition>
 
-          {/* Dropdown Component */}
-          <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm '>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                  <span>Dropdown</span>
+            <ViewTransition>
+              <Card className='p-6 space-y-4' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Badges & Labels
+                </h3>
+                <div className='flex flex-wrap gap-2'>
+                  <Badge variant='primary'>Primary</Badge>
+                  <Badge variant='aqua'>Aqua</Badge>
+                  <Badge variant='green'>Green</Badge>
+                  <Badge variant='yellow'>Yellow</Badge>
+                  <Badge variant='red'>Red</Badge>
+                  <Badge variant='blue'>Blue</Badge>
+                  <Badge variant='outline'>Outline</Badge>
                 </div>
-              </div>
-              <div className='my-6 flex justify-center gap-x-4'>
-                <Dropdown
-                  trigger={<Button variant='ghost'>{currentHeading}</Button>}
-                >
-                  <div className='p-1 flex flex-col w-32'>
-                    {HEADING_OPTIONS.map((heading) => (
-                      <DropdownItem
-                        key={heading.label}
-                        onClick={() => handleHeadingSelect(heading.label)}
-                        isActive={currentHeading === heading.label}
-                      >
-                        {heading.label}
-                      </DropdownItem>
-                    ))}
-                    <DropdownItem
-                      onClick={() => handleHeadingSelect('Paragraph')}
-                      isActive={currentHeading === 'Paragraph'}
-                    >
-                      Paragraph
-                    </DropdownItem>
+                <div className='flex flex-wrap gap-2 mt-4'>
+                  <Label variant='primary'>Primary Label</Label>
+                  <Label variant='secondary'>Secondary</Label>
+                  <Label variant='aqua' icon='react'>
+                    React
+                  </Label>
+                </div>
+              </Card>
+            </ViewTransition>
+          </StaggerContainer>
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Forms Section */}
+      <section className='space-y-6'>
+        <SectionTitle icon='pencilSimple' title='Form Elements' />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          <StaggerContainer>
+            <ViewTransition>
+              <Card className='p-6 space-y-6' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Inputs
+                </h3>
+                <div className='space-y-4'>
+                  <div className='space-y-2'>
+                    <Label variant='secondary'>Text Input</Label>
+                    <Input placeholder='Type something...' />
                   </div>
-                </Dropdown>
+                  <div className='space-y-2'>
+                    <Label variant='secondary'>With Icon</Label>
+                    <div className='relative'>
+                      <Icon
+                        name='userCircle'
+                        className='absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground size-4'
+                      />
+                      <Input className='pl-9' placeholder='Username' />
+                    </div>
+                  </div>
+                  <div className='space-y-2'>
+                    <Label variant='secondary'>Textarea</Label>
+                    <Textarea placeholder='Write a longer message...' />
+                  </div>
+                </div>
+              </Card>
+            </ViewTransition>
 
-                <Dropdown trigger={<Button variant='link'>Link</Button>}>
-                  <div className='p-2'>
-                    <input
-                      type='text'
-                      placeholder='Enter URL'
-                      className='w-fit p-3 text-sm border border-border rounded-md mb-2 focus:outline-none'
+            <ViewTransition>
+              <Card className='p-6 space-y-6' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Controls
+                </h3>
+                <div className='space-y-6'>
+                  <div className='flex items-center justify-between'>
+                    <span className='font-medium'>Checkbox</span>
+                    <Checkbox
+                      id='example-checkbox'
+                      label='Check me'
+                      checked={isChecked}
+                      onChange={(c) => setIsChecked(c)}
                     />
-                    <Button variant='primary' className='w-full'>
-                      Submit
+                  </div>
+                  <div className='flex items-center justify-between'>
+                    <span className='font-medium'>Switch</span>
+                    <Switch
+                      id='switch-example'
+                      label='Toggle me'
+                      checked={isSwitchOn}
+                      onChange={setIsSwitchOn}
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <div className='flex justify-between'>
+                      <span className='font-medium'>Slider</span>
+                      <span className='text-muted-foreground font-mono'>
+                        {sliderValue}
+                      </span>
+                    </div>
+                    <Slider
+                      id='slider-example'
+                      value={sliderValue}
+                      onChange={setSliderValue}
+                      max={100}
+                      step={1}
+                    />
+                  </div>
+                  <div className='space-y-2'>
+                    <span className='font-medium block mb-2'>Toggle Group</span>
+                    <ToggleGroup
+                      value={toggleGroupValue}
+                      onChange={setToggleGroupValue}
+                      options={[
+                        { label: 'Left', value: 'left', icon: 'arrowLeft' },
+                        { label: 'Center', value: 'center', icon: 'rows' },
+                        { label: 'Right', value: 'right', icon: 'arrowRight' },
+                      ]}
+                    />
+                  </div>
+                  <div className='flex items-center gap-4'>
+                    <span className='font-medium'>Dropdown:</span>
+                    <Dropdown
+                      trigger={
+                        <Button className='flex justify-between gap-4'>
+                          Options <Icon name='caretDown' size={16} />
+                        </Button>
+                      }
+                      matchTriggerWidth
+                    >
+                      <DropdownItem icon='pencilSimple'>Edit</DropdownItem>
+                      <DropdownItem icon='note'>Duplicate</DropdownItem>
+                      <DropdownItem icon='trash' className='text-destructive'>
+                        Delete
+                      </DropdownItem>
+                    </Dropdown>
+                  </div>
+                  <div className='flex items-center gap-4'>
+                    <span className='font-medium'>Standalone Toggle:</span>
+                    <Toggle
+                      isActive={toggleState}
+                      onChange={() => setToggleState(!toggleState)}
+                    >
+                      <Icon
+                        name={toggleState ? 'star' : 'star'}
+                        weight={toggleState ? 'fill' : 'regular'}
+                      />
+                    </Toggle>
+                  </div>
+                </div>
+              </Card>
+            </ViewTransition>
+          </StaggerContainer>
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Feedback Section */}
+      <section className='space-y-6'>
+        <SectionTitle icon='info' title='Feedback & Overlays' />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          <StaggerContainer>
+            <ViewTransition>
+              <Card className='p-6 space-y-6' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Toasts
+                </h3>
+                <div className='space-y-4'>
+                  <p className='text-sm text-muted-foreground'>
+                    Transient notifications for user feedback.
+                  </p>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <Button
+                      onClick={() => toast.success('Operation successful!')}
+                      variant='outline'
+                      className='w-full justify-start'
+                      icon='checkCircle'
+                    >
+                      Show Success Toast
+                    </Button>
+                    <Button
+                      onClick={() => toast.error('Something went wrong!')}
+                      variant='outline'
+                      className='w-full justify-start'
+                      icon='warning'
+                    >
+                      Show Error Toast
                     </Button>
                   </div>
-                </Dropdown>
-              </div>
+                </div>
+              </Card>
+            </ViewTransition>
+
+            <ViewTransition>
+              <Card className='p-6 space-y-6' isPreview>
+                <h3 className='font-bold text-lg border-b-2 border-border pb-2'>
+                  Overlays
+                </h3>
+                <div className='space-y-6'>
+                  <div className='grid grid-cols-2 gap-4'>
+                    <Button
+                      onClick={openModal}
+                      variant='primary'
+                      className='w-full'
+                    >
+                      Open Modal
+                    </Button>
+                    <Button
+                      onClick={openDrawer}
+                      variant='default'
+                      className='w-full'
+                    >
+                      Open Drawer
+                    </Button>
+                  </div>
+                  <div className='pt-4 border-t border-border flex justify-center'>
+                    <Tooltip text='This is a helpful tooltip'>
+                      <Button variant='outline'>Hover me for Tooltip</Button>
+                    </Tooltip>
+                  </div>
+                </div>
+              </Card>
+            </ViewTransition>
+          </StaggerContainer>
+        </div>
+      </section>
+
+      <Separator />
+
+      {/* Data Display */}
+      <section className='space-y-6'>
+        <SectionTitle icon='table' title='Data Display' />
+        <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+          <Card className='col-span-1 lg:col-span-2 overflow-hidden' isPreview>
+            <div className='p-4 border-b-2 border-border bg-muted/30'>
+              <h3 className='font-bold'>Users Table</h3>
             </div>
-          </ViewTransition>
-
-          <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
-            {/* Modal Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>Modal</span>
-                  </div>
-                </div>
-                <div className='flex justify-center my-6 px-4.5'>
-                  <Button variant='primary' onClick={openModal}>
-                    Open Modal
-                  </Button>
-                </div>
-              </div>
-            </ViewTransition>
-
-            {/* Drawer Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>Drawer</span>
-                  </div>
-                </div>
-                <div className='flex justify-center my-6 px-4.5'>
-                  <Button variant='primary' onClick={openDrawer}>
-                    Open Drawer
-                  </Button>
-                </div>
-              </div>
-            </ViewTransition>
-          </div>
-
-          <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
-            {/* Badge Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>Badge</span>
-                  </div>
-                </div>
-                <div className='my-6 px-4.5'>
-                  <div className='flex items-center justify-center space-x-3'>
-                    <div className='flex w-auto'>
-                      <Badge variant='default' icon='nextjs'>
-                        Next.js
-                      </Badge>
-                    </div>
-                    <div className='flex w-auto'>
-                      <Badge variant='outline' icon='firebase'>
-                        Firebase
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ViewTransition>
-
-            {/* Checkbox Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>Checkbox</span>
-                  </div>
-                </div>
-                <div className='flex justify-center my-6 px-4.5'>
-                  <Checkbox
-                    id='sample-checkbox'
-                    checked={isChecked}
-                    onChange={setIsChecked}
-                    label='I agree to the terms and conditions'
-                  />
-                </div>
-              </div>
-            </ViewTransition>
-          </div>
-
-          <div className='grid grid-cols-2 gap-x-4 lg:gap-x-8'>
-            {/* Tooltip Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>Tooltip</span>
-                  </div>
-                </div>
-                <div className='flex justify-center my-6'>
-                  <Tooltip text='This is a tooltip' position='top'>
-                    <Button>Hover Me</Button>
-                  </Tooltip>
-                </div>
-              </div>
-            </ViewTransition>
-
-            {/* Toggle Component */}
-            <ViewTransition>
-              <div className='w-full rounded-md border shadow-sm '>
-                <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                  <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                    <span>
-                      Toggle{' '}
-                      <span className='text-muted-foreground dark:text-muted-foreground'>
-                        (with tooltip)
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <div className='flex justify-center gap-2 my-6'>
-                  <Tooltip text='Bold' position='top'>
-                    <Toggle
-                      isActive={formats.bold}
-                      onChange={() => toggleFormat('bold')}
-                    >
-                      <span className='font-bold'>B</span>
-                    </Toggle>
-                  </Tooltip>
-
-                  <Tooltip text='Italic' position='top'>
-                    <Toggle
-                      isActive={formats.italic}
-                      onChange={() => toggleFormat('italic')}
-                    >
-                      <span className='italic'>I</span>
-                    </Toggle>
-                  </Tooltip>
-
-                  <Tooltip text='Underline' position='top'>
-                    <Toggle
-                      isActive={formats.underline}
-                      onChange={() => toggleFormat('underline')}
-                    >
-                      <span className='underline'>U</span>
-                    </Toggle>
-                  </Tooltip>
-                </div>
-              </div>
-            </ViewTransition>
-          </div>
-
-          {/* Toast Component */}
-          <ViewTransition>
-            <div className='w-full rounded-md border shadow-sm '>
-              <div className='flex w-full items-center border-b border-border px-4.5 py-2.5 '>
-                <div className='flex items-center text-[15px] font-medium tracking-wide text-foreground'>
-                  <span>Toast</span>
-                </div>
-              </div>
-              <div className='flex justify-center gap-4 my-6'>
-                <Button onClick={() => toast.show('This is a default toast!')}>
-                  Default
-                </Button>
-                <Button
-                  variant='primary'
-                  onClick={() => toast.success('This is a success toast!')}
-                >
-                  Success
-                </Button>
-                <Button
-                  variant='destructive'
-                  onClick={() => toast.error('This is an error toast!')}
-                >
-                  Error
-                </Button>
-              </div>
+            <div className='px-4 pb-4'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableCell isHeader>Name</TableCell>
+                    <TableCell isHeader>Role</TableCell>
+                    <TableCell isHeader className='text-right'>
+                      Status
+                    </TableCell>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className='font-medium'>John Doe</TableCell>
+                    <TableCell>Developer</TableCell>
+                    <TableCell className='text-right'>
+                      <Badge variant='green'>Active</Badge>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className='font-medium'>Jane Smith</TableCell>
+                    <TableCell>Designer</TableCell>
+                    <TableCell className='text-right'>
+                      <Badge variant='yellow'>Away</Badge>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className='font-medium'>Bob Johnson</TableCell>
+                    <TableCell>Manager</TableCell>
+                    <TableCell className='text-right'>
+                      <Badge variant='red'>Offline</Badge>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-          </ViewTransition>
-        </StaggerContainer>
-      </div>
+          </Card>
+
+          <Card className='p-6 space-y-4' isPreview>
+            <h3 className='font-bold border-b-2 border-border pb-2'>
+              Skeleton Loading
+            </h3>
+            <div className='space-y-3'>
+              <Skeleton className='h-32 w-full rounded-md' />
+              <Skeleton className='h-4 w-3/4' />
+              <Skeleton className='h-4 w-1/2' />
+            </div>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }

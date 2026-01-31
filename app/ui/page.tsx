@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
-import UIComponentsContent from './content';
+import UIContent from './content';
 
 export const metadata: Metadata = {
-  title: 'UI - Zulfikar',
+  title: 'UI Components - Zulfikar',
   description:
-    'Explore all available UI components used in this website, in an interactive way.',
+    'A showcase of the design system and UI components used in this website.',
 };
 
-export default async function UIComponentsPage() {
-  return <UIComponentsContent />;
+export default function UIPage() {
+  return <UIContent />;
 }
