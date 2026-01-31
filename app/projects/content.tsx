@@ -69,14 +69,13 @@ export default function ProjectsContent({ initialData }: ProjectsContentProps) {
   }, [projects, searchQuery, selectedTool]);
 
   const pinnedProjects = filteredProjects.filter((p) => p.pinned);
-  const wipProjects = filteredProjects.filter(
-    (p) => p.status === 'inProgress' && !p.pinned,
-  );
-  const doneProjects = filteredProjects.filter(
-    (p) => p.status === 'completed' && !p.pinned,
-  );
+
+  // Show all projects in their respective categories, even if pinned
+  // This ensures the sections (WIP, Completed, Upcoming) are always visible if there are projects
+  const wipProjects = filteredProjects.filter((p) => p.status === 'inProgress');
+  const doneProjects = filteredProjects.filter((p) => p.status === 'completed');
   const upcomingProjects = filteredProjects.filter(
-    (p) => p.status === 'upcoming' && !p.pinned,
+    (p) => p.status === 'upcoming',
   );
 
   const showPinned =
