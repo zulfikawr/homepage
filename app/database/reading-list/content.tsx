@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { Button } from '@/components/UI';
+import { Button, Card } from '@/components/UI';
 import BookCard from '@/components/UI/Card/variants/Book';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
@@ -47,16 +47,19 @@ export default function ReadingListDatabase() {
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <ViewTransition>
-              <div className='w-full rounded-md border bg-white flex justify-center items-center text-center shadow-sm  dark:bg-card p-5 min-h-[100px]'>
+              <Card
+                isPreview
+                className='flex justify-center items-center h-full'
+              >
                 <Button
                   variant='primary'
                   icon='plus'
                   onClick={handleAddBook}
-                  className='mx-auto'
+                  className='mx-auto my-8'
                 >
                   {books && books.length > 0 ? 'Add more' : 'Add book'}
                 </Button>
-              </div>
+              </Card>
             </ViewTransition>
 
             {Array.isArray(books) && books.length > 0 ? (

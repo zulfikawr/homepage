@@ -6,10 +6,11 @@ import { twMerge } from 'tailwind-merge';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
-import { Badge, Button, Icon, Input, ToggleGroup } from '@/components/UI';
+import { Badge, Button, Card, Icon, Input, ToggleGroup } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import ProjectCard from '@/components/UI/Card/variants/Project';
+import Mask from '@/components/Visual/Mask';
 import { useCollection } from '@/hooks';
 import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
@@ -111,34 +112,36 @@ export default function ProjectsDatabase() {
         </div>
 
         {/* Tools Filter */}
-        <div className='flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide mask-fade-right'>
-          <Badge
-            variant={selectedTool === null ? 'primary' : 'outline'}
-            className={twMerge(
-              'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-              selectedTool !== null && 'hover:bg-primary/20',
-            )}
-            onClick={() => setSelectedTool(null)}
-          >
-            All Tools
-          </Badge>
-          {allTools.map((tool) => (
+        <Mask className='-m-1 scrollbar-hide pb-2'>
+          <div className='flex items-center gap-2 m-1'>
             <Badge
-              key={tool}
-              variant={selectedTool === tool ? 'primary' : 'outline'}
-              icon
+              variant={selectedTool === null ? 'primary' : 'outline'}
               className={twMerge(
                 'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                selectedTool !== tool && 'hover:bg-primary/20',
+                selectedTool !== null && 'hover:bg-primary/20',
               )}
-              onClick={() =>
-                setSelectedTool(selectedTool === tool ? null : tool)
-              }
+              onClick={() => setSelectedTool(null)}
             >
-              {tool}
+              All Tools
             </Badge>
-          ))}
-        </div>
+            {allTools.map((tool) => (
+              <Badge
+                key={tool}
+                variant={selectedTool === tool ? 'primary' : 'outline'}
+                icon
+                className={twMerge(
+                  'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
+                  selectedTool !== tool && 'hover:bg-primary/20',
+                )}
+                onClick={() =>
+                  setSelectedTool(selectedTool === tool ? null : tool)
+                }
+              >
+                {tool}
+              </Badge>
+            ))}
+          </div>
+        </Mask>
       </div>
 
       <div className='grid grid-cols-1 gap-4'>
@@ -149,16 +152,16 @@ export default function ProjectsDatabase() {
         ) : (
           <>
             <ViewTransition>
-              <div className='w-full rounded-md border bg-white text-center shadow-sm dark:bg-card p-5'>
+              <Card isPreview>
                 <Button
                   variant='primary'
                   icon='plus'
                   onClick={handleAddProject}
-                  className='mx-auto'
+                  className='my-8 mx-auto'
                 >
                   Add New Project
                 </Button>
-              </div>
+              </Card>
             </ViewTransition>
 
             {filteredProjects.length > 0 ? (
