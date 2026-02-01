@@ -131,6 +131,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       slug,
       dateString: formatDate(selectedDate),
     };
+    delete (postData as { id?: string }).id;
 
     try {
       let result;

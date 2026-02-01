@@ -22,6 +22,28 @@ async function ensureAuth() {
 }
 
 /**
+ * Helper to clean book data before sending to PocketBase.
+ */
+function cleanBookData(data: Omit<Book, 'id'> | Book): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Handle imageURL field
+  if (typeof clean.imageURL === 'string') {
+    if (clean.imageURL.includes('/api/files/')) {
+      const parts = clean.imageURL.split('/');
+      clean.imageURL = parts[parts.length - 1].split('?')[0];
+    }
+  }
+
+  // Remove ID
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Fetches all books from the database.
  */
 export async function getBooks(): Promise<Book[]> {
@@ -39,13 +61,17 @@ export async function getBooks(): Promise<Book[]> {
  * Adds a new book to the database.
  */
 export async function addBook(
-  data: Omit<Book, 'id'>,
+  data: Omit<Book, 'id'> | FormData,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   await ensureAuth();
   try {
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanBookData(data) as Record<string, unknown>);
     const record = await pb
       .collection('reading_list')
-      .create<RecordModel>(data);
+      .create<RecordModel>(payload);
     const book = mapRecordToBook(record);
 
     revalidatePath('/reading-list');
@@ -65,12 +91,30 @@ export async function addBook(
  * Updates an existing book in the database.
  */
 export async function updateBook(
-  data: Book,
+  data: Book | FormData,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   await ensureAuth();
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
+    let recordId: string;
+    let updateData: Record<string, unknown> | FormData;
+
+    if (data instanceof FormData) {
+      const formId = data.get('id') as string;
+      // If id is in FormData, use it, but remove from payload
+      if (formId) recordId = formId;
+      else throw new Error('ID is required for update');
+
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id;
+      updateData = cleanBookData(data);
+    }
 
     if (recordId.length !== 15) {
       const records = await pb
@@ -94,7 +138,7 @@ export async function updateBook(
 
     const record = await pb
       .collection('reading_list')
-      .update<RecordModel>(recordId, rest);
+      .update<RecordModel>(recordId, updateData);
     const book = mapRecordToBook(record);
 
     revalidatePath('/reading-list');

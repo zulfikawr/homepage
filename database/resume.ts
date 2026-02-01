@@ -53,8 +53,14 @@ export async function updateResume(
     if (data instanceof FormData) {
       updateData = data;
     } else {
+      let fileValue = data.fileUrl;
+      // If it's a PB URL, extract filename
+      if (fileValue && fileValue.includes('/api/files/')) {
+        const parts = fileValue.split('/');
+        fileValue = parts[parts.length - 1].split('?')[0];
+      }
       updateData = {
-        fileUrl: data.fileUrl,
+        file: fileValue,
       };
     }
 
@@ -74,9 +80,15 @@ export async function updateResume(
         data.append('id', RECORD_ID);
         record = await pb.collection(COLLECTION).create(data);
       } else {
+        let fileValue = data.fileUrl;
+        if (fileValue && fileValue.includes('/api/files/')) {
+          const parts = fileValue.split('/');
+          fileValue = parts[parts.length - 1].split('?')[0];
+        }
+
         const createData: Record<string, unknown> = {
           id: RECORD_ID,
-          file: data.fileUrl,
+          file: fileValue,
         };
         record = await pb.collection(COLLECTION).create(createData);
       }

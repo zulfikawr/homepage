@@ -22,6 +22,30 @@ async function ensureAuth() {
 }
 
 /**
+ * Helper to clean publication data before sending to PocketBase.
+ */
+function cleanPublicationData(
+  data: Omit<Publication, 'id'> | Publication,
+): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Ensure arrays are stringified
+  if (Array.isArray(clean.authors)) {
+    clean.authors = JSON.stringify(clean.authors);
+  }
+  if (Array.isArray(clean.keywords)) {
+    clean.keywords = JSON.stringify(clean.keywords);
+  }
+
+  // Remove ID
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Fetches all publications from the database.
  */
 export async function getPublications(): Promise<Publication[]> {
@@ -39,13 +63,17 @@ export async function getPublications(): Promise<Publication[]> {
  * Adds a new publication to the database.
  */
 export async function addPublication(
-  data: Omit<Publication, 'id'>,
+  data: Omit<Publication, 'id'> | FormData,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
   await ensureAuth();
   try {
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanPublicationData(data) as Record<string, unknown>);
     const record = await pb
       .collection('publications')
-      .create<RecordModel>(data);
+      .create<RecordModel>(payload);
     const publication = mapRecordToPublication(record);
 
     revalidatePath('/publications');
@@ -65,12 +93,29 @@ export async function addPublication(
  * Updates an existing publication in the database.
  */
 export async function updatePublication(
-  data: Publication,
+  data: Publication | FormData,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
   await ensureAuth();
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
+    let recordId: string;
+    let updateData: Record<string, unknown> | FormData;
+
+    if (data instanceof FormData) {
+      const formId = data.get('id') as string;
+      if (formId) recordId = formId;
+      else throw new Error('ID is required for update');
+
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id;
+      updateData = cleanPublicationData(data);
+    }
 
     if (recordId.length !== 15) {
       const records = await pb
@@ -94,7 +139,7 @@ export async function updatePublication(
 
     const record = await pb
       .collection('publications')
-      .update<RecordModel>(recordId, rest);
+      .update<RecordModel>(recordId, updateData);
     const publication = mapRecordToPublication(record);
 
     revalidatePath('/publications');

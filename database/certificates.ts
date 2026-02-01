@@ -22,6 +22,47 @@ async function ensureAuth() {
 }
 
 /**
+ * Helper to clean certificate data before sending to PocketBase.
+ */
+function cleanCertificateData(
+  data: Omit<Certificate, 'id'> | Certificate,
+): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Handle image field
+  if (typeof clean.image === 'string') {
+    if (clean.image.includes('/api/files/')) {
+      const parts = clean.image.split('/');
+      clean.image = parts[parts.length - 1].split('?')[0];
+    } else if (clean.image.startsWith('http') || clean.image.startsWith('/')) {
+      clean.imageUrl = clean.image;
+      clean.image = null;
+    }
+  }
+
+  // Handle organizationLogo field
+  if (typeof clean.organizationLogo === 'string') {
+    if (clean.organizationLogo.includes('/api/files/')) {
+      const parts = clean.organizationLogo.split('/');
+      clean.organizationLogo = parts[parts.length - 1].split('?')[0];
+    } else if (
+      clean.organizationLogo.startsWith('http') ||
+      clean.organizationLogo.startsWith('/')
+    ) {
+      clean.organizationLogoUrl = clean.organizationLogo;
+      clean.organizationLogo = null;
+    }
+  }
+
+  // Remove ID
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Fetches all certificates from the database.
  * @returns Promise with array of certificates.
  */
@@ -46,9 +87,13 @@ export async function addCertificate(
 ): Promise<{ success: boolean; certificate?: Certificate; error?: string }> {
   await ensureAuth();
   try {
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanCertificateData(data) as Record<string, unknown>);
     const record = await pb
       .collection('certificates')
-      .create<RecordModel>(data);
+      .create<RecordModel>(payload);
     const certificate = mapRecordToCertificate(record);
 
     revalidatePath('/certs');
@@ -78,51 +123,40 @@ export async function updateCertificate(
     let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
-      recordId = data.get('id') as string;
-      updateData = data;
-    } else {
-      const { id, ...rest } = data;
-      recordId = id;
+      const formId = data.get('id') as string;
+      if (formId) recordId = formId;
+      else throw new Error('ID is required for update');
 
-      if (recordId.length !== 15) {
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id;
+      updateData = cleanCertificateData(data);
+    }
+
+    if (recordId.length !== 15) {
+      const records = await pb
+        .collection('certificates')
+        .getFullList<RecordModel>({
+          filter: `slug = "${recordId}"`,
+        });
+      if (records.length > 0) recordId = records[0].id;
+    } else {
+      try {
+        await pb.collection('certificates').getOne(recordId);
+      } catch {
         const records = await pb
           .collection('certificates')
           .getFullList<RecordModel>({
             filter: `slug = "${recordId}"`,
           });
         if (records.length > 0) recordId = records[0].id;
-      } else {
-        try {
-          await pb.collection('certificates').getOne(recordId);
-        } catch {
-          const records = await pb
-            .collection('certificates')
-            .getFullList<RecordModel>({
-              filter: `slug = "${recordId}"`,
-            });
-          if (records.length > 0) recordId = records[0].id;
-        }
       }
-
-      const cleanData: Record<string, unknown> = { ...rest };
-
-      // Extract filename if it's a PocketBase URL
-      if (data.imageUrl && data.imageUrl.includes('/api/files/')) {
-        const parts = data.imageUrl.split('/');
-        const fileName = parts[parts.length - 1].split('?')[0];
-        cleanData.image = fileName;
-      }
-
-      if (
-        data.organizationLogoUrl &&
-        data.organizationLogoUrl.includes('/api/files/')
-      ) {
-        const parts = data.organizationLogoUrl.split('/');
-        const fileName = parts[parts.length - 1].split('?')[0];
-        cleanData.organizationLogo = fileName;
-      }
-
-      updateData = cleanData;
     }
 
     const record = await pb

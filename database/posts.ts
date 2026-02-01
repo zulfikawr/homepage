@@ -22,6 +22,53 @@ async function ensureAuth() {
 }
 
 /**
+ * Maps a PocketBase record to a Post object with full URLs for images/audio.
+ */
+function cleanPostData(data: Omit<Post, 'id'> | Post): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Handle image field
+  if (typeof clean.image === 'string') {
+    if (clean.image.includes('/api/files/')) {
+      const parts = clean.image.split('/');
+      clean.image = parts[parts.length - 1].split('?')[0];
+    } else if (clean.image.startsWith('http')) {
+      clean.image_url = clean.image;
+      clean.image = null;
+    } else if (clean.image.startsWith('/')) {
+      clean.image_url = clean.image;
+      clean.image = null;
+    }
+  }
+
+  // Handle audio field
+  if (typeof clean.audio === 'string') {
+    if (clean.audio.includes('/api/files/')) {
+      const parts = clean.audio.split('/');
+      clean.audio = parts[parts.length - 1].split('?')[0];
+    } else if (clean.audio.startsWith('http')) {
+      clean.audio_url = clean.audio;
+      clean.audio = null;
+    } else if (clean.audio.startsWith('/')) {
+      clean.audio_url = clean.audio;
+      clean.audio = null;
+    }
+  }
+
+  // Ensure categories is stringified
+  if (Array.isArray(clean.categories)) {
+    clean.categories = JSON.stringify(clean.categories);
+  }
+
+  // Remove ID
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Fetches all posts from the database.
  */
 export async function getPosts(): Promise<Post[]> {
@@ -72,7 +119,11 @@ export async function addPost(
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
   await ensureAuth();
   try {
-    const record = await pb.collection('posts').create<RecordModel>(data);
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanPostData(data) as Record<string, unknown>);
+    const record = await pb.collection('posts').create<RecordModel>(payload);
     const post = mapRecordToPost(record);
 
     revalidatePath('/posts');
@@ -81,9 +132,10 @@ export async function addPost(
 
     return { success: true, post };
   } catch (error: unknown) {
+    const pbError = error as { data?: unknown; message?: string };
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }
@@ -98,24 +150,41 @@ export async function updatePost(
   await ensureAuth();
   try {
     let recordId = id;
-    if (id.length !== 15) {
+    let updateData: Record<string, unknown> | FormData;
+
+    if (data instanceof FormData) {
+      const formId = data.get('id') as string;
+      if (formId) recordId = formId;
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id || id;
+      updateData = cleanPostData(data as Post);
+    }
+
+    if (recordId.length !== 15) {
       const records = await pb.collection('posts').getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
+        filter: `slug = "${recordId}"`,
       });
       if (records.length > 0) recordId = records[0].id;
     } else {
       try {
-        await pb.collection('posts').getOne(id);
+        await pb.collection('posts').getOne(recordId);
       } catch {
         const records = await pb.collection('posts').getFullList<RecordModel>({
-          filter: `slug = "${id}"`,
+          filter: `slug = "${recordId}"`,
         });
         if (records.length > 0) recordId = records[0].id;
       }
     }
     const record = await pb
       .collection('posts')
-      .update<RecordModel>(recordId, data);
+      .update<RecordModel>(recordId, updateData);
     const post = mapRecordToPost(record);
 
     revalidatePath('/posts');
@@ -125,9 +194,10 @@ export async function updatePost(
 
     return { success: true, post };
   } catch (error: unknown) {
+    const pbError = error as { data?: unknown; message?: string };
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: pbError.message || String(pbError),
     };
   }
 }

@@ -22,6 +22,30 @@ async function ensureAuth() {
 }
 
 /**
+ * Helper to clean movie data before sending to PocketBase.
+ */
+function cleanMovieData(
+  data: Omit<Movie, 'id'> | Movie,
+): Record<string, unknown> {
+  const clean: Record<string, unknown> = { ...data };
+
+  // Handle posterUrl field
+  if (typeof clean.posterUrl === 'string') {
+    if (clean.posterUrl.includes('/api/files/')) {
+      const parts = clean.posterUrl.split('/');
+      clean.posterUrl = parts[parts.length - 1].split('?')[0];
+    }
+  }
+
+  // Remove ID
+  if ('id' in clean) {
+    delete clean.id;
+  }
+
+  return clean;
+}
+
+/**
  * Fetches all movies from the database.
  * @returns Promise with array of movies.
  */
@@ -42,11 +66,15 @@ export async function getMovies(): Promise<Movie[]> {
  * @returns Promise with operation result.
  */
 export async function addMovie(
-  data: Omit<Movie, 'id'>,
+  data: Omit<Movie, 'id'> | FormData,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
   await ensureAuth();
   try {
-    const record = await pb.collection('movies').create<RecordModel>(data);
+    const payload =
+      data instanceof FormData
+        ? data
+        : (cleanMovieData(data) as Record<string, unknown>);
+    const record = await pb.collection('movies').create<RecordModel>(payload);
     const movie = mapRecordToMovie(record);
 
     revalidatePath('/movies');
@@ -68,12 +96,29 @@ export async function addMovie(
  * @returns Promise with operation result.
  */
 export async function updateMovie(
-  data: Movie,
+  data: Movie | FormData,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
   await ensureAuth();
   try {
-    const { id, ...rest } = data;
-    let recordId = id;
+    let recordId: string;
+    let updateData: Record<string, unknown> | FormData;
+
+    if (data instanceof FormData) {
+      const formId = data.get('id') as string;
+      if (formId) recordId = formId;
+      else throw new Error('ID is required for update');
+
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      recordId = data.id;
+      updateData = cleanMovieData(data);
+    }
 
     if (recordId.length !== 15) {
       const records = await pb.collection('movies').getFullList<RecordModel>({
@@ -93,7 +138,7 @@ export async function updateMovie(
 
     const record = await pb
       .collection('movies')
-      .update<RecordModel>(recordId, rest);
+      .update<RecordModel>(recordId, updateData);
     const movie = mapRecordToMovie(record);
 
     revalidatePath('/movies');

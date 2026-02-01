@@ -57,7 +57,7 @@ export async function getInterestsAndObjectives(): Promise<InterestsAndObjective
  * Updates an interests and objectives record.
  */
 export async function updateInterestsAndObjectives(
-  data: InterestsAndObjectives & { id?: string },
+  data: (InterestsAndObjectives & { id?: string }) | FormData,
 ): Promise<{
   success: boolean;
   data?: InterestsAndObjectives;
@@ -65,9 +65,30 @@ export async function updateInterestsAndObjectives(
 }> {
   await ensureAuth();
   try {
-    const id = data.id || 'main';
-    const updateData: Record<string, unknown> = { ...data };
-    if ('id' in updateData) delete updateData.id;
+    let id: string;
+    let updateData: Record<string, unknown> | FormData;
+
+    if (data instanceof FormData) {
+      id = (data.get('id') as string) || 'main';
+      const formData = new FormData();
+      data.forEach((value, key) => {
+        if (key !== 'id') {
+          // If objectives is passed as JSON string in FormData, it's fine.
+          // If passed as separate entries, FormData logic might need adjustment but usually handled by form.
+          formData.append(key, value);
+        }
+      });
+      updateData = formData;
+    } else {
+      id = data.id || 'main';
+      const cleanData: Record<string, unknown> = { ...data };
+      if ('id' in cleanData) delete cleanData.id;
+
+      if (Array.isArray(cleanData.objectives)) {
+        cleanData.objectives = JSON.stringify(cleanData.objectives);
+      }
+      updateData = cleanData;
+    }
 
     let record;
     try {
@@ -75,7 +96,13 @@ export async function updateInterestsAndObjectives(
         .collection(COLLECTION)
         .update<RecordModel>(id, updateData);
     } catch {
-      record = await pb.collection(COLLECTION).create({ id, ...updateData });
+      // If create needed
+      if (updateData instanceof FormData) {
+        updateData.append('id', id);
+        record = await pb.collection(COLLECTION).create(updateData);
+      } else {
+        record = await pb.collection(COLLECTION).create({ id, ...updateData });
+      }
     }
 
     revalidatePath('/');

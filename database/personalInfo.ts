@@ -86,9 +86,19 @@ export async function updatePersonalInfo(
   } catch {
     // Try to create if it doesn't exist
     try {
-      const record = await pb
-        .collection(COLLECTION)
-        .create({ id: RECORD_ID, ...data });
+      let record;
+      if (data instanceof FormData) {
+        data.append('id', RECORD_ID);
+        record = await pb.collection(COLLECTION).create(data);
+      } else {
+        const createData: Record<string, unknown> = {
+          id: RECORD_ID,
+          name: data.name,
+          title: data.title,
+          avatarUrl: data.avatarUrl,
+        };
+        record = await pb.collection(COLLECTION).create(createData);
+      }
 
       revalidatePath('/');
       revalidatePath('/database/personal-info');
