@@ -255,28 +255,40 @@ body::-webkit-scrollbar {
 }
 
 .prose h1 {
-  @apply text-gruv-orange;
+  @apply text-gruv-red dark:text-gruv-orange;
 }
 .prose h2 {
-  @apply text-gruv-aqua;
+  @apply text-gruv-green dark:text-gruv-aqua;
 }
 .prose h3 {
-  @apply text-gruv-yellow;
+  @apply text-gruv-orange dark:text-gruv-yellow;
 }
 .prose h4 {
   @apply text-gruv-blue;
 }
 
 .prose p {
-  @apply my-4 leading-relaxed text-muted-foreground;
+  @apply my-4 leading-relaxed text-foreground dark:text-muted-foreground;
 }
 
 .prose ul {
-  @apply list-disc pl-6 my-4 space-y-2 text-muted-foreground;
+  @apply list-disc pl-6 my-4 space-y-2 text-foreground dark:text-muted-foreground;
 }
 
 .prose ol {
-  @apply list-decimal pl-6 my-4 space-y-2 text-muted-foreground;
+  @apply list-decimal pl-6 my-4 space-y-2 text-foreground dark:text-muted-foreground;
+}
+
+.prose li {
+  @apply text-foreground dark:text-muted-foreground;
+}
+
+.prose ul li::marker {
+  @apply text-gruv-orange dark:text-gruv-aqua;
+}
+
+.prose ol li::marker {
+  @apply text-gruv-orange dark:text-gruv-aqua font-bold;
 }
 
 .prose a {
@@ -288,7 +300,7 @@ body::-webkit-scrollbar {
 }
 
 .prose em {
-  @apply italic text-muted-foreground;
+  @apply italic text-foreground dark:text-muted-foreground;
 }
 
 .prose hr {
@@ -344,7 +356,7 @@ body::-webkit-scrollbar {
 }
 
 .prose pre {
-  @apply rounded-md overflow-hidden my-4 bg-gruv-bg-dark;
+  @apply rounded-md overflow-hidden my-4 bg-card-header dark:bg-gruv-bg-dark;
   font-family: var(--font-mono);
   font-size: 0.875rem;
   line-height: 1.6;
@@ -353,8 +365,28 @@ body::-webkit-scrollbar {
   border: 2px solid var(--border);
 }
 
+.code-block-wrapper {
+  @apply my-6 rounded-md border-2 border-border shadow-brutalist bg-card dark:bg-gruv-bg-dark overflow-visible;
+}
+
+.code-block-header {
+  @apply flex items-center justify-between px-4 py-1.5 bg-card-header border-b-2 border-border rounded-t-[calc(var(--radius)-2px)] min-h-[40px];
+}
+
+.code-lang {
+  @apply text-xs font-bold tracking-widest uppercase text-primary/80;
+}
+
+.code-copy-btn-wrapper {
+  @apply !relative !z-50 !flex !visible !opacity-100;
+}
+
+.code-block-wrapper pre {
+  @apply m-0 rounded-none border-0 shadow-none bg-transparent;
+}
+
 .prose pre code {
-  @apply block p-4 overflow-x-auto text-gruv-fg;
+  @apply block p-4 overflow-x-auto text-foreground dark:text-gruv-fg;
   background: transparent;
   font-family: inherit;
   font-size: inherit;
@@ -367,7 +399,7 @@ body::-webkit-scrollbar {
 .prose h1 code,
 .prose h2 code,
 .prose h3 code {
-  @apply text-sm px-2 py-1 rounded-md bg-muted border border-border font-medium text-gruv-aqua;
+  @apply text-sm px-2 py-1 rounded-md bg-card-header dark:bg-muted border border-border font-medium text-gruv-red dark:text-gruv-aqua;
   font-family: var(--font-mono);
 }
 
@@ -421,6 +453,48 @@ html {
 /* Fix highlight.js background color to match theme */
 .hljs {
   background: transparent !important;
+}
+
+/* Light theme syntax highlighting overrides for better visibility */
+html:not(.dark) .hljs-string,
+html:not(.dark) .hljs-regexp,
+html:not(.dark) .hljs-addition,
+html:not(.dark) .hljs-attribute,
+html:not(.dark) .hljs-meta-string {
+  color: #79740e !important; /* Gruvbox Green (Dark) */
+}
+
+html:not(.dark) .hljs-built_in,
+html:not(.dark) .hljs-class .hljs-title {
+  color: #b57614 !important; /* Gruvbox Yellow (Dark) */
+}
+
+html:not(.dark) .hljs-attr,
+html:not(.dark) .hljs-variable,
+html:not(.dark) .hljs-template-variable,
+html:not(.dark) .hljs-type,
+html:not(.dark) .hljs-selector-class,
+html:not(.dark) .hljs-selector-attr,
+html:not(.dark) .hljs-selector-pseudo,
+html:not(.dark) .hljs-number {
+  color: #af3a03 !important; /* Gruvbox Orange (Dark) */
+}
+
+html:not(.dark) .hljs-keyword,
+html:not(.dark) .hljs-selector-tag,
+html:not(.dark) .hljs-doctag {
+  color: #8f3f71 !important; /* Gruvbox Purple (Dark) */
+}
+
+html:not(.dark) .hljs-title,
+html:not(.dark) .hljs-section,
+html:not(.dark) .hljs-name {
+  color: #076678 !important; /* Gruvbox Blue (Dark) */
+}
+
+html:not(.dark) .hljs-comment,
+html:not(.dark) .hljs-quote {
+  color: #928374 !important; /* Gruvbox Gray */
 }
 
 /* Squiggly underline utility */

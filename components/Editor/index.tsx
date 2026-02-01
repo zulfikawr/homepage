@@ -17,6 +17,8 @@ import {
   Tooltip,
 } from '@/components/UI';
 import { IconName } from '@/components/UI/Icon';
+import Mask from '@/components/Visual/Mask';
+import { useRadius } from '@/contexts/radiusContext';
 
 interface EditorProps {
   content: string;
@@ -31,6 +33,7 @@ const Editor: React.FC<EditorProps> = ({
   className,
   textareaClassName,
 }) => {
+  const { radius } = useRadius();
   const [markdown, setMarkdown] = useState(content);
   const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>(
     {},
@@ -276,10 +279,16 @@ const Editor: React.FC<EditorProps> = ({
   };
 
   return (
-    <div className={twMerge('flex flex-col', className)}>
-      <div className='relative flex items-center bg-muted dark:bg-card rounded-t-md border border-b-0 border shrink-0 cursor-default overflow-visible'>
+    <div
+      className={twMerge(
+        'group flex flex-col border-2 shadow-brutalist bg-background transition-all duration-150 hover:shadow-brutalist-xl hover:bg-card-header focus-within:shadow-brutalist-lg focus-within:-translate-y-0.5 focus-within:bg-card-header active:translate-x-0.5 active:translate-y-0.5 active:shadow-brutalist-sm overflow-hidden',
+        className,
+      )}
+      style={{ borderRadius: `${radius}px` }}
+    >
+      <div className='relative flex items-center bg-muted/50 dark:bg-card/50 border-b-2 shrink-0 cursor-default overflow-visible'>
         {/* Formatting Tools */}
-        <div className='flex flex-1 items-center px-2 py-1 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mt-20 pt-20 -ml-20 pl-20'>
+        <Mask className='flex-1 scrollbar-hide p-2'>
           <div className='flex items-center gap-2 overflow-visible min-w-max h-9'>
             {toolbarButtons.map((button, index) => (
               <Tooltip key={index} text={button.label} position='top'>
@@ -296,10 +305,10 @@ const Editor: React.FC<EditorProps> = ({
               </Tooltip>
             ))}
           </div>
-        </div>
+        </Mask>
 
         {/* Fixed Preview Button */}
-        <div className='flex items-center px-2 py-1 border-l border bg-muted dark:bg-card ml-auto shrink-0 sticky right-0 z-10'>
+        <div className='flex items-center px-2 py-1 border-l-2 ml-auto shrink-0 sticky right-0 z-10'>
           <Tooltip text='Preview' position='top'>
             <Button
               variant='ghost'
@@ -315,8 +324,7 @@ const Editor: React.FC<EditorProps> = ({
       </div>
       <div
         className={twMerge(
-          'relative w-full h-[300px] md:h-[500px] border border-t-0 border rounded-b-md bg-muted/50 dark:bg-background overflow-y-auto',
-          className,
+          'relative w-full h-[300px] md:h-[500px] bg-transparent overflow-y-auto',
         )}
       >
         <div className='relative w-full min-h-full'>

@@ -7,16 +7,35 @@ const md = new MarkdownIt({
   breaks: false,
   linkify: true,
   highlight: (code, lang) => {
+    let highlighted = '';
+    const canHighlight = lang && hljs.getLanguage(lang);
+
     try {
-      if (lang && hljs.getLanguage(lang)) {
-        return `<pre class="hljs"><code>${
-          hljs.highlight(code, { language: lang, ignoreIllegals: true }).value
-        }</code></pre>`;
+      if (canHighlight) {
+        highlighted = hljs.highlight(code, {
+          language: lang,
+          ignoreIllegals: true,
+        }).value;
+      } else {
+        highlighted = md.utils.escapeHtml(code);
       }
     } catch {
-      // Ignored
+      highlighted = md.utils.escapeHtml(code);
     }
-    return '';
+
+    if (lang) {
+      return `<div class="code-block-wrapper">
+        <div class="code-block-header">
+          <span class="code-lang">${lang}</span>
+          <span class="code-copy-btn-wrapper" data-code="${encodeURIComponent(
+            code,
+          )}">Wait...</span>
+        </div>
+        <pre class="hljs"><code>${highlighted}</code></pre>
+      </div>`;
+    }
+
+    return `<pre class="hljs"><code>${highlighted}</code></pre>`;
   },
 });
 
@@ -25,6 +44,26 @@ md.use(anchor, {
 });
 
 md.enable('table');
+
+// Override fence renderer to prevent double wrapping of our custom code blocks
+const defaultFence = md.renderer.rules.fence;
+md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+  const token = tokens[idx];
+  const info = token.info ? md.utils.unescapeAll(token.info).trim() : '';
+  const langName = info.split(/\s+/g)[0];
+
+  const highlighted = options.highlight
+    ? options.highlight(token.content, langName, '')
+    : md.utils.escapeHtml(token.content);
+
+  if (highlighted.includes('code-block-wrapper')) {
+    return highlighted + '\n';
+  }
+
+  return (
+    (defaultFence ? defaultFence(tokens, idx, options, env, self) : '') + '\n'
+  );
+};
 
 // Custom UI element rule: !![label](type:value:extra)!!
 md.inline.ruler.push('markdown_ui', (state, silent) => {

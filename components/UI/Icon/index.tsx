@@ -38,6 +38,7 @@ export const iconMap = {
   cloudSun: PhosphorIcons.CloudSunIcon,
   code: PhosphorIcons.CodeIcon,
   codeBlock: PhosphorIcons.CodeBlockIcon,
+  copy: PhosphorIcons.Copy,
   cube: PhosphorIcons.CubeIcon,
   database: PhosphorIcons.DatabaseIcon,
   desktop: PhosphorIcons.DesktopIcon,
