@@ -53,7 +53,7 @@ export default function ProjectCard({
       {/* Desktop layout */}
       <div className='flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:gap-6'>
         {/* Image container */}
-        <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90 sm:block'>
+        <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-xl dark:opacity-90 sm:block'>
           <ImageWithFallback
             src={project.image}
             alt={project.name}

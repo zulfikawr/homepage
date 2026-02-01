@@ -42,7 +42,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     const getBadgeClasses = () => {
       switch (variant) {
         case 'primary':
-          return 'bg-primary text-primary-foreground hover:brightness-110 hover:shadow-md';
+          return 'bg-primary text-primary-foreground hover:brightness-110 hover:shadow-brutalist-xl';
         case 'aqua':
           return 'bg-gruv-aqua/15 text-gruv-aqua border-gruv-aqua/30 hover:bg-gruv-aqua/25 hover:border-gruv-aqua/60';
         case 'green':
@@ -54,7 +54,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         case 'red':
           return 'bg-gruv-red/15 text-gruv-red border-gruv-red/30 hover:bg-gruv-red/25 hover:border-gruv-red/60';
         case 'outline':
-          return 'bg-transparent text-foreground border-border hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-sm';
+          return 'bg-transparent text-foreground border-border hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-brutalist-xl';
         default:
           return 'bg-muted text-muted-foreground border-border hover:bg-muted/80 hover:border-muted-foreground/30';
       }
@@ -75,7 +75,7 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={twMerge(
-          'inline-flex items-center border-2 px-2.5 py-0.5 text-xs font-medium shadow-brutalist-sm select-none brutalist-interactive',
+          'inline-flex items-center border-2 px-2.5 py-0.5 text-xs font-medium shadow-brutalist-sm select-none brutalist-interactive hover:shadow-brutalist-xl',
           hasValidIcon && 'gap-1.5',
           getBadgeClasses(),
           className,

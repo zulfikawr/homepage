@@ -85,7 +85,7 @@ export default function PostCard({
   const renderMedia = () => {
     if (post.image) {
       return (
-        <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-lg dark:opacity-90'>
+        <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-xl dark:opacity-90'>
           <ImageWithFallback
             src={post.image || '/images/placeholder.png'}
             alt={`featured-image-${post.title}`}

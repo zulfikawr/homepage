@@ -122,7 +122,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       {shouldRender && (
         <Portal>
           <div
-            className='fixed z-[10000] px-3 py-1.5 text-xs font-medium text-popover-foreground bg-popover border border-border shadow-lg whitespace-nowrap pointer-events-none transition-all duration-200 ease-out'
+            className='fixed z-[10000] px-3 py-1.5 text-xs font-medium text-popover-foreground bg-popover whitespace-nowrap pointer-events-none transition-all duration-200 ease-out shadow-brutalist'
             style={{
               top: coords.top,
               left: coords.left,

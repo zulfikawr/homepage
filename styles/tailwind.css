@@ -61,8 +61,9 @@
 
   --shadow-header: 0 4px 8px rgba(0, 0, 0, 0.04);
   --shadow-brutalist: 4px 4px 0px rgba(0, 0, 0, 0.25);
-  --shadow-brutalist-lg: 6px 6px 0px rgba(0, 0, 0, 0.3);
-  --shadow-brutalist-xl: 8px 8px 0px rgba(0, 0, 0, 0.35);
+  --shadow-brutalist-md: 6px 6px 0px rgba(0, 0, 0, 0.3);
+  --shadow-brutalist-lg: 8px 8px 0px rgba(0, 0, 0, 0.3);
+  --shadow-brutalist-xl: 10px 10px 0px rgba(0, 0, 0, 0.35);
   --shadow-brutalist-sm: 2px 2px 0px rgba(0, 0, 0, 0.25);
   --shadow-brutalist-hover: 2px 2px 0px rgba(0, 0, 0, 0.25);
 
@@ -192,8 +193,9 @@
 
     /* Dark mode brutalist shadows */
     --shadow-brutalist: 4px 4px 0px rgba(0, 0, 0, 0.5);
-    --shadow-brutalist-lg: 6px 6px 0px rgba(0, 0, 0, 0.6);
-    --shadow-brutalist-xl: 8px 8px 0px rgba(0, 0, 0, 0.7);
+    --shadow-brutalist-md: 6px 6px 0px rgba(0, 0, 0, 0.5);
+    --shadow-brutalist-lg: 8px 8px 0px rgba(0, 0, 0, 0.6);
+    --shadow-brutalist-xl: 10px 10px 0px rgba(0, 0, 0, 0.7);
     --shadow-brutalist-sm: 2px 2px 0px rgba(0, 0, 0, 0.5);
     --shadow-brutalist-hover: 2px 2px 0px rgba(0, 0, 0, 0.5);
   }
@@ -216,51 +218,7 @@
     -moz-osx-selector-smoothing: grayscale;
   }
 
-  /* Brutalist Shadow Utilities */
-  .shadow-brutalist {
-    box-shadow: var(--shadow-brutalist);
-    border: 2px solid var(--border);
-  }
 
-  .shadow-brutalist-sm {
-    box-shadow: var(--shadow-brutalist-sm);
-    border: 2px solid var(--border);
-  }
-
-  .shadow-brutalist-lg {
-    box-shadow: var(--shadow-brutalist-lg);
-    border: 2px solid var(--border);
-  }
-
-  .shadow-brutalist-xl {
-    box-shadow: var(--shadow-brutalist-xl);
-    border: 3px solid var(--border);
-  }
-
-  /* Interaction Utilities */
-  .brutalist-interactive {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Hover: Pop up (translate up-left) and increase shadow - Only on devices with hover */
-  @media (hover: hover) {
-    .brutalist-interactive:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: var(--shadow-brutalist-lg);
-    }
-
-    .hover\:shadow-brutalist-hover:hover {
-      box-shadow: var(--shadow-brutalist-lg);
-      transform: translate(-2px, -2px);
-      transition: all 0.15s ease-out;
-    }
-  }
-
-  /* Active: Press down (translate down-right) and decrease shadow */
-  .brutalist-interactive:active {
-    transform: translate(2px, 2px);
-    box-shadow: var(--shadow-brutalist-hover);
-  }
 }
 
 body::-webkit-scrollbar {
@@ -922,5 +880,56 @@ html {
   input[type='range'].slider-thumb:disabled::-moz-range-thumb {
     background-color: var(--muted-foreground);
     border-color: var(--muted-foreground);
+  }
+
+  /* Brutalist Shadow Utilities */
+  .shadow-brutalist {
+    box-shadow: var(--shadow-brutalist);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-sm {
+    box-shadow: var(--shadow-brutalist-sm);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-md {
+    box-shadow: var(--shadow-brutalist-md);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-lg {
+    box-shadow: var(--shadow-brutalist-lg);
+    border: 2px solid var(--border);
+  }
+
+  .shadow-brutalist-xl {
+    box-shadow: var(--shadow-brutalist-xl);
+    border: 3px solid var(--border);
+  }
+
+  /* Interaction Utilities */
+  .brutalist-interactive {
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Hover: Pop up (translate up-left) and increase shadow - Only on devices with hover */
+  @media (hover: hover) {
+    .brutalist-interactive:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow-brutalist-xl);
+    }
+
+    .hover\:shadow-brutalist-hover:hover {
+      box-shadow: var(--shadow-brutalist-xl);
+      transform: translate(-2px, -2px);
+      transition: all 0.15s ease-out;
+    }
+  }
+
+  /* Active: Press down (translate down-right) and decrease shadow */
+  .brutalist-interactive:active {
+    transform: translate(2px, 2px);
+    box-shadow: var(--shadow-brutalist-hover);
   }
 }

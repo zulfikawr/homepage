@@ -102,7 +102,7 @@ export const Dropzone: React.FC<DropzoneProps> = ({
             : 'aspect-square max-w-[200px] mx-auto',
           isDragging
             ? 'border-primary shadow-brutalist-lg -translate-y-1 -translate-x-1'
-            : 'hover:bg-muted/50 dark:hover:bg-primary/10 hover:shadow-brutalist-hover',
+            : 'hover:bg-muted/50 dark:hover:bg-primary/10 hover:shadow-brutalist-xl',
           previewUrl ? 'border-solid' : 'border-dashed',
         )}
         style={{ borderRadius: `${radius * 1.5}px` }}

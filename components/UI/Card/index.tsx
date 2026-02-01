@@ -42,7 +42,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         : 'bg-card border-border backdrop-blur-none',
       isActuallyInteractive &&
         !isActive &&
-        'cursor-pointer brutalist-interactive hover:bg-primary/10 hover:border-primary/50 hover:dark:border-primary/40',
+        'cursor-pointer brutalist-interactive hover:shadow-brutalist-xl hover:bg-primary/10 hover:border-primary/50 hover:dark:border-primary/40',
       variant === 'ghost' && 'bg-transparent border-transparent shadow-none',
       className,
     );
