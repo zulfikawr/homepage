@@ -39,6 +39,7 @@ export const useHotkeys = (
     );
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!e.key) return;
       const pressedKey = e.key.toLowerCase();
       const isCtrlPressed = e.ctrlKey || e.metaKey;
       const isShiftPressed = e.shiftKey;
