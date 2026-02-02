@@ -456,6 +456,17 @@ export function KbarContent() {
     }
   }, [selectedIndex]);
 
+  const colors = [
+    'text-destructive',
+    'text-gruv-orange',
+    'text-gruv-yellow',
+    'text-gruv-green',
+    'text-gruv-aqua',
+    'text-gruv-blue',
+    'text-primary',
+    'text-muted-foreground',
+  ];
+
   return (
     <div className='flex h-full flex-col'>
       <div className='px-4 pt-4 pb-0 sm:px-8 sm:pt-6 sm:pb-0'>
@@ -504,6 +515,7 @@ export function KbarContent() {
                 >
                   {section.items.map((item, index) => {
                     const isSelected = itemOffset + index === selectedIndex;
+                    const colorIndex = (index * 7) % colors.length;
                     return (
                       <div
                         key={item.key}
@@ -543,6 +555,7 @@ export function KbarContent() {
                             title={(item as StaticKbarItem).label}
                             desc={(item as StaticKbarItem).desc}
                             icon={(item as StaticKbarItem).icon}
+                            className={colors[colorIndex]}
                             href={(item as StaticKbarItem).href}
                             isActive={isSelected}
                             action={() => handleAction(item as StaticKbarItem)}
