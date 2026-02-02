@@ -46,6 +46,7 @@ export const iconMap = {
   deviceTablet: PhosphorIcons.DeviceTabletIcon,
   dotsSixVertical: PhosphorIcons.DotsSixVerticalIcon,
   dotsThree: PhosphorIcons.DotsThreeIcon,
+  dotsThreeVertical: PhosphorIcons.DotsThreeVerticalIcon,
   envelope: PhosphorIcons.EnvelopeIcon,
   eye: PhosphorIcons.EyeIcon,
   file: PhosphorIcons.FileIcon,

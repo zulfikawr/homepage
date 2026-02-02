@@ -18,35 +18,59 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/r2/buckets/${bucketName}/objects`;
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
+    let allObjects: Array<{ key: string; size: number; uploaded: string }> = [];
+    let cursor: string | undefined = undefined;
+    let truncated = true;
 
-    if (!response.ok) {
-      const text = await response.text();
-      return NextResponse.json(
-        { error: `R2 API Error: ${text}` },
-        { status: response.status },
+    while (truncated) {
+      const url = new URL(
+        `https://api.cloudflare.com/client/v4/accounts/${accountId}/r2/buckets/${bucketName}/objects`,
       );
+      if (prefix) url.searchParams.set('prefix', prefix);
+      if (cursor) url.searchParams.set('cursor', cursor);
+
+      const response = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        return NextResponse.json(
+          { error: `R2 API Error: ${text}` },
+          { status: response.status },
+        );
+      }
+
+      const data = (await response.json()) as {
+        result?: Array<{ key: string; size: number; uploaded: string }>;
+        result_info?: { cursor?: string };
+        success: boolean;
+      };
+
+      if (data.result) {
+        allObjects = allObjects.concat(data.result);
+      }
+
+      cursor = data.result_info?.cursor;
+      truncated = !!cursor;
     }
 
-    const data = (await response.json()) as {
-      result?: Array<{ key: string; size: number }>;
-    };
-    const objects = data.result || [];
+    const objects = allObjects;
 
     // Filter by prefix and organize into folders/files
-    const filtered = objects.filter((obj: { key: string; size: number }) =>
-      obj.key.startsWith(prefix),
-    );
+    const filtered = objects.filter((obj) => obj.key.startsWith(prefix));
 
     // Group by immediate subfolder or file
     const items = new Map<
       string,
-      { type: 'folder' | 'file'; key: string; size?: number }
+      {
+        type: 'folder' | 'file';
+        key: string;
+        size?: number;
+        uploaded?: string;
+      }
     >();
 
     for (const obj of filtered) {
@@ -68,6 +92,7 @@ export async function GET(request: NextRequest) {
           type: 'file',
           key: obj.key,
           size: obj.size,
+          uploaded: obj.uploaded,
         });
       }
     }

@@ -32,7 +32,7 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <div
-        className='overflow-x-auto border-2 border-border mt-4 shadow-brutalist'
+        className='overflow-x-auto mt-4 border-2 border-border shadow-brutalist transition-all duration-150 hover:shadow-brutalist-xl'
         style={{ borderRadius: `${radius}px` }}
       >
         <table
@@ -74,7 +74,10 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
     return (
       <tr
         ref={ref}
-        className={twMerge('border-b border-border last:border-b-0', className)}
+        className={twMerge(
+          'border-b border-border last:border-b-0 hover:bg-muted/50 hover:shadow-brutalist transition-shadow',
+          className,
+        )}
         {...props}
       />
     );

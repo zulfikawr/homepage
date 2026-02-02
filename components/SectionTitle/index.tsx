@@ -51,17 +51,17 @@ const SectionTitle = ({
       >
         {loading ? (
           <>
-            <span className='mr-1.5 flex h-5 w-5 items-center justify-center'>
-              <Skeleton width={20} height={20} as='span' />
+            <span className='mr-1.5 flex items-center justify-center'>
+              <Skeleton width={25} height={25} as='span' />
             </span>
-            <span className='block uppercase cursor-default'>
-              <Skeleton width={128} height={16} as='span' />
+            <span className='flex items-center uppercase cursor-default'>
+              <Skeleton width={100} height={25} as='span' />
             </span>
           </>
         ) : (
           <>
             <span
-              className={`mr-1.5 flex h-5 w-5 ${iconColor} ${iconClassName}`}
+              className={`mr-1.5 flex h-5 w-5 items-center justify-center ${iconColor} ${iconClassName}`}
             >
               {icon && <Icon name={icon} />}
             </span>

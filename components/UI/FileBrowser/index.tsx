@@ -36,7 +36,12 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
       };
 
       if (data.items) {
-        setItems(data.items);
+        // Sort items: folders first, then files
+        const sorted = data.items.sort((a, b) => {
+          if (a.type === b.type) return a.key.localeCompare(b.key);
+          return a.type === 'folder' ? -1 : 1;
+        });
+        setItems(sorted);
         setCurrentPrefix(prefix);
       }
     } catch (error) {

@@ -27,7 +27,7 @@ const Skeleton = React.forwardRef<HTMLElement, SkeletonProps>(
   ) => {
     const { radius } = useRadius();
 
-    const baseStyles = 'animate-pulse bg-muted dark:bg-muted/50';
+    const baseStyles = 'animate-pulse bg-muted dark:bg-muted/50 inline-block';
 
     const variantStyles = {
       rectangle: '',

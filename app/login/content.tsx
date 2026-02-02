@@ -102,7 +102,7 @@ export default function LoginContent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
+                  className='h-11'
                 />
               </div>
               <div className='space-y-2'>
@@ -119,7 +119,7 @@ export default function LoginContent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className='bg-transparent border-border focus:border-gruv-aqua transition-colors h-11'
+                  className='h-11'
                 />
               </div>
             </div>

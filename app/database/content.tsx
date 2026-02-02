@@ -84,6 +84,12 @@ export default function DatabaseContent() {
       icon: 'rows',
       href: '/database/sections',
     },
+    {
+      title: 'Storage',
+      desc: 'Manage files and folders in R2 storage',
+      icon: 'folder',
+      href: '/database/storage',
+    },
   ];
 
   const colors = [
