@@ -177,7 +177,7 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
     if (value instanceof ArrayBuffer) {
       body = value;
     } else if (ArrayBuffer.isView(value)) {
-      body = value.buffer;
+      body = value.buffer as ArrayBuffer;
     } else if (typeof value === 'string') {
       body = value;
     } else if (value instanceof Blob) {
@@ -206,7 +206,7 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
       Authorization: `Bearer ${this.apiToken}`,
     };
 
-    if (options?.httpMetadata?.contentType) {
+    if (options?.httpMetadata && 'contentType' in options.httpMetadata) {
       headers['Content-Type'] = options.httpMetadata.contentType;
     }
 
@@ -227,10 +227,11 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
       size: body instanceof ArrayBuffer ? body.byteLength : 0,
       etag: '',
       httpEtag: '',
-      checksums: {},
+      checksums: { toJSON: () => ({}) },
       uploaded: new Date(),
       httpMetadata: options?.httpMetadata || {},
       customMetadata: options?.customMetadata || {},
+      storageClass: 'STANDARD',
       writeHttpMetadata: async () => {},
     } as R2Object;
   }
@@ -309,11 +310,18 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
     throw new Error('R2 list not implemented in HTTP mode');
   }
 
-  async createMultipartUpload(): Promise<R2MultipartUpload> {
+  async createMultipartUpload(
+    key: string,
+    options?: R2MultipartOptions,
+  ): Promise<R2MultipartUpload> {
+    void key;
+    void options;
     throw new Error('R2 multipart upload not implemented in HTTP mode');
   }
 
-  async resumeMultipartUpload(): Promise<R2MultipartUpload> {
+  resumeMultipartUpload(key: string, uploadId: string): R2MultipartUpload {
+    void key;
+    void uploadId;
     throw new Error('R2 multipart upload not implemented in HTTP mode');
   }
 }

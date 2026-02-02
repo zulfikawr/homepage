@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { toast } from '@/components/UI';
-import { Button, FileDropzone, FormLabel } from '@/components/UI';
+import { Button, FileUpload, FormLabel } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
 import { updateResume } from '@/database/resume';
 import { Resume } from '@/types/resume';
@@ -19,7 +19,6 @@ const initialResumeState: Resume = {
 
 const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
   const [resume, setResume] = useState<Resume>(data || initialResumeState);
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -35,15 +34,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
     e?.preventDefault();
 
     try {
-      let result;
-
-      if (resumeFile) {
-        const formData = new FormData();
-        formData.append('file', resumeFile);
-        result = await updateResume(formData);
-      } else {
-        result = await updateResume(resume);
-      }
+      const result = await updateResume(resume);
 
       if (result.success && result.data) {
         toast.success('Resume successfully updated!');
@@ -68,12 +59,12 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
             <FormLabel htmlFor='resume' required>
               Resume PDF
             </FormLabel>
-            <FileDropzone
-              value={resume.fileUrl}
-              onUrlChange={(url) => setResume({ fileUrl: url })}
-              onFileSelect={setResumeFile}
+            <FileUpload
+              collectionName='resume'
+              recordId='1'
+              fieldName='file_url'
               accept='application/pdf'
-              fileTypeLabel='PDF (max 10MB)'
+              onUploadSuccess={(url) => setResume({ fileUrl: url })}
             />
           </div>
         </form>

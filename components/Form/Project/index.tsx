@@ -12,7 +12,7 @@ import {
   Checkbox,
   Dropdown,
   DropdownItem,
-  Dropzone,
+  FileUpload,
   FormLabel,
   Icon,
   Input,
@@ -439,10 +439,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <FormLabel htmlFor='image' required>
               Project Image
             </FormLabel>
-            <Dropzone
+            <Input
+              type='text'
               value={project.image}
-              onUrlChange={(url) => handleChange('image', url)}
+              onChange={(e) => handleChange('image', e.target.value)}
+              placeholder='Image URL or select file below'
+              className='mb-2'
+            />
+            <FileUpload
+              collectionName='projects'
+              fieldName='image'
               onFileSelect={setImageFile}
+              onUploadSuccess={(url) => handleChange('image', url)}
+              accept='image/*'
             />
           </div>
           <div>
@@ -576,12 +585,19 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           </div>
           <div>
             <FormLabel htmlFor='faviconUrl'>Favicon</FormLabel>
-            <Dropzone
+            <Input
+              type='text'
               value={project.favicon || ''}
-              onUrlChange={(url) => handleChange('favicon', url)}
+              onChange={(e) => handleChange('favicon', e.target.value)}
+              placeholder='Favicon URL or select file below'
+              className='mb-2'
+            />
+            <FileUpload
+              collectionName='projects'
+              fieldName='favicon'
               onFileSelect={setFaviconFile}
-              placeholder='Paste favicon URL here...'
-              aspectRatio='square'
+              onUploadSuccess={(url) => handleChange('favicon', url)}
+              accept='image/*'
             />
           </div>
           <div>

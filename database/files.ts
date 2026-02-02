@@ -52,6 +52,9 @@ export async function uploadFile(
 
       const fileExt = file.name.split('.').pop() || 'bin';
       key = `posts/${row.slug}/${fieldName}.${fileExt}`;
+    } else if (collectionName === 'resume') {
+      // Resume uses fixed path: profile/resume.pdf
+      key = 'profile/resume.pdf';
     } else {
       // Legacy format for other collections
       key = `${collectionName}-${recordId}-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;

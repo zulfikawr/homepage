@@ -1,13 +1,12 @@
 'use client';
 
-'use client';
-
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { toast } from '@/components/UI';
-import { Button, Icon } from '@/components/UI';
+import { Button } from '@/components/UI';
+import { FileBrowser } from '@/components/UI/FileBrowser';
+import { modal } from '@/components/UI/Modal';
 import { uploadFile } from '@/database/files';
 
 interface FileUploadProps {
@@ -32,19 +31,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreviewUrl(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -114,8 +100,23 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     }
   };
 
+  const handleBrowserSelect = (key: string) => {
+    // Update the form with the selected file key
+    onUploadSuccess(`/api/storage/${key}`);
+    toast.success('File selected from R2');
+  };
+
+  const openFileBrowser = () => {
+    modal.open(
+      <FileBrowser
+        onSelect={handleBrowserSelect}
+        onClose={() => modal.close()}
+      />,
+    );
+  };
+
   return (
-    <div className={twMerge('flex items-center gap-3', className)}>
+    <div className={twMerge('flex items-center gap-2', className)}>
       <input
         type='file'
         ref={fileInputRef}
@@ -124,36 +125,37 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         accept={accept}
       />
 
-      {previewUrl && (
-        <div className='relative group size-12 rounded-md overflow-hidden border-2 border-border shadow-brutalist flex-shrink-0'>
-          <Image
-            src={previewUrl}
-            alt='Preview'
-            fill
-            className='object-cover'
-            sizes='48px'
-          />
-          <button
-            onClick={handleRemove}
-            className='absolute inset-0 bg-card/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity'
-            title='Remove file'
-          >
-            <Icon name='trash' className='size-5 text-primary' />
-          </button>
-        </div>
-      )}
-
       <Button
         variant='default'
         onClick={handleButtonClick}
         disabled={isUploading}
         icon={
-          isUploading ? undefined : previewUrl ? 'pencilSimpleLine' : 'plus'
+          isUploading ? undefined : selectedFile ? 'pencilSimpleLine' : 'plus'
         }
         className={twMerge('h-9', isUploading && 'opacity-70')}
       >
-        {isUploading ? '...' : previewUrl ? 'Replace' : 'Upload'}
+        {isUploading ? '...' : selectedFile ? 'Replace' : 'Upload'}
       </Button>
+
+      <Button
+        variant='default'
+        onClick={openFileBrowser}
+        disabled={isUploading}
+        icon='folder'
+        className='h-9'
+      >
+        Select
+      </Button>
+
+      {selectedFile && (
+        <button
+          onClick={handleRemove}
+          className='text-sm text-muted-foreground hover:text-foreground'
+          title='Remove file'
+        >
+          Remove
+        </button>
+      )}
     </div>
   );
 };

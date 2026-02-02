@@ -4,8 +4,6 @@ export { Card } from './Card';
 export { Checkbox } from './Checkbox';
 export { default as Drawer, drawer, useDrawer } from './Drawer';
 export { Dropdown, DropdownItem } from './Dropdown';
-export { Dropzone } from './Dropzone';
-export { FileDropzone } from './FileDropzone';
 export { FileUpload } from './FileUpload';
 export { FormLabel } from './FormLabel';
 export { default as HeatmapLegend } from './HeatmapLegend';
