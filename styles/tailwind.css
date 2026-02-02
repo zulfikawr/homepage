@@ -419,6 +419,18 @@ html {
   inherits: false;
 }
 
+@property --mask-top {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+@property --mask-bottom {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;

@@ -13,6 +13,7 @@ import PostCard from '@/components/UI/Card/variants/Post';
 import ProjectCard from '@/components/UI/Card/variants/Project';
 import { PublicationCard } from '@/components/UI/Card/variants/Publication';
 import { IconName } from '@/components/UI/Icon';
+import Mask from '@/components/Visual/Mask';
 import { useAuth } from '@/contexts/authContext';
 import { searchDatabase, SearchResult } from '@/database/search';
 import { useAuthActions } from '@/hooks';
@@ -474,9 +475,10 @@ export function KbarContent() {
         </div>
       </div>
 
-      <div
+      <Mask
         ref={scrollRef}
-        className='flex-1 overflow-y-auto scrollbar-hide flex-shrink-0 p-4 sm:px-8 sm:py-6 pt-6'
+        direction='vertical'
+        className='flex-1 scrollbar-hide flex-shrink-0 p-4 sm:px-8 sm:py-6 pt-6'
       >
         {filteredSections.length === 0 && !isSearching ? (
           <div className='flex flex-col items-center justify-center h-full text-muted-foreground py-12'>
@@ -554,7 +556,7 @@ export function KbarContent() {
             );
           })
         )}
-      </div>
+      </Mask>
     </div>
   );
 }

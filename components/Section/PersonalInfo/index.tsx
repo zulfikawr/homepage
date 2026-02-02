@@ -19,11 +19,15 @@ export const PersonalInfoLayout = ({
     <section className='flex flex-row items-start justify-between gap-x-4 sm:gap-x-10'>
       <div className='flex flex-col gap-y-1 flex-1 min-w-0'>
         <h1 className='text-3xl lg:text-4xl font-medium tracking-wide text-foreground h-12 leading-[48px] flex items-center justify-start'>
-          <span className='mr-3 flex items-center justify-center h-full'>👋</span>
+          <span className='mr-3 flex items-center justify-center h-full'>
+            👋
+          </span>
           {isLoading ? (
             <Skeleton width={220} height={32} className='max-w-[70%]' />
           ) : (
-            <span className='text-gruv-orange truncate'>{personalInfo?.name}</span>
+            <span className='text-gruv-orange truncate'>
+              {personalInfo?.name}
+            </span>
           )}
         </h1>
         <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg min-h-6'>
