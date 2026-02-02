@@ -664,7 +664,14 @@ const WeatherBanner = ({ className }: { className?: string }) => {
         const res = await fetch(
           'https://api.open-meteo.com/v1/forecast?latitude=-6.2088&longitude=106.8456&current=temperature_2m,weather_code,is_day&timezone=Asia/Jakarta',
         );
-        const data = await res.json();
+        interface WeatherApiResponse {
+          current: {
+            temperature_2m: number;
+            weather_code: number;
+            is_day: number;
+          };
+        }
+        const data = (await res.json()) as WeatherApiResponse;
         setWeatherData({
           temp: data.current.temperature_2m,
           code: data.current.weather_code,

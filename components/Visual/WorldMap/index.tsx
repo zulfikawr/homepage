@@ -364,7 +364,12 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     fetch(
       'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
     )
-      .then((response) => response.json())
+      .then(
+        (response) =>
+          response.json() as Promise<
+            FeatureCollection<Geometry, GeoJsonProperties>
+          >,
+      )
       .then((geojson) => setWorldData(geojson));
   }, []);
 

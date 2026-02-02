@@ -1,34 +1,34 @@
 'use server';
 
-import { cookies } from 'next/headers';
-
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 import { AnalyticsEvent } from '@/types/analytics';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface AnalyticsRow {
+  id: string;
+  path: string;
+  country: string;
+  referrer: string;
+  user_agent: string;
+  is_bot: number;
+  created_at: number;
 }
 
-/**
- * Fetches analytics events. Note: Subscriptions should be handled by client hooks.
- * This server-side function provides the initial list.
- */
 export async function getAnalyticsEvents(): Promise<AnalyticsEvent[]> {
-  await ensureAuth();
   try {
-    const records = await pb.collection('analytics_events').getFullList({
-      sort: '-created',
-    });
-    return records as unknown as AnalyticsEvent[];
+    const db = getDB();
+    if (!db) return [];
+    const { results } = await db
+      .prepare('SELECT * FROM analytics_events ORDER BY created_at DESC')
+      .all<AnalyticsRow>();
+    return results.map((row) => ({
+      id: row.id,
+      path: row.path,
+      country: row.country,
+      referrer: row.referrer,
+      user_agent: row.user_agent,
+      is_bot: !!row.is_bot,
+      created: new Date(row.created_at * 1000).toISOString(),
+    }));
   } catch {
     return [];
   }

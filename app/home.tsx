@@ -11,29 +11,21 @@ import PostSection from '@/components/Section/Post';
 import ProjectSection from '@/components/Section/Project';
 import { useCollection } from '@/hooks';
 import { mapRecordToSection } from '@/lib/mappers';
-import { PersonalInfo } from '@/types/personalInfo';
 import { Section } from '@/types/section';
 
-interface HomeProps {
-  initialData?: Section[];
-  initialPersonalInfo?: PersonalInfo;
-}
-
-export default function Home({ initialData, initialPersonalInfo }: HomeProps) {
-  const options = React.useMemo(() => ({ sort: 'order' }), []);
-  const { data: sections } = useCollection<Section>(
+export default function Home() {
+  const { data: allSections } = useCollection<Section>(
     'sections',
     mapRecordToSection,
-    options,
-    initialData,
   );
 
+  const sections = React.useMemo(() => {
+    if (!allSections) return [];
+    return [...allSections].sort((a, b) => a.order - b.order);
+  }, [allSections]);
+
   const sectionMap: Record<string, React.ReactNode> = {
-    'personal-info': (
-      <PersonalInfoSection
-        initialData={initialPersonalInfo ? [initialPersonalInfo] : undefined}
-      />
-    ),
+    'personal-info': <PersonalInfoSection />,
     banners: <Banners />,
     interests: <InterestsAndObjectivesSection />,
     projects: <ProjectSection />,

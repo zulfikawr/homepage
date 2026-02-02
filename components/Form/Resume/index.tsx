@@ -31,8 +31,8 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
     }
   }, [data]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     try {
       let result;

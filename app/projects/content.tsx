@@ -22,18 +22,14 @@ import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 import { sortByDate } from '@/utilities/sortByDate';
 
-interface ProjectsContentProps {
-  initialData?: Project[];
-}
-
 type StatusFilter = 'all' | 'inProgress' | 'completed' | 'upcoming';
 
-export default function ProjectsContent({ initialData }: ProjectsContentProps) {
+export default function ProjectsContent() {
   const {
     data: projects,
     loading,
     error,
-  } = useCollection<Project>('projects', mapRecordToProject, {}, initialData);
+  } = useCollection<Project>('projects', mapRecordToProject);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');

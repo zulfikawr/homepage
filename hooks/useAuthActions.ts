@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { modal } from '@/components/UI';
 import { toast } from '@/components/UI';
 import { LogoutConfirm } from '@/components/UI/Modal/LogoutConfirm';
-import pb from '@/lib/pocketbase';
+import { login as setAuth, logout as clearAuth } from '@/lib/auth';
 
 export function useAuthActions() {
   const [error, setError] = useState<string>('');
@@ -17,12 +17,29 @@ export function useAuthActions() {
     setError('');
     setLoading(true);
     try {
-      try {
-        await pb.collection('_superusers').authWithPassword(email, password);
-      } catch {
-        await pb.collection('users').authWithPassword(email, password);
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      interface LoginResponse {
+        success: boolean;
+        user?: {
+          id: string;
+          email: string;
+          role: string;
+        };
+        error?: string;
       }
 
+      const result = (await res.json()) as LoginResponse;
+
+      if (!res.ok || !result.success || !result.user) {
+        throw new Error(result.error || 'Invalid credentials');
+      }
+
+      setAuth(result.user);
       router.push('/database');
       router.refresh();
       toast.show('You are now logged in!');
@@ -37,20 +54,11 @@ export function useAuthActions() {
   };
 
   const handleGithubLogin = async () => {
-    setLoading(true);
-    try {
-      await pb.collection('users').authWithOAuth2({ provider: 'github' });
-      router.push('/');
-      toast.show('You are now logged in with GitHub!');
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
+    toast.show('GitHub login not yet implemented for D1.', 'error');
   };
 
   const handleLogout = () => {
-    pb.authStore.clear();
+    clearAuth();
     router.push('/');
     router.refresh();
     toast.show('Logged out successfully!');
@@ -60,7 +68,7 @@ export function useAuthActions() {
     modal.open(
       React.createElement(LogoutConfirm, {
         onConfirm: () => {
-          pb.authStore.clear();
+          clearAuth();
           router.push('/');
           router.refresh();
           toast.show('Logged out successfully!');

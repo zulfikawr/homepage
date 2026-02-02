@@ -1,59 +1,57 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToEmployment } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getBucket, getDB } from '@/lib/cloudflare';
 import { Employment } from '@/types/employment';
 
-/**
- * Helper to clean employment data before sending to PocketBase.
- */
-function cleanEmploymentData(
-  data: Omit<Employment, 'id'> | Employment,
-): Record<string, unknown> {
-  const clean: Record<string, unknown> = { ...data };
+interface EmploymentRow {
+  [key: string]: unknown;
+  id: string;
+  slug: string;
+  organization: string;
+  organization_industry: string;
+  job_title: string;
+  job_type: string;
+  responsibilities: string;
+  date_string: string;
+  org_logo_url: string;
+  organization_location: string;
+}
 
-  // Handle logo field (file field vs orgLogoUrl text field)
-  if (typeof clean.orgLogoUrl === 'string') {
-    if (clean.orgLogoUrl.includes('/api/files/')) {
-      const parts = clean.orgLogoUrl.split('/');
-      clean.orgLogo = parts[parts.length - 1].split('?')[0];
-    } else if (
-      clean.orgLogoUrl.startsWith('http') ||
-      clean.orgLogoUrl.startsWith('/')
-    ) {
-      // External or local URL -> move to orgLogoUrl and clear orgLogo (file field)
-      clean.orgLogo = null;
-    }
-  }
-
-  // Ensure responsibilities is stringified if it's an array
-  if (Array.isArray(clean.responsibilities)) {
-    clean.responsibilities = JSON.stringify(clean.responsibilities);
-  }
-
-  // Remove the ID from the body as it's passed in the URL
-  if ('id' in clean) {
-    delete clean.id;
-  }
-
-  return clean;
+function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    slug: row.slug,
+    organization: row.organization,
+    jobTitle: row.job_title,
+    dateString: row.date_string,
+    jobType: row.job_type as Employment['jobType'],
+    orgLogoUrl: row.org_logo_url,
+    organizationIndustry: row.organization_industry,
+    organizationLocation: row.organization_location,
+    responsibilities: row.responsibilities
+      ? JSON.parse(row.responsibilities)
+      : [],
+  };
 }
 
 /**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
+ * Uploads a file to R2 and returns the public path.
  */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+async function uploadFile(file: File): Promise<string> {
+  const bucket = getBucket();
+  if (!bucket) throw new Error('Storage binding (BUCKET) not found');
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+  const key = `org-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const arrayBuffer = await file.arrayBuffer();
+
+  await bucket.put(key, arrayBuffer, {
+    httpMetadata: { contentType: file.type },
+  });
+
+  return `/api/storage/${key}`;
 }
 
 /**
@@ -61,11 +59,17 @@ async function ensureAuth() {
  */
 export async function getEmployments(): Promise<Employment[]> {
   try {
-    const records = await pb
-      .collection('employments')
-      .getFullList<RecordModel>({ sort: '-created' });
-    return records.map(mapRecordToEmployment);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+
+    const { results } = await db
+      .prepare('SELECT * FROM employments ORDER BY created_at DESC')
+      .all<EmploymentRow>();
+    return results
+      .map(mapRowToEmployment)
+      .filter((e): e is Employment => e !== null);
+  } catch (error) {
+    console.error('[Database] Failed to fetch employments:', error);
     return [];
   }
 }
@@ -76,27 +80,79 @@ export async function getEmployments(): Promise<Employment[]> {
 export async function addEmployment(
   data: Omit<Employment, 'id'> | FormData,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
-  await ensureAuth();
   try {
-    const payload =
-      data instanceof FormData
-        ? data
-        : (cleanEmploymentData(data) as Record<string, unknown>);
-    const record = await pb
-      .collection('employments')
-      .create<RecordModel>(payload);
-    const employment = mapRecordToEmployment(record);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
-    revalidatePath('/employments');
+    const id = crypto.randomUUID();
+    let payload: Partial<Employment> = {};
+
+    if (data instanceof FormData) {
+      payload.organization = data.get('organization') as string;
+      payload.organizationIndustry = data.get('organizationIndustry') as string;
+      payload.jobTitle = data.get('jobTitle') as string;
+      payload.jobType = data.get('jobType') as Employment['jobType'];
+      payload.dateString = data.get('dateString') as string;
+      payload.organizationLocation = data.get('organizationLocation') as string;
+      payload.slug = data.get('slug') as string;
+
+      const respStr = data.get('responsibilities') as string;
+      try {
+        payload.responsibilities = JSON.parse(respStr);
+      } catch {
+        payload.responsibilities = [];
+      }
+
+      const logoFile = data.get('orgLogo') as File | null;
+      const logoUrlInput = data.get('orgLogoUrl') as string | null;
+      if (logoFile && logoFile.size > 0) {
+        payload.orgLogoUrl = await uploadFile(logoFile);
+      } else if (logoUrlInput) {
+        payload.orgLogoUrl = logoUrlInput.replace('/api/storage/', '');
+      }
+    } else {
+      payload = { ...data };
+    }
+
+    if (!payload.slug) {
+      payload.slug =
+        payload.organization?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+    }
+    const respJson = JSON.stringify(payload.responsibilities || []);
+
+    await db
+      .prepare(
+        `INSERT INTO employments (id, slug, organization, organization_industry, job_title, job_type, responsibilities, date_string, org_logo_url, organization_location)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        payload.slug,
+        payload.organization,
+        payload.organizationIndustry,
+        payload.jobTitle,
+        payload.jobType,
+        respJson,
+        payload.dateString,
+        payload.orgLogoUrl || '',
+        payload.organizationLocation || '',
+      )
+      .run();
+
+    revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
 
-    return { success: true, employment };
+    const newEmp = await getEmploymentById(id);
+    if (!newEmp)
+      throw new Error('Failed to retrieve employment after creation');
+
+    return { success: true, employment: newEmp };
   } catch (error: unknown) {
-    const pbError = error as { data?: unknown; message?: string };
+    console.error('[Database] Failed to add employment:', error);
     return {
       success: false,
-      error: pbError.message || String(pbError),
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -107,69 +163,113 @@ export async function addEmployment(
 export async function updateEmployment(
   data: Employment | FormData,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
-  await ensureAuth();
   try {
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
+
     let recordId: string;
-    let updateData: Record<string, unknown> | FormData;
 
     if (data instanceof FormData) {
       recordId = data.get('id') as string;
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          formData.append(key, value);
-        }
-      });
-      updateData = formData;
     } else {
       recordId = data.id;
-      updateData = cleanEmploymentData(data);
     }
 
-    // Resolve slug to ID if necessary
-    if (recordId.length !== 15) {
-      const records = await pb
-        .collection('employments')
-        .getFullList<RecordModel>({
-          filter: `slug = "${recordId}"`,
-        });
-      if (records.length > 0) {
-        recordId = records[0].id;
-      }
-    } else {
-      try {
-        await pb.collection('employments').getOne(recordId);
-      } catch {
-        const records = await pb
-          .collection('employments')
-          .getFullList<RecordModel>({
-            filter: `slug = "${recordId}"`,
-          });
-        if (records.length > 0) {
-          recordId = records[0].id;
+    const existing = await getEmploymentById(recordId);
+    if (!existing) return { success: false, error: 'Employment not found' };
+    recordId = existing.id;
+
+    let payload: Partial<Employment> = {};
+    if (data instanceof FormData) {
+      payload.organization = data.get('organization') as string;
+      payload.organizationIndustry = data.get('organizationIndustry') as string;
+      payload.jobTitle = data.get('jobTitle') as string;
+      payload.jobType = data.get('jobType') as Employment['jobType'];
+      payload.dateString = data.get('dateString') as string;
+      payload.organizationLocation = data.get('organizationLocation') as string;
+      payload.slug = data.get('slug') as string;
+
+      const respStr = data.get('responsibilities') as string;
+      if (respStr) {
+        try {
+          payload.responsibilities = JSON.parse(respStr);
+        } catch {
+          payload.responsibilities = [];
         }
       }
+
+      const logoFile = data.get('orgLogo') as File | null;
+      const logoUrlInput = data.get('orgLogoUrl') as string | null;
+      if (logoFile && logoFile.size > 0) {
+        payload.orgLogoUrl = await uploadFile(logoFile);
+      } else if (logoUrlInput) {
+        payload.orgLogoUrl = logoUrlInput.replace('/api/storage/', '');
+      }
+    } else {
+      payload = { ...data };
     }
 
-    const record = await pb
-      .collection('employments')
-      .update<RecordModel>(recordId, updateData);
-    const employment = mapRecordToEmployment(record);
+    const fields: string[] = [];
+    const values: (string | number | boolean | null)[] = [];
 
-    revalidatePath('/employments');
+    if (payload.organization !== undefined) {
+      fields.push('organization = ?');
+      values.push(payload.organization);
+    }
+    if (payload.slug !== undefined) {
+      fields.push('slug = ?');
+      values.push(payload.slug);
+    }
+    if (payload.organizationIndustry !== undefined) {
+      fields.push('organization_industry = ?');
+      values.push(payload.organizationIndustry);
+    }
+    if (payload.jobTitle !== undefined) {
+      fields.push('job_title = ?');
+      values.push(payload.jobTitle);
+    }
+    if (payload.jobType !== undefined) {
+      fields.push('job_type = ?');
+      values.push(payload.jobType);
+    }
+    if (payload.dateString !== undefined) {
+      fields.push('date_string = ?');
+      values.push(payload.dateString);
+    }
+    if (payload.orgLogoUrl !== undefined) {
+      fields.push('org_logo_url = ?');
+      values.push(payload.orgLogoUrl);
+    }
+    if (payload.organizationLocation !== undefined) {
+      fields.push('organization_location = ?');
+      values.push(payload.organizationLocation);
+    }
+    if (payload.responsibilities !== undefined) {
+      fields.push('responsibilities = ?');
+      values.push(JSON.stringify(payload.responsibilities));
+    }
+
+    if (fields.length > 0) {
+      values.push(recordId);
+      await db
+        .prepare(`UPDATE employments SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
+
+    revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
 
-    return { success: true, employment };
+    const updated = await getEmploymentById(recordId);
+    if (!updated) throw new Error('Failed to retrieve employment after update');
+
+    return { success: true, employment: updated };
   } catch (error: unknown) {
-    const pbError = error as {
-      data?: unknown;
-      message?: string;
-      status?: number;
-    };
+    console.error('[Database] Failed to update employment:', error);
     return {
       success: false,
-      error: pbError.message || String(pbError),
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -180,36 +280,25 @@ export async function updateEmployment(
 export async function deleteEmployment(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId = id;
-    if (id.length !== 15) {
-      const records = await pb
-        .collection('employments')
-        .getFullList<RecordModel>({
-          filter: `slug = "${id}"`,
-        });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('employments').getOne(id);
-      } catch {
-        const records = await pb
-          .collection('employments')
-          .getFullList<RecordModel>({
-            filter: `slug = "${id}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
-      }
-    }
-    await pb.collection('employments').delete(recordId);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
-    revalidatePath('/employments');
+    const existing = await getEmploymentById(id);
+    if (!existing) return { success: false, error: 'Employment not found' };
+
+    await db
+      .prepare('DELETE FROM employments WHERE id = ?')
+      .bind(existing.id)
+      .run();
+
+    revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
 
     return { success: true };
   } catch (error: unknown) {
+    console.error('[Database] Failed to delete employment:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
@@ -224,30 +313,16 @@ export async function getEmploymentById(
   id: string,
 ): Promise<Employment | null> {
   try {
-    if (id.length === 15) {
-      try {
-        const record = await pb
-          .collection('employments')
-          .getOne<RecordModel>(id);
-        if (record) return mapRecordToEmployment(record);
-      } catch {
-        // Ignored
-      }
-    }
+    const db = getDB();
+    if (!db) return null;
 
-    const records = await pb
-      .collection('employments')
-      .getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
-        requestKey: null,
-      });
+    const query = 'SELECT * FROM employments WHERE id = ? OR slug = ?';
+    const row = await db.prepare(query).bind(id, id).first<EmploymentRow>();
 
-    if (records.length > 0) {
-      return mapRecordToEmployment(records[0]);
-    }
-
-    return null;
-  } catch {
+    if (!row) return null;
+    return mapRowToEmployment(row);
+  } catch (error) {
+    console.error('[Database] Failed to get employment by ID:', error);
     return null;
   }
 }

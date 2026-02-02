@@ -1,8 +1,4 @@
-import PocketBase from 'pocketbase';
-
-const pb = new PocketBase(
-  process.env.NEXT_PUBLIC_POCKETBASE_URL || 'https://pocketbase.zulfikar.site',
-);
+import { getDB } from './cloudflare';
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
@@ -20,12 +16,8 @@ export const getSpotifyAuthUrl = () => {
     throw new Error('Spotify client ID is not configured');
   }
 
-  // Use consistent base URL from environment or fallback
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    (typeof window !== 'undefined'
-      ? window.location.origin
-      : 'https://dev.zulfikar.site');
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://dev.zulfikar.site';
   const redirectUri = `${baseUrl}/callback`;
 
   const params = new URLSearchParams({
@@ -35,16 +27,24 @@ export const getSpotifyAuthUrl = () => {
     scope: SCOPES,
   });
 
-  const authUrl = `${SPOTIFY_AUTH_URL}?${params.toString()}`;
-  console.log('Generated Spotify Auth URL:', authUrl);
-  console.log('Redirect URI being used:', redirectUri);
-  return authUrl;
+  return `${SPOTIFY_AUTH_URL}?${params.toString()}`;
 };
 
+interface SpotifyTokensRow {
+  id: string;
+  access_token: string;
+  refresh_token: string;
+  timestamp: number;
+}
+
 export async function getAccessToken() {
-  const tokens = await pb
-    .collection('spotify_tokens')
-    .getOne('spotify', { requestKey: null });
+  const db = getDB();
+  if (!db) throw new Error('DB not available');
+
+  const tokens = await db
+    .prepare('SELECT * FROM spotify_tokens WHERE id = ?')
+    .bind('spotify')
+    .first<SpotifyTokensRow>();
 
   if (!tokens) {
     throw new Error('No tokens found');
@@ -74,31 +74,29 @@ export async function getAccessToken() {
       cache: 'no-store',
     });
 
-    const data = await response.json();
+    interface SpotifyTokenResponse {
+      access_token: string;
+      refresh_token?: string;
+      expires_in: number;
+      token_type: string;
+    }
+
+    const data = (await response.json()) as SpotifyTokenResponse;
 
     if (data.access_token) {
       accessToken = data.access_token;
 
-      const adminEmail = process.env.PB_ADMIN_EMAIL;
-      const adminPass = process.env.PB_ADMIN_PASSWORD;
-
-      if (adminEmail && adminPass) {
-        try {
-          const adminPb = new PocketBase(
-            process.env.NEXT_PUBLIC_POCKETBASE_URL,
-          );
-          await adminPb
-            .collection('_superusers')
-            .authWithPassword(adminEmail, adminPass);
-          await adminPb.collection('spotify_tokens').update('spotify', {
-            access_token: data.access_token,
-            refresh_token: data.refresh_token || tokens.refresh_token,
-            timestamp: Date.now(),
-          });
-        } catch (pbError) {
-          console.error('Failed to update PB with admin credentials:', pbError);
-        }
-      }
+      await db
+        .prepare(
+          'UPDATE spotify_tokens SET access_token = ?, refresh_token = ?, timestamp = ?, updated_at = unixepoch() WHERE id = ?',
+        )
+        .bind(
+          data.access_token,
+          data.refresh_token || tokens.refresh_token,
+          Date.now(),
+          'spotify',
+        )
+        .run();
     }
   }
 
@@ -109,34 +107,21 @@ export async function saveSpotifyTokens(
   accessToken: string,
   refreshToken: string,
 ) {
-  const adminEmail = process.env.PB_ADMIN_EMAIL;
-  const adminPass = process.env.PB_ADMIN_PASSWORD;
+  const db = getDB();
+  if (!db) throw new Error('DB not available');
 
-  if (!adminEmail || !adminPass) {
-    throw new Error('Admin credentials not configured');
-  }
-
-  const adminPb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
-  await adminPb
-    .collection('_superusers')
-    .authWithPassword(adminEmail, adminPass);
-
-  try {
-    // Try to update existing record
-    return await adminPb.collection('spotify_tokens').update('spotify', {
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      timestamp: Date.now(),
-    });
-  } catch {
-    // If record doesn't exist, create it
-    return await adminPb.collection('spotify_tokens').create({
-      id: 'spotify',
-      access_token: accessToken,
-      refresh_token: refreshToken,
-      timestamp: Date.now(),
-    });
-  }
+  await db
+    .prepare(
+      `INSERT INTO spotify_tokens (id, access_token, refresh_token, timestamp)
+     VALUES (?, ?, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET
+       access_token = excluded.access_token,
+       refresh_token = excluded.refresh_token,
+       timestamp = excluded.timestamp,
+       updated_at = unixepoch()`,
+    )
+    .bind('spotify', accessToken, refreshToken, Date.now())
+    .run();
 }
 
 export async function getRecentlyPlayed(limit = 10) {

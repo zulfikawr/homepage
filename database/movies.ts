@@ -1,225 +1,250 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToMovie } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getBucket, getDB } from '@/lib/cloudflare';
 import { Movie } from '@/types/movie';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface MovieRow {
+  [key: string]: unknown;
+  id: string;
+  slug: string;
+  title: string;
+  release_date: string;
+  imdb_id: string;
+  poster_url: string;
+  imdb_link: string;
+  rating: number;
 }
 
-/**
- * Helper to clean movie data before sending to PocketBase.
- */
-function cleanMovieData(
-  data: Omit<Movie, 'id'> | Movie,
-): Record<string, unknown> {
-  const clean: Record<string, unknown> = { ...data };
-
-  // Handle posterUrl field
-  if (typeof clean.posterUrl === 'string') {
-    if (clean.posterUrl.includes('/api/files/')) {
-      const parts = clean.posterUrl.split('/');
-      clean.posterUrl = parts[parts.length - 1].split('?')[0];
-    }
-  }
-
-  // Remove ID
-  if ('id' in clean) {
-    delete clean.id;
-  }
-
-  return clean;
+function mapRowToMovie(row: MovieRow | null): Movie | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    releaseDate: row.release_date,
+    imdbId: row.imdb_id,
+    posterUrl: row.poster_url,
+    imdbLink: row.imdb_link,
+    rating: row.rating,
+  };
 }
 
-/**
- * Fetches all movies from the database.
- * @returns Promise with array of movies.
- */
+async function uploadFile(file: File): Promise<string> {
+  const bucket = getBucket();
+  if (!bucket) throw new Error('Storage binding (BUCKET) not found');
+  const key = `movie-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const arrayBuffer = await file.arrayBuffer();
+  await bucket.put(key, arrayBuffer, {
+    httpMetadata: { contentType: file.type },
+  });
+  return `/api/storage/${key}`;
+}
+
 export async function getMovies(): Promise<Movie[]> {
   try {
-    const records = await pb
-      .collection('movies')
-      .getFullList<RecordModel>({ sort: '-created' });
-    return records.map(mapRecordToMovie);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+    const { results } = await db
+      .prepare('SELECT * FROM movies ORDER BY created_at DESC')
+      .all<MovieRow>();
+    return results.map(mapRowToMovie).filter((m): m is Movie => m !== null);
+  } catch (error) {
+    console.error('[Database] Failed to fetch movies:', error);
     return [];
   }
 }
 
-/**
- * Adds a new movie to the database.
- * @param data Movie data without ID.
- * @returns Promise with operation result.
- */
 export async function addMovie(
   data: Omit<Movie, 'id'> | FormData,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
-  await ensureAuth();
   try {
-    const payload =
-      data instanceof FormData
-        ? data
-        : (cleanMovieData(data) as Record<string, unknown>);
-    const record = await pb.collection('movies').create<RecordModel>(payload);
-    const movie = mapRecordToMovie(record);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
+
+    const id = crypto.randomUUID();
+    let payload: Partial<Movie> = {};
+
+    if (data instanceof FormData) {
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.releaseDate = data.get('releaseDate') as string;
+      payload.imdbId = data.get('imdbId') as string;
+      payload.imdbLink = data.get('imdbLink') as string;
+      payload.rating = Number(data.get('rating'));
+      const posterFile = data.get('poster') as File | null;
+      const posterUrlInput = data.get('posterUrl') as string | null;
+      if (posterFile && posterFile.size > 0) {
+        payload.posterUrl = await uploadFile(posterFile);
+      } else if (posterUrlInput) {
+        payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
+      }
+    } else {
+      payload = { ...data };
+    }
+
+    if (!payload.slug) {
+      payload.slug =
+        payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+    }
+
+    await db
+      .prepare(
+        `INSERT INTO movies (id, slug, title, release_date, imdb_id, poster_url, imdb_link, rating)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        payload.slug,
+        payload.title,
+        payload.releaseDate || '',
+        payload.imdbId || '',
+        payload.posterUrl || '',
+        payload.imdbLink || '',
+        payload.rating || 0,
+      )
+      .run();
 
     revalidatePath('/movies');
     revalidatePath('/database/movies');
     revalidateTag('movies', 'max');
 
-    return { success: true, movie };
-  } catch (error: unknown) {
+    const newMovie = await getMovieById(id);
+    if (!newMovie) throw new Error('Failed to retrieve movie after creation');
+
+    return { success: true, movie: newMovie };
+  } catch (error) {
+    console.error('[Database] Failed to add movie:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Updates an existing movie in the database.
- * @param data Updated movie data.
- * @returns Promise with operation result.
- */
 export async function updateMovie(
   data: Movie | FormData,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId: string;
-    let updateData: Record<string, unknown> | FormData;
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
+    let recordId =
+      data instanceof FormData ? (data.get('id') as string) : data.id;
+    const existing = await getMovieById(recordId);
+    if (!existing) return { success: false, error: 'Movie not found' };
+    recordId = existing.id;
+
+    let payload: Partial<Movie> = {};
     if (data instanceof FormData) {
-      const formId = data.get('id') as string;
-      if (formId) recordId = formId;
-      else throw new Error('ID is required for update');
-
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          formData.append(key, value);
-        }
-      });
-      updateData = formData;
-    } else {
-      recordId = data.id;
-      updateData = cleanMovieData(data);
-    }
-
-    if (recordId.length !== 15) {
-      const records = await pb.collection('movies').getFullList<RecordModel>({
-        filter: `slug = "${recordId}"`,
-      });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('movies').getOne(recordId);
-      } catch {
-        const records = await pb.collection('movies').getFullList<RecordModel>({
-          filter: `slug = "${recordId}"`,
-        });
-        if (records.length > 0) recordId = records[0].id;
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.releaseDate = data.get('releaseDate') as string;
+      payload.imdbId = data.get('imdbId') as string;
+      payload.imdbLink = data.get('imdbLink') as string;
+      payload.rating = Number(data.get('rating'));
+      const posterFile = data.get('poster') as File | null;
+      const posterUrlInput = data.get('posterUrl') as string | null;
+      if (posterFile && posterFile.size > 0) {
+        payload.posterUrl = await uploadFile(posterFile);
+      } else if (posterUrlInput) {
+        payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
       }
+    } else {
+      payload = { ...data };
     }
 
-    const record = await pb
-      .collection('movies')
-      .update<RecordModel>(recordId, updateData);
-    const movie = mapRecordToMovie(record);
+    const fields: string[] = [];
+    const values: (string | number | boolean | null)[] = [];
+    if (payload.title !== undefined) {
+      fields.push('title = ?');
+      values.push(payload.title);
+    }
+    if (payload.slug !== undefined) {
+      fields.push('slug = ?');
+      values.push(payload.slug);
+    }
+    if (payload.releaseDate !== undefined) {
+      fields.push('release_date = ?');
+      values.push(payload.releaseDate);
+    }
+    if (payload.imdbId !== undefined) {
+      fields.push('imdb_id = ?');
+      values.push(payload.imdbId);
+    }
+    if (payload.imdbLink !== undefined) {
+      fields.push('imdb_link = ?');
+      values.push(payload.imdbLink);
+    }
+    if (payload.rating !== undefined) {
+      fields.push('rating = ?');
+      values.push(payload.rating);
+    }
+    if (payload.posterUrl !== undefined) {
+      fields.push('poster_url = ?');
+      values.push(payload.posterUrl);
+    }
+
+    if (fields.length > 0) {
+      values.push(recordId);
+      await db
+        .prepare(`UPDATE movies SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
 
     revalidatePath('/movies');
     revalidatePath('/database/movies');
     revalidateTag('movies', 'max');
 
-    return { success: true, movie };
-  } catch (error: unknown) {
+    const updated = await getMovieById(recordId);
+    if (!updated) throw new Error('Failed to retrieve movie after update');
+
+    return { success: true, movie: updated };
+  } catch (error) {
+    console.error('[Database] Failed to update movie:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Deletes a movie from the database.
- * @param id ID or slug of the movie.
- * @returns Promise with operation result.
- */
 export async function deleteMovie(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId = id;
-    if (id.length !== 15) {
-      const records = await pb.collection('movies').getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
-      });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('movies').getOne(id);
-      } catch {
-        const records = await pb.collection('movies').getFullList<RecordModel>({
-          filter: `slug = "${id}"`,
-        });
-        if (records.length > 0) recordId = records[0].id;
-      }
-    }
-    await pb.collection('movies').delete(recordId);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
+    const existing = await getMovieById(id);
+    if (!existing) return { success: false, error: 'Movie not found' };
+    await db.prepare('DELETE FROM movies WHERE id = ?').bind(existing.id).run();
     revalidatePath('/movies');
     revalidatePath('/database/movies');
     revalidateTag('movies', 'max');
-
     return { success: true };
-  } catch (error: unknown) {
+  } catch (error) {
+    console.error('[Database] Failed to delete movie:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Fetches a single movie by ID or slug.
- */
 export async function getMovieById(id: string): Promise<Movie | null> {
   try {
-    if (id.length === 15) {
-      try {
-        const record = await pb.collection('movies').getOne<RecordModel>(id);
-        if (record) return mapRecordToMovie(record);
-      } catch {
-        // Ignored
-      }
-    }
-
-    const records = await pb.collection('movies').getFullList<RecordModel>({
-      filter: `slug = "${id}"`,
-      requestKey: null,
-    });
-
-    if (records.length > 0) {
-      return mapRecordToMovie(records[0]);
-    }
-
-    return null;
-  } catch {
+    const db = getDB();
+    if (!db) return null;
+    const row = await db
+      .prepare('SELECT * FROM movies WHERE id = ? OR slug = ?')
+      .bind(id, id)
+      .first<MovieRow>();
+    return mapRowToMovie(row);
+  } catch (error) {
+    console.error('[Database] Failed to get movie by ID:', error);
     return null;
   }
 }

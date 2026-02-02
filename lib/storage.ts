@@ -1,27 +1,21 @@
-import { RecordModel } from 'pocketbase';
-
-import pb from './pocketbase';
-
 /**
- * Generates a URL for a file stored in PocketBase.
- * This function acts as an abstraction layer to allow switching storage providers easily.
+ * Generates a URL for a file.
+ * Now simplified for Cloudflare R2 / D1 migration.
  *
- * @param record - The PocketBase record (or an object with collectionName and id)
- * @param fileName - The name of the file
+ * @param record - Context record (unused but kept for signature compatibility)
+ * @param fileName - The name or URL of the file
  * @returns The full URL to the file
  */
 export function getFileUrl(
-  record: RecordModel | { collectionName: string; id: string },
+  record: Record<string, unknown>,
   fileName: string,
 ): string {
   if (!fileName) return '';
 
-  // If it's already a full URL, return it
-  if (fileName.startsWith('http')) return fileName;
+  // If it's already a full URL or absolute path, return it
+  if (fileName.startsWith('http') || fileName.startsWith('/')) {
+    return fileName;
+  }
 
-  // Custom logic for "clean" storage paths can be added here
-  // For example, if you move resume to a custom folder:
-  // if (record.collectionName === 'resume') return `/storage/resume/${fileName}`;
-
-  return pb.files.getURL(record as RecordModel, fileName);
+  return `/api/storage/${fileName}`;
 }

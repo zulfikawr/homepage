@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 const GITHUB_USERNAME = 'zulfikawr';
 
 interface GitHubGraphQLDay {
@@ -14,6 +16,24 @@ interface GitHubGraphQLWeek {
 interface GitHubGraphQLData {
   totalContributions: number;
   weeks: GitHubGraphQLWeek[];
+}
+
+interface GitHubGraphQLResponse {
+  data?: {
+    user?: {
+      contributionsCollection?: {
+        contributionCalendar?: GitHubGraphQLData;
+        commitContributionsByRepository?: Array<{
+          repository: {
+            nameWithOwner: string;
+          };
+        }>;
+      };
+    };
+  };
+  errors?: Array<{
+    message: string;
+  }>;
 }
 
 export async function GET() {
@@ -80,7 +100,7 @@ export async function GET() {
       );
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as GitHubGraphQLResponse;
 
     if (result.errors) {
       return NextResponse.json(

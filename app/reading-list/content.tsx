@@ -11,18 +11,12 @@ import { useCollection } from '@/hooks';
 import { mapRecordToBook } from '@/lib/mappers';
 import { Book } from '@/types/book';
 
-interface ReadingListContentProps {
-  initialData?: Book[];
-}
-
-export default function ReadingListContent({
-  initialData,
-}: ReadingListContentProps) {
+export default function ReadingListContent() {
   const {
     data: books,
     loading,
     error,
-  } = useCollection<Book>('reading_list', mapRecordToBook, {}, initialData);
+  } = useCollection<Book>('reading_list', mapRecordToBook);
 
   const booksArray = books || [];
 

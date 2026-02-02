@@ -1,15 +1,6 @@
 'use server';
 
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
-
-import {
-  mapRecordToBook,
-  mapRecordToPost,
-  mapRecordToProject,
-  mapRecordToPublication,
-} from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 import { Book } from '@/types/book';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
@@ -21,63 +12,103 @@ export type SearchResult =
   | { type: 'book'; data: Book }
   | { type: 'publication'; data: Publication };
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+interface PostRow {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  date_string: string;
+}
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface ProjectRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+}
+
+interface BookRow {
+  id: string;
+  title: string;
+  author: string;
+  slug: string;
+}
+
+interface PublicationRow {
+  id: string;
+  title: string;
+  slug: string;
 }
 
 export async function searchDatabase(query: string): Promise<SearchResult[]> {
   if (!query || query.length < 2) return [];
 
-  const searchTerms = query.toLowerCase().trim();
-  const filter = `title ~ "${searchTerms}" || content ~ "${searchTerms}" || excerpt ~ "${searchTerms}"`;
-  const projectFilter = `name ~ "${searchTerms}" || description ~ "${searchTerms}" || readme ~ "${searchTerms}"`;
-  const bookFilter = `title ~ "${searchTerms}" || author ~ "${searchTerms}"`;
-  const publicationFilter = `title ~ "${searchTerms}" || excerpt ~ "${searchTerms}" || publisher ~ "${searchTerms}"`;
+  const db = getDB();
+  if (!db) return [];
 
-  await ensureAuth();
+  const searchTerms = `%${query.toLowerCase().trim()}%`;
+
   try {
     const [posts, projects, books, publications] = await Promise.all([
-      pb
-        .collection('posts')
-        .getList<RecordModel>(1, 10, { filter, sort: '-created' }),
-      pb.collection('projects').getList<RecordModel>(1, 10, {
-        filter: projectFilter,
-        sort: '-created',
-      }),
-      pb
-        .collection('reading_list')
-        .getList<RecordModel>(1, 10, { filter: bookFilter, sort: '-created' }),
-      pb.collection('publications').getList<RecordModel>(1, 10, {
-        filter: publicationFilter,
-        sort: '-created',
-      }),
+      db
+        .prepare(
+          'SELECT id, title, slug, excerpt, date_string FROM posts WHERE title LIKE ? OR content LIKE ? OR excerpt LIKE ? LIMIT 5',
+        )
+        .bind(searchTerms, searchTerms, searchTerms)
+        .all<PostRow>(),
+      db
+        .prepare(
+          'SELECT id, name, slug, description FROM projects WHERE name LIKE ? OR description LIKE ? OR readme LIKE ? LIMIT 5',
+        )
+        .bind(searchTerms, searchTerms, searchTerms)
+        .all<ProjectRow>(),
+      db
+        .prepare(
+          'SELECT id, title, author, slug FROM books WHERE title LIKE ? OR author LIKE ? LIMIT 5',
+        )
+        .bind(searchTerms, searchTerms)
+        .all<BookRow>(),
+      db
+        .prepare(
+          'SELECT id, title, slug FROM publications WHERE title LIKE ? OR excerpt LIKE ? OR publisher LIKE ? LIMIT 5',
+        )
+        .bind(searchTerms, searchTerms, searchTerms)
+        .all<PublicationRow>(),
     ]);
 
+    // Map rows manually since we removed record mappers dependency on PB
     const results: SearchResult[] = [
-      ...posts.items.map((item) => ({
+      ...posts.results.map((row) => ({
         type: 'post' as const,
-        data: mapRecordToPost(item),
+        data: {
+          id: row.id,
+          title: row.title,
+          slug: row.slug,
+          excerpt: row.excerpt,
+          dateString: row.date_string,
+        } as Post,
       })),
-      ...projects.items.map((item) => ({
+      ...projects.results.map((row) => ({
         type: 'project' as const,
-        data: mapRecordToProject(item),
+        data: {
+          id: row.id,
+          name: row.name,
+          slug: row.slug,
+          description: row.description,
+        } as Project,
       })),
-      ...books.items.map((item) => ({
+      ...books.results.map((row) => ({
         type: 'book' as const,
-        data: mapRecordToBook(item),
+        data: {
+          id: row.id,
+          title: row.title,
+          author: row.author,
+          slug: row.slug,
+        } as Book,
       })),
-      ...publications.items.map((item) => ({
+      ...publications.results.map((row) => ({
         type: 'publication' as const,
-        data: mapRecordToPublication(item),
+        data: { id: row.id, title: row.title, slug: row.slug } as Publication,
       })),
     ];
 

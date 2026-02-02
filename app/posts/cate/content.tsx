@@ -10,17 +10,8 @@ import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 
-interface Props {
-  initialPosts: Post[];
-}
-
-export default function CategoriesContent({ initialPosts }: Props) {
-  const { data: posts } = useCollection<Post>(
-    'posts',
-    mapRecordToPost,
-    {},
-    initialPosts,
-  );
+export default function CategoriesContent() {
+  const { data: posts } = useCollection<Post>('posts', mapRecordToPost);
 
   const categories = useMemo(() => {
     if (!posts) return [];

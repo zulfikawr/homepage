@@ -42,7 +42,13 @@ export default function GitHubCard({
           `https://api.github.com/repos/${owner}/${repo}`,
         );
         if (res.ok) {
-          const apiData = await res.json();
+          interface GitHubRepoApiData {
+            stargazers_count: number;
+            forks_count: number;
+            language: string | null;
+            description: string | null;
+          }
+          const apiData = (await res.json()) as GitHubRepoApiData;
           setData({
             stars: apiData.stargazers_count || 0,
             forks: apiData.forks_count || 0,

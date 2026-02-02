@@ -214,7 +214,7 @@ const TopLanguagesBanner = ({ className }: { className?: string }) => {
           throw new Error('Failed to fetch language data');
         }
 
-        const data = await response.json();
+        const data = (await response.json()) as LanguageData;
         setLanguageData(data);
         setError(null);
       } catch (err) {

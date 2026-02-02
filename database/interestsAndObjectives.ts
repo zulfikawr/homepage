@@ -1,14 +1,9 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToInterests } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
-
-const COLLECTION = 'interests_and_objectives';
 
 const defaultInterestsData: InterestsAndObjectives = {
   description:
@@ -22,30 +17,36 @@ const defaultInterestsData: InterestsAndObjectives = {
     'Through my work, I aim to contribute to discussions on sustainable development and how climate policies shape global relations.',
 };
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+interface InterestsRow {
+  id: string;
+  description: string;
+  objectives: string;
+  conclusion: string;
+}
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+function mapRowToInterests(row: InterestsRow): InterestsAndObjectives {
+  return {
+    description: row.description,
+    objectives: row.objectives ? JSON.parse(row.objectives) : [],
+    conclusion: row.conclusion,
+  };
 }
 
 /**
- * Fetches all interests and objectives from the database and picks a random one.
- * @returns Promise with interests and objectives data.
+ * Fetches interests and objectives from the database and picks a random one.
  */
 export async function getInterestsAndObjectives(): Promise<InterestsAndObjectives> {
   try {
-    const records = await pb.collection(COLLECTION).getFullList<RecordModel>();
+    const db = getDB();
+    if (!db) return defaultInterestsData;
 
-    if (records.length > 0) {
-      const randomRecord = records[Math.floor(Math.random() * records.length)];
-      return mapRecordToInterests(randomRecord);
+    // Pick a random row
+    const row = await db
+      .prepare('SELECT * FROM interests_objectives ORDER BY RANDOM() LIMIT 1')
+      .first<InterestsRow>();
+
+    if (row) {
+      return mapRowToInterests(row);
     }
     return defaultInterestsData;
   } catch {
@@ -63,55 +64,55 @@ export async function updateInterestsAndObjectives(
   data?: InterestsAndObjectives;
   error?: string;
 }> {
-  await ensureAuth();
   try {
+    const db = getDB();
+    if (!db) throw new Error('DB not available');
+
     let id: string;
-    let updateData: Record<string, unknown> | FormData;
+    let description: string;
+    let objectivesJson: string;
+    let conclusion: string;
 
     if (data instanceof FormData) {
-      id = (data.get('id') as string) || 'main';
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          // If objectives is passed as JSON string in FormData, it's fine.
-          // If passed as separate entries, FormData logic might need adjustment but usually handled by form.
-          formData.append(key, value);
-        }
-      });
-      updateData = formData;
+      id = (data.get('id') as string) || '1';
+      description = data.get('description') as string;
+      objectivesJson = data.get('objectives') as string;
+      conclusion = data.get('conclusion') as string;
+
+      // Validation: ensure objectives is valid JSON
+      try {
+        JSON.parse(objectivesJson);
+      } catch {
+        objectivesJson = '[]';
+      }
     } else {
-      id = data.id || 'main';
-      const cleanData: Record<string, unknown> = { ...data };
-      if ('id' in cleanData) delete cleanData.id;
-
-      if (Array.isArray(cleanData.objectives)) {
-        cleanData.objectives = JSON.stringify(cleanData.objectives);
-      }
-      updateData = cleanData;
+      id = data.id || '1';
+      description = data.description;
+      objectivesJson = JSON.stringify(data.objectives || []);
+      conclusion = data.conclusion;
     }
 
-    let record;
-    try {
-      record = await pb
-        .collection(COLLECTION)
-        .update<RecordModel>(id, updateData);
-    } catch {
-      // If create needed
-      if (updateData instanceof FormData) {
-        updateData.append('id', id);
-        record = await pb.collection(COLLECTION).create(updateData);
-      } else {
-        record = await pb.collection(COLLECTION).create({ id, ...updateData });
-      }
-    }
+    await db
+      .prepare(
+        `INSERT INTO interests_objectives (id, description, objectives, conclusion)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         description = excluded.description,
+         objectives = excluded.objectives,
+         conclusion = excluded.conclusion,
+         updated_at = unixepoch()`,
+      )
+      .bind(id, description, objectivesJson, conclusion)
+      .run();
 
     revalidatePath('/');
     revalidatePath('/database/interests-and-objectives');
     revalidateTag('interests_and_objectives', 'max');
 
+    const updated = await getInterestsAndObjectives();
     return {
       success: true,
-      data: mapRecordToInterests(record as unknown as RecordModel),
+      data: updated,
     };
   } catch (error: unknown) {
     return {

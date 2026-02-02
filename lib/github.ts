@@ -32,12 +32,17 @@ export async function getGitHubContributions(): Promise<GitHubContributionData |
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      interface GitHubErrorResponse {
+        error?: string;
+        message?: string;
+        details?: unknown;
+      }
+      const errorData = (await response.json()) as GitHubErrorResponse;
       console.error('GitHub API error:', response.status, errorData);
       return null;
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as GitHubContributionData;
 
     // Cache the data
     apiCache.data = data;

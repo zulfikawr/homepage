@@ -40,8 +40,8 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
     setPersonalInfo((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     try {
       let result;

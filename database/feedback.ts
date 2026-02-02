@@ -1,68 +1,54 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+interface FeedbackRow {
+  id: string;
+  feedback: string;
+  contact: string;
+  created_at: number;
+}
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+export async function getFeedback() {
+  try {
+    const db = getDB();
+    const { results } = await db
+      .prepare('SELECT * FROM feedback ORDER BY created_at DESC')
+      .all<FeedbackRow>();
+    return results;
+  } catch {
+    return [];
   }
 }
 
-/**
- * Deletes a feedback entry.
- * @param id ID of the feedback entry.
- * @returns Promise with operation result.
- */
 export async function deleteFeedback(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    await pb.collection('feedback').delete(id);
-
+    const db = getDB();
+    await db.prepare('DELETE FROM feedback WHERE id = ?').bind(id).run();
     revalidatePath('/database/feedback');
-
     return { success: true };
-  } catch (error: unknown) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : String(error),
-    };
+  } catch (e) {
+    return { success: false, error: String(e) };
   }
 }
 
-/**
- * Creates a new feedback entry.
- * @param data Feedback data.
- * @returns Promise with operation result.
- */
 export async function createFeedback(data: {
   feedback: string;
   contact: string;
 }): Promise<{ success: boolean; error?: string }> {
   try {
-    await pb.collection('feedback').create({
-      ...data,
-      timestamp: new Date().toISOString(),
-    });
-
+    const db = getDB();
+    await db
+      .prepare('INSERT INTO feedback (id, feedback, contact) VALUES (?, ?, ?)')
+      .bind(crypto.randomUUID(), data.feedback, data.contact)
+      .run();
     revalidatePath('/database/feedback');
-
     return { success: true };
-  } catch (error: unknown) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : String(error),
-    };
+  } catch (e) {
+    return { success: false, error: String(e) };
   }
 }

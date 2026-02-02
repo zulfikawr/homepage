@@ -3,7 +3,10 @@ export const siteConfig = {
   title: 'IR Student, Journalist, and Web Developer',
   description: 'Personal website and portfolio of Zulfikar',
   author: 'Zulfikar',
-  url: 'https://zulfikar.site',
+  url:
+    process.env.NODE_ENV === 'development'
+      ? `https://${process.env.NEXT_PUBLIC_DEV_URL || 'dev.zulfikar.site'}`
+      : `https://${process.env.NEXT_PUBLIC_BASE_URL || 'zulfikar.site'}`,
   contacts: [
     {
       platform: 'Email',
@@ -107,7 +110,10 @@ export const siteConfig = {
     },
     { name: 'React 19', description: 'Frontend library' },
     { name: 'Tailwind CSS 4', description: 'Utility-first CSS framework' },
-    { name: 'PocketBase', description: 'Backend-as-a-service for DB and Auth' },
+    {
+      name: 'Cloudflare D1 & R2',
+      description: 'SQL database and object storage',
+    },
     { name: 'Puter.js', description: 'AI capabilities provider' },
     { name: 'Bun', description: 'JavaScript runtime and package manager' },
   ],

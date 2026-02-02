@@ -2,9 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { saveSpotifyTokens } from '@/lib/spotify';
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
-    const { code } = await request.json();
+    const { code } = (await request.json()) as { code: string };
 
     if (!code) {
       return NextResponse.json(
@@ -45,7 +47,14 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    const tokenData = await tokenResponse.json();
+    interface SpotifyTokenResponse {
+      access_token?: string;
+      refresh_token?: string;
+      error?: string;
+      error_description?: string;
+    }
+
+    const tokenData = (await tokenResponse.json()) as SpotifyTokenResponse;
 
     console.log('Spotify token response status:', tokenResponse.status);
     console.log('Spotify token response:', tokenData);
@@ -55,7 +64,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Save tokens to database
-    await saveSpotifyTokens(tokenData.access_token, tokenData.refresh_token);
+    if (tokenData.access_token && tokenData.refresh_token) {
+      await saveSpotifyTokens(tokenData.access_token, tokenData.refresh_token);
+    } else {
+      throw new Error('Missing tokens in Spotify response');
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,24 +1,26 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToSection } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 import { Section } from '@/types/section';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+interface SectionRow {
+  id: string;
+  name: string;
+  title: string;
+  enabled: number;
+  sort_order: number;
+}
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+function mapRowToSection(row: SectionRow): Section {
+  return {
+    id: row.id,
+    name: row.name,
+    title: row.title,
+    enabled: !!row.enabled,
+    order: row.sort_order,
+  };
 }
 
 /**
@@ -26,11 +28,15 @@ async function ensureAuth() {
  */
 export async function getSections(): Promise<Section[]> {
   try {
-    const records = await pb
-      .collection('sections')
-      .getFullList<RecordModel>({ sort: 'order' });
-    return records.map(mapRecordToSection);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+
+    const { results } = await db
+      .prepare('SELECT * FROM sections ORDER BY sort_order ASC')
+      .all<SectionRow>();
+    return results.map(mapRowToSection);
+  } catch (e) {
+    console.error('Error fetching sections:', e);
     return [];
   }
 }
@@ -41,16 +47,23 @@ export async function getSections(): Promise<Section[]> {
 export async function addSection(
   data: Omit<Section, 'id'>,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
-  await ensureAuth();
   try {
-    const record = await pb.collection('sections').create<RecordModel>(data);
-    const section = mapRecordToSection(record);
+    const db = getDB();
+    const id = crypto.randomUUID();
+
+    await db
+      .prepare(
+        `INSERT INTO sections (id, name, title, enabled, sort_order)
+       VALUES (?, ?, ?, ?, ?)`,
+      )
+      .bind(id, data.name, data.title, data.enabled ? 1 : 0, data.order)
+      .run();
 
     revalidatePath('/');
     revalidatePath('/database/sections');
     revalidateTag('sections', 'max');
 
-    return { success: true, section };
+    return { success: true, section: { ...data, id } };
   } catch (error: unknown) {
     return {
       success: false,
@@ -66,18 +79,45 @@ export async function updateSection(
   id: string,
   data: Partial<Section>,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
-  await ensureAuth();
   try {
-    const record = await pb
-      .collection('sections')
-      .update<RecordModel>(id, data);
-    const section = mapRecordToSection(record);
+    const db = getDB();
+
+    const fields: string[] = [];
+    const values: (string | number | boolean | null | undefined)[] = [];
+
+    if (data.name !== undefined) {
+      fields.push('name = ?');
+      values.push(data.name);
+    }
+    if (data.title !== undefined) {
+      fields.push('title = ?');
+      values.push(data.title);
+    }
+    if (data.enabled !== undefined) {
+      fields.push('enabled = ?');
+      values.push(data.enabled ? 1 : 0);
+    }
+    if (data.order !== undefined) {
+      fields.push('sort_order = ?');
+      values.push(data.order);
+    }
+
+    if (fields.length > 0) {
+      values.push(id);
+      await db
+        .prepare(`UPDATE sections SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
 
     revalidatePath('/');
     revalidatePath('/database/sections');
     revalidateTag('sections', 'max');
 
-    return { success: true, section };
+    const sections = await getSections();
+    const updated = sections.find((s) => s.id === id);
+
+    return { success: true, section: updated };
   } catch (error: unknown) {
     return {
       success: false,
@@ -92,9 +132,9 @@ export async function updateSection(
 export async function deleteSection(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    await pb.collection('sections').delete(id);
+    const db = getDB();
+    await db.prepare('DELETE FROM sections WHERE id = ?').bind(id).run();
 
     revalidatePath('/');
     revalidatePath('/database/sections');

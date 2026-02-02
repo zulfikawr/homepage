@@ -27,7 +27,13 @@ export async function fetchGitHubRepo(
       return null;
     }
 
-    const data = await res.json();
+    interface GitHubRepoResponse {
+      stargazers_count: number;
+      forks_count: number;
+      language: string | null;
+      description: string | null;
+    }
+    const data = (await res.json()) as GitHubRepoResponse;
 
     return {
       stars: data.stargazers_count || 0,

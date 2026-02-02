@@ -18,17 +18,17 @@ export const PersonalInfoLayout = ({
   return (
     <section className='flex items-center justify-between gap-x-10 gap-y-8'>
       <div className='flex flex-col gap-y-1 flex-1'>
-        <h1 className='text-4xl font-medium tracking-wide text-foreground h-12 leading-[48px]'>
+        <h1 className='text-4xl font-medium tracking-wide text-foreground h-12 leading-[48px] flex items-center'>
           <span className='mr-3 inline-block'>👋</span>
           {isLoading ? (
-            <Skeleton width={192} height={32} as='span' />
+            <Skeleton width={220} height={32} />
           ) : (
             <span className='text-gruv-orange'>{personalInfo?.name}</span>
           )}
         </h1>
-        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg'>
+        <div className='flex flex-col gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg min-h-6'>
           {isLoading ? (
-            <Skeleton width={256} height={20} as='span' />
+            <Skeleton width={300} height={20} />
           ) : (
             <p className='text-gruv-aqua dark:text-gruv-aqua/80'>
               {personalInfo?.title}
@@ -60,35 +60,26 @@ export const PersonalInfoLayout = ({
   );
 };
 
-const PersonalInfoSection = ({
-  initialData,
-}: {
-  initialData?: PersonalInfo[];
-}) => {
+const PersonalInfoSection = () => {
   const {
     data: personalInfoList,
     loading,
     error,
-  } = useCollection<PersonalInfo>(
-    'profile',
-    mapRecordToPersonalInfo,
-    {},
-    initialData,
-  );
+  } = useCollection<PersonalInfo>('profile', mapRecordToPersonalInfo);
 
   const personalInfo = useMemo(() => {
     return personalInfoList && personalInfoList.length > 0
       ? personalInfoList[0]
-      : {
-          name: 'Zulfikar',
-          title: 'I build things for the web',
-          avatarUrl: '/images/placeholder-square.png',
-        };
+      : undefined;
   }, [personalInfoList]);
 
   if (error) return <div>Failed to load personal info</div>;
 
-  return <PersonalInfoLayout personalInfo={personalInfo} isLoading={loading} />;
+  if (loading) {
+    return <PersonalInfoLayout isLoading={true} />;
+  }
+
+  return <PersonalInfoLayout personalInfo={personalInfo} isLoading={false} />;
 };
 
 export default PersonalInfoSection;

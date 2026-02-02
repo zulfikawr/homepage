@@ -22,7 +22,7 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const router = useRouter();
 
-  const identifier = project.slug || project.id;
+  const identifier = project.slug;
   const href = openForm
     ? `/database/projects/${identifier}/edit`
     : `/projects/${identifier}`;

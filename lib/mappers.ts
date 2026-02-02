@@ -1,5 +1,3 @@
-import { RecordModel } from 'pocketbase';
-
 import { AnalyticsEvent } from '@/types/analytics';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
@@ -17,226 +15,225 @@ import { Section } from '@/types/section';
 import { getFileUrl } from './storage';
 
 /**
- * Standardized mapping functions to convert PocketBase records to application types.
- * These are shared between client and server.
+ * Standardized mapping functions to convert database rows to application types.
  */
 
-export function mapRecordToPost(record: RecordModel): Post {
+export type BaseDatabaseRow = {
+  [key: string]: unknown;
+};
+
+export function mapRecordToPost(row: BaseDatabaseRow): Post {
   return {
-    id: record.id,
-    title: record.title,
-    content: record.content,
-    excerpt: record.excerpt,
-    dateString: record.dateString,
-    image: getFileUrl(record, record.image as string),
-    image_url: record.image_url,
-    audio: getFileUrl(record, record.audio as string),
-    audio_url: record.audio_url,
-    slug: record.slug,
+    id: row.id as string,
+    title: row.title as string,
+    content: row.content as string,
+    excerpt: row.excerpt as string,
+    dateString: (row.date_string || row.dateString) as string,
+    image: getFileUrl({}, (row.image_url || row.image) as string),
+    image_url: getFileUrl({}, (row.image_url || row.image) as string),
+    audio: getFileUrl({}, (row.audio_url || row.audio) as string),
+    audio_url: getFileUrl({}, (row.audio_url || row.audio) as string),
+    slug: row.slug as string,
     categories:
-      typeof record.categories === 'string'
-        ? JSON.parse(record.categories)
-        : record.categories,
+      typeof row.categories === 'string'
+        ? JSON.parse(row.categories)
+        : (row.categories as string[]) || [],
   };
 }
 
-export function mapRecordToBook(record: RecordModel): Book {
+export function mapRecordToBook(row: BaseDatabaseRow): Book {
   return {
-    id: record.id,
-    slug: record.slug,
-    type: record.type,
-    title: record.title,
-    author: record.author,
-    imageURL: record.imageURL
-      ? getFileUrl(record, record.imageURL as string)
-      : '',
-    link: record.link,
-    dateAdded: record.dateAdded,
+    id: row.id as string,
+    slug: row.slug as string,
+    type: row.type as 'currentlyReading' | 'read' | 'toRead',
+    title: row.title as string,
+    author: row.author as string,
+    imageURL: getFileUrl({}, (row.image_url || row.imageURL || '') as string),
+    link: row.link as string,
+    dateAdded: (row.date_added || row.dateAdded) as string,
   };
 }
 
-export function mapRecordToCertificate(record: RecordModel): Certificate {
+export function mapRecordToCertificate(row: BaseDatabaseRow): Certificate {
   return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    issuedBy: record.issuedBy,
-    dateIssued: record.dateIssued,
-    credentialId: record.credentialId,
-    imageUrl: getFileUrl(
-      record,
-      (record.image as string) || (record.imageUrl as string),
-    ),
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
+    issuedBy: (row.issued_by || row.issuedBy) as string,
+    dateIssued: (row.date_issued || row.dateIssued) as string,
+    credentialId: (row.credential_id || row.credentialId) as string,
+    imageUrl: getFileUrl({}, (row.image_url || row.imageUrl) as string),
     organizationLogoUrl: getFileUrl(
-      record,
-      (record.organizationLogo as string) ||
-        (record.organizationLogoUrl as string),
+      {},
+      (row.organization_logo_url || row.organizationLogoUrl) as string,
     ),
-    link: record.link,
+    link: row.link as string,
   };
 }
 
-export function mapRecordToEmployment(record: RecordModel): Employment {
+export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
   return {
-    id: record.id,
-    slug: record.slug,
-    organization: record.organization,
-    jobTitle: record.jobTitle,
-    dateString: record.dateString,
-    jobType: record.jobType,
-    orgLogoUrl: getFileUrl(
-      record,
-      (record.orgLogo as string) || (record.orgLogoUrl as string),
-    ),
-    organizationIndustry: record.organizationIndustry,
-    organizationLocation: record.organizationLocation,
+    id: row.id as string,
+    slug: row.slug as string,
+    organization: row.organization as string,
+    jobTitle: (row.job_title || row.jobTitle) as string,
+    dateString: (row.date_string || row.dateString) as string,
+    jobType: (row.job_type || row.jobType) as Employment['jobType'],
+    orgLogoUrl: getFileUrl({}, (row.org_logo_url || row.orgLogoUrl) as string),
+    organizationIndustry: (row.organization_industry ||
+      row.organizationIndustry) as string,
+    organizationLocation: (row.organization_location ||
+      row.organizationLocation) as string,
     responsibilities:
-      typeof record.responsibilities === 'string'
-        ? JSON.parse(record.responsibilities)
-        : record.responsibilities,
+      typeof row.responsibilities === 'string'
+        ? JSON.parse(row.responsibilities)
+        : (row.responsibilities as string[]) || [],
   };
 }
 
 export function mapRecordToInterests(
-  record: RecordModel,
+  row: BaseDatabaseRow,
 ): InterestsAndObjectives & { id: string } {
   return {
-    id: record.id,
-    description: record.description,
-    conclusion: record.conclusion,
+    id: row.id as string,
+    description: row.description as string,
+    conclusion: row.conclusion as string,
     objectives:
-      typeof record.objectives === 'string'
-        ? JSON.parse(record.objectives)
-        : record.objectives,
+      typeof row.objectives === 'string'
+        ? JSON.parse(row.objectives)
+        : (row.objectives as string[]) || [],
   };
 }
 
-export function mapRecordToMovie(record: RecordModel): Movie {
+export function mapRecordToMovie(row: BaseDatabaseRow): Movie {
   return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    releaseDate: record.releaseDate,
-    imdbId: record.imdbId,
-    posterUrl: record.posterUrl
-      ? getFileUrl(record, record.posterUrl as string)
-      : '',
-    imdbLink: record.imdbLink,
-    rating: record.rating,
-  };
-}
-
-export function mapRecordToPersonalInfo(record: RecordModel): PersonalInfo {
-  const fileName =
-    (record.avatar as string) || (record.avatarUrl as string) || '';
-  return {
-    name: record.name as string,
-    title: record.title as string,
-    avatarUrl: getFileUrl(record, fileName),
-  };
-}
-
-export function mapRecordToProject(record: RecordModel): Project {
-  return {
-    id: record.id,
-    name: record.name,
-    dateString: record.dateString,
-    image: getFileUrl(
-      record,
-      (record.image as string) || (record.image_url as string),
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
+    releaseDate: (row.release_date || row.releaseDate) as string,
+    imdbId: (row.imdb_id || row.imdbId) as string,
+    posterUrl: getFileUrl(
+      {},
+      (row.poster_url || row.posterUrl || '') as string,
     ),
-    description: record.description,
+    imdbLink: (row.imdb_link || row.imdbLink) as string,
+    rating: row.rating as number,
+  };
+}
+
+export function mapRecordToPersonalInfo(row: BaseDatabaseRow): PersonalInfo {
+  return {
+    name: row.name as string,
+    title: row.title as string,
+    avatarUrl: getFileUrl(
+      {},
+      (row.avatar_url || row.avatarUrl || '') as string,
+    ),
+  };
+}
+
+export function mapRecordToProject(row: BaseDatabaseRow): Project {
+  return {
+    id: row.id as string,
+    name: row.name as string,
+    dateString: (row.date_string || row.dateString) as string,
+    image: getFileUrl({}, (row.image_url || row.image) as string),
+    description: row.description as string,
     tools:
-      typeof record.tools === 'string'
-        ? JSON.parse(record.tools)
-        : record.tools,
-    readme: record.readme,
-    status: record.status,
-    link: record.link,
-    favicon: getFileUrl(
-      record,
-      (record.favicon as string) || (record.favicon_url as string),
-    ),
-    pinned: record.pinned,
-    slug: record.slug,
-    githubRepoUrl: record.githubRepoUrl,
+      typeof row.tools === 'string'
+        ? JSON.parse(row.tools)
+        : (row.tools as string[]) || [],
+    readme: row.readme as string,
+    status: row.status as 'inProgress' | 'completed' | 'upcoming',
+    link: row.link as string,
+    favicon: getFileUrl({}, (row.favicon_url || row.favicon) as string),
+    pinned: !!row.pinned,
+    slug: row.slug as string,
+    githubRepoUrl: (row.github_repo_url || row.githubRepoUrl) as string,
   };
 }
 
-export function mapRecordToPublication(record: RecordModel): Publication {
+export function mapRecordToPublication(row: BaseDatabaseRow): Publication {
   return {
-    id: record.id,
-    slug: record.slug,
-    title: record.title,
-    publisher: record.publisher,
-    link: record.link,
-    openAccess: record.openAccess,
-    excerpt: record.excerpt,
+    id: row.id as string,
+    slug: row.slug as string,
+    title: row.title as string,
+    publisher: row.publisher as string,
+    link: row.link as string,
+    openAccess: !!row.open_access || !!row.openAccess,
+    excerpt: row.excerpt as string,
     authors:
-      typeof record.authors === 'string'
-        ? JSON.parse(record.authors)
-        : record.authors,
+      typeof row.authors === 'string'
+        ? JSON.parse(row.authors)
+        : (row.authors as string[]) || [],
     keywords:
-      typeof record.keywords === 'string'
-        ? JSON.parse(record.keywords)
-        : record.keywords,
+      typeof row.keywords === 'string'
+        ? JSON.parse(row.keywords)
+        : (row.keywords as string[]) || [],
   };
 }
 
-export function mapRecordToSection(record: RecordModel): Section {
+export function mapRecordToSection(row: BaseDatabaseRow): Section {
   return {
-    id: record.id,
-    name: record.name,
-    title: record.title,
-    enabled: record.enabled,
-    order: record.order,
+    id: row.id as string,
+    name: row.name as string,
+    title: row.title as string,
+    enabled: !!row.enabled,
+    order: (row.sort_order !== undefined
+      ? row.sort_order
+      : row.order) as number,
   };
 }
 
-export function mapRecordToResume(record: RecordModel): Resume {
-  const fileName = (record.file as string) || '';
+export function mapRecordToResume(row: BaseDatabaseRow): Resume {
   return {
-    fileUrl: getFileUrl(record, fileName),
+    fileUrl: getFileUrl({}, (row.file_url || row.fileUrl || '') as string),
   };
 }
 
-export function mapRecordToComment(record: RecordModel): Comment {
+export function mapRecordToComment(row: BaseDatabaseRow): Comment {
   return {
-    id: record.id,
-    postId: record.postId,
-    author: record.author,
-    content: record.content,
-    avatarUrl: record.avatarUrl
-      ? getFileUrl(record, record.avatarUrl as string)
-      : undefined,
-    parentId: record.parentId,
-    createdAt: new Date(record.created).getTime(),
-    likes: Array.isArray(record.likedBy) ? record.likedBy.length : 0,
+    id: row.id as string,
+    postId: (row.post_id || row.postId) as string,
+    author: row.author as string,
+    content: row.content as string,
+    avatarUrl: getFileUrl({}, (row.avatar_url || row.avatarUrl) as string),
+    parentId: (row.parent_id || row.parentId) as string,
+    createdAt: row.created_at
+      ? (row.created_at as number) * 1000
+      : new Date((row.created as string) || Date.now()).getTime(),
+    likes: (row.likes as number) || 0,
   };
 }
 
-export function mapRecordToAnalyticsEvent(record: RecordModel): AnalyticsEvent {
+export function mapRecordToAnalyticsEvent(
+  row: BaseDatabaseRow,
+): AnalyticsEvent {
   return {
-    id: record.id,
-    path: record.path,
-    country: record.country,
-    referrer: record.referrer,
-    user_agent: record.user_agent,
-    is_bot: record.is_bot,
-    created: record.created,
+    id: row.id as string,
+    path: row.path as string,
+    country: row.country as string,
+    referrer: row.referrer as string,
+    user_agent: row.user_agent as string,
+    is_bot: !!row.is_bot,
+    created: row.created_at
+      ? new Date((row.created_at as number) * 1000).toISOString()
+      : (row.created as string),
   };
 }
 
-export function mapRecordToFeedback(record: RecordModel): {
+export function mapRecordToFeedback(row: BaseDatabaseRow): {
   id: string;
   feedback: string;
   contact: string;
   created: string;
 } {
   return {
-    id: record.id,
-    feedback: record.feedback,
-    contact: record.contact,
-    created: record.created,
+    id: row.id as string,
+    feedback: row.feedback as string,
+    contact: row.contact as string,
+    created: row.created_at
+      ? new Date((row.created_at as number) * 1000).toISOString()
+      : (row.created as string),
   };
 }

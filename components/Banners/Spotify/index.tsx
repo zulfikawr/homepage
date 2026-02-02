@@ -14,7 +14,7 @@ import {
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { useAuth } from '@/contexts/authContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import { getSpotifyAuthUrl } from '@/lib/spotify';
+import { getSpotifyAuthUrl } from '@/lib/spotify-client';
 import { SpotifyTrack } from '@/types/spotify';
 
 const apiCache: {
@@ -262,7 +262,10 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
       let foundCurrentTrack = false;
 
       if (currentResponse.status === 200) {
-        const data = await currentResponse.json();
+        const data = (await currentResponse.json()) as {
+          is_playing: boolean;
+          item: SpotifyTrack | null;
+        };
 
         if (data.is_playing && !data.item) {
           // Ad playing - we'll try recently played instead
@@ -287,7 +290,9 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
         try {
           const recentRes = await fetch('/api/spotify/recently-played?limit=1');
           if (recentRes.ok) {
-            const recentlyPlayed = await recentRes.json();
+            const recentlyPlayed = (await recentRes.json()) as {
+              items: Array<{ track: SpotifyTrack; played_at: string }>;
+            };
 
             // Check if we have recent tracks
             if (

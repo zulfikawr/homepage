@@ -25,7 +25,7 @@ export default function PublicationCard({
     if (isPreview) return;
 
     if (openForm) {
-      router.push(`/database/publications/${publication.id}/edit`);
+      router.push(`/database/publications/${publication.slug}/edit`);
     } else {
       openLink(publication.link);
     }

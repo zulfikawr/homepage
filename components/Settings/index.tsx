@@ -11,7 +11,7 @@ import { useBackground } from '@/contexts/backgroundContext';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { useRadius } from '@/contexts/radiusContext';
 import { useWeather, WeatherType } from '@/contexts/weatherContext';
-import { getSpotifyAuthUrl } from '@/lib/spotify';
+import { getSpotifyAuthUrl } from '@/lib/spotify-client';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },

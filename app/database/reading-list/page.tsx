@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import ReadingListDatabase from './content';
+import ReadingListContent from './content';
 
 export const metadata: Metadata = {
   title: 'Reading List - Zulfikar',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ReadingListPage() {
-  return <ReadingListDatabase />;
+  return <ReadingListContent />;
 }

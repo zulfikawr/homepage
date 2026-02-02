@@ -13,16 +13,12 @@ import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 import { sortByDate } from '@/utilities/sortByDate';
 
-interface PostsContentProps {
-  initialData?: Post[];
-}
-
-export default function PostsContent({ initialData }: PostsContentProps) {
+export default function PostsContent() {
   const {
     data: posts,
     loading,
     error,
-  } = useCollection<Post>('posts', mapRecordToPost, {}, initialData);
+  } = useCollection<Post>('posts', mapRecordToPost);
 
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 

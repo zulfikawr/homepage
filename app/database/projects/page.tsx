@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import ProjectDatabase from './content';
+import ProjectsContent from './content';
 
 export const metadata: Metadata = {
   title: 'Projects - Zulfikar',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectPage() {
-  return <ProjectDatabase />;
+  return <ProjectsContent />;
 }

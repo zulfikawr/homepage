@@ -9,16 +9,12 @@ import { useCollection } from '@/hooks';
 import { mapRecordToMovie } from '@/lib/mappers';
 import { Movie } from '@/types/movie';
 
-interface MoviesContentProps {
-  initialData?: Movie[];
-}
-
-export default function MoviesContent({ initialData }: MoviesContentProps) {
+export default function MoviesContent() {
   const {
     data: movies,
     loading,
     error,
-  } = useCollection<Movie>('movies', mapRecordToMovie, {}, initialData);
+  } = useCollection<Movie>('movies', mapRecordToMovie);
 
   if (error) return <CardEmpty message='Failed to load movies' />;
 

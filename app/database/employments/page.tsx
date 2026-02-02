@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import EmploymentDatabase from './content';
+import EmploymentsContent from './content';
 
 export const metadata: Metadata = {
   title: 'Employments - Zulfikar',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function EmploymentPage() {
-  return <EmploymentDatabase />;
+  return <EmploymentsContent />;
 }

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
+import { SpotifyPlaylist } from '@/types/spotify';
+
+export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,7 +26,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await spotifyRes.json();
+    const data = (await spotifyRes.json()) as { items: SpotifyPlaylist[] };
     return NextResponse.json(data);
   } catch (error: unknown) {
     return NextResponse.json(

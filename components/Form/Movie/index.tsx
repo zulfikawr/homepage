@@ -87,7 +87,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
         `https://imdb.iamidiotareyoutoo.com/search?q=${encoded}`,
       );
       if (!res.ok) throw new Error(`Status ${res.status}`);
-      const data = await res.json();
+      interface ImdbSearchResponse {
+        description?: Record<string, unknown>[];
+      }
+      const data = (await res.json()) as ImdbSearchResponse;
       const list: Record<string, unknown>[] = Array.isArray(data?.description)
         ? (data.description as Record<string, unknown>[])
         : [];
@@ -157,8 +160,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     if (!validateForm()) return;
 
@@ -256,7 +259,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  e.preventDefault();
+                  e?.preventDefault();
                   performSearch(query);
                 }
               }}
@@ -384,7 +387,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     key={i}
                     type='button'
                     onClick={() => handleChange('rating', i)}
-                    onMouseDown={(e) => e.preventDefault()}
+                    onMouseDown={(e) => e?.preventDefault()}
                     className={`p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
                     aria-label={`${i} star`}
                   >

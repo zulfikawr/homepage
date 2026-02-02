@@ -25,7 +25,7 @@ export default function BookCard({
     if (isPreview) return;
 
     if (openForm) {
-      router.push(`/database/reading-list/${book.id}/edit`);
+      router.push(`/database/reading-list/${book.slug}/edit`);
     } else {
       openLink(book.link);
     }

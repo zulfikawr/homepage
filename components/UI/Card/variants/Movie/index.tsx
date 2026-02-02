@@ -28,7 +28,7 @@ export default function MovieCard({
     if (isPreview) return;
 
     if (openForm) {
-      router.push(`/database/movies/${movie.id}/edit`);
+      router.push(`/database/movies/${movie.slug}/edit`);
     } else {
       if (movie.imdbLink) openLink(movie.imdbLink);
     }

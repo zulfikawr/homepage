@@ -1,32 +1,12 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import pb from '@/lib/pocketbase';
-import { getFileUrl } from '@/lib/storage';
+import { getBucket, getDB } from '@/lib/cloudflare';
 
 /**
- * Ensures the PocketBase client is authenticated for server-side operations.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
-}
-
-/**
- * Uploads a file to a specific collection and record.
- *
- * @param collectionName - Target collection name
- * @param recordId - Target record ID
- * @param fieldName - Field name for the file
- * @param formData - FormData containing the file
- * @returns Result object with success status and full URL
+ * Uploads a file to R2 and updates a database record.
+ * (This is a generic helper used for legacy reasons or multi-purpose fields)
  */
 export async function uploadFile(
   collectionName: string,
@@ -34,31 +14,43 @@ export async function uploadFile(
   fieldName: string,
   formData: FormData,
 ): Promise<{ success: boolean; url?: string; error?: string }> {
-  await ensureAuth();
   try {
-    const record = await pb
-      .collection(collectionName)
-      .update<RecordModel>(recordId, formData);
+    const db = getDB();
+    const bucket = getBucket();
+    const file = formData.get(fieldName) as File;
+    if (!file || !db || !bucket)
+      return { success: false, error: 'Config missing' };
 
-    const fileName = record[fieldName] as string;
-    if (!fileName) {
-      return {
-        success: false,
-        error: 'Upload succeeded but no filename returned',
-      };
-    }
+    const key = `${collectionName}-${recordId}-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const arrayBuffer = await file.arrayBuffer();
+    await bucket.put(key, arrayBuffer, {
+      httpMetadata: { contentType: file.type },
+    });
 
-    const url = getFileUrl(record, fileName);
+    const url = `/api/storage/${key}`;
 
-    // Revalidate paths that might be affected
-    revalidatePath('/database');
-    revalidatePath(`/database/${collectionName}`);
-
-    return { success: true, url };
-  } catch (error: unknown) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : String(error),
+    // Map collection names to table names if they differ
+    const tableMap: Record<string, string> = {
+      profile: 'personal_info',
+      reading_list: 'books',
     };
+    const table = tableMap[collectionName] || collectionName;
+
+    // Most tables use image_url or similar. This helper might need specific mapping
+    // for every field in every table, but generally we use image_url or file_url now.
+    const field =
+      fieldName === 'image' || fieldName === 'poster' || fieldName === 'avatar'
+        ? 'image_url'
+        : fieldName;
+
+    await db
+      .prepare(`UPDATE ${table} SET ${field} = ? WHERE id = ?`)
+      .bind(url, recordId)
+      .run();
+
+    revalidatePath(`/database/${collectionName}`);
+    return { success: true, url };
+  } catch (e) {
+    return { success: false, error: String(e) };
   }
 }

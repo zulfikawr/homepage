@@ -1,231 +1,255 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToBook } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getBucket, getDB } from '@/lib/cloudflare';
 import { Book } from '@/types/book';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface BookRow {
+  [key: string]: unknown;
+  id: string;
+  slug: string;
+  type: string;
+  title: string;
+  author: string;
+  image_url: string;
+  link: string;
+  date_added: string;
 }
 
-/**
- * Helper to clean book data before sending to PocketBase.
- */
-function cleanBookData(data: Omit<Book, 'id'> | Book): Record<string, unknown> {
-  const clean: Record<string, unknown> = { ...data };
-
-  // Handle imageURL field
-  if (typeof clean.imageURL === 'string') {
-    if (clean.imageURL.includes('/api/files/')) {
-      const parts = clean.imageURL.split('/');
-      clean.imageURL = parts[parts.length - 1].split('?')[0];
-    }
-  }
-
-  // Remove ID
-  if ('id' in clean) {
-    delete clean.id;
-  }
-
-  return clean;
+function mapRowToBook(row: BookRow | null): Book | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    slug: row.slug,
+    type: row.type as Book['type'],
+    title: row.title,
+    author: row.author,
+    imageURL: row.image_url,
+    link: row.link,
+    dateAdded: row.date_added,
+  };
 }
 
-/**
- * Fetches all books from the database.
- */
+async function uploadFile(file: File): Promise<string> {
+  const bucket = getBucket();
+  if (!bucket) throw new Error('Storage binding (BUCKET) not found');
+  const key = `book-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const arrayBuffer = await file.arrayBuffer();
+  await bucket.put(key, arrayBuffer, {
+    httpMetadata: { contentType: file.type },
+  });
+  return `/api/storage/${key}`;
+}
+
 export async function getBooks(): Promise<Book[]> {
   try {
-    const records = await pb
-      .collection('reading_list')
-      .getFullList<RecordModel>({ sort: '-created' });
-    return records.map(mapRecordToBook);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+    const { results } = await db
+      .prepare('SELECT * FROM books ORDER BY created_at DESC')
+      .all<BookRow>();
+    return results.map(mapRowToBook).filter((b): b is Book => b !== null);
+  } catch (error) {
+    console.error('[Database] Failed to fetch books:', error);
     return [];
   }
 }
 
-/**
- * Adds a new book to the database.
- */
 export async function addBook(
   data: Omit<Book, 'id'> | FormData,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
-  await ensureAuth();
   try {
-    const payload =
-      data instanceof FormData
-        ? data
-        : (cleanBookData(data) as Record<string, unknown>);
-    const record = await pb
-      .collection('reading_list')
-      .create<RecordModel>(payload);
-    const book = mapRecordToBook(record);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
+
+    const id = crypto.randomUUID();
+    let payload: Partial<Book> = {};
+
+    if (data instanceof FormData) {
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.author = data.get('author') as string;
+      payload.type = data.get('type') as Book['type'];
+      payload.link = data.get('link') as string;
+      payload.dateAdded = data.get('dateAdded') as string;
+
+      const imageFile = data.get('imageURL') as File | null;
+      const imageUrlInput = data.get('image_url') as string | null;
+
+      if (imageFile && imageFile.size > 0) {
+        payload.imageURL = await uploadFile(imageFile);
+      } else if (imageUrlInput) {
+        payload.imageURL = imageUrlInput.replace('/api/storage/', '');
+      }
+    } else {
+      payload = { ...data };
+    }
+
+    if (!payload.slug) {
+      payload.slug =
+        payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+    }
+
+    await db
+      .prepare(
+        `INSERT INTO books (id, slug, type, title, author, image_url, link, date_added) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        payload.slug,
+        payload.type,
+        payload.title,
+        payload.author,
+        payload.imageURL || '',
+        payload.link || '',
+        payload.dateAdded || '',
+      )
+      .run();
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
     revalidateTag('reading_list', 'max');
 
-    return { success: true, book };
-  } catch (error: unknown) {
+    const newBook = await getBookById(id);
+    if (!newBook) throw new Error('Failed to retrieve book after creation');
+
+    return { success: true, book: newBook };
+  } catch (error) {
+    console.error('[Database] Failed to add book:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Updates an existing book in the database.
- */
 export async function updateBook(
   data: Book | FormData,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId: string;
-    let updateData: Record<string, unknown> | FormData;
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
+    let recordId =
+      data instanceof FormData ? (data.get('id') as string) : data.id;
+    const existing = await getBookById(recordId);
+    if (!existing) return { success: false, error: 'Book not found' };
+    recordId = existing.id;
+
+    let payload: Partial<Book> = {};
     if (data instanceof FormData) {
-      const formId = data.get('id') as string;
-      // If id is in FormData, use it, but remove from payload
-      if (formId) recordId = formId;
-      else throw new Error('ID is required for update');
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.author = data.get('author') as string;
+      payload.type = data.get('type') as Book['type'];
+      payload.link = data.get('link') as string;
+      payload.dateAdded = data.get('dateAdded') as string;
 
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          formData.append(key, value);
-        }
-      });
-      updateData = formData;
-    } else {
-      recordId = data.id;
-      updateData = cleanBookData(data);
-    }
+      const imageFile = data.get('imageURL') as File | null;
+      const imageUrlInput = data.get('image_url') as string | null;
 
-    if (recordId.length !== 15) {
-      const records = await pb
-        .collection('reading_list')
-        .getFullList<RecordModel>({
-          filter: `slug = "${recordId}"`,
-        });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('reading_list').getOne(recordId);
-      } catch {
-        const records = await pb
-          .collection('reading_list')
-          .getFullList<RecordModel>({
-            filter: `slug = "${recordId}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
+      if (imageFile && imageFile.size > 0) {
+        payload.imageURL = await uploadFile(imageFile);
+      } else if (imageUrlInput) {
+        payload.imageURL = imageUrlInput.replace('/api/storage/', '');
       }
+    } else {
+      payload = { ...data };
     }
 
-    const record = await pb
-      .collection('reading_list')
-      .update<RecordModel>(recordId, updateData);
-    const book = mapRecordToBook(record);
+    const fields: string[] = [];
+    const values: (string | number | boolean | null)[] = [];
+
+    if (payload.title !== undefined) {
+      fields.push('title = ?');
+      values.push(payload.title);
+    }
+    if (payload.slug !== undefined) {
+      fields.push('slug = ?');
+      values.push(payload.slug);
+    }
+    if (payload.author !== undefined) {
+      fields.push('author = ?');
+      values.push(payload.author);
+    }
+    if (payload.type !== undefined) {
+      fields.push('type = ?');
+      values.push(payload.type);
+    }
+    if (payload.link !== undefined) {
+      fields.push('link = ?');
+      values.push(payload.link);
+    }
+    if (payload.dateAdded !== undefined) {
+      fields.push('date_added = ?');
+      values.push(payload.dateAdded);
+    }
+    if (payload.imageURL !== undefined) {
+      fields.push('image_url = ?');
+      values.push(payload.imageURL);
+    }
+
+    if (fields.length > 0) {
+      values.push(recordId);
+      await db
+        .prepare(`UPDATE books SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
     revalidateTag('reading_list', 'max');
 
-    return { success: true, book };
-  } catch (error: unknown) {
+    const updated = await getBookById(recordId);
+    return { success: true, book: updated! };
+  } catch (error) {
+    console.error('[Database] Failed to update book:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Deletes a book from the database.
- */
 export async function deleteBook(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId = id;
-    if (id.length !== 15) {
-      const records = await pb
-        .collection('reading_list')
-        .getFullList<RecordModel>({
-          filter: `slug = "${id}"`,
-        });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('reading_list').getOne(id);
-      } catch {
-        const records = await pb
-          .collection('reading_list')
-          .getFullList<RecordModel>({
-            filter: `slug = "${id}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
-      }
-    }
-    await pb.collection('reading_list').delete(recordId);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
+
+    const existing = await getBookById(id);
+    if (!existing) return { success: false, error: 'Book not found' };
+
+    await db.prepare('DELETE FROM books WHERE id = ?').bind(existing.id).run();
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
     revalidateTag('reading_list', 'max');
 
     return { success: true };
-  } catch (error: unknown) {
+  } catch (error) {
+    console.error('[Database] Failed to delete book:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Fetches a single book by ID or slug.
- */
 export async function getBookById(id: string): Promise<Book | null> {
   try {
-    if (id.length === 15) {
-      try {
-        const record = await pb
-          .collection('reading_list')
-          .getOne<RecordModel>(id);
-        if (record) return mapRecordToBook(record);
-      } catch {
-        // Ignored
-      }
-    }
-
-    const records = await pb
-      .collection('reading_list')
-      .getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
-        requestKey: null,
-      });
-
-    if (records.length > 0) {
-      return mapRecordToBook(records[0]);
-    }
-
-    return null;
-  } catch {
+    const db = getDB();
+    if (!db) return null;
+    const row = await db
+      .prepare('SELECT * FROM books WHERE id = ? OR slug = ?')
+      .bind(id, id)
+      .first<BookRow>();
+    return mapRowToBook(row);
+  } catch (error) {
+    console.error('[Database] Failed to get book by ID:', error);
     return null;
   }
 }

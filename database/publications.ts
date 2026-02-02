@@ -1,236 +1,269 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
-import { mapRecordToPublication } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getDB } from '@/lib/cloudflare';
 import { Publication } from '@/types/publication';
 
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface PublicationRow {
+  [key: string]: unknown;
+  id: string;
+  slug: string;
+  title: string;
+  authors: string;
+  publisher: string;
+  excerpt: string;
+  keywords: string;
+  open_access: number;
+  link: string;
 }
 
-/**
- * Helper to clean publication data before sending to PocketBase.
- */
-function cleanPublicationData(
-  data: Omit<Publication, 'id'> | Publication,
-): Record<string, unknown> {
-  const clean: Record<string, unknown> = { ...data };
-
-  // Ensure arrays are stringified
-  if (Array.isArray(clean.authors)) {
-    clean.authors = JSON.stringify(clean.authors);
-  }
-  if (Array.isArray(clean.keywords)) {
-    clean.keywords = JSON.stringify(clean.keywords);
-  }
-
-  // Remove ID
-  if ('id' in clean) {
-    delete clean.id;
-  }
-
-  return clean;
+function mapRowToPublication(row: PublicationRow | null): Publication | null {
+  if (!row) return null;
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    authors: row.authors ? JSON.parse(row.authors) : [],
+    publisher: row.publisher,
+    excerpt: row.excerpt,
+    keywords: row.keywords ? JSON.parse(row.keywords) : [],
+    openAccess: !!row.open_access,
+    link: row.link,
+  };
 }
 
-/**
- * Fetches all publications from the database.
- */
 export async function getPublications(): Promise<Publication[]> {
   try {
-    const records = await pb
-      .collection('publications')
-      .getFullList<RecordModel>({ sort: '-created' });
-    return records.map(mapRecordToPublication);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+    const { results } = await db
+      .prepare('SELECT * FROM publications ORDER BY created_at DESC')
+      .all<PublicationRow>();
+    return results
+      .map(mapRowToPublication)
+      .filter((p): p is Publication => p !== null);
+  } catch (error) {
+    console.error('[Database] Failed to fetch publications:', error);
     return [];
   }
 }
 
-/**
- * Adds a new publication to the database.
- */
 export async function addPublication(
   data: Omit<Publication, 'id'> | FormData,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
-  await ensureAuth();
   try {
-    const payload =
-      data instanceof FormData
-        ? data
-        : (cleanPublicationData(data) as Record<string, unknown>);
-    const record = await pb
-      .collection('publications')
-      .create<RecordModel>(payload);
-    const publication = mapRecordToPublication(record);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
+
+    const id = crypto.randomUUID();
+    let payload: Partial<Publication> = {};
+
+    if (data instanceof FormData) {
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.publisher = data.get('publisher') as string;
+      payload.excerpt = data.get('excerpt') as string;
+      payload.link = data.get('link') as string;
+      payload.openAccess = data.get('openAccess') === 'true';
+      const authorsStr = data.get('authors') as string;
+      try {
+        payload.authors = JSON.parse(authorsStr);
+      } catch {
+        payload.authors = [];
+      }
+      const keywordsStr = data.get('keywords') as string;
+      try {
+        payload.keywords = JSON.parse(keywordsStr);
+      } catch {
+        payload.keywords = [];
+      }
+    } else {
+      payload = { ...data };
+    }
+
+    if (!payload.slug) {
+      payload.slug =
+        payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+    }
+
+    await db
+      .prepare(
+        `INSERT INTO publications (id, slug, title, authors, publisher, excerpt, keywords, open_access, link)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        payload.slug,
+        payload.title,
+        JSON.stringify(payload.authors || []),
+        payload.publisher,
+        payload.excerpt,
+        JSON.stringify(payload.keywords || []),
+        payload.openAccess ? 1 : 0,
+        payload.link || '',
+      )
+      .run();
 
     revalidatePath('/publications');
     revalidatePath('/database/publications');
     revalidateTag('publications', 'max');
 
-    return { success: true, publication };
-  } catch (error: unknown) {
+    const newPub = await getPublicationById(id);
+    if (!newPub)
+      throw new Error('Failed to retrieve publication after creation');
+
+    return { success: true, publication: newPub };
+  } catch (error) {
+    console.error('[Database] Failed to add publication:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Updates an existing publication in the database.
- */
 export async function updatePublication(
   data: Publication | FormData,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId: string;
-    let updateData: Record<string, unknown> | FormData;
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
+    let recordId =
+      data instanceof FormData ? (data.get('id') as string) : data.id;
+    const existing = await getPublicationById(recordId);
+    if (!existing) return { success: false, error: 'Publication not found' };
+    recordId = existing.id;
+
+    let payload: Partial<Publication> = {};
     if (data instanceof FormData) {
-      const formId = data.get('id') as string;
-      if (formId) recordId = formId;
-      else throw new Error('ID is required for update');
-
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          formData.append(key, value);
+      payload.title = data.get('title') as string;
+      payload.slug = data.get('slug') as string;
+      payload.publisher = data.get('publisher') as string;
+      payload.excerpt = data.get('excerpt') as string;
+      payload.link = data.get('link') as string;
+      payload.openAccess = data.get('openAccess') === 'true';
+      const authorsStr = data.get('authors') as string;
+      if (authorsStr) {
+        try {
+          payload.authors = JSON.parse(authorsStr);
+        } catch {
+          payload.authors = [];
         }
-      });
-      updateData = formData;
-    } else {
-      recordId = data.id;
-      updateData = cleanPublicationData(data);
-    }
-
-    if (recordId.length !== 15) {
-      const records = await pb
-        .collection('publications')
-        .getFullList<RecordModel>({
-          filter: `slug = "${recordId}"`,
-        });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('publications').getOne(recordId);
-      } catch {
-        const records = await pb
-          .collection('publications')
-          .getFullList<RecordModel>({
-            filter: `slug = "${recordId}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
       }
+      const keywordsStr = data.get('keywords') as string;
+      if (keywordsStr) {
+        try {
+          payload.keywords = JSON.parse(keywordsStr);
+        } catch {
+          payload.keywords = [];
+        }
+      }
+    } else {
+      payload = { ...data };
     }
 
-    const record = await pb
-      .collection('publications')
-      .update<RecordModel>(recordId, updateData);
-    const publication = mapRecordToPublication(record);
+    const fields: string[] = [];
+    const values: (string | number | boolean | null)[] = [];
+    if (payload.title !== undefined) {
+      fields.push('title = ?');
+      values.push(payload.title);
+    }
+    if (payload.slug !== undefined) {
+      fields.push('slug = ?');
+      values.push(payload.slug);
+    }
+    if (payload.publisher !== undefined) {
+      fields.push('publisher = ?');
+      values.push(payload.publisher);
+    }
+    if (payload.excerpt !== undefined) {
+      fields.push('excerpt = ?');
+      values.push(payload.excerpt);
+    }
+    if (payload.link !== undefined) {
+      fields.push('link = ?');
+      values.push(payload.link);
+    }
+    if (payload.openAccess !== undefined) {
+      fields.push('open_access = ?');
+      values.push(payload.openAccess ? 1 : 0);
+    }
+    if (payload.authors !== undefined) {
+      fields.push('authors = ?');
+      values.push(JSON.stringify(payload.authors));
+    }
+    if (payload.keywords !== undefined) {
+      fields.push('keywords = ?');
+      values.push(JSON.stringify(payload.keywords));
+    }
+
+    if (fields.length > 0) {
+      values.push(recordId);
+      await db
+        .prepare(`UPDATE publications SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
 
     revalidatePath('/publications');
     revalidatePath('/database/publications');
     revalidateTag('publications', 'max');
 
-    return { success: true, publication };
-  } catch (error: unknown) {
+    const updated = await getPublicationById(recordId);
+    if (!updated)
+      throw new Error('Failed to retrieve publication after update');
+
+    return { success: true, publication: updated };
+  } catch (error) {
+    console.error('[Database] Failed to update publication:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Deletes a publication from the database.
- * @param id ID or slug of the publication.
- * @returns Promise with operation result.
- */
 export async function deletePublication(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId = id;
-    if (id.length !== 15) {
-      const records = await pb
-        .collection('publications')
-        .getFullList<RecordModel>({
-          filter: `slug = "${id}"`,
-        });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('publications').getOne(id);
-      } catch {
-        const records = await pb
-          .collection('publications')
-          .getFullList<RecordModel>({
-            filter: `slug = "${id}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
-      }
-    }
-    await pb.collection('publications').delete(recordId);
+    const db = getDB();
+    if (!db) throw new Error('Database binding (DB) not found');
 
+    const existing = await getPublicationById(id);
+    if (!existing) return { success: false, error: 'Publication not found' };
+    await db
+      .prepare('DELETE FROM publications WHERE id = ?')
+      .bind(existing.id)
+      .run();
     revalidatePath('/publications');
     revalidatePath('/database/publications');
     revalidateTag('publications', 'max');
-
     return { success: true };
-  } catch (error: unknown) {
+  } catch (error) {
+    console.error('[Database] Failed to delete publication:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : String(error),
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
 
-/**
- * Fetches a single publication by ID or slug.
- */
 export async function getPublicationById(
   id: string,
 ): Promise<Publication | null> {
   try {
-    if (id.length === 15) {
-      try {
-        const record = await pb
-          .collection('publications')
-          .getOne<RecordModel>(id);
-        if (record) return mapRecordToPublication(record);
-      } catch {
-        // Ignored
-      }
-    }
-
-    const records = await pb
-      .collection('publications')
-      .getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
-        requestKey: null,
-      });
-
-    if (records.length > 0) {
-      return mapRecordToPublication(records[0]);
-    }
-
-    return null;
-  } catch {
+    const db = getDB();
+    if (!db) return null;
+    const row = await db
+      .prepare('SELECT * FROM publications WHERE id = ? OR slug = ?')
+      .bind(id, id)
+      .first<PublicationRow>();
+    return mapRowToPublication(row);
+  } catch (error) {
+    console.error('[Database] Failed to get publication by ID:', error);
     return null;
   }
 }

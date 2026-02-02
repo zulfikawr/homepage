@@ -1,27 +1,18 @@
 import { NextResponse } from 'next/server';
-import PocketBase from 'pocketbase';
+
+import { getDB } from '@/lib/cloudflare';
+
+export const runtime = 'edge';
 
 export async function POST() {
   try {
-    const adminEmail = process.env.PB_ADMIN_EMAIL;
-    const adminPass = process.env.PB_ADMIN_PASSWORD;
+    const db = getDB();
+    if (!db) throw new Error('DB not available');
 
-    if (!adminEmail || !adminPass) {
-      return NextResponse.json(
-        { error: 'Admin credentials not configured' },
-        { status: 500 },
-      );
-    }
-
-    const adminPb = new PocketBase(
-      process.env.NEXT_PUBLIC_POCKETBASE_URL ||
-        'https://pocketbase.zulfikar.site',
-    );
-    await adminPb
-      .collection('_superusers')
-      .authWithPassword(adminEmail, adminPass);
-
-    await adminPb.collection('spotify_tokens').delete('spotify');
+    await db
+      .prepare('DELETE FROM spotify_tokens WHERE id = ?')
+      .bind('spotify')
+      .run();
 
     return NextResponse.json({ success: true });
   } catch (error) {

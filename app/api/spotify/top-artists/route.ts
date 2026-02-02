@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
+import { SpotifyArtist } from '@/types/spotify';
+
+export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +16,7 @@ export async function GET(request: NextRequest) {
       `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
-        cache: 'no-store',
+        next: { revalidate: 3600 },
       },
     );
 
@@ -24,7 +27,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await spotifyRes.json();
+    const data = (await spotifyRes.json()) as { items: SpotifyArtist[] };
     return NextResponse.json(data);
   } catch (error: unknown) {
     return NextResponse.json(

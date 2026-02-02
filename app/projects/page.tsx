@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
 
-import { getProjects } from '@/database/projects';
-
 import ProjectsContent from './content';
 
 export const metadata: Metadata = {
@@ -10,6 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
-  return <ProjectsContent initialData={projects} />;
+  return <ProjectsContent />;
 }

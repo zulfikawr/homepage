@@ -23,8 +23,8 @@ export default function LoginContent() {
     }
   }, [user, router]);
 
-  const onPasswordLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onPasswordLogin = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
     setError('');
     try {
       await handleLogin(email, password);

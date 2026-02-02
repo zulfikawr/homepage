@@ -44,7 +44,7 @@ export default function EmploymentCard({
     if (isPreview) return;
 
     if (openForm) {
-      router.push(`/database/employments/${employment.id}/edit`);
+      router.push(`/database/employments/${employment.slug}/edit`);
     } else {
       drawer.open(<EmploymentViewer employment={employment} />);
     }

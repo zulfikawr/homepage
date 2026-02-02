@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
+
 const GITHUB_USERNAME = 'zulfikawr';
 
 interface LanguageNode {
@@ -10,6 +12,24 @@ interface LanguageNode {
 interface LanguageEdge {
   size: number;
   node: LanguageNode;
+}
+
+interface GitHubLanguagesResponse {
+  data?: {
+    user?: {
+      repositories?: {
+        nodes: Array<{
+          name: string;
+          languages: {
+            edges: LanguageEdge[];
+          };
+        }>;
+      };
+    };
+  };
+  errors?: Array<{
+    message: string;
+  }>;
 }
 
 export async function GET() {
@@ -74,7 +94,7 @@ export async function GET() {
       );
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as GitHubLanguagesResponse;
 
     if (result.errors) {
       return NextResponse.json(

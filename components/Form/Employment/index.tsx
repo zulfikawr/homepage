@@ -148,14 +148,14 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     if (!validateForm()) return;
 
     const employmentData = {
       ...employment,
-      id: employmentToEdit?.id || '', // Let PocketBase handle ID for new records
+      id: employmentToEdit?.id || '',
       slug: employment.slug || generateSlug(employment.organization),
       dateString: formatDateRange(startDate, endDate, isPresent),
     };
@@ -350,6 +350,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                   <Button
                     variant='destructive'
                     icon='trashSimple'
+                    className='h-9'
                     onClick={() => handleRemoveResponsibility(index)}
                   />
                 </div>
@@ -364,6 +365,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 <Button
                   variant='primary'
                   icon='plus'
+                  className='h-9'
                   onClick={handleAddResponsibility}
                 />
               </div>

@@ -10,16 +10,10 @@ import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
 
-interface PagesContentProps {
-  initialResume?: Resume;
-}
-
-export default function PagesContent({ initialResume }: PagesContentProps) {
+export default function PagesContent() {
   const { data: resumeList } = useCollection<Resume>(
     'resume',
     mapRecordToResume,
-    {},
-    initialResume ? [initialResume] : undefined,
   );
 
   const resume = useMemo(() => {

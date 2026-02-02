@@ -1,67 +1,44 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { cookies } from 'next/headers';
-import { RecordModel } from 'pocketbase';
 
+import { getBucket, getDB } from '@/lib/cloudflare';
 import { mapRecordToProject } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
 import { Project } from '@/types/project';
 
+interface ProjectRow {
+  [key: string]: unknown;
+  id: string;
+  slug: string;
+  name: string;
+  date_string: string;
+  image_url: string;
+  description: string;
+  tools: string;
+  readme: string;
+  status: string;
+  link: string;
+  favicon_url: string;
+  github_repo_url: string;
+  pinned: number;
+}
+
 /**
- * Maps a PocketBase record to a Project object with full URLs for images.
- * Handles file field vs text field URL issues.
+ * Uploads a file to R2 and returns the filename (key).
  */
-function cleanProjectData(
-  data: Omit<Project, 'id'> | Project,
-): Record<string, unknown> {
-  const clean: Record<string, unknown> = { ...data };
+async function uploadFile(file: File, slug: string): Promise<string> {
+  const bucket = getBucket();
+  if (!bucket) throw new Error('Storage not available');
 
-  // Handle image field (file field vs image_url text field)
-  if (typeof clean.image === 'string') {
-    if (clean.image.includes('/api/files/')) {
-      // PocketBase file URL -> extract filename for the file field
-      const parts = clean.image.split('/');
-      clean.image = parts[parts.length - 1].split('?')[0];
-    } else if (clean.image.startsWith('http')) {
-      // External URL -> move to image_url and clear image (file field)
-      clean.image_url = clean.image;
-      clean.image = null;
-    } else if (clean.image.startsWith('/')) {
-      // Local asset -> move to image_url and clear image (file field)
-      clean.image_url = clean.image;
-      clean.image = null;
-    }
-    // If it's already a filename, leave as is
-  }
+  // Use nested folder structure: projects/{slug}/{filename}
+  const key = `projects/${slug}/${file.name.replace(/\s+/g, '-')}`;
+  const arrayBuffer = await file.arrayBuffer();
 
-  // Handle favicon field
-  if (typeof clean.favicon === 'string') {
-    if (clean.favicon.includes('/api/files/')) {
-      const parts = clean.favicon.split('/');
-      clean.favicon = parts[parts.length - 1].split('?')[0];
-    } else if (clean.favicon.startsWith('http')) {
-      clean.favicon_url = clean.favicon;
-      clean.favicon = null;
-    } else if (clean.favicon.startsWith('/')) {
-      // Local asset -> move to favicon_url and clear favicon (file field)
-      clean.favicon_url = clean.favicon;
-      clean.favicon = null;
-    }
-  }
+  await bucket.put(key, arrayBuffer, {
+    httpMetadata: { contentType: file.type },
+  });
 
-  // Ensure tools is stringified if it's an array and we're sending JSON
-  // (PocketBase usually handles this but being explicit is safer)
-  if (Array.isArray(clean.tools)) {
-    clean.tools = JSON.stringify(clean.tools);
-  }
-
-  // Remove the ID from the body as it's passed in the URL
-  if ('id' in clean) {
-    delete clean.id;
-  }
-
-  return clean;
+  return key;
 }
 
 /**
@@ -69,25 +46,35 @@ function cleanProjectData(
  */
 export async function getProjects(): Promise<Project[]> {
   try {
-    const records = await pb
-      .collection('projects')
-      .getFullList<RecordModel>({ sort: '-created' });
-    return records.map(mapRecordToProject);
-  } catch {
+    const db = getDB();
+    if (!db) return [];
+
+    const { results } = await db
+      .prepare('SELECT * FROM projects ORDER BY created_at DESC')
+      .all<ProjectRow>();
+    return results.map((row) => mapRecordToProject(row));
+  } catch (e) {
+    console.error('Error fetching projects:', e);
     return [];
   }
 }
 
 /**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
+ * Fetches a single project by ID or slug.
  */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
+export async function getProjectById(id: string): Promise<Project | null> {
+  try {
+    const db = getDB();
+    if (!db) return null;
 
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+    const query = 'SELECT * FROM projects WHERE id = ? OR slug = ?';
+    const row = await db.prepare(query).bind(id, id).first<ProjectRow>();
+
+    if (!row) return null;
+    return mapRecordToProject(row);
+  } catch (e) {
+    console.error('Error fetching project:', e);
+    return null;
   }
 }
 
@@ -97,25 +84,94 @@ async function ensureAuth() {
 export async function addProject(
   data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
-  await ensureAuth();
   try {
-    const payload =
-      data instanceof FormData
-        ? data
-        : (cleanProjectData(data) as Record<string, unknown>);
-    const record = await pb.collection('projects').create<RecordModel>(payload);
-    const project = mapRecordToProject(record);
+    const db = getDB();
+    const id = crypto.randomUUID();
+    let payload: Partial<Project> = {};
+
+    if (data instanceof FormData) {
+      // Handle FormData
+      payload.name = data.get('name') as string;
+      payload.slug = data.get('slug') as string;
+      payload.description = data.get('description') as string;
+      payload.readme = data.get('readme') as string;
+      payload.dateString = data.get('dateString') as string;
+      payload.status = data.get('status') as Project['status'];
+      payload.link = data.get('link') as string;
+      payload.githubRepoUrl = data.get('githubRepoUrl') as string;
+      payload.pinned = data.get('pinned') === 'true';
+
+      const toolsStr = data.get('tools') as string;
+      try {
+        payload.tools = JSON.parse(toolsStr);
+      } catch {
+        payload.tools = [];
+      }
+
+      const projectSlug =
+        payload.slug ||
+        payload.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-') ||
+        id;
+
+      const imageFile = data.get('image') as File;
+      const imageUrlInput = data.get('image_url') as string;
+      if (imageFile && imageFile.size > 0) {
+        payload.image_url = await uploadFile(imageFile, projectSlug);
+      } else if (imageUrlInput) {
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
+      }
+
+      const faviconFile = data.get('favicon') as File;
+      const faviconUrlInput = data.get('favicon_url') as string;
+      if (faviconFile && faviconFile.size > 0) {
+        payload.favicon_url = await uploadFile(faviconFile, projectSlug);
+      } else if (faviconUrlInput) {
+        payload.favicon_url = faviconUrlInput.replace('/api/storage/', '');
+      }
+    } else {
+      payload = { ...data };
+    }
+
+    // Default values
+    if (!payload.slug)
+      payload.slug =
+        payload.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+
+    const toolsJson = JSON.stringify(payload.tools || []);
+
+    await db
+      .prepare(
+        `INSERT INTO projects (id, slug, name, date_string, image_url, description, tools, readme, status, link, favicon_url, github_repo_url, pinned)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .bind(
+        id,
+        payload.slug,
+        payload.name,
+        payload.dateString,
+        payload.image_url,
+        payload.description,
+        toolsJson,
+        payload.readme,
+        payload.status,
+        payload.link,
+        payload.favicon_url,
+        payload.githubRepoUrl,
+        payload.pinned ? 1 : 0,
+      )
+      .run();
 
     revalidatePath('/projects');
     revalidatePath('/database/projects');
     revalidateTag('projects', 'max');
 
-    return { success: true, project };
+    const newProject = await getProjectById(id);
+    return { success: true, project: newProject! };
   } catch (error: unknown) {
-    const pbError = error as { data?: unknown; message?: string };
+    console.error('Add project error:', error);
     return {
       success: false,
-      error: pbError.message || String(pbError),
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -126,71 +182,138 @@ export async function addProject(
 export async function updateProject(
   data: Project | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
-  await ensureAuth();
   try {
+    const db = getDB();
     let recordId: string;
-    let updateData: Record<string, unknown> | FormData;
+    let payload: Partial<Project> = {};
 
     if (data instanceof FormData) {
       recordId = data.get('id') as string;
-      // Create a new FormData without the id field to avoid PB errors
-      const formData = new FormData();
-      data.forEach((value, key) => {
-        if (key !== 'id') {
-          formData.append(key, value);
+      payload.name = data.get('name') as string;
+      payload.slug = data.get('slug') as string;
+      payload.description = data.get('description') as string;
+      payload.readme = data.get('readme') as string;
+      payload.dateString = data.get('dateString') as string;
+      payload.status = data.get('status') as Project['status'];
+      payload.link = data.get('link') as string;
+      payload.githubRepoUrl = data.get('githubRepoUrl') as string;
+
+      const pinnedVal = data.get('pinned');
+      if (pinnedVal !== null) payload.pinned = pinnedVal === 'true';
+
+      const toolsStr = data.get('tools') as string;
+      if (toolsStr) {
+        try {
+          payload.tools = JSON.parse(toolsStr);
+        } catch {
+          payload.tools = [];
         }
-      });
-      updateData = formData;
+      }
     } else {
       recordId = data.id;
-      updateData = cleanProjectData(data);
+      payload = { ...data };
     }
 
-    // Resolve slug to ID if necessary
-    if (recordId.length !== 15) {
-      const records = await pb.collection('projects').getFullList<RecordModel>({
-        filter: `slug = "${recordId}"`,
-      });
-      if (records.length > 0) {
-        recordId = records[0].id;
+    if (!recordId) return { success: false, error: 'ID required' };
+
+    // Resolve ID if slug
+    const existing = await getProjectById(recordId);
+    if (!existing) return { success: false, error: 'Project not found' };
+    const resolvedId = existing.id;
+
+    if (data instanceof FormData) {
+      const projectSlug = payload.slug || existing.slug;
+
+      const imageFile = data.get('image') as File;
+      const imageUrlInput = data.get('image_url') as string;
+      if (imageFile && imageFile.size > 0) {
+        payload.image_url = await uploadFile(imageFile, projectSlug);
+      } else if (imageUrlInput) {
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
-    } else {
-      // Even if 15 chars, check if it's a valid ID or if it's actually a slug
-      try {
-        await pb.collection('projects').getOne(recordId);
-      } catch {
-        const records = await pb
-          .collection('projects')
-          .getFullList<RecordModel>({
-            filter: `slug = "${recordId}"`,
-          });
-        if (records.length > 0) {
-          recordId = records[0].id;
-        }
+
+      const faviconFile = data.get('favicon') as File;
+      const faviconUrlInput = data.get('favicon_url') as string;
+      if (faviconFile && faviconFile.size > 0) {
+        payload.favicon_url = await uploadFile(faviconFile, projectSlug);
+      } else if (faviconUrlInput) {
+        payload.favicon_url = faviconUrlInput.replace('/api/storage/', '');
       }
     }
 
-    const record = await pb
-      .collection('projects')
-      .update<RecordModel>(recordId, updateData);
-    const project = mapRecordToProject(record);
+    // Dynamic Update Query
+    const fields: string[] = [];
+    const values: (string | number | boolean | null | undefined)[] = [];
+
+    if (payload.name !== undefined) {
+      fields.push('name = ?');
+      values.push(payload.name);
+    }
+    if (payload.slug !== undefined) {
+      fields.push('slug = ?');
+      values.push(payload.slug);
+    }
+    if (payload.description !== undefined) {
+      fields.push('description = ?');
+      values.push(payload.description);
+    }
+    if (payload.readme !== undefined) {
+      fields.push('readme = ?');
+      values.push(payload.readme);
+    }
+    if (payload.dateString !== undefined) {
+      fields.push('date_string = ?');
+      values.push(payload.dateString);
+    }
+    if (payload.status !== undefined) {
+      fields.push('status = ?');
+      values.push(payload.status);
+    }
+    if (payload.link !== undefined) {
+      fields.push('link = ?');
+      values.push(payload.link);
+    }
+    if (payload.githubRepoUrl !== undefined) {
+      fields.push('github_repo_url = ?');
+      values.push(payload.githubRepoUrl);
+    }
+    if (payload.pinned !== undefined) {
+      fields.push('pinned = ?');
+      values.push(payload.pinned ? 1 : 0);
+    }
+    if (payload.tools !== undefined) {
+      fields.push('tools = ?');
+      values.push(JSON.stringify(payload.tools));
+    }
+    if (payload.image_url !== undefined) {
+      fields.push('image_url = ?');
+      values.push(payload.image_url);
+    }
+    if (payload.favicon_url !== undefined) {
+      fields.push('favicon_url = ?');
+      values.push(payload.favicon_url);
+    }
+
+    if (fields.length > 0) {
+      values.push(resolvedId);
+      await db
+        .prepare(`UPDATE projects SET ${fields.join(', ')} WHERE id = ?`)
+        .bind(...values)
+        .run();
+    }
 
     revalidatePath('/projects');
-    revalidatePath(`/projects/${project.slug}`);
+    revalidatePath(`/projects/${payload.slug || existing.slug}`);
     revalidatePath('/database/projects');
-    revalidatePath(`/database/projects/${project.id}/edit`);
     revalidateTag('projects', 'max');
 
-    return { success: true, project };
+    const updated = await getProjectById(resolvedId);
+    return { success: true, project: updated! };
   } catch (error: unknown) {
-    const pbError = error as {
-      data?: unknown;
-      message?: string;
-      status?: number;
-    };
+    console.error('Update project error:', error);
     return {
       success: false,
-      error: pbError.message || String(pbError),
+      error: error instanceof Error ? error.message : String(error),
     };
   }
 }
@@ -201,27 +324,16 @@ export async function updateProject(
 export async function deleteProject(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
-  await ensureAuth();
   try {
-    let recordId = id;
-    if (id.length !== 15) {
-      const records = await pb.collection('projects').getFullList<RecordModel>({
-        filter: `slug = "${id}"`,
-      });
-      if (records.length > 0) recordId = records[0].id;
-    } else {
-      try {
-        await pb.collection('projects').getOne(id);
-      } catch {
-        const records = await pb
-          .collection('projects')
-          .getFullList<RecordModel>({
-            filter: `slug = "${id}"`,
-          });
-        if (records.length > 0) recordId = records[0].id;
-      }
-    }
-    await pb.collection('projects').delete(recordId);
+    const db = getDB();
+    // Resolve ID
+    const existing = await getProjectById(id);
+    if (!existing) return { success: false, error: 'Project not found' };
+
+    await db
+      .prepare('DELETE FROM projects WHERE id = ?')
+      .bind(existing.id)
+      .run();
 
     revalidatePath('/projects');
     revalidatePath('/database/projects');
@@ -233,34 +345,5 @@ export async function deleteProject(
       success: false,
       error: error instanceof Error ? error.message : String(error),
     };
-  }
-}
-
-/**
- * Fetches a single project by ID or slug.
- */
-export async function getProjectById(id: string): Promise<Project | null> {
-  try {
-    if (id.length === 15) {
-      try {
-        const record = await pb.collection('projects').getOne<RecordModel>(id);
-        if (record) return mapRecordToProject(record);
-      } catch {
-        // Ignored
-      }
-    }
-
-    const records = await pb.collection('projects').getFullList<RecordModel>({
-      filter: `slug = "${id}"`,
-      requestKey: null,
-    });
-
-    if (records.length > 0) {
-      return mapRecordToProject(records[0]);
-    }
-
-    return null;
-  } catch {
-    return null;
   }
 }

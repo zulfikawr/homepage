@@ -9,23 +9,12 @@ import { useCollection } from '@/hooks';
 import { mapRecordToPublication } from '@/lib/mappers';
 import { Publication } from '@/types/publication';
 
-interface PublicationsContentProps {
-  initialData?: Publication[];
-}
-
-export default function PublicationsContent({
-  initialData,
-}: PublicationsContentProps) {
+export default function PublicationsContent() {
   const {
     data: publications,
     loading,
     error,
-  } = useCollection<Publication>(
-    'publications',
-    mapRecordToPublication,
-    {},
-    initialData,
-  );
+  } = useCollection<Publication>('publications', mapRecordToPublication);
 
   if (error) return <CardEmpty message='Failed to load publications' />;
 

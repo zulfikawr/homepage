@@ -41,8 +41,8 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     setInterestsAndObjectives((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     try {
       const result = await updateInterestsAndObjectives(interestsAndObjectives);
@@ -116,6 +116,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                   <Button
                     variant='destructive'
                     icon='trashSimple'
+                    className='h-9'
                     onClick={() => handleRemoveObjective(index)}
                   />
                 </div>
@@ -130,6 +131,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                 <Button
                   variant='primary'
                   icon='plus'
+                  className='h-9'
                   onClick={handleAddObjective}
                 />
               </div>

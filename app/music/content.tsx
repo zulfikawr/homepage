@@ -44,6 +44,10 @@ interface SpotifyMusicContentProps {
   initialPlaylists?: SpotifyPlaylist[];
 }
 
+interface SpotifyDataResponse<T> {
+  items: T[];
+}
+
 export default function SpotifyMusicContent({
   initialRecent,
   initialTopTracks,
@@ -115,10 +119,10 @@ export default function SpotifyMusicContent({
 
       const [recentData, topData, artistsData, playlistsData] =
         await Promise.all([
-          recentRes.json(),
-          topRes.json(),
-          artistsRes.json(),
-          playlistsRes.json(),
+          recentRes.json() as Promise<SpotifyDataResponse<RecentlyPlayedItem>>,
+          topRes.json() as Promise<SpotifyDataResponse<SpotifyTrack>>,
+          artistsRes.json() as Promise<SpotifyDataResponse<SpotifyArtist>>,
+          playlistsRes.json() as Promise<SpotifyDataResponse<SpotifyPlaylist>>,
         ]);
 
       setRecentTracks(recentData?.items || []);
@@ -162,7 +166,7 @@ export default function SpotifyMusicContent({
         throw new Error('Failed to fetch top tracks');
       }
 
-      const data = await res.json();
+      const data = (await res.json()) as SpotifyDataResponse<SpotifyTrack>;
       setTopTracks(data?.items || []);
       setDataLoading((prev) => ({ ...prev, topTracks: false }));
     } catch (err) {
@@ -184,7 +188,7 @@ export default function SpotifyMusicContent({
         throw new Error('Failed to fetch top artists');
       }
 
-      const data = await res.json();
+      const data = (await res.json()) as SpotifyDataResponse<SpotifyArtist>;
       setTopArtists(data?.items || []);
       setDataLoading((prev) => ({ ...prev, topArtists: false }));
     } catch (err) {

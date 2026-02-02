@@ -134,8 +134,8 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     if (!validateForm()) return;
 

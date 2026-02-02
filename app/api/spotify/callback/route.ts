@@ -2,9 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { saveSpotifyTokens } from '@/lib/spotify';
 
+export const runtime = 'edge';
+
 export async function POST(request: NextRequest) {
   try {
-    const { accessToken, refreshToken } = await request.json();
+    const { accessToken, refreshToken } = (await request.json()) as {
+      accessToken: string;
+      refreshToken: string;
+    };
 
     if (!accessToken || !refreshToken) {
       return NextResponse.json(

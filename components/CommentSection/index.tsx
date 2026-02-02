@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { RecordModel } from 'pocketbase';
 
 import { Editor } from '@/components/Editor';
 import { Card } from '@/components/UI';
@@ -46,17 +45,17 @@ export default function CommentSection({
     : '';
 
   // Use the new generic collection hook
-  const { data: comments, loading: dataLoading } = useCollection<Comment>(
+  const { data: allComments, loading: dataLoading } = useCollection<Comment>(
     'comments',
     mapRecordToComment,
-    useMemo(
-      () => ({
-        filter: `postId = "${postId}"`,
-        sort: '-created',
-      }),
-      [postId],
-    ),
   );
+
+  const comments = useMemo(() => {
+    if (!allComments) return [];
+    return allComments
+      .filter((c) => c.postId === postId)
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }, [allComments, postId]);
 
   const isLoading = dataLoading || externalLoading;
 
@@ -86,9 +85,7 @@ export default function CommentSection({
         postId,
         githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
         content,
-        user?.avatar
-          ? getFileUrl(user as unknown as RecordModel, user.avatar as string)
-          : undefined,
+        user?.avatar ? getFileUrl({}, user.avatar as string) : undefined,
       );
       setContent('');
       toast.show('Comment posted successfully!');
@@ -109,9 +106,7 @@ export default function CommentSection({
         postId,
         replyAuthor,
         replyContent,
-        user?.avatar
-          ? getFileUrl(user as unknown as RecordModel, user.avatar as string)
-          : undefined,
+        user?.avatar ? getFileUrl({}, user.avatar as string) : undefined,
         parentId,
       );
       toast.show('Reply posted successfully!');
@@ -127,7 +122,7 @@ export default function CommentSection({
       return;
     }
     try {
-      await likeComment(commentId, user.id);
+      await likeComment(commentId);
     } catch {
       // Ignored
     }
@@ -187,12 +182,7 @@ export default function CommentSection({
               <div className='flex items-center gap-x-3'>
                 <ImageWithFallback
                   src={
-                    user?.avatar
-                      ? getFileUrl(
-                          user as unknown as RecordModel,
-                          user.avatar as string,
-                        )
-                      : ''
+                    user?.avatar ? getFileUrl({}, user.avatar as string) : ''
                   }
                   alt={githubUsername}
                   width={32}

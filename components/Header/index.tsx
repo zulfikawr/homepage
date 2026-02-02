@@ -52,7 +52,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                     alt='Zulfikar'
                     height={24}
                     width={24}
-                    loading='lazy'
+                    loading='eager'
                     type='square'
                     sizes='24px'
                   />
@@ -74,7 +74,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                       alt='Zulfikar'
                       height={24}
                       width={24}
-                      loading='lazy'
+                      loading='eager'
                       type='square'
                       sizes='24px'
                     />

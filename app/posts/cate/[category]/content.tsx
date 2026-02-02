@@ -10,29 +10,15 @@ import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 
-interface CategoryContentProps {
-  posts: Post[];
-  category: string;
-}
+export default function CategoryContent({ category }: { category: string }) {
+  const { data: allPosts } = useCollection<Post>('posts', mapRecordToPost);
 
-export default function CategoryContent({
-  posts: initialPosts,
-  category,
-}: CategoryContentProps) {
-  const options = useMemo(
-    () => ({
-      filter: `categories ~ "${category}"`,
-      sort: '-created',
-    }),
-    [category],
-  );
-
-  const { data: posts } = useCollection<Post>(
-    'posts',
-    mapRecordToPost,
-    options,
-    initialPosts,
-  );
+  const posts = useMemo(() => {
+    if (!allPosts) return [];
+    return allPosts.filter((post) =>
+      post.categories.some((c) => c.toLowerCase() === category.toLowerCase()),
+    );
+  }, [allPosts, category]);
 
   return (
     <div>

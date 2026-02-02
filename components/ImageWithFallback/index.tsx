@@ -32,6 +32,8 @@ export default function ImageWithFallback({
   const { radius } = useRadius();
 
   const currentSrc = hasError || !src ? fallback : src;
+  const isStorageUrl =
+    typeof src === 'string' && src.startsWith('/api/storage/');
 
   return (
     <Image
@@ -39,6 +41,7 @@ export default function ImageWithFallback({
       key={typeof src === 'string' ? src : 'fallback'}
       alt={alt}
       src={currentSrc}
+      unoptimized={isStorageUrl || props.unoptimized}
       onError={() => setHasError(true)}
       onLoad={() => setIsLoading(false)}
       className={twMerge(

@@ -28,7 +28,7 @@ export default function PostCard({
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const identifier = post?.slug || post?.id;
+  const identifier = post?.slug;
   const href = openForm
     ? `/database/posts/${identifier}/edit`
     : `/posts/${identifier}`;
@@ -40,7 +40,7 @@ export default function PostCard({
 
   // Prefetch the post page when card is in viewport
   useEffect(() => {
-    if (isPreview || isPreview || !post) return;
+    if (isPreview || !post) return;
 
     const currentRef = cardRef.current;
     const observer = new IntersectionObserver(
@@ -71,8 +71,7 @@ export default function PostCard({
     if (isPreview) return;
     e.stopPropagation();
     try {
-      const identifier = post.slug || post.id;
-      const shareUrl = `${window.location.origin}/posts/${identifier}`;
+      const shareUrl = `${window.location.origin}/posts/${post.slug}`;
       await navigator.share({
         title: post.title,
         url: shareUrl,

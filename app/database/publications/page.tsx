@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import PublicationDatabase from './content';
+import PublicationsContent from './content';
 
 export const metadata: Metadata = {
   title: 'Publications - Zulfikar',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default async function PublicationPage() {
-  return <PublicationDatabase />;
+  return <PublicationsContent />;
 }

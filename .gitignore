@@ -6,3 +6,9 @@ firebase.json
 out
 .firebase
 .gemini
+
+# Cloudflare
+.cloudflare/
+.wrangler/
+*_migration.sqlschema.sql
+env.d.ts

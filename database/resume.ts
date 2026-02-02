@@ -1,109 +1,90 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
 
-import { mapRecordToResume } from '@/lib/mappers';
-import pb from '@/lib/pocketbase';
+import { getBucket, getDB } from '@/lib/cloudflare';
 import { Resume } from '@/types/resume';
 
-const COLLECTION = 'resume';
-const RECORD_ID = 'resumemainrec00';
-
-/**
- * Ensures the PocketBase client is authenticated for server-side operations
- * by loading the auth state from the request cookies.
- */
-async function ensureAuth() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get('pb_auth');
-
-  if (authCookie) {
-    pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
-  }
+interface ResumeRow {
+  file_url: string;
 }
 
-/**
- * Fetches the resume info from the database.
- * @returns Promise with resume data.
- */
+async function uploadFile(file: File): Promise<string> {
+  const bucket = getBucket();
+  if (!bucket) {
+    console.error('uploadFile: Bucket binding not found');
+    throw new Error('Storage not available');
+  }
+
+  const key = `profile/resume.pdf`;
+  const arrayBuffer = await file.arrayBuffer();
+
+  try {
+    await bucket.put(key, arrayBuffer, {
+      httpMetadata: { contentType: 'application/pdf' },
+    });
+  } catch (err) {
+    console.error('uploadFile: R2 error:', err);
+    throw err;
+  }
+
+  return `/api/storage/${key}`;
+}
+
 export async function getResume(): Promise<Resume> {
   try {
-    const record = await pb.collection(COLLECTION).getOne(RECORD_ID);
-    return mapRecordToResume(record);
+    const db = getDB();
+    if (!db) return { fileUrl: '' };
+    const row = await db
+      .prepare('SELECT * FROM resume WHERE id = 1')
+      .first<ResumeRow>();
+    return { fileUrl: row?.file_url || '' };
   } catch {
-    return {
-      fileUrl: '',
-    };
+    return { fileUrl: '' };
   }
 }
 
-/**
- * Updates the resume data.
- * @param data New resume data or FormData.
- * @returns Promise with operation result.
- */
 export async function updateResume(
   data: Resume | FormData,
 ): Promise<{ success: boolean; data?: Resume; error?: string }> {
-  await ensureAuth();
   try {
-    let updateData: Record<string, unknown> | FormData;
+    const db = getDB();
+    if (!db) {
+      console.error('updateResume: DB binding not found');
+      return { success: false, error: 'Database binding not found' };
+    }
+
+    let fileUrl: string = '';
 
     if (data instanceof FormData) {
-      updateData = data;
-    } else {
-      let fileValue = data.fileUrl;
-      // If it's a PB URL, extract filename
-      if (fileValue && fileValue.includes('/api/files/')) {
-        const parts = fileValue.split('/');
-        fileValue = parts[parts.length - 1].split('?')[0];
+      const file = data.get('file') as File;
+      if (file && file.size > 0) {
+        console.log('updateResume: Uploading file...', file.name, file.size);
+        fileUrl = await uploadFile(file);
+      } else {
+        fileUrl = (data.get('fileUrl') as string) || '';
       }
-      updateData = {
-        file: fileValue,
-      };
+    } else {
+      fileUrl = data.fileUrl;
     }
 
-    const record = await pb
-      .collection(COLLECTION)
-      .update(RECORD_ID, updateData);
+    console.log('updateResume: Saving fileUrl to D1:', fileUrl);
+
+    await db
+      .prepare(
+        `INSERT INTO resume (id, file_url) VALUES (1, ?)
+       ON CONFLICT(id) DO UPDATE SET file_url = excluded.file_url, updated_at = unixepoch()`,
+      )
+      .bind(fileUrl)
+      .run();
 
     revalidatePath('/database/resume');
-    revalidatePath('/contacts'); // Assuming resume might be linked here
-
-    return { success: true, data: mapRecordToResume(record) };
-  } catch {
-    // Try to create if it doesn't exist
-    try {
-      let record;
-      if (data instanceof FormData) {
-        data.append('id', RECORD_ID);
-        record = await pb.collection(COLLECTION).create(data);
-      } else {
-        let fileValue = data.fileUrl;
-        if (fileValue && fileValue.includes('/api/files/')) {
-          const parts = fileValue.split('/');
-          fileValue = parts[parts.length - 1].split('?')[0];
-        }
-
-        const createData: Record<string, unknown> = {
-          id: RECORD_ID,
-          file: fileValue,
-        };
-        record = await pb.collection(COLLECTION).create(createData);
-      }
-
-      revalidatePath('/database/resume');
-
-      return { success: true, data: mapRecordToResume(record) };
-    } catch (createError: unknown) {
-      return {
-        success: false,
-        error:
-          createError instanceof Error
-            ? createError.message
-            : String(createError),
-      };
-    }
+    return { success: true, data: { fileUrl } };
+  } catch (e) {
+    console.error('updateResume Error:', e);
+    return {
+      success: false,
+      error: e instanceof Error ? e.message : String(e),
+    };
   }
 }

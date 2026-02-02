@@ -110,7 +110,15 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
       if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
 
-      const data = await res.json();
+      interface GitHubRepoResponse {
+        name: string;
+        description: string;
+        homepage: string;
+        html_url: string;
+        language: string;
+        languages_url: string;
+      }
+      const data = (await res.json()) as GitHubRepoResponse;
 
       // Update project state with GitHub data
       setProject((prev) => ({
@@ -126,7 +134,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       // Try to fetch languages for more tools
       const langRes = await fetch(data.languages_url);
       if (langRes.ok) {
-        const langs = await langRes.json();
+        const langs = (await langRes.json()) as Record<string, number>;
         const topLangs = Object.keys(langs).slice(0, 5);
         if (topLangs.length > 0) {
           handleChange('tools', topLangs);
@@ -256,8 +264,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
 
     if (!validateForm()) return;
 
@@ -393,7 +401,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               onChange={(e) => setGithubUrl(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  e.preventDefault();
+                  e?.preventDefault();
                   fetchGitHubData();
                 }
               }}
@@ -592,7 +600,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 variant='destructive'
                 icon='trash'
                 onClick={(e) => {
-                  e.preventDefault();
+                  e?.preventDefault();
                   confirmDelete();
                 }}
                 className='w-full'
@@ -604,7 +612,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 <Button
                   icon='pushPinSlash'
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     togglePin();
                   }}
                   className='w-full'
@@ -615,7 +623,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 <Button
                   icon='pushPin'
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     togglePin();
                   }}
                   className='w-full'
@@ -639,7 +647,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 <Button
                   icon='pushPinSlash'
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     togglePin();
                   }}
                   className='w-full'
@@ -650,7 +658,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 <Button
                   icon='pushPin'
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     togglePin();
                   }}
                   className='w-full'

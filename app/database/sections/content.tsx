@@ -52,7 +52,7 @@ export default function SectionDatabase() {
     data: sections,
     loading,
     error,
-  } = useCollection<Section>('sections', mapRecordToSection, { sort: 'order' });
+  } = useCollection<Section>('sections', mapRecordToSection);
 
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>([]);
