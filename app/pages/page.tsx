@@ -1,11 +1,24 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import PagesContent from './content';
+import { getResume } from '@/lib/data';
+
+import PagesContent, { PagesSkeleton } from './content';
 
 export const metadata: Metadata = {
   title: 'Pages - Zulfikar',
 };
 
-export default async function DashboardPage() {
-  return <PagesContent />;
+async function Pages() {
+  const resumeList = await getResume();
+  const resume = resumeList?.[0] || null;
+  return <PagesContent resume={resume} />;
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<PagesSkeleton />}>
+      <Pages />
+    </Suspense>
+  );
 }

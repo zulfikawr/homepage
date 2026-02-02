@@ -1,13 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
 import SectionTitle from '@/components/SectionTitle';
 import { Skeleton } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { Separator } from '@/components/UI/Separator';
-import { useCollection } from '@/hooks';
-import { mapRecordToInterests } from '@/lib/mappers';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
 
 export const InterestsAndObjectivesLayout = ({
@@ -77,50 +74,24 @@ export const InterestsAndObjectivesLayout = ({
   );
 };
 
-const InterestsAndObjectivesSection = () => {
-  const {
-    data: allInterests,
-    loading,
-    error,
-  } = useCollection<InterestsAndObjectives & { id: string }>(
-    'interests_and_objectives',
-    mapRecordToInterests,
-  );
+export default function InterestsAndObjectivesSection({
+  data,
+}: {
+  data?: InterestsAndObjectives;
+}) {
+  const { forceLoading } = useLoadingToggle();
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (allInterests.length > 0 && selectedIndex === null) {
-      queueMicrotask(() =>
-        setSelectedIndex(Math.floor(Math.random() * allInterests.length)),
+  if (forceLoading || !data) {
+    if (!data && !forceLoading) {
+      return (
+        <section>
+          <SectionTitle icon='microscope' title='Interests & Objectives' />
+          <CardEmpty message='No interests and objectives found.' />
+        </section>
       );
     }
-  }, [allInterests, selectedIndex]);
-
-  const interestsAndObjectives =
-    selectedIndex !== null ? allInterests[selectedIndex] : null;
-
-  if (error) return <div>Failed to load interests and objectives</div>;
-
-  if (loading || (!interestsAndObjectives && allInterests.length > 0)) {
     return <InterestsAndObjectivesLayout isLoading={true} />;
   }
 
-  if (allInterests.length === 0) {
-    return (
-      <section>
-        <SectionTitle icon='microscope' title='Interests & Objectives' />
-        <CardEmpty message='No interests and objectives found.' />
-      </section>
-    );
-  }
-
-  return (
-    <InterestsAndObjectivesLayout
-      data={interestsAndObjectives!}
-      isLoading={false}
-    />
-  );
-};
-
-export default InterestsAndObjectivesSection;
+  return <InterestsAndObjectivesLayout data={data} isLoading={false} />;
+}

@@ -1,12 +1,24 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import CertificatesContent from './content';
+import { getCertificates } from '@/lib/data';
+
+import CertificatesContent, { CertificatesSkeleton } from './content';
 
 export const metadata: Metadata = {
   title: 'Certificates - Zulfikar',
   description: 'My certifications and achievements',
 };
 
-export default async function CertificatesPage() {
-  return <CertificatesContent />;
+async function CertificatesList() {
+  const certificates = await getCertificates();
+  return <CertificatesContent certificates={certificates} />;
+}
+
+export default function CertificatesPage() {
+  return (
+    <Suspense fallback={<CertificatesSkeleton />}>
+      <CertificatesList />
+    </Suspense>
+  );
 }

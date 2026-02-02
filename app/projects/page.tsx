@@ -1,12 +1,24 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import ProjectsContent from './content';
+import { getProjects } from '@/lib/data';
+
+import ProjectsContent, { ProjectsSkeleton } from './content';
 
 export const metadata: Metadata = {
   title: 'Projects - Zulfikar',
   description: 'A collection of my projects, categorized by their status',
 };
 
-export default async function ProjectsPage() {
-  return <ProjectsContent />;
+async function ProjectsList() {
+  const projects = await getProjects();
+  return <ProjectsContent projects={projects} />;
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={<ProjectsSkeleton />}>
+      <ProjectsList />
+    </Suspense>
+  );
 }

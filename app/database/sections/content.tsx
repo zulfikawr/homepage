@@ -17,17 +17,36 @@ import { Button, Icon, Skeleton, Switch } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { updateSection } from '@/database/sections';
 import { useCollection } from '@/hooks';
-import { mapRecordToSection } from '@/lib/mappers';
+import {
+  mapRecordToEmployment,
+  mapRecordToInterests,
+  mapRecordToPersonalInfo,
+  mapRecordToPost,
+  mapRecordToProject,
+  mapRecordToSection,
+} from '@/lib/mappers';
 import { Section } from '@/types/section';
 
 const SectionPreview = ({ sections }: { sections: Section[] }) => {
+  const { data: profile } = useCollection('profile', mapRecordToPersonalInfo);
+  const { data: posts } = useCollection('posts', mapRecordToPost);
+  const { data: projects } = useCollection('projects', mapRecordToProject);
+  const { data: employments } = useCollection(
+    'employments',
+    mapRecordToEmployment,
+  );
+  const { data: interests } = useCollection(
+    'interests_and_objectives',
+    mapRecordToInterests,
+  );
+
   const sectionMap: Record<string, React.ReactNode> = {
-    'personal-info': <PersonalInfoSection />,
+    'personal-info': <PersonalInfoSection data={profile?.[0]} />,
     banners: <Banners />,
-    interests: <InterestsAndObjectivesSection />,
-    projects: <ProjectSection />,
-    employment: <EmploymentSection />,
-    posts: <PostSection />,
+    interests: <InterestsAndObjectivesSection data={interests?.[0]} />,
+    projects: <ProjectSection data={projects} />,
+    employment: <EmploymentSection data={employments} />,
+    posts: <PostSection data={posts} />,
   };
 
   return (

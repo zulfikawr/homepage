@@ -1,62 +1,61 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import PostCard from '@/components/UI/Card/variants/Post';
-import { useCollection } from '@/hooks';
-import { mapRecordToPost } from '@/lib/mappers';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Post } from '@/types/post';
 import { sortByDate } from '@/utilities/sortByDate';
 
-const PostSection = () => {
-  const {
-    data: posts,
-    loading,
-    error,
-  } = useCollection<Post>('posts', mapRecordToPost);
+import PostClient from './PostClient';
 
+export const PostLayout = ({
+  posts,
+  isLoading = false,
+}: {
+  posts?: Post[];
+  isLoading?: boolean;
+}) => {
   const sortedPosts = posts ? sortByDate(posts) : [];
-
-  if (error) return <CardEmpty message='Failed to load posts' />;
 
   return (
     <section>
       <SectionTitle
         icon='notePencil'
         title='Latest Posts'
-        loading={loading}
-        link={{
-          href: '/posts',
-          label: 'All Posts',
-        }}
+        loading={isLoading}
+        link={
+          !isLoading
+            ? {
+                href: '/posts',
+                label: 'All Posts',
+              }
+            : undefined
+        }
       />
-      {loading || !posts ? (
+      {isLoading ? (
         <div className='flex flex-col gap-y-4'>
-          {Array(8)
+          {Array(4)
             .fill(0)
-            .map((_, index) => (
-              <CardLoading key={index} variant='post' />
+            .map((_, i) => (
+              <CardLoading key={i} variant='post' />
             ))}
         </div>
-      ) : posts.length === 0 ? (
+      ) : sortedPosts.length === 0 ? (
         <CardEmpty message='No posts found.' />
       ) : (
-        <div className='grid grid-cols-1 gap-6'>
-          <StaggerContainer>
-            {sortedPosts.map((post) => (
-              <ViewTransition key={post.id}>
-                <div key={post.id} className='cursor-pointer'>
-                  <PostCard post={post} />
-                </div>
-              </ViewTransition>
-            ))}
-          </StaggerContainer>
-        </div>
+        <PostClient posts={sortedPosts} />
       )}
     </section>
   );
 };
 
-export default PostSection;
+export default function PostSection({ data }: { data: Post[] }) {
+  const { forceLoading } = useLoadingToggle();
+
+  if (forceLoading) {
+    return <PostLayout isLoading={true} />;
+  }
+
+  return <PostLayout posts={data} isLoading={false} />;
+}

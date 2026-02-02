@@ -71,9 +71,16 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
+interface PutRequestBody {
+  action: 'rename' | 'create-folder';
+  oldKey?: string;
+  newKey?: string;
+  key?: string;
+}
+
 export async function PUT(request: NextRequest) {
   try {
-    const data = await request.json();
+    const data = (await request.json()) as PutRequestBody;
     const { action, oldKey, newKey } = data;
 
     const bucket = getBucket();

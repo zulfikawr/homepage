@@ -1,11 +1,8 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Skeleton } from '@/components/UI';
-import { useCollection } from '@/hooks';
-import { mapRecordToPersonalInfo } from '@/lib/mappers';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { PersonalInfo } from '@/types/personalInfo';
 
 export const PersonalInfoLayout = ({
@@ -64,26 +61,12 @@ export const PersonalInfoLayout = ({
   );
 };
 
-const PersonalInfoSection = () => {
-  const {
-    data: personalInfoList,
-    loading,
-    error,
-  } = useCollection<PersonalInfo>('profile', mapRecordToPersonalInfo);
+export default function PersonalInfoSection({ data }: { data?: PersonalInfo }) {
+  const { forceLoading } = useLoadingToggle();
 
-  const personalInfo = useMemo(() => {
-    return personalInfoList && personalInfoList.length > 0
-      ? personalInfoList[0]
-      : undefined;
-  }, [personalInfoList]);
-
-  if (error) return <div>Failed to load personal info</div>;
-
-  if (loading) {
+  if (forceLoading) {
     return <PersonalInfoLayout isLoading={true} />;
   }
 
-  return <PersonalInfoLayout personalInfo={personalInfo} isLoading={false} />;
-};
-
-export default PersonalInfoSection;
+  return <PersonalInfoLayout personalInfo={data} isLoading={false} />;
+}

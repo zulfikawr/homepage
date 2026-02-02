@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+'use client';
+
 import Link from 'next/link';
 
 import { Card } from '@/components/UI';
@@ -14,16 +15,7 @@ import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { getHeatmapIntensityClass } from '@/components/UI/HeatmapLegend';
 import Mask from '@/components/Visual/Mask';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import { getGitHubContributions } from '@/lib/github';
 import { GitHubContributionData } from '@/types/github';
-
-const apiCache: {
-  data: GitHubContributionData | null;
-  lastFetched: number;
-} = {
-  data: null,
-  lastFetched: 0,
-};
 
 const getIntensityLevel = (count: number) => {
   if (count === 0) return 0;
@@ -77,7 +69,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 };
 
-const GitHubContributionsLayout = ({
+export const GitHubContributionsLayout = ({
   isLoading,
   data,
 }: {
@@ -91,7 +83,6 @@ const GitHubContributionsLayout = ({
       <Separator margin='0' />
 
       <div className='p-4 space-y-4'>
-        {/* Stats row */}
         <div className='flex items-center justify-between'>
           <div className='space-y-1'>
             <p className='text-xs text-muted-foreground h-4 leading-4 flex items-center'>
@@ -119,7 +110,6 @@ const GitHubContributionsLayout = ({
           </div>
         </div>
 
-        {/* Heatmap */}
         <Mask className='-m-1 p-1 scrollbar-hide'>
           <div className='flex gap-1 min-w-max'>
             {isLoading
@@ -158,7 +148,6 @@ const GitHubContributionsLayout = ({
           </div>
         </Mask>
 
-        {/* Legend */}
         <div className='pt-4'>
           <HeatmapLegend isLoading={isLoading} />
         </div>
@@ -167,53 +156,18 @@ const GitHubContributionsLayout = ({
   );
 };
 
-const GitHubContributionsBanner = () => {
-  const [data, setData] = useState<GitHubContributionData | null>(
-    apiCache.data,
-  );
-  const [loading, setLoading] = useState(!apiCache.data);
-  const [error, setError] = useState<string | null>(null);
-  const { forceLoading, forceEmpty } = useLoadingToggle();
+export default function GitHubContributionsBanner({
+  data,
+  isLoading = false,
+}: {
+  data: GitHubContributionData | null;
+  isLoading?: boolean;
+}) {
+  const { forceLoading } = useLoadingToggle();
+  const loading = isLoading || forceLoading;
 
-  const isLoading = loading || forceLoading;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (
-        !apiCache.data ||
-        Date.now() - apiCache.lastFetched > 1000 * 60 * 60
-      ) {
-        setLoading(true);
-        setError(null);
-
-        try {
-          const contributions = await getGitHubContributions();
-
-          if (contributions) {
-            setData(contributions);
-            apiCache.data = contributions;
-            apiCache.lastFetched = Date.now();
-          } else {
-            setError('Failed to fetch contributions');
-          }
-        } catch {
-          setError('Error fetching data');
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setData(apiCache.data);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (error || forceEmpty)
+  if (!data && !loading)
     return <CardEmpty message='No data - Check GITHUB_TOKEN' />;
 
-  return <GitHubContributionsLayout isLoading={isLoading} data={data} />;
-};
-
-export default GitHubContributionsBanner;
+  return <GitHubContributionsLayout isLoading={loading} data={data} />;
+}

@@ -9,7 +9,6 @@ import PageTitle from '@/components/PageTitle';
 import SectionTitle from '@/components/SectionTitle';
 import { Badge } from '@/components/UI/Badge';
 import { Button } from '@/components/UI/Button';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import ProjectCard from '@/components/UI/Card/variants/Project';
 import { Icon } from '@/components/UI/Icon';
@@ -17,20 +16,41 @@ import { Input } from '@/components/UI/Input';
 import { Separator } from '@/components/UI/Separator';
 import { ToggleGroup } from '@/components/UI/ToggleGroup';
 import Mask from '@/components/Visual/Mask';
-import { useCollection } from '@/hooks';
-import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 import { sortByDate } from '@/utilities/sortByDate';
 
 type StatusFilter = 'all' | 'inProgress' | 'completed' | 'upcoming';
 
-export default function ProjectsContent() {
-  const {
-    data: projects,
-    loading,
-    error,
-  } = useCollection<Project>('projects', mapRecordToProject);
+export function ProjectsSkeleton() {
+  return (
+    <div className='space-y-8'>
+      <PageTitle
+        emoji='🚀'
+        title='Projects'
+        subtitle='A collection of my projects, categorized by their status.'
+      />
+      <ProjectAnalytics projects={[]} loading={true} />
+      <div className='flex flex-col gap-y-10'>
+        <section>
+          <SectionTitle icon='pushPin' title='Pinned' loading={true} />
+          <div className='flex flex-col gap-6 mt-4'>
+            <CardLoading variant='project' />
+          </div>
+        </section>
+        <Separator />
+        <section>
+          <SectionTitle icon='hammer' title='Work in Progress' loading={true} />
+          <div className='flex flex-col gap-6 mt-4'>
+            <CardLoading variant='project' />
+            <CardLoading variant='project' />
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
 
+export default function ProjectsContent({ projects }: { projects: Project[] }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -74,21 +94,18 @@ export default function ProjectsContent() {
     (p) => p.status === 'upcoming',
   );
 
-  const showPinned =
-    statusFilter === 'all' && (pinnedProjects.length > 0 || loading);
+  const showPinned = statusFilter === 'all' && pinnedProjects.length > 0;
   const showWip =
     (statusFilter === 'all' || statusFilter === 'inProgress') &&
-    (wipProjects.length > 0 || loading);
+    wipProjects.length > 0;
   const showDone =
     (statusFilter === 'all' || statusFilter === 'completed') &&
-    (doneProjects.length > 0 || loading);
+    doneProjects.length > 0;
   const showUpcoming =
     (statusFilter === 'all' || statusFilter === 'upcoming') &&
-    (upcomingProjects.length > 0 || loading);
+    upcomingProjects.length > 0;
 
   const hasResults = showPinned || showWip || showDone || showUpcoming;
-
-  if (error) return <CardEmpty message='Failed to load projects' />;
 
   return (
     <div className='space-y-8'>
@@ -98,7 +115,7 @@ export default function ProjectsContent() {
         subtitle='A collection of my projects, categorized by their status.'
       />
 
-      <ProjectAnalytics projects={projects || []} loading={loading} />
+      <ProjectAnalytics projects={projects || []} loading={false} />
 
       {/* Controls Section */}
       <div className='-mx-4 px-4 pb-4 pt-2 md:mx-0 md:p-0 space-y-4'>
@@ -175,7 +192,7 @@ export default function ProjectsContent() {
       </div>
 
       <div className='space-y-10 min-h-[50vh]'>
-        {!loading && !hasResults && (
+        {!hasResults && (
           <div className='animate-fade-in flex flex-col items-center justify-center py-12 text-center'>
             <Icon
               name='ghost'
@@ -211,21 +228,13 @@ export default function ProjectsContent() {
               iconClassName='text-gruv-red'
             />
             <div className='flex flex-col gap-6 w-full mt-4'>
-              {loading ? (
-                Array(1)
-                  .fill(0)
-                  .map((_, index) => (
-                    <CardLoading key={index} variant='project' />
-                  ))
-              ) : (
-                <StaggerContainer>
-                  {pinnedProjects.map((project) => (
-                    <ViewTransition key={project.id}>
-                      <ProjectCard project={project} />
-                    </ViewTransition>
-                  ))}
-                </StaggerContainer>
-              )}
+              <StaggerContainer>
+                {pinnedProjects.map((project) => (
+                  <ViewTransition key={project.id}>
+                    <ProjectCard project={project} />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             </div>
           </section>
         )}
@@ -243,21 +252,13 @@ export default function ProjectsContent() {
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
-              {loading ? (
-                Array(2)
-                  .fill(0)
-                  .map((_, index) => (
-                    <CardLoading key={index} variant='project' />
-                  ))
-              ) : (
-                <StaggerContainer>
-                  {wipProjects.map((project) => (
-                    <ViewTransition key={project.id}>
-                      <ProjectCard project={project} />
-                    </ViewTransition>
-                  ))}
-                </StaggerContainer>
-              )}
+              <StaggerContainer>
+                {wipProjects.map((project) => (
+                  <ViewTransition key={project.id}>
+                    <ProjectCard project={project} />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             </div>
           </section>
         )}
@@ -275,21 +276,13 @@ export default function ProjectsContent() {
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
-              {loading ? (
-                Array(3)
-                  .fill(0)
-                  .map((_, index) => (
-                    <CardLoading key={index} variant='project' />
-                  ))
-              ) : (
-                <StaggerContainer>
-                  {doneProjects.map((project) => (
-                    <ViewTransition key={project.id}>
-                      <ProjectCard project={project} />
-                    </ViewTransition>
-                  ))}
-                </StaggerContainer>
-              )}
+              <StaggerContainer>
+                {doneProjects.map((project) => (
+                  <ViewTransition key={project.id}>
+                    <ProjectCard project={project} />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             </div>
           </section>
         )}
@@ -307,21 +300,13 @@ export default function ProjectsContent() {
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
-              {loading ? (
-                Array(2)
-                  .fill(0)
-                  .map((_, index) => (
-                    <CardLoading key={index} variant='project' />
-                  ))
-              ) : (
-                <StaggerContainer>
-                  {upcomingProjects.map((project) => (
-                    <ViewTransition key={project.id}>
-                      <ProjectCard project={project} />
-                    </ViewTransition>
-                  ))}
-                </StaggerContainer>
-              )}
+              <StaggerContainer>
+                {upcomingProjects.map((project) => (
+                  <ViewTransition key={project.id}>
+                    <ProjectCard project={project} />
+                  </ViewTransition>
+                ))}
+              </StaggerContainer>
             </div>
           </section>
         )}

@@ -1,67 +1,66 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
-import { EmploymentCard } from '@/components/UI/Card/variants/Employment';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import Mask from '@/components/Visual/Mask';
-import { useCollection } from '@/hooks';
-import { mapRecordToEmployment } from '@/lib/mappers';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Employment } from '@/types/employment';
 import { sortByDate } from '@/utilities/sortByDate';
 
-const EmploymentSection = () => {
-  const {
-    data: employments,
-    loading,
-    error,
-  } = useCollection<Employment>('employments', mapRecordToEmployment);
+import EmploymentClient from './EmploymentClient';
 
+export const EmploymentLayout = ({
+  employments,
+  isLoading = false,
+}: {
+  employments?: Employment[];
+  isLoading?: boolean;
+}) => {
   const sortedEmployments = employments ? sortByDate(employments) : [];
-
-  if (error) return <CardEmpty message='Failed to load employments' />;
 
   return (
     <section className='relative'>
       <SectionTitle
         icon='briefcase'
         title='Employments'
-        loading={loading}
-        link={{
-          href: 'https://www.linkedin.com/in/zulfikar-muhammad',
-          label: 'LinkedIn',
-        }}
+        loading={isLoading}
+        link={
+          !isLoading
+            ? {
+                href: 'https://www.linkedin.com/in/zulfikar-muhammad',
+                label: 'LinkedIn',
+              }
+            : undefined
+        }
       />
       <div className='flex flex-col gap-y-4'>
-        {loading ? (
+        {isLoading ? (
           <Mask className='-m-4 scrollbar-hide'>
             <div className='inline-flex min-w-full gap-x-4 p-4'>
-              {Array(8)
+              {Array(3)
                 .fill(0)
-                .map((_, index) => (
-                  <CardLoading key={index} variant='employment' />
+                .map((_, i) => (
+                  <CardLoading key={i} variant='employment' />
                 ))}
             </div>
           </Mask>
         ) : sortedEmployments.length === 0 ? (
           <CardEmpty message='No employments found.' />
         ) : (
-          <Mask className='-m-4 scrollbar-hide'>
-            <div className='inline-flex min-w-full gap-x-4 p-4'>
-              <StaggerContainer>
-                {sortedEmployments.map((employment) => (
-                  <ViewTransition key={employment.id} direction='right'>
-                    <EmploymentCard employment={employment} />
-                  </ViewTransition>
-                ))}
-              </StaggerContainer>
-            </div>
-          </Mask>
+          <EmploymentClient employments={sortedEmployments} />
         )}
       </div>
     </section>
   );
 };
 
-export default EmploymentSection;
+export default function EmploymentSection({ data }: { data: Employment[] }) {
+  const { forceLoading } = useLoadingToggle();
+
+  if (forceLoading) {
+    return <EmploymentLayout isLoading={true} />;
+  }
+
+  return <EmploymentLayout employments={data} isLoading={false} />;
+}

@@ -1,4 +1,4 @@
-'use client';
+import { Suspense } from 'react';
 
 import AIKnowledgeAssistantBanner from '@/components/Banners/AIKnowledgeAssistant';
 import GitHubContributionsBanner from '@/components/Banners/GitHubContributions';
@@ -8,23 +8,72 @@ import TopLanguagesBanner from '@/components/Banners/TopLanguages';
 import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
 import WeatherBanner from '@/components/Banners/Weather';
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
+import {
+  getAnalyticsEvents,
+  getGitHubContributionsServer,
+  getGitHubLanguagesServer,
+  getResume,
+} from '@/lib/data';
+
+// Server-side data fetchers that return the component with data
+async function GitHubContributionsData() {
+  const data = await getGitHubContributionsServer();
+  return <GitHubContributionsBanner data={data} />;
+}
+
+async function TopLanguagesData() {
+  const data = await getGitHubLanguagesServer();
+  return <TopLanguagesBanner data={data} />;
+}
+
+async function PagesAndLinksData() {
+  const resumeList = await getResume();
+  return <PagesAndLinksBanner resume={resumeList?.[0] || null} />;
+}
+
+async function VisitorGeographyData() {
+  const events = await getAnalyticsEvents();
+  return <VisitorGeographyBanner events={events} />;
+}
 
 const Banners = () => {
   return (
     <div className='space-y-6'>
       <StaggerContainer>
         <ViewTransition key='pages'>
-          <PagesAndLinksBanner />
+          <Suspense
+            fallback={<PagesAndLinksBanner resume={null} isLoading={true} />}
+          >
+            <PagesAndLinksData />
+          </Suspense>
         </ViewTransition>
+
         <ViewTransition key='contributions'>
-          <GitHubContributionsBanner />
+          <Suspense
+            fallback={
+              <GitHubContributionsBanner data={null} isLoading={true} />
+            }
+          >
+            <GitHubContributionsData />
+          </Suspense>
         </ViewTransition>
+
         <ViewTransition key='geography'>
-          <VisitorGeographyBanner />
+          <Suspense
+            fallback={<VisitorGeographyBanner events={[]} isLoading={true} />}
+          >
+            <VisitorGeographyData />
+          </Suspense>
         </ViewTransition>
+
         <ViewTransition key='languages'>
-          <TopLanguagesBanner />
+          <Suspense
+            fallback={<TopLanguagesBanner data={null} isLoading={true} />}
+          >
+            <TopLanguagesData />
+          </Suspense>
         </ViewTransition>
+
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
           <StaggerContainer initialDelay={0.2}>
             <ViewTransition key='spotify' className='h-full'>
@@ -35,6 +84,7 @@ const Banners = () => {
             </ViewTransition>
           </StaggerContainer>
         </div>
+
         <ViewTransition key='ai-assistant'>
           <AIKnowledgeAssistantBanner />
         </ViewTransition>

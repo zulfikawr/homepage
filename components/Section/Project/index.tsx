@@ -1,22 +1,21 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import SectionTitle from '@/components/SectionTitle';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import { ProjectCard } from '@/components/UI/Card/variants/Project';
-import { useCollection } from '@/hooks';
-import { mapRecordToProject } from '@/lib/mappers';
+import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Project } from '@/types/project';
 import { parseDate } from '@/utilities/sortByDate';
 
-const ProjectSection = () => {
-  const {
-    data: projects,
-    loading,
-    error,
-  } = useCollection<Project>('projects', mapRecordToProject);
+import ProjectClient from './ProjectClient';
 
+export const ProjectLayout = ({
+  projects,
+  isLoading = false,
+}: {
+  projects?: Project[];
+  isLoading?: boolean;
+}) => {
   function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
     const pinnedProjects = projects.filter((p) => p.pinned);
 
@@ -31,34 +30,28 @@ const ProjectSection = () => {
 
   const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];
 
-  if (error) return <CardEmpty message='Failed to load projects' />;
-
   return (
     <section>
       <SectionTitle
         icon='package'
         title='Pinned Projects'
-        loading={loading}
-        link={{
-          href: '/projects',
-          label: 'All Projects',
-        }}
+        loading={isLoading}
+        link={
+          !isLoading
+            ? {
+                href: '/projects',
+                label: 'All Projects',
+              }
+            : undefined
+        }
       />
       <div className='flex flex-col gap-y-4'>
-        {loading ? (
-          Array(8)
+        {isLoading ? (
+          Array(4)
             .fill(0)
-            .map((_, index) => <CardLoading key={index} variant='project' />)
+            .map((_, i) => <CardLoading key={i} variant='project' />)
         ) : sortedProjects.length > 0 ? (
-          <div className='flex flex-col gap-y-4'>
-            <StaggerContainer>
-              {sortedProjects.map((project) => (
-                <ViewTransition key={project.id}>
-                  <ProjectCard project={project} />
-                </ViewTransition>
-              ))}
-            </StaggerContainer>
-          </div>
+          <ProjectClient projects={sortedProjects} />
         ) : (
           <CardEmpty message='No projects found.' />
         )}
@@ -67,4 +60,12 @@ const ProjectSection = () => {
   );
 };
 
-export default ProjectSection;
+export default function ProjectSection({ data }: { data: Project[] }) {
+  const { forceLoading } = useLoadingToggle();
+
+  if (forceLoading) {
+    return <ProjectLayout isLoading={true} />;
+  }
+
+  return <ProjectLayout projects={data} isLoading={false} />;
+}

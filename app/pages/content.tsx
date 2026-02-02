@@ -1,25 +1,38 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import PageTitle from '@/components/PageTitle';
+import { Skeleton } from '@/components/UI';
 import NavigationCard from '@/components/UI/Card/variants/Navigation';
 import { IconName } from '@/components/UI/Icon';
-import { useCollection } from '@/hooks';
-import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
 
-export default function PagesContent() {
-  const { data: resumeList } = useCollection<Resume>(
-    'resume',
-    mapRecordToResume,
+export function PagesSkeleton() {
+  return (
+    <div>
+      <PageTitle
+        emoji='📑'
+        title='Pages'
+        subtitle='Explore all pages in this website'
+      />
+      <div className='grid grid-cols-2 gap-4'>
+        {Array(12)
+          .fill(0)
+          .map((_, i) => (
+            <div
+              key={i}
+              className='h-24 border-2 shadow-brutalist rounded-md bg-card p-4'
+            >
+              <Skeleton width='40%' height={20} className='mb-2' />
+              <Skeleton width='80%' height={16} />
+            </div>
+          ))}
+      </div>
+    </div>
   );
+}
 
-  const resume = useMemo(() => {
-    return resumeList && resumeList.length > 0 ? resumeList[0] : null;
-  }, [resumeList]);
-
+export default function PagesContent({ resume }: { resume: Resume | null }) {
   const pages: { title: string; desc: string; icon: IconName; href: string }[] =
     [
       {

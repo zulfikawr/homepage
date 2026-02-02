@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": false,
   "scripts": {
-    "dev": "rm -rf .next && next dev",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "wrangler dev",
+    "deploy": "opennextjs-cloudflare build && wrangler deploy",
     "lint": "eslint . --fix && bunx prettier --write .",
     "analyze": "bash scripts/analyze-performance.sh",
-    "clean": "rm -rf .next node_modules && bun install"
+    "clean": "rm -rf .next .open-next node_modules && bun install"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",
@@ -27,8 +28,8 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@cloudflare/workers-types": "^4.20260131.0",
+    "@opennextjs/cloudflare": "^1.16.2",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@types/markdown-it": "^14.1.2",

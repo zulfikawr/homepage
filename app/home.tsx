@@ -1,36 +1,95 @@
-'use client';
-
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { StaggerContainer, ViewTransition } from '@/components/Motion';
 import Banners from '@/components/Section/Banners';
-import EmploymentSection from '@/components/Section/Employment';
-import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
-import PersonalInfoSection from '@/components/Section/PersonalInfo';
-import PostSection from '@/components/Section/Post';
-import ProjectSection from '@/components/Section/Project';
-import { useCollection } from '@/hooks';
-import { mapRecordToSection } from '@/lib/mappers';
-import { Section } from '@/types/section';
+import EmploymentSection, {
+  EmploymentLayout,
+} from '@/components/Section/Employment';
+import InterestsAndObjectivesSection, {
+  InterestsAndObjectivesLayout,
+} from '@/components/Section/InterestsAndObjectives';
+import PersonalInfoSection, {
+  PersonalInfoLayout,
+} from '@/components/Section/PersonalInfo';
+import PostSection, { PostLayout } from '@/components/Section/Post';
+import ProjectSection, { ProjectLayout } from '@/components/Section/Project';
+import {
+  getEmployments,
+  getInterestsAndObjectives,
+  getPosts,
+  getProfile,
+  getProjects,
+  getSections,
+} from '@/lib/data';
 
-export default function Home() {
-  const { data: allSections } = useCollection<Section>(
-    'sections',
-    mapRecordToSection,
-  );
+// Standardized Skeletons using the Layout components
+const PersonalInfoSkeleton = () => <PersonalInfoLayout isLoading={true} />;
+const InterestsSkeleton = () => (
+  <InterestsAndObjectivesLayout isLoading={true} />
+);
+const PostSkeleton = () => <PostLayout isLoading={true} />;
+const ProjectSkeleton = () => <ProjectLayout isLoading={true} />;
+const EmploymentSkeleton = () => <EmploymentLayout isLoading={true} />;
 
-  const sections = React.useMemo(() => {
-    if (!allSections) return [];
-    return [...allSections].sort((a, b) => a.order - b.order);
-  }, [allSections]);
+// Fetchers
+async function PersonalInfoData() {
+  const data = await getProfile();
+  return <PersonalInfoSection data={data?.[0]} />;
+}
+
+async function InterestsData() {
+  const data = await getInterestsAndObjectives();
+  const selected =
+    data.length > 0 ? data[Math.floor(Math.random() * data.length)] : undefined;
+  return <InterestsAndObjectivesSection data={selected} />;
+}
+
+async function ProjectsData() {
+  const data = await getProjects();
+  return <ProjectSection data={data} />;
+}
+
+async function EmploymentData() {
+  const data = await getEmployments();
+  return <EmploymentSection data={data} />;
+}
+
+async function PostsData() {
+  const data = await getPosts();
+  return <PostSection data={data} />;
+}
+
+export default async function Home() {
+  const allSections = await getSections();
+  const sections = [...allSections].sort((a, b) => a.order - b.order);
 
   const sectionMap: Record<string, React.ReactNode> = {
-    'personal-info': <PersonalInfoSection />,
+    'personal-info': (
+      <Suspense fallback={<PersonalInfoSkeleton />}>
+        <PersonalInfoData />
+      </Suspense>
+    ),
     banners: <Banners />,
-    interests: <InterestsAndObjectivesSection />,
-    projects: <ProjectSection />,
-    employment: <EmploymentSection />,
-    posts: <PostSection />,
+    interests: (
+      <Suspense fallback={<InterestsSkeleton />}>
+        <InterestsData />
+      </Suspense>
+    ),
+    projects: (
+      <Suspense fallback={<ProjectSkeleton />}>
+        <ProjectsData />
+      </Suspense>
+    ),
+    employment: (
+      <Suspense fallback={<EmploymentSkeleton />}>
+        <EmploymentData />
+      </Suspense>
+    ),
+    posts: (
+      <Suspense fallback={<PostSkeleton />}>
+        <PostsData />
+      </Suspense>
+    ),
   };
 
   const defaultOrder = [
@@ -44,7 +103,7 @@ export default function Home() {
 
   const activeSections =
     sections && sections.length > 0
-      ? sections.filter((s) => s.enabled).sort((a, b) => a.order - b.order)
+      ? sections.filter((s) => s.enabled)
       : defaultOrder.map((name, index) => ({
           name,
           enabled: true,

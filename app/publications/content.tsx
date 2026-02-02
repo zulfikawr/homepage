@@ -5,19 +5,32 @@ import PageTitle from '@/components/PageTitle';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import PublicationCard from '@/components/UI/Card/variants/Publication';
-import { useCollection } from '@/hooks';
-import { mapRecordToPublication } from '@/lib/mappers';
 import { Publication } from '@/types/publication';
 
-export default function PublicationsContent() {
-  const {
-    data: publications,
-    loading,
-    error,
-  } = useCollection<Publication>('publications', mapRecordToPublication);
+export function PublicationsSkeleton() {
+  return (
+    <div>
+      <PageTitle
+        emoji='📚'
+        title='Publications'
+        subtitle='My academic and professional publications'
+      />
+      <div className='grid grid-cols-1 gap-4'>
+        {Array(4)
+          .fill(0)
+          .map((_, index) => (
+            <CardLoading key={index} variant='publication' />
+          ))}
+      </div>
+    </div>
+  );
+}
 
-  if (error) return <CardEmpty message='Failed to load publications' />;
-
+export default function PublicationsContent({
+  publications,
+}: {
+  publications: Publication[];
+}) {
   return (
     <div>
       <PageTitle
@@ -27,13 +40,7 @@ export default function PublicationsContent() {
       />
 
       <div className='grid grid-cols-1 gap-4'>
-        {loading ? (
-          Array(8)
-            .fill(0)
-            .map((_, index) => (
-              <CardLoading key={index} variant='publication' />
-            ))
-        ) : publications.length > 0 ? (
+        {publications.length > 0 ? (
           <StaggerContainer>
             {publications.map((publication) => (
               <ViewTransition key={publication.id}>

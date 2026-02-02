@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+'use client';
+
 import Link from 'next/link';
 
 import { Card } from '@/components/UI';
@@ -19,7 +20,6 @@ interface LanguageData {
   totalBytes: number;
 }
 
-// Map language names to iconify icon names
 const getLanguageIcon = (name: string): string => {
   const iconMap: Record<string, string> = {
     JavaScript: 'javascript',
@@ -86,7 +86,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 };
 
-const TopLanguagesLayout = ({
+export const TopLanguagesLayout = ({
   isLoading,
   data,
 }: {
@@ -102,7 +102,6 @@ const TopLanguagesLayout = ({
       <Separator margin='0' />
 
       <div className='p-4 space-y-4'>
-        {/* Top Language Display */}
         <div className='flex items-center gap-4'>
           <div className='flex-shrink-0'>
             {isLoading ? (
@@ -138,7 +137,6 @@ const TopLanguagesLayout = ({
           </div>
         </div>
 
-        {/* Language Progress Bars */}
         <div className='space-y-3'>
           {isLoading ? (
             <>
@@ -193,50 +191,25 @@ const TopLanguagesLayout = ({
   );
 };
 
-const TopLanguagesBanner = ({ className }: { className?: string }) => {
-  const [languageData, setLanguageData] = useState<LanguageData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { forceLoading, forceEmpty } = useLoadingToggle();
+export default function TopLanguagesBanner({
+  className,
+  data,
+  isLoading = false,
+}: {
+  className?: string;
+  data: LanguageData | null;
+  isLoading?: boolean;
+}) {
+  const { forceLoading } = useLoadingToggle();
+  const loading = isLoading || forceLoading;
 
-  const isLoading = loading || forceLoading;
-
-  useEffect(() => {
-    const fetchLanguages = async () => {
-      try {
-        setLoading(true);
-
-        const response = await fetch('/api/github/languages', {
-          next: { revalidate: 3600 }, // Cache for 1 hour
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch language data');
-        }
-
-        const data = (await response.json()) as LanguageData;
-        setLanguageData(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching language data:', err);
-        setError(
-          err instanceof Error ? err.message : 'Failed to load languages',
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLanguages();
-  }, []);
-
-  if (error && !forceEmpty) {
+  if (!data && !loading) {
     return (
       <div className={className}>
         <Card isPreview>
           <BannerHeader />
           <Separator margin='0' />
-          <CardEmpty message={error} />
+          <CardEmpty message='No language data available' />
         </Card>
       </div>
     );
@@ -244,12 +217,7 @@ const TopLanguagesBanner = ({ className }: { className?: string }) => {
 
   return (
     <div className={className}>
-      <TopLanguagesLayout
-        isLoading={isLoading}
-        data={forceEmpty ? null : languageData}
-      />
+      <TopLanguagesLayout isLoading={loading} data={data} />
     </div>
   );
-};
-
-export default TopLanguagesBanner;
+}

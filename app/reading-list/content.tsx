@@ -7,20 +7,33 @@ import BookCard from '@/components/UI/Card/variants/Book';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import { Separator } from '@/components/UI/Separator';
-import { useCollection } from '@/hooks';
-import { mapRecordToBook } from '@/lib/mappers';
 import { Book } from '@/types/book';
 
-export default function ReadingListContent() {
-  const {
-    data: books,
-    loading,
-    error,
-  } = useCollection<Book>('reading_list', mapRecordToBook);
+export function ReadingListSkeleton() {
+  return (
+    <div>
+      <PageTitle
+        emoji='📚'
+        title='Reading List'
+        subtitle="I'm reading or re-reading (on average) one book every 3 month in 2025"
+        badge={{
+          color: 'yellow',
+          text: '2025',
+        }}
+      />
+      <section>
+        <SectionTitle icon='eye' title='Currently Reading' loading={true} />
+        <div className='grid grid-cols-2 gap-4 mt-4'>
+          <CardLoading variant='book' />
+          <CardLoading variant='book' />
+        </div>
+      </section>
+    </div>
+  );
+}
 
+export default function ReadingListContent({ books }: { books: Book[] }) {
   const booksArray = books || [];
-
-  if (error) return <CardEmpty message='Failed to load reading list' />;
 
   return (
     <div>
@@ -45,12 +58,8 @@ export default function ReadingListContent() {
           <div
             className={`grid ${booksArray.filter((book) => book.type === 'currentlyReading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {loading ? (
-              Array(8)
-                .fill(0)
-                .map((_, index) => <CardLoading key={index} variant='book' />)
-            ) : booksArray.filter((book) => book.type === 'currentlyReading')
-                .length > 0 ? (
+            {booksArray.filter((book) => book.type === 'currentlyReading')
+              .length > 0 ? (
               <StaggerContainer>
                 {booksArray
                   .filter((book) => book.type === 'currentlyReading')
@@ -80,11 +89,7 @@ export default function ReadingListContent() {
           <div
             className={`grid ${booksArray.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {loading ? (
-              Array(8)
-                .fill(0)
-                .map((_, index) => <CardLoading key={index} variant='book' />)
-            ) : booksArray.filter((book) => book.type === 'read').length > 0 ? (
+            {booksArray.filter((book) => book.type === 'read').length > 0 ? (
               <StaggerContainer>
                 {booksArray
                   .filter((book) => book.type === 'read')
@@ -114,12 +119,7 @@ export default function ReadingListContent() {
           <div
             className={`grid ${booksArray.filter((book) => book.type === 'toRead').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {loading ? (
-              Array(8)
-                .fill(0)
-                .map((_, index) => <CardLoading key={index} variant='book' />)
-            ) : booksArray.filter((book) => book.type === 'toRead').length >
-              0 ? (
+            {booksArray.filter((book) => book.type === 'toRead').length > 0 ? (
               <StaggerContainer>
                 {booksArray
                   .filter((book) => book.type === 'toRead')

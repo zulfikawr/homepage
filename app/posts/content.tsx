@@ -8,18 +8,29 @@ import { Icon, Toggle } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import PostCard from '@/components/UI/Card/variants/Post';
-import { useCollection } from '@/hooks';
-import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 import { sortByDate } from '@/utilities/sortByDate';
 
-export default function PostsContent() {
-  const {
-    data: posts,
-    loading,
-    error,
-  } = useCollection<Post>('posts', mapRecordToPost);
+export function PostsSkeleton() {
+  return (
+    <div>
+      <PageTitle
+        emoji='📰'
+        title='Posts'
+        subtitle='Browse all posts written by me'
+      />
+      <div className='flex flex-col gap-y-4'>
+        {Array(8)
+          .fill(0)
+          .map((_, index) => (
+            <CardLoading key={index} variant='post' />
+          ))}
+      </div>
+    </div>
+  );
+}
 
+export default function PostsContent({ posts }: { posts: Post[] }) {
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
   const sortedPosts = useMemo(() => (posts ? sortByDate(posts) : []), [posts]);
@@ -53,8 +64,6 @@ export default function PostsContent() {
     );
   }, [sortedPosts, activeCategories]);
 
-  if (error) return <CardEmpty message='Failed to load posts' />;
-
   return (
     <div>
       <PageTitle
@@ -81,15 +90,7 @@ export default function PostsContent() {
         ))}
       </div>
 
-      {loading ? (
-        <div className='flex flex-col gap-y-4'>
-          {Array(8)
-            .fill(0)
-            .map((_, index) => (
-              <CardLoading key={index} variant='post' />
-            ))}
-        </div>
-      ) : filteredPosts.length === 0 ? (
+      {filteredPosts.length === 0 ? (
         <CardEmpty message='No posts found.' />
       ) : (
         <div className='grid grid-cols-1 gap-6'>

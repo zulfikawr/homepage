@@ -1,4 +1,4 @@
-import { getOptionalRequestContext } from '@cloudflare/next-on-pages';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 
 interface D1HttpMeta {
   [key: string]: unknown;
@@ -339,13 +339,13 @@ export function getDB(): D1Database {
   }
 
   // In production, use the binding from the runtime
-  let context;
+  let env;
   try {
-    context = getOptionalRequestContext();
+    const context = getCloudflareContext();
+    env = context.env as CloudflareEnv;
   } catch {
-    // Not in Edge runtime, ignore and use fallback
+    // Not in Edge runtime or OpenNext context not initialized
   }
-  const env = context?.env as CloudflareEnv | undefined;
 
   if (env?.DB) return env.DB;
 
@@ -380,13 +380,13 @@ export function getBucket(): R2Bucket {
   }
 
   // In production, use the binding from the runtime
-  let context;
+  let env;
   try {
-    context = getOptionalRequestContext();
+    const context = getCloudflareContext();
+    env = context.env as CloudflareEnv;
   } catch {
-    // Not in Edge runtime, ignore
+    // Not in Edge runtime or OpenNext context not initialized
   }
-  const env = context?.env as CloudflareEnv | undefined;
 
   if (env?.BUCKET) {
     console.log('[Cloudflare] Using R2 bucket binding');

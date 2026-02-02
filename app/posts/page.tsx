@@ -1,12 +1,24 @@
+import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import PostsContent from './content';
+import { getPosts } from '@/lib/data';
+
+import PostsContent, { PostsSkeleton } from './content';
 
 export const metadata: Metadata = {
   title: 'Posts - Zulfikar',
   description: 'Browse all posts on Zulfikar',
 };
 
-export default async function PostsPage() {
-  return <PostsContent />;
+async function PostsList() {
+  const posts = await getPosts();
+  return <PostsContent posts={posts} />;
+}
+
+export default function PostsPage() {
+  return (
+    <Suspense fallback={<PostsSkeleton />}>
+      <PostsList />
+    </Suspense>
+  );
 }

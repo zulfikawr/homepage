@@ -8,8 +8,6 @@ import { Button, Icon, Separator, Skeleton, Tooltip } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import WorldMapVisualization from '@/components/Visual/WorldMap';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import { useCollection } from '@/hooks';
-import { mapRecordToAnalyticsEvent } from '@/lib/mappers';
 import { AnalyticsEvent } from '@/types/analytics';
 
 const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
@@ -55,7 +53,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   );
 };
 
-const VisitorGeographyLayout = ({
+export const VisitorGeographyLayout = ({
   isLoading,
   data,
   error,
@@ -89,19 +87,17 @@ const VisitorGeographyLayout = ({
   );
 };
 
-const VisitorGeographyBanner = ({ className }: { className?: string }) => {
-  const {
-    data: events,
-    loading: eventsLoading,
-    error: eventsError,
-  } = useCollection<AnalyticsEvent>(
-    'analytics_events',
-    mapRecordToAnalyticsEvent,
-  );
-
-  const { forceLoading, forceEmpty } = useLoadingToggle();
-
-  const isLoading = eventsLoading || forceLoading;
+export default function VisitorGeographyBanner({
+  className,
+  events = [],
+  isLoading = false,
+}: {
+  className?: string;
+  events?: AnalyticsEvent[];
+  isLoading?: boolean;
+}) {
+  const { forceLoading } = useLoadingToggle();
+  const loading = isLoading || forceLoading;
 
   const countries = useMemo(() => {
     if (!events || events.length === 0) return [];
@@ -120,17 +116,13 @@ const VisitorGeographyBanner = ({ className }: { className?: string }) => {
       .sort((a, b) => b.count - a.count);
   }, [events]);
 
-  const error = eventsError ? `Error: ${eventsError}` : null;
-
   return (
     <div className={className}>
       <VisitorGeographyLayout
-        isLoading={isLoading}
-        data={forceEmpty ? null : countries}
-        error={error}
+        isLoading={loading}
+        data={countries}
+        error={null}
       />
     </div>
   );
-};
-
-export default VisitorGeographyBanner;
+}

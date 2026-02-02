@@ -1,29 +1,27 @@
 'use client';
 
-import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { Card } from '@/components/UI';
+import { Card, Skeleton } from '@/components/UI';
 import { Button, Icon, Separator, Tooltip } from '@/components/UI';
 import Mask from '@/components/Visual/Mask';
-import { useCollection } from '@/hooks';
-import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
 
-const PagesAndLinksBanner = () => {
-  const { data: resumeList } = useCollection<Resume>(
-    'resume',
-    mapRecordToResume,
-  );
-
-  const resume = useMemo(() => {
-    return resumeList && resumeList.length > 0 ? resumeList[0] : null;
-  }, [resumeList]);
-
+const PagesAndLinksBanner = ({
+  resume,
+  isLoading = false,
+}: {
+  resume: Resume | null;
+  isLoading?: boolean;
+}) => {
   const ViewAllButton = (
     <Link href='/pages' prefetch={true}>
       <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
-        <Icon name='caretRight' className='size-5' />
+        {isLoading ? (
+          <Skeleton width={20} height={20} />
+        ) : (
+          <Icon name='caretRight' className='size-5' />
+        )}
       </Button>
     </Link>
   );
@@ -72,8 +70,17 @@ const PagesAndLinksBanner = () => {
     <Card isPreview>
       <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
         <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-          <Icon name='cube' className='size-7 text-gruv-red' />
-          <span>Pages & Links</span>
+          {isLoading ? (
+            <>
+              <Skeleton width={28} height={28} className='rounded-md' />
+              <Skeleton width={120} height={20} />
+            </>
+          ) : (
+            <>
+              <Icon name='cube' className='size-7 text-gruv-red' />
+              <span>Pages & Links</span>
+            </>
+          )}
         </div>
 
         <div className='hidden md:block'>
@@ -87,24 +94,37 @@ const PagesAndLinksBanner = () => {
 
       <Mask className='scrollbar-hide'>
         <div className='inline-flex min-w-full items-center px-4 py-4 gap-x-2.5 whitespace-nowrap'>
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              prefetch={!link.target}
-              target={link.target}
-              rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
-            >
-              <Button className='group/btn px-3 dark:bg-muted tracking-normal gap-2'>
-                <span
-                  className={`${link.color} group-hover/btn:text-accent-foreground`}
+          {isLoading
+            ? Array(6)
+                .fill(0)
+                .map((_, i) => (
+                  <Skeleton
+                    key={i}
+                    width={100}
+                    height={32}
+                    className='rounded-md shadow-brutalist border-2'
+                  />
+                ))
+            : navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  prefetch={!link.target}
+                  target={link.target}
+                  rel={
+                    link.target === '_blank' ? 'noopener noreferrer' : undefined
+                  }
                 >
-                  <Icon name={link.icon} />
-                </span>
-                {link.label}
-              </Button>
-            </Link>
-          ))}
+                  <Button className='group/btn px-3 dark:bg-muted tracking-normal gap-2'>
+                    <span
+                      className={`${link.color} group-hover/btn:text-accent-foreground`}
+                    >
+                      <Icon name={link.icon} />
+                    </span>
+                    {link.label}
+                  </Button>
+                </Link>
+              ))}
         </div>
       </Mask>
     </Card>

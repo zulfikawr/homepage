@@ -10,5 +10,6 @@ out
 # Cloudflare
 .cloudflare/
 .wrangler/
+.open-next/
 *_migration.sqlschema.sql
 env.d.ts
