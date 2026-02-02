@@ -62,7 +62,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
           </>
         ) : (
           <>
-            <Icon name='githubLogo' className='size-7' />
+            <Icon name='githubLogo' className='size-7 text-gruv-orange' />
             <span>GitHub Contributions</span>
           </>
         )}

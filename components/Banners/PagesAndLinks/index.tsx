@@ -72,7 +72,7 @@ const PagesAndLinksBanner = () => {
     <Card isPreview>
       <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
         <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-          <Icon name='cube' className='size-7' />
+          <Icon name='cube' className='size-7 text-gruv-red' />
           <span>Pages & Links</span>
         </div>
 

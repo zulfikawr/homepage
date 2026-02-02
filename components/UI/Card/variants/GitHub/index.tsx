@@ -66,7 +66,7 @@ export default function GitHubCard({
 
   return (
     <div className={isPreview ? 'w-full' : ''}>
-      <Card className='overflow-hidden' isPreview={isPreview}>
+      <Card isPreview={isPreview}>
         <Link
           href={repoUrl}
           target='_blank'

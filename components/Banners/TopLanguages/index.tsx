@@ -71,7 +71,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
           </>
         ) : (
           <>
-            <Icon name='code' className='size-7' />
+            <Icon name='code' className='size-7 text-gruv-yellow' />
             <span>Top Languages</span>
           </>
         )}

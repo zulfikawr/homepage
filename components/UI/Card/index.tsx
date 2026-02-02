@@ -35,7 +35,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     const isActuallyInteractive = interactive && !isPreview;
 
     const baseStyles = twMerge(
-      'group relative flex flex-col select-none transition-all duration-150 overflow-hidden shadow-brutalist border-2',
+      'group relative flex flex-col select-none transition-all duration-150 overflow-visible shadow-brutalist border-2',
       (openForm || isPreview) && 'w-full',
       isActive
         ? 'bg-primary/10 border-primary/50 dark:border-primary/40'
@@ -55,7 +55,12 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onClick={isPreview ? undefined : onClick}
         {...props}
       >
-        {children}
+        <div
+          className='flex-1 flex flex-col overflow-hidden h-full w-full'
+          style={{ borderRadius: radius > 0 ? `${radius - 2}px` : undefined }}
+        >
+          {children}
+        </div>
       </div>
     );
   },

@@ -81,7 +81,7 @@ export default function ProjectAnalytics({
           </>
         ) : (
           <>
-            <Icon name='chartBar' className='size-7' />
+            <Icon name='chartBar' className='size-7 text-gruv-aqua' />
             <span>Tech Stack Radar</span>
           </>
         )}

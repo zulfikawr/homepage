@@ -351,7 +351,7 @@ export default function UIContent() {
       <section className='space-y-6'>
         <SectionTitle icon='table' title='Data Display' />
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-          <Card className='col-span-1 lg:col-span-2 overflow-hidden' isPreview>
+          <Card className='col-span-1 lg:col-span-2' isPreview>
             <div className='p-4 border-b-2 border-border bg-muted/30'>
               <h3 className='font-bold'>Users Table</h3>
             </div>

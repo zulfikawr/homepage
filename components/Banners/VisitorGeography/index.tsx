@@ -40,7 +40,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
           </>
         ) : (
           <>
-            <Icon name='globe' className='size-7' />
+            <Icon name='globe' className='size-7 text-gruv-blue' />
             <span>Visitor Geography</span>
           </>
         )}

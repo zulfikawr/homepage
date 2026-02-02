@@ -174,7 +174,7 @@ export default function AnalyticsContent() {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
           {/* Left Column Skeleton */}
           <div className='lg:col-span-2 space-y-8'>
-            <Card isPreview className='overflow-hidden h-[450px]'>
+            <Card isPreview className='h-[450px]'>
               <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
                 <Skeleton width={120} height={16} />
               </div>
