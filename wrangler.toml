@@ -1,0 +1,15 @@
+name = "homepage"
+compatibility_date = "2024-01-01"
+
+# D1 Database binding - use remote in dev
+[[d1_databases]]
+binding = "DB"
+database_name = "homepage"
+database_id = "3b04ea7f-65a6-4255-ab36-f2ce492aeb58"
+preview_database_id = "3b04ea7f-65a6-4255-ab36-f2ce492aeb58"
+
+# R2 Bucket binding - use remote in dev
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "zulfikar-storage"
+preview_bucket_name = "zulfikar-storage"

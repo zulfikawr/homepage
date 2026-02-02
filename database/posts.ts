@@ -22,11 +22,16 @@ interface PostRow {
 /**
  * Uploads a file to R2 and returns the filename (key).
  */
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(
+  file: File,
+  slug: string,
+  fieldName: string,
+): Promise<string> {
   const bucket = getBucket();
   if (!bucket) throw new Error('Storage not available');
 
-  const key = `post-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+  const fileExt = file.name.split('.').pop() || 'bin';
+  const key = `posts/${slug}/${fieldName}.${fileExt}`;
   const arrayBuffer = await file.arrayBuffer();
 
   await bucket.put(key, arrayBuffer, {
@@ -92,10 +97,16 @@ export async function addPost(
       payload.excerpt = data.get('excerpt') as string;
       payload.dateString = data.get('dateString') as string;
 
+      // Generate slug first if not provided
+      if (!payload.slug) {
+        payload.slug =
+          payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+      }
+
       const imageFile = data.get('image') as File;
       const imageUrlInput = data.get('image_url') as string;
       if (imageFile && imageFile.size > 0) {
-        payload.image_url = await uploadFile(imageFile);
+        payload.image_url = await uploadFile(imageFile, payload.slug, 'image');
       } else if (imageUrlInput) {
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
@@ -103,7 +114,7 @@ export async function addPost(
       const audioFile = data.get('audio') as File;
       const audioUrlInput = data.get('audio_url') as string;
       if (audioFile && audioFile.size > 0) {
-        payload.audio_url = await uploadFile(audioFile);
+        payload.audio_url = await uploadFile(audioFile, payload.slug, 'audio');
       } else if (audioUrlInput) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');
       }
@@ -159,6 +170,7 @@ export async function updatePost(
   data: Partial<Post> | FormData,
 ): Promise<{ success: boolean; post?: Post; error?: string }> {
   try {
+    console.log('[updatePost] Starting update for:', id);
     const db = getDB();
     let recordId = id;
 
@@ -166,9 +178,14 @@ export async function updatePost(
     const existing = await getPostById(id);
     if (!existing) return { success: false, error: 'Post not found' };
     recordId = existing.id;
+    console.log('[updatePost] Existing post:', {
+      id: recordId,
+      slug: existing.slug,
+    });
 
     let payload: Partial<Post> = {};
     if (data instanceof FormData) {
+      console.log('[updatePost] Processing FormData');
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
       payload.content = data.get('content') as string;
@@ -184,20 +201,40 @@ export async function updatePost(
         }
       }
 
+      // Use existing slug or generate new one
+      const slug = payload.slug || existing.slug;
+
       const imageFile = data.get('image') as File;
       const imageUrlInput = data.get('image_url') as string;
+      console.log('[updatePost] Image data:', {
+        hasImageFile: imageFile?.size > 0,
+        imageUrlInput,
+      });
+
       if (imageFile && imageFile.size > 0) {
-        payload.image_url = await uploadFile(imageFile);
+        console.log('[updatePost] Uploading new image file');
+        payload.image_url = await uploadFile(imageFile, slug, 'image');
       } else if (imageUrlInput) {
+        console.log('[updatePost] Using existing image URL');
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
+      } else {
+        console.log(
+          '[updatePost] No image data, keeping existing:',
+          existing.image_url,
+        );
+        // Don't update image_url if no new data provided
+        payload.image_url = undefined;
       }
 
       const audioFile = data.get('audio') as File;
       const audioUrlInput = data.get('audio_url') as string;
       if (audioFile && audioFile.size > 0) {
-        payload.audio_url = await uploadFile(audioFile);
+        payload.audio_url = await uploadFile(audioFile, slug, 'audio');
       } else if (audioUrlInput) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');
+      } else {
+        // Don't update audio_url if no new data provided
+        payload.audio_url = undefined;
       }
     } else {
       payload = { ...data };
@@ -224,6 +261,7 @@ export async function updatePost(
       values.push(payload.excerpt);
     }
     if (payload.image_url !== undefined) {
+      console.log('[updatePost] Will update image_url to:', payload.image_url);
       fields.push('image_url = ?');
       values.push(payload.image_url);
     }
@@ -242,8 +280,15 @@ export async function updatePost(
 
     if (fields.length > 0) {
       values.push(recordId);
+      const query = `UPDATE posts SET ${fields.join(', ')} WHERE id = ?`;
+      console.log(
+        '[updatePost] Executing query:',
+        query,
+        'with values:',
+        values,
+      );
       await db
-        .prepare(`UPDATE posts SET ${fields.join(', ')} WHERE id = ?`)
+        .prepare(query)
         .bind(...values)
         .run();
     }
@@ -254,6 +299,9 @@ export async function updatePost(
     revalidateTag('posts', 'max');
 
     const updated = await getPostById(recordId);
+    console.log('[updatePost] Updated post:', {
+      image_url: updated?.image_url,
+    });
     return { success: true, post: updated! };
   } catch (error: unknown) {
     console.error('Update post error:', error);

@@ -311,7 +311,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
                 collectionName='posts'
                 recordId={postToEdit?.id}
                 fieldName='image'
-                onUploadSuccess={(url) => handleChange('image', url)}
+                onUploadSuccess={(url) => handleChange('image_url', url)}
                 onFileSelect={setImageFile}
               />
             </div>
@@ -330,7 +330,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
                 recordId={postToEdit?.id}
                 fieldName='audio'
                 accept='audio/*'
-                onUploadSuccess={(url) => handleChange('audio', url)}
+                onUploadSuccess={(url) => handleChange('audio_url', url)}
                 onFileSelect={setAudioFile}
               />
             </div>

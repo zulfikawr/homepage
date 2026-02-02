@@ -31,15 +31,17 @@ function mapRowToMovie(row: MovieRow | null): Movie | null {
   };
 }
 
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, slug: string): Promise<string> {
   const bucket = getBucket();
   if (!bucket) throw new Error('Storage binding (BUCKET) not found');
-  const key = `movie-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+
+  const fileExt = file.name.split('.').pop() || 'jpg';
+  const key = `movies/${slug}/poster.${fileExt}`;
   const arrayBuffer = await file.arrayBuffer();
   await bucket.put(key, arrayBuffer, {
     httpMetadata: { contentType: file.type },
   });
-  return `/api/storage/${key}`;
+  return key;
 }
 
 export async function getMovies(): Promise<Movie[]> {
@@ -73,10 +75,17 @@ export async function addMovie(
       payload.imdbId = data.get('imdbId') as string;
       payload.imdbLink = data.get('imdbLink') as string;
       payload.rating = Number(data.get('rating'));
+
+      // Generate slug first if not provided
+      if (!payload.slug) {
+        payload.slug =
+          payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+      }
+
       const posterFile = data.get('poster') as File | null;
       const posterUrlInput = data.get('posterUrl') as string | null;
       if (posterFile && posterFile.size > 0) {
-        payload.posterUrl = await uploadFile(posterFile);
+        payload.posterUrl = await uploadFile(posterFile, payload.slug);
       } else if (posterUrlInput) {
         payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
       }
@@ -144,10 +153,14 @@ export async function updateMovie(
       payload.imdbId = data.get('imdbId') as string;
       payload.imdbLink = data.get('imdbLink') as string;
       payload.rating = Number(data.get('rating'));
+
+      // Use existing slug or new one
+      const slug = payload.slug || existing.slug;
+
       const posterFile = data.get('poster') as File | null;
       const posterUrlInput = data.get('posterUrl') as string | null;
       if (posterFile && posterFile.size > 0) {
-        payload.posterUrl = await uploadFile(posterFile);
+        payload.posterUrl = await uploadFile(posterFile, slug);
       } else if (posterUrlInput) {
         payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
       }

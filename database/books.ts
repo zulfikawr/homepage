@@ -31,15 +31,17 @@ function mapRowToBook(row: BookRow | null): Book | null {
   };
 }
 
-async function uploadFile(file: File): Promise<string> {
+async function uploadFile(file: File, slug: string): Promise<string> {
   const bucket = getBucket();
   if (!bucket) throw new Error('Storage binding (BUCKET) not found');
-  const key = `book-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+
+  const fileExt = file.name.split('.').pop() || 'jpg';
+  const key = `books/${slug}/image.${fileExt}`;
   const arrayBuffer = await file.arrayBuffer();
   await bucket.put(key, arrayBuffer, {
     httpMetadata: { contentType: file.type },
   });
-  return `/api/storage/${key}`;
+  return key;
 }
 
 export async function getBooks(): Promise<Book[]> {
@@ -77,8 +79,14 @@ export async function addBook(
       const imageFile = data.get('imageURL') as File | null;
       const imageUrlInput = data.get('image_url') as string | null;
 
+      // Generate slug first if not provided for addBook
+      if (!payload.slug) {
+        payload.slug =
+          payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+      }
+
       if (imageFile && imageFile.size > 0) {
-        payload.imageURL = await uploadFile(imageFile);
+        payload.imageURL = await uploadFile(imageFile, payload.slug);
       } else if (imageUrlInput) {
         payload.imageURL = imageUrlInput.replace('/api/storage/', '');
       }
@@ -149,8 +157,11 @@ export async function updateBook(
       const imageFile = data.get('imageURL') as File | null;
       const imageUrlInput = data.get('image_url') as string | null;
 
+      // Use existing slug or generate new one for updateBook
+      const slug = payload.slug || existing.slug;
+
       if (imageFile && imageFile.size > 0) {
-        payload.imageURL = await uploadFile(imageFile);
+        payload.imageURL = await uploadFile(imageFile, slug);
       } else if (imageUrlInput) {
         payload.imageURL = imageUrlInput.replace('/api/storage/', '');
       }
