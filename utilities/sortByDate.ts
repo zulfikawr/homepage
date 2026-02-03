@@ -1,4 +1,4 @@
-export const parse_date = (date_string: string): Date => {
+export const parseDate = (date_string: string): Date => {
   if (!date_string) return new Date(0);
 
   try {
@@ -38,8 +38,8 @@ export const sortByDate = <T extends { date_string?: string }>(
     if (!a.date_string) return 1;
     if (!b.date_string) return -1;
 
-    const date_a = parse_date(a.date_string);
-    const date_b = parse_date(b.date_string);
+    const date_a = parseDate(a.date_string);
+    const date_b = parseDate(b.date_string);
     return date_b.getTime() - date_a.getTime();
   });
 };
