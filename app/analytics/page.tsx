@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import { getAnalyticsEvents } from '@/lib/data';
+import { getAnalyticsSummary } from '@/lib/data';
 
 import AnalyticsContent, { AnalyticsSkeleton } from './content';
 
@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 };
 
 async function Analytics() {
-  const events = await getAnalyticsEvents();
-  return <AnalyticsContent events={events} />;
+  const stats = await getAnalyticsSummary();
+  return <AnalyticsContent stats={stats} />;
 }
 
 export default function AnalyticsPage() {

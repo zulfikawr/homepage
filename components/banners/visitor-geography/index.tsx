@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
@@ -8,7 +7,6 @@ import { Button, Icon, Separator, Skeleton, Tooltip } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import WorldMapVisualization from '@/components/visual/world-map';
 import { useLoadingToggle } from '@/contexts/loading-context';
-import { AnalyticsEvent } from '@/types/analytics-event';
 
 const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
   const ViewAnalyticsButton = (
@@ -89,40 +87,19 @@ export const VisitorGeographyLayout = ({
 
 export default function VisitorGeographyBanner({
   className,
-  events = [],
+  data = [],
   isLoading = false,
 }: {
   className?: string;
-  events?: AnalyticsEvent[];
+  data?: { code: string; name: string; count: number }[];
   isLoading?: boolean;
 }) {
   const { forceLoading } = useLoadingToggle();
   const loading = isLoading || forceLoading;
 
-  const countries = useMemo(() => {
-    if (!events || events.length === 0) return [];
-
-    const countryCounts: Record<string, { count: number; name: string }> = {};
-    events.forEach((e) => {
-      const countryCode = e.country || 'Unknown';
-      if (!countryCounts[countryCode]) {
-        countryCounts[countryCode] = { count: 0, name: countryCode };
-      }
-      countryCounts[countryCode].count++;
-    });
-
-    return Object.entries(countryCounts)
-      .map(([code, data]) => ({ code, name: data.name, count: data.count }))
-      .sort((a, b) => b.count - a.count);
-  }, [events]);
-
   return (
     <div className={className}>
-      <VisitorGeographyLayout
-        isLoading={loading}
-        data={countries}
-        error={null}
-      />
+      <VisitorGeographyLayout isLoading={loading} data={data} error={null} />
     </div>
   );
 }

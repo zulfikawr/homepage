@@ -8,7 +8,7 @@ import PageTitle from '@/components/page-title';
 import { Card } from '@/components/ui';
 import { Icon, Skeleton } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { AnalyticsEvent } from '@/types/analytics-event';
+import { AnalyticsSummary } from '@/types/analytics-summary';
 
 export function AnalyticsSkeleton() {
   return (
@@ -92,102 +92,10 @@ export function AnalyticsSkeleton() {
 }
 
 export default function AnalyticsContent({
-  events,
+  stats,
 }: {
-  events: AnalyticsEvent[];
+  stats: AnalyticsSummary;
 }) {
-  const stats = useMemo(() => {
-    if (!events) return null;
-
-    const totalViews = events.length;
-    if (totalViews === 0)
-      return {
-        totalViews: 0,
-        uniqueVisitors: 0,
-        topRoutes: [],
-        countries: [],
-        devices: [],
-        referrers: [],
-      };
-
-    const uniqueVisitors = new Set(events.map((e) => e.user_agent + e.country))
-      .size;
-
-    // Top Routes
-    const routeCounts: Record<string, number> = {};
-    events.forEach((e) => {
-      routeCounts[e.path] = (routeCounts[e.path] || 0) + 1;
-    });
-    const topRoutes = Object.entries(routeCounts)
-      .map(([path, views]) => ({ path, views }))
-      .sort((a, b) => b.views - a.views)
-      .slice(0, 5);
-
-    // Top Countries
-    const countryCounts: Record<string, { count: number; name: string }> = {};
-    events.forEach((e) => {
-      const countryCode = e.country || 'Unknown';
-      if (!countryCounts[countryCode]) {
-        countryCounts[countryCode] = { count: 0, name: countryCode };
-      }
-      countryCounts[countryCode].count++;
-    });
-    const countries = Object.entries(countryCounts)
-      .map(([code, data]) => ({ code, name: data.name, count: data.count }))
-      .sort((a, b) => b.count - a.count);
-
-    // Devices
-    const devices = [
-      {
-        type: 'Desktop',
-        count: events.filter(
-          (e) => !/mobile|android|iphone|ipad/i.test(e.user_agent),
-        ).length,
-        icon: 'desktop' as const,
-      },
-      {
-        type: 'Mobile',
-        count: events.filter((e) => /mobile|android|iphone/i.test(e.user_agent))
-          .length,
-        icon: 'deviceMobile' as const,
-      },
-    ].map((d) => ({
-      ...d,
-      percentage: Math.round((d.count / totalViews) * 100) || 0,
-    }));
-
-    // Referrers
-    const referrerCounts: Record<string, number> = {};
-    events.forEach((e) => {
-      let ref = 'Direct';
-      try {
-        if (
-          e.referrer &&
-          e.referrer !== 'Direct' &&
-          e.referrer.startsWith('http')
-        ) {
-          ref = new URL(e.referrer).hostname;
-        }
-      } catch {
-        ref = e.referrer || 'Direct';
-      }
-      referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
-    });
-    const referrers = Object.entries(referrerCounts)
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-
-    return {
-      totalViews,
-      uniqueVisitors,
-      topRoutes,
-      countries,
-      devices,
-      referrers,
-    };
-  }, [events]);
-
   const maxViews = useMemo(
     () =>
       stats && stats.topRoutes.length > 0
@@ -259,18 +167,17 @@ export default function AnalyticsContent({
             },
           ].map((stat, i) => (
             <ViewTransition key={i}>
-              <Card
-                isPreview
-                className='p-5 flex flex-col justify-between h-32'
-              >
+              <Card isPreview className='p-4 flex flex-col h-32'>
                 <div className='flex items-center justify-between text-muted-foreground'>
                   <span className='text-xs font-medium uppercase tracking-wider'>
                     {stat.label}
                   </span>
                   <Icon name={stat.icon} size={18} className={stat.color} />
                 </div>
-                <div className='text-2xl font-semibold tracking-tight text-foreground'>
-                  {stat.value}
+                <div className='flex-1 flex items-center'>
+                  <div className='text-2xl font-semibold tracking-tight text-foreground'>
+                    {stat.value}
+                  </div>
                 </div>
               </Card>
             </ViewTransition>
@@ -282,7 +189,7 @@ export default function AnalyticsContent({
         <div className='lg:col-span-2 space-y-8'>
           <StaggerContainer>
             <ViewTransition>
-              <VisitorGeographyBanner />
+              <VisitorGeographyBanner data={stats.countries} />
             </ViewTransition>
 
             <ViewTransition>

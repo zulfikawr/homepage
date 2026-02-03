@@ -17,6 +17,9 @@ CREATE TABLE IF NOT EXISTS analytics_events (
   is_bot BOOLEAN,
   created_at INTEGER DEFAULT (unixepoch())
 );
+CREATE INDEX IF NOT EXISTS idx_analytics_path ON analytics_events(path);
+CREATE INDEX IF NOT EXISTS idx_analytics_is_bot ON analytics_events(is_bot);
+CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics_events(created_at);
 
 -- Books
 CREATE TABLE IF NOT EXISTS books (

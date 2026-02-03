@@ -14,10 +14,7 @@ export const LogoutConfirm: React.FC<LogoutConfirmProps> = ({ onConfirm }) => (
     <h2 className='text-xl font-semibold text-primary'>Confirm Logout</h2>
     <p className='text-gruv-aqua'>Are you sure you want to logout?</p>
     <div className='flex justify-end space-x-4'>
-      <Button
-        onClick={() => modal.close()}
-        className='px-4 md:px-6'
-      >
+      <Button onClick={() => modal.close()} className='px-4 md:px-6'>
         Cancel
       </Button>
       <Button

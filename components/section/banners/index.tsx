@@ -9,7 +9,7 @@ import VisitorGeographyBanner from '@/components/banners/visitor-geography';
 import WeatherBanner from '@/components/banners/weather';
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import {
-  getAnalyticsEvents,
+  getAnalyticsSummary,
   getGitHubContributionsServer,
   getGitHubLanguagesServer,
   getResume,
@@ -32,8 +32,8 @@ async function PagesAndLinksData() {
 }
 
 async function VisitorGeographyData() {
-  const events = await getAnalyticsEvents();
-  return <VisitorGeographyBanner events={events} />;
+  const stats = await getAnalyticsSummary();
+  return <VisitorGeographyBanner data={stats.countries} />;
 }
 
 const Banners = () => {
@@ -60,7 +60,7 @@ const Banners = () => {
 
         <ViewTransition key='geography'>
           <Suspense
-            fallback={<VisitorGeographyBanner events={[]} isLoading={true} />}
+            fallback={<VisitorGeographyBanner data={[]} isLoading={true} />}
           >
             <VisitorGeographyData />
           </Suspense>
