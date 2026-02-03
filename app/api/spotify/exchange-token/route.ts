@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { saveSpotifyTokens } from '@/lib/spotify';
 
-export const runtime = 'edge';
-
 export async function POST(request: NextRequest) {
   try {
     const { code } = (await request.json()) as { code: string };

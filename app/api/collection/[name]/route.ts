@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getDB } from '@/lib/cloudflare';
 
-export const runtime = 'edge';
-
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ name: string }> },

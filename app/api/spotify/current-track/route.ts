@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyTrack } from '@/types/spotify';
 
-export const runtime = 'edge';
-
 export async function GET() {
   try {
     const accessToken = await getAccessToken();

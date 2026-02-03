@@ -5,8 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "wrangler dev",
-    "deploy": "opennextjs-cloudflare build && wrangler deploy",
     "lint": "eslint . --fix && bunx prettier --write .",
     "analyze": "bash scripts/analyze-performance.sh",
     "clean": "rm -rf .next .open-next node_modules && bun install"

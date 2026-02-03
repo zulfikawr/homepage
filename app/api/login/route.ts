@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getDB } from '@/lib/cloudflare';
 
-export const runtime = 'edge';
-
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = (await request.json()) as {

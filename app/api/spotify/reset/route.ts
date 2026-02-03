@@ -2,8 +2,6 @@ import { NextResponse } from 'next/server';
 
 import { getDB } from '@/lib/cloudflare';
 
-export const runtime = 'edge';
-
 export async function POST() {
   try {
     const db = getDB();
