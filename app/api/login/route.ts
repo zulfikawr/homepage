@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getDB } from '@/lib/cloudflare';
+import { verifyPassword } from '@/utilities/password';
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
     interface UserRow {
       id: string;
       email: string;
-      passwordHash: string;
+      password_hash: string;
       role: string;
     }
 
@@ -44,9 +45,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For simplicity, we are doing a direct comparison.
-    // In production, you'd use bcrypt/argon2.
-    if (user.passwordHash !== password) {
+    // Use the secure password verification utility.
+    // This handles both new hashed passwords and legacy plain-text passwords.
+    const isValid = await verifyPassword(password, user.password_hash);
+
+    if (!isValid) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 },
