@@ -5,7 +5,7 @@ import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { CardLoading } from '@/components/UI/Card/variants/Loading';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { Project } from '@/types/project';
-import { parseDate } from '@/utilities/sortByDate';
+import { parse_date } from '@/utilities/sortByDate';
 
 import ProjectClient from './ProjectClient';
 
@@ -16,19 +16,22 @@ export const ProjectLayout = ({
   projects?: Project[];
   isLoading?: boolean;
 }) => {
-  function sortProjectsByPinnedAndDate(projects: Project[]): Project[] {
-    const pinnedProjects = projects.filter((p) => p.pinned);
+  function sort_projects_by_pinned_and_date(projects: Project[]): Project[] {
+    const pinned_projects = projects.filter((p) => p.pinned);
 
-    const sortedPinnedProjects = pinnedProjects
+    const sorted_pinned_projects = pinned_projects
       .sort(
         (a, b) =>
-          parseDate(b.dateString).getTime() - parseDate(a.dateString).getTime(),
+          parse_date(b.date_string).getTime() -
+          parse_date(a.date_string).getTime(),
       )
       .slice(0, 5);
-    return [...sortedPinnedProjects];
+    return [...sorted_pinned_projects];
   }
 
-  const sortedProjects = projects ? sortProjectsByPinnedAndDate(projects) : [];
+  const sorted_projects = projects
+    ? sort_projects_by_pinned_and_date(projects)
+    : [];
 
   return (
     <section>
@@ -50,8 +53,8 @@ export const ProjectLayout = ({
           Array(4)
             .fill(0)
             .map((_, i) => <CardLoading key={i} variant='project' />)
-        ) : sortedProjects.length > 0 ? (
-          <ProjectClient projects={sortedProjects} />
+        ) : sorted_projects.length > 0 ? (
+          <ProjectClient projects={sorted_projects} />
         ) : (
           <CardEmpty message='No projects found.' />
         )}

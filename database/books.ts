@@ -19,15 +19,17 @@ interface BookRow {
 
 function mapRowToBook(row: BookRow | null): Book | null {
   if (!row) return null;
+  const image_key = row.image_url;
   return {
     id: row.id,
     slug: row.slug,
     type: row.type as Book['type'],
     title: row.title,
     author: row.author,
-    imageURL: row.image_url,
+    image: image_key ? `/api/storage/${image_key}` : '',
+    image_url: image_key || '',
     link: row.link,
-    dateAdded: row.date_added,
+    date_added: row.date_added,
   };
 }
 
@@ -74,9 +76,9 @@ export async function addBook(
       payload.author = data.get('author') as string;
       payload.type = data.get('type') as Book['type'];
       payload.link = data.get('link') as string;
-      payload.dateAdded = data.get('dateAdded') as string;
+      payload.date_added = data.get('date_added') as string;
 
-      const imageFile = data.get('imageURL') as File | null;
+      const imageFile = data.get('image') as File | null;
       const imageUrlInput = data.get('image_url') as string | null;
 
       // Generate slug first if not provided for addBook
@@ -86,9 +88,9 @@ export async function addBook(
       }
 
       if (imageFile && imageFile.size > 0) {
-        payload.imageURL = await uploadFile(imageFile, payload.slug);
+        payload.image_url = await uploadFile(imageFile, payload.slug);
       } else if (imageUrlInput) {
-        payload.imageURL = imageUrlInput.replace('/api/storage/', '');
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -109,9 +111,9 @@ export async function addBook(
         payload.type,
         payload.title,
         payload.author,
-        payload.imageURL || '',
+        payload.image_url || '',
         payload.link || '',
-        payload.dateAdded || '',
+        payload.date_added || '',
       )
       .run();
 
@@ -152,18 +154,18 @@ export async function updateBook(
       payload.author = data.get('author') as string;
       payload.type = data.get('type') as Book['type'];
       payload.link = data.get('link') as string;
-      payload.dateAdded = data.get('dateAdded') as string;
+      payload.date_added = data.get('date_added') as string;
 
-      const imageFile = data.get('imageURL') as File | null;
+      const imageFile = data.get('image') as File | null;
       const imageUrlInput = data.get('image_url') as string | null;
 
       // Use existing slug or generate new one for updateBook
       const slug = payload.slug || existing.slug;
 
       if (imageFile && imageFile.size > 0) {
-        payload.imageURL = await uploadFile(imageFile, slug);
+        payload.image_url = await uploadFile(imageFile, slug);
       } else if (imageUrlInput) {
-        payload.imageURL = imageUrlInput.replace('/api/storage/', '');
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -192,13 +194,13 @@ export async function updateBook(
       fields.push('link = ?');
       values.push(payload.link);
     }
-    if (payload.dateAdded !== undefined) {
+    if (payload.date_added !== undefined) {
       fields.push('date_added = ?');
-      values.push(payload.dateAdded);
+      values.push(payload.date_added);
     }
-    if (payload.imageURL !== undefined) {
+    if (payload.image_url !== undefined) {
       fields.push('image_url = ?');
-      values.push(payload.imageURL);
+      values.push(payload.image_url);
     }
 
     if (fields.length > 0) {

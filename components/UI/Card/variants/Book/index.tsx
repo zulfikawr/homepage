@@ -46,7 +46,7 @@ export default function BookCard({
               <ImageWithFallback
                 width={35}
                 height={52}
-                src={book.imageURL}
+                src={book.image}
                 alt={book.title}
                 className='h-full w-full object-cover'
                 loading='lazy'
@@ -66,7 +66,7 @@ export default function BookCard({
         </div>
         <div className='flex w-full items-center justify-between border-t-2 border-border px-4.5 py-2 text-xs font-light text-muted-foreground  dark:text-muted-foreground'>
           <span>Date Added</span>
-          <span>{book.dateAdded}</span>
+          <span>{book.date_added}</span>
         </div>
       </Card>
     </div>

@@ -24,13 +24,13 @@ export default function MovieCard({
   const router = useRouter();
   const rating = movie.rating || 0;
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
 
     if (openForm) {
       router.push(`/database/movies/${movie.slug}/edit`);
     } else {
-      if (movie.imdbLink) openLink(movie.imdbLink);
+      if (movie.imdb_link) openLink(movie.imdb_link);
     }
   };
 
@@ -49,7 +49,7 @@ export default function MovieCard({
   return (
     <div className={isPreview ? 'w-full' : ''}>
       <Card
-        onClick={handleCardClick}
+        onClick={handle_card_click}
         openForm={openForm}
         isPreview={isPreview}
         className={`${openForm || isPreview ? 'w-full' : ''}`}
@@ -62,7 +62,7 @@ export default function MovieCard({
                   <ImageWithFallback
                     width={35}
                     height={52}
-                    src={movie.posterUrl}
+                    src={movie.image}
                     alt={movie.title}
                     className='h-full w-full object-cover'
                     loading='lazy'
@@ -76,7 +76,7 @@ export default function MovieCard({
                   {movie.title}
                 </p>
                 <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-medium tracking-wide text-gruv-aqua lg:text-sm'>
-                  Released {movie.releaseDate}
+                  Released {movie.release_date}
                 </p>
               </div>
             </div>
@@ -100,7 +100,7 @@ export default function MovieCard({
               <div className='relative aspect-[2/3] w-full bg-muted dark:bg-card'>
                 <ImageWithFallback
                   className='z-10 object-cover transition-all duration-300 group-hover:blur-sm group-hover:brightness-50'
-                  src={movie.posterUrl}
+                  src={movie.image}
                   alt={movie.title}
                   fill
                   type='portrait'

@@ -21,7 +21,7 @@ export default function PublicationCard({
 }: PublicationCardProps) {
   const router = useRouter();
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
 
     if (openForm) {
@@ -34,7 +34,7 @@ export default function PublicationCard({
   return (
     <div className={isPreview ? 'w-full' : ''}>
       <Card
-        onClick={handleCardClick}
+        onClick={handle_card_click}
         openForm={openForm}
         isPreview={isPreview}
         isActive={isActive}
@@ -56,9 +56,9 @@ export default function PublicationCard({
                 | 'red'
                 | 'default'
               )[] = ['blue', 'aqua', 'green', 'yellow', 'red'];
-              const badgeType = colors[index % colors.length];
+              const badge_type = colors[index % colors.length];
               return (
-                <Badge key={index} variant={badgeType}>
+                <Badge key={index} variant={badge_type}>
                   {keyword}
                 </Badge>
               );
@@ -69,7 +69,7 @@ export default function PublicationCard({
         <div className='flex w-full items-center justify-between border-t-2 border-border px-4 py-2 text-xs font-light text-muted-foreground  dark:text-muted-foreground'>
           <span>{publication.publisher}</span>
           <span>
-            {publication.openAccess ? (
+            {publication.open_access ? (
               <span className='flex items-center gap-2 text-gruv-green font-medium'>
                 <Icon name='lockOpen' className='size-4.5' />
                 Open Access

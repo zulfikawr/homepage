@@ -24,8 +24,8 @@ import { siteConfig } from '@/lib/site-config';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
 import { Employment } from '@/types/employment';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
-import { PersonalInfo } from '@/types/personalInfo';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
+import { PersonalInfo } from '@/types/personal_info';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
@@ -195,7 +195,7 @@ About Zulfikar (Dynamic Profile):
 - Professional Title: ${profile?.title || siteConfig.title}
 
 Detailed Experience:
-${safeJoin(employment, (e) => `- ${e.jobTitle} at ${e.organization} (${e.dateString}, Type: ${e.jobType})${e.responsibilities?.length ? `\n  Responsibilities: ${e.responsibilities.slice(0, 3).join('; ')}` : ''}`)}
+${safeJoin(employment, (e) => `- ${e.job_title} at ${e.organization} (${e.date_string}, Type: ${e.job_type})${e.responsibilities?.length ? `\n  Responsibilities: ${e.responsibilities.slice(0, 3).join('; ')}` : ''}`)}
 
 Interests & Professional Philosophy:
 ${interests?.[0]?.description || 'Not specified'}
@@ -206,27 +206,27 @@ ${safeJoin(
   projects,
   (p) => `
 ### ${p.name}
-- Date: ${p.dateString}
+- Date: ${p.date_string}
 - Status: ${p.status}
 - Description: ${p.description}
 - Tools/Tech: ${p.tools?.join(', ') || 'N/A'}
 - View at: /projects/${p.slug}
 ${p.link ? `- Live URL: ${p.link}` : ''}
-${p.githubRepoUrl ? `- GitHub: ${p.githubRepoUrl}` : ''}
+${p.github_repo_url ? `- GitHub: ${p.github_repo_url}` : ''}
 ${p.readme ? `- Details: ${truncate(p.readme, 500)}` : ''}`,
 )}
 
 === ALL BLOG POSTS ===
-${safeJoin(posts, (p) => `- "${p.title}" (${p.dateString}): ${truncate(p.excerpt, 200)} [Categories: ${p.categories?.join(', ') || 'Uncategorized'}] - Read at: /posts/${p.slug}`)}
+${safeJoin(posts, (p) => `- "${p.title}" (${p.date_string}): ${truncate(p.excerpt, 200)} [Categories: ${p.categories?.join(', ') || 'Uncategorized'}] - Read at: /posts/${p.slug}`)}
 
 === CERTIFICATIONS ===
-${safeJoin(certs, (c) => `- ${c.title} (${c.dateIssued}) issued by ${c.issuedBy}${c.credentialId ? ` [ID: ${c.credentialId}]` : ''}${c.link ? ` - Verify: ${c.link}` : ''}`)}
+${safeJoin(certs, (c) => `- ${c.title} (${c.date_issued}) issued by ${c.issued_by}${c.credential_id ? ` [ID: ${c.credential_id}]` : ''}${c.link ? ` - Verify: ${c.link}` : ''}`)}
 
 === PUBLICATIONS ===
 ${safeJoin(publications, (p) => `- "${p.title}" by ${p.authors?.join(', ') || 'Zulfikar'}, published by ${p.publisher}${p.excerpt ? `\n  Summary: ${truncate(p.excerpt, 200)}` : ''}${p.keywords?.length ? `\n  Keywords: ${p.keywords.join(', ')}` : ''}${p.link ? `\n  Read: ${p.link}` : ''}`)}
 
 === READING LIST ===
-${safeJoin(books, (b) => `- "${b.title}" by ${b.author} (Status: ${b.type}, Added: ${b.dateAdded})${b.link ? ` - ${b.link}` : ''}`)}
+${safeJoin(books, (b) => `- "${b.title}" by ${b.author} (Status: ${b.type}, Added: ${b.date_added})${b.link ? ` - ${b.link}` : ''}`)}
 
 Instructions:
 1. Be natural, professional, and concise. Avoid AI buzzwords.
@@ -250,7 +250,7 @@ Instructions:
   ]);
 
   // Cancel ongoing request
-  const handleCancel = useCallback(() => {
+  const handle_cancel = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -268,7 +268,7 @@ Instructions:
     [],
   );
 
-  const handleSend = async () => {
+  const handle_send = async () => {
     const trimmedInput = input.trim();
     if (!trimmedInput || isLoading) return;
 
@@ -395,7 +395,7 @@ Instructions:
         <div>
           <h2 className='text-lg font-bold leading-none'>Personal Assistant</h2>
           <p className='text-xs text-muted-foreground mt-1'>
-            Powered by Claude 4.5 Sonnet
+            Powered by Puter.js
           </p>
         </div>
       </div>
@@ -451,9 +451,7 @@ Instructions:
               ) : (
                 <MarkdownRenderer
                   content={m.content}
-                  className={`py-2 ${
-                    m.role === 'user' ? 'prose-chat' : 'prose-chat-assistant'
-                  }`}
+                  className={`py-2 ${m.role === 'user' ? 'prose-chat' : 'prose-chat-assistant'}`}
                 />
               )}
             </div>
@@ -468,7 +466,7 @@ Instructions:
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleSend();
+            handle_send();
           }}
           className='flex gap-2'
         >
@@ -483,7 +481,7 @@ Instructions:
           {isLoading ? (
             <Button
               nativeType='button'
-              onClick={handleCancel}
+              onClick={handle_cancel}
               className='px-3 h-9'
               title='Cancel'
             >

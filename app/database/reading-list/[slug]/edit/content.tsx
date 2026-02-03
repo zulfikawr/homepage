@@ -23,7 +23,7 @@ export default function EditBookPage({ book }: EditBookPageProps) {
     <div>
       <PageTitle emoji='📚' title={`Edit Book`} subtitle={book.title} />
 
-      <BookForm bookToEdit={book} />
+      <BookForm book_to_edit={book} />
     </div>
   );
 }

@@ -95,10 +95,10 @@ export async function addProject(
       payload.slug = data.get('slug') as string;
       payload.description = data.get('description') as string;
       payload.readme = data.get('readme') as string;
-      payload.dateString = data.get('dateString') as string;
+      payload.date_string = data.get('date_string') as string;
       payload.status = data.get('status') as Project['status'];
       payload.link = data.get('link') as string;
-      payload.githubRepoUrl = data.get('githubRepoUrl') as string;
+      payload.github_repo_url = data.get('github_repo_url') as string;
       payload.pinned = data.get('pinned') === 'true';
 
       const toolsStr = data.get('tools') as string;
@@ -148,7 +148,7 @@ export async function addProject(
         id,
         payload.slug,
         payload.name,
-        payload.dateString,
+        payload.date_string,
         payload.image_url,
         payload.description,
         toolsJson,
@@ -156,7 +156,7 @@ export async function addProject(
         payload.status,
         payload.link,
         payload.favicon_url,
-        payload.githubRepoUrl,
+        payload.github_repo_url,
         payload.pinned ? 1 : 0,
       )
       .run();
@@ -193,10 +193,10 @@ export async function updateProject(
       payload.slug = data.get('slug') as string;
       payload.description = data.get('description') as string;
       payload.readme = data.get('readme') as string;
-      payload.dateString = data.get('dateString') as string;
+      payload.date_string = data.get('date_string') as string;
       payload.status = data.get('status') as Project['status'];
       payload.link = data.get('link') as string;
-      payload.githubRepoUrl = data.get('githubRepoUrl') as string;
+      payload.github_repo_url = data.get('github_repo_url') as string;
 
       const pinnedVal = data.get('pinned');
       if (pinnedVal !== null) payload.pinned = pinnedVal === 'true';
@@ -261,9 +261,9 @@ export async function updateProject(
       fields.push('readme = ?');
       values.push(payload.readme);
     }
-    if (payload.dateString !== undefined) {
+    if (payload.date_string !== undefined) {
       fields.push('date_string = ?');
-      values.push(payload.dateString);
+      values.push(payload.date_string);
     }
     if (payload.status !== undefined) {
       fields.push('status = ?');
@@ -273,9 +273,9 @@ export async function updateProject(
       fields.push('link = ?');
       values.push(payload.link);
     }
-    if (payload.githubRepoUrl !== undefined) {
+    if (payload.github_repo_url !== undefined) {
       fields.push('github_repo_url = ?');
-      values.push(payload.githubRepoUrl);
+      values.push(payload.github_repo_url);
     }
     if (payload.pinned !== undefined) {
       fields.push('pinned = ?');

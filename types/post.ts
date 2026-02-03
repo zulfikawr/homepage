@@ -5,7 +5,7 @@ export interface Post {
   title?: string;
   excerpt?: string;
   categories?: string[];
-  dateString?: string;
+  date_string?: string;
   content?: string;
   audio?: string;
   audio_url?: string;

@@ -23,21 +23,21 @@ import { Comment } from '@/types/comment';
 import ImageWithFallback from '../ImageWithFallback';
 
 interface CommentSectionProps {
-  postId: string;
+  post_id: string;
   isLoading?: boolean;
 }
 
 export default function CommentSection({
-  postId,
-  isLoading: externalLoading = false,
+  post_id,
+  isLoading: external_loading = false,
 }: CommentSectionProps) {
-  const [author, setAuthor] = useState('');
-  const [content, setContent] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, isAdmin, loading: authLoading } = useAuth();
-  const { handleGithubLogin, handleLogout: authLogout } = useAuthActions();
+  const [author, set_author] = useState('');
+  const [content, set_content] = useState('');
+  const [is_submitting, setIsSubmitting] = useState(false);
+  const { user, isAdmin, loading: auth_loading } = useAuth();
+  const { handleGithubLogin, handleLogout: auth_logout } = useAuthActions();
 
-  const githubUsername = user
+  const github_username = user
     ? (user.username as string) ||
       (user.name as string) ||
       (user.email as string) ||
@@ -45,49 +45,49 @@ export default function CommentSection({
     : '';
 
   // Use the new generic collection hook
-  const { data: allComments, loading: dataLoading } = useCollection<Comment>(
+  const { data: all_comments, loading: data_loading } = useCollection<Comment>(
     'comments',
     mapRecordToComment,
   );
 
   const comments = useMemo(() => {
-    if (!allComments) return [];
-    return allComments
-      .filter((c) => c.postId === postId)
-      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-  }, [allComments, postId]);
+    if (!all_comments) return [];
+    return all_comments
+      .filter((c) => c.post_id === post_id)
+      .sort((a, b) => (b.created_at || 0) - (a.created_at || 0));
+  }, [all_comments, post_id]);
 
-  const isLoading = dataLoading || externalLoading;
+  const isLoading = data_loading || external_loading;
 
   // Set author from user profile
   useEffect(() => {
     if (user && user.name) {
-      setAuthor(user.name as string);
+      set_author(user.name as string);
     }
   }, [user]);
 
-  const handleLogout = async () => {
+  const handle_logout = async () => {
     try {
-      authLogout();
-      setAuthor('');
-      setContent('');
+      auth_logout();
+      set_author('');
+      set_content('');
     } catch {
       toast.show('Failed to logout', 'error');
     }
   };
 
-  const handleSubmitComment = async () => {
+  const handle_submit_comment = async () => {
     if (!content.trim()) return;
 
     setIsSubmitting(true);
     try {
       await addComment(
-        postId,
-        githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
+        post_id,
+        github_username || author || ((user?.name as string) ?? 'Anonymous'),
         content,
         user?.avatar ? getFileUrl({}, user.avatar as string) : undefined,
       );
-      setContent('');
+      set_content('');
       toast.show('Comment posted successfully!');
     } catch {
       toast.show('Failed to submit comment', 'error');
@@ -96,18 +96,18 @@ export default function CommentSection({
     }
   };
 
-  const handleSubmitReply = async (
-    parentId: string,
-    replyAuthor: string,
-    replyContent: string,
+  const handle_submit_reply = async (
+    parent_id: string,
+    reply_author: string,
+    reply_content: string,
   ) => {
     try {
       await addComment(
-        postId,
-        replyAuthor,
-        replyContent,
+        post_id,
+        reply_author,
+        reply_content,
         user?.avatar ? getFileUrl({}, user.avatar as string) : undefined,
-        parentId,
+        parent_id,
       );
       toast.show('Reply posted successfully!');
     } catch (error) {
@@ -116,30 +116,30 @@ export default function CommentSection({
     }
   };
 
-  const handleLike = async (commentId: string) => {
+  const handle_like = async (comment_id: string) => {
     if (!user) {
       toast.show('Please login to like comments', 'error');
       return;
     }
     try {
-      await likeComment(commentId);
+      await likeComment(comment_id);
     } catch {
       // Ignored
     }
   };
 
-  const handleDelete = async (commentId: string) => {
+  const handle_delete = async (comment_id: string) => {
     try {
-      await deleteComment(commentId);
+      await deleteComment(comment_id);
       toast.show('Comment deleted');
     } catch {
       // Ignored
     }
   };
 
-  const handleUpdate = async (commentId: string, newContent: string) => {
+  const handle_update = async (comment_id: string, new_content: string) => {
     try {
-      await updateComment(commentId, newContent);
+      await updateComment(comment_id, new_content);
       toast.show('Comment updated');
     } catch {
       // Ignored
@@ -165,7 +165,7 @@ export default function CommentSection({
 
       {/* Comment Input */}
       <Card className='p-4 sm:p-6' isPreview>
-        {authLoading ? (
+        {auth_loading ? (
           <div className='space-y-4'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-x-3'>
@@ -184,32 +184,32 @@ export default function CommentSection({
                   src={
                     user?.avatar ? getFileUrl({}, user.avatar as string) : ''
                   }
-                  alt={githubUsername}
+                  alt={github_username}
                   width={32}
                   height={32}
                   className='rounded-full'
                   sizes='32px'
                 />
                 <span className='font-medium dark:text-foreground'>
-                  {githubUsername}
+                  {github_username}
                 </span>
               </div>
               <Button
-                onClick={handleLogout}
+                onClick={handle_logout}
                 className='text-xs'
                 variant='outline'
               >
                 Logout
               </Button>
             </div>
-            <Editor content={content} onUpdate={setContent} />
+            <Editor content={content} onUpdate={set_content} />
             <div className='flex justify-end'>
               <Button
-                onClick={handleSubmitComment}
-                disabled={isSubmitting || !content.trim()}
+                onClick={handle_submit_comment}
+                disabled={is_submitting || !content.trim()}
                 variant='primary'
               >
-                {isSubmitting ? 'Posting...' : 'Post Comment'}
+                {is_submitting ? 'Posting...' : 'Post Comment'}
               </Button>
             </div>
           </div>
@@ -236,24 +236,24 @@ export default function CommentSection({
       <div className='space-y-6'>
         {isLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <CommentCard key={i} isLoading={true} />
+            <CommentCard isLoading={true} key={i} />
           ))
         ) : comments && comments.length > 0 ? (
           comments
-            .filter((c) => !c.parentId) // Only show top-level comments
+            .filter((c) => !c.parent_id) // Only show top-level comments
             .map((comment) => (
               <CommentCard
                 key={comment.id}
                 comment={comment}
-                replies={comments.filter((c) => c.parentId === comment.id)}
-                onLike={() => handleLike(comment.id)}
+                replies={comments.filter((c) => c.parent_id === comment.id)}
+                onLike={() => handle_like(comment.id)}
                 onReply={(author, content) =>
-                  handleSubmitReply(comment.id, author, content)
+                  handle_submit_reply(comment.id, author, content)
                 }
-                onDelete={() => handleDelete(comment.id)}
-                onEdit={(newContent) => handleUpdate(comment.id, newContent)}
-                currentUserId={user?.id}
-                isAdmin={isAdmin}
+                onDelete={() => handle_delete(comment.id)}
+                onEdit={(new_content) => handle_update(comment.id, new_content)}
+                current_user_id={user?.id}
+                is_admin={isAdmin}
               />
             ))
         ) : (

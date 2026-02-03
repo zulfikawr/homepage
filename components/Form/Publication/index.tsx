@@ -17,10 +17,10 @@ import { Publication } from '@/types/publication';
 import { generateSlug } from '@/utilities/generateSlug';
 
 interface PublicationFormProps {
-  publicationToEdit?: Publication;
+  publication_to_edit?: Publication;
 }
 
-const initialPublicationState: Publication = {
+const initial_publication_state: Publication = {
   id: '',
   slug: '',
   title: '',
@@ -28,21 +28,21 @@ const initialPublicationState: Publication = {
   publisher: '',
   excerpt: '',
   keywords: [],
-  openAccess: false,
+  open_access: false,
   link: '',
 };
 
 const PublicationForm: React.FC<PublicationFormProps> = ({
-  publicationToEdit,
+  publication_to_edit,
 }) => {
-  const [publication, setPublication] = useState<Publication>(
-    publicationToEdit || initialPublicationState,
+  const [publication, set_publication] = useState<Publication>(
+    publication_to_edit || initial_publication_state,
   );
 
-  const [newAuthor, setNewAuthor] = useState('');
-  const [newKeyword, setNewKeyword] = useState('');
+  const [new_author, set_new_author] = useState('');
+  const [new_keyword, set_new_keyword] = useState('');
 
-  const currentPreviewPublication: Publication = {
+  const current_preview_publication: Publication = {
     id: publication.id || 'preview',
     slug: publication.slug || 'preview',
     title: publication.title || 'Publication Title',
@@ -50,56 +50,56 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     publisher: publication.publisher || 'Publisher Name',
     excerpt: publication.excerpt || 'Publication excerpt',
     keywords: publication.keywords.length ? publication.keywords : ['Keyword'],
-    openAccess: publication.openAccess,
+    open_access: publication.open_access,
     link: publication.link || '#',
   };
 
-  const handleChange = (
+  const handle_change = (
     field: keyof Publication,
     value: string | string[] | boolean,
   ) => {
-    setPublication((prev) => ({ ...prev, [field]: value }));
+    set_publication((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAddAuthor = () => {
-    const trimmed = newAuthor.trim();
+  const handle_add_author = () => {
+    const trimmed = new_author.trim();
     if (trimmed && !publication.authors.includes(trimmed)) {
-      handleChange('authors', [...publication.authors, trimmed]);
-      setNewAuthor('');
+      handle_change('authors', [...publication.authors, trimmed]);
+      set_new_author('');
     }
   };
 
-  const handleRemoveAuthor = (index: number) => {
+  const handle_remove_author = (index: number) => {
     const updated = publication.authors.filter((_, i) => i !== index);
-    handleChange('authors', updated);
+    handle_change('authors', updated);
   };
 
-  const handleAuthorChange = (index: number, value: string) => {
+  const handle_author_change = (index: number, value: string) => {
     const updated = [...publication.authors];
     updated[index] = value;
-    handleChange('authors', updated);
+    handle_change('authors', updated);
   };
 
-  const handleAddKeyword = () => {
-    const trimmed = newKeyword.trim();
+  const handle_add_keyword = () => {
+    const trimmed = new_keyword.trim();
     if (trimmed && !publication.keywords.includes(trimmed)) {
-      handleChange('keywords', [...publication.keywords, trimmed]);
-      setNewKeyword('');
+      handle_change('keywords', [...publication.keywords, trimmed]);
+      set_new_keyword('');
     }
   };
 
-  const handleRemoveKeyword = (index: number) => {
+  const handle_remove_keyword = (index: number) => {
     const updated = publication.keywords.filter((_, i) => i !== index);
-    handleChange('keywords', updated);
+    handle_change('keywords', updated);
   };
 
-  const handleKeywordChange = (index: number, value: string) => {
+  const handle_keyword_change = (index: number, value: string) => {
     const updated = [...publication.keywords];
     updated[index] = value;
-    handleChange('keywords', updated);
+    handle_change('keywords', updated);
   };
 
-  const requiredPublicationFields: {
+  const required_publication_fields: {
     key: keyof typeof publication;
     label: string;
     check?: (value: (typeof publication)[keyof typeof publication]) => boolean;
@@ -115,16 +115,16 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     { key: 'link', label: 'Link' },
   ];
 
-  const validateForm = () => {
-    for (const field of requiredPublicationFields) {
+  const validate_form = () => {
+    for (const field of required_publication_fields) {
       const value = publication[field.key];
-      const isEmpty = field.check
+      const is_empty = field.check
         ? !field.check(value)
         : typeof value === 'string'
           ? !value.trim()
           : !value;
 
-      if (isEmpty) {
+      if (is_empty) {
         toast.error(`${field.label} is required.`);
         return false;
       }
@@ -134,24 +134,24 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
 
   const router = useRouter();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validate_form()) return;
 
-    const newPublication = {
+    const new_publication = {
       ...publication,
-      id: publicationToEdit?.id || generateSlug(publication.title),
+      id: publication_to_edit?.id || generateSlug(publication.title),
     };
 
     try {
-      const result = publicationToEdit
-        ? await updatePublication(newPublication)
-        : await addPublication(newPublication);
+      const result = publication_to_edit
+        ? await updatePublication(new_publication)
+        : await addPublication(new_publication);
 
       if (result.success) {
         toast.success(
-          publicationToEdit
+          publication_to_edit
             ? 'Publication updated successfully!'
             : 'Publication added successfully!',
         );
@@ -166,11 +166,11 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!publicationToEdit) return;
+  const handle_delete = async () => {
+    if (!publication_to_edit) return;
 
     try {
-      const result = await deletePublication(publicationToEdit.id);
+      const result = await deletePublication(publication_to_edit.id);
 
       if (result.success) {
         toast.success('Publication deleted successfully!');
@@ -185,7 +185,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     }
   };
 
-  const confirmDelete = () => {
+  const confirm_delete = () => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
@@ -194,7 +194,10 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
           cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <PublicationCard publication={currentPreviewPublication} isPreview />
+          <PublicationCard
+            publication={current_preview_publication}
+            isPreview
+          />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -203,7 +206,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
           <Button
             variant='destructive'
             onClick={() => {
-              handleDelete();
+              handle_delete();
               modal.close();
             }}
           >
@@ -218,20 +221,24 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     <>
       <div className='space-y-6'>
         <div className='flex justify-center'>
-          <PublicationCard publication={currentPreviewPublication} isPreview />
+          <PublicationCard
+            publication={current_preview_publication}
+            isPreview
+          />
         </div>
 
         <Separator margin='5' />
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        {/* Form */}
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='title' required>
               Title
             </FormLabel>
             <Input
               type='text'
-              value={publication.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              value={publication.title || ''}
+              onChange={(e) => handle_change('title', e.target.value)}
               required
             />
           </div>
@@ -244,28 +251,30 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                 <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={author}
-                    onChange={(e) => handleAuthorChange(index, e.target.value)}
+                    value={author || ''}
+                    onChange={(e) =>
+                      handle_author_change(index, e.target.value)
+                    }
                     required
                   />
                   <Button
                     variant='destructive'
                     icon='trashSimple'
-                    onClick={() => handleRemoveAuthor(index)}
+                    onClick={() => handle_remove_author(index)}
                   />
                 </div>
               ))}
               <div className='flex items-center gap-2'>
                 <Input
                   type='text'
-                  value={newAuthor}
-                  onChange={(e) => setNewAuthor(e.target.value)}
+                  value={new_author || ''}
+                  onChange={(e) => set_new_author(e.target.value)}
                   placeholder='Add an author'
                 />
                 <Button
                   variant='primary'
                   icon='plus'
-                  onClick={handleAddAuthor}
+                  onClick={handle_add_author}
                 />
               </div>
             </div>
@@ -276,8 +285,8 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={publication.publisher}
-              onChange={(e) => handleChange('publisher', e.target.value)}
+              value={publication.publisher || ''}
+              onChange={(e) => handle_change('publisher', e.target.value)}
               required
             />
           </div>
@@ -287,8 +296,8 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={publication.excerpt}
-              onChange={(e) => handleChange('excerpt', e.target.value)}
+              value={publication.excerpt || ''}
+              onChange={(e) => handle_change('excerpt', e.target.value)}
               required
             />
           </div>
@@ -299,27 +308,29 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
                 <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={keyword}
-                    onChange={(e) => handleKeywordChange(index, e.target.value)}
+                    value={keyword || ''}
+                    onChange={(e) =>
+                      handle_keyword_change(index, e.target.value)
+                    }
                   />
                   <Button
                     variant='destructive'
                     icon='trashSimple'
-                    onClick={() => handleRemoveKeyword(index)}
+                    onClick={() => handle_remove_keyword(index)}
                   />
                 </div>
               ))}
               <div className='flex items-center gap-2'>
                 <Input
                   type='text'
-                  value={newKeyword}
-                  onChange={(e) => setNewKeyword(e.target.value)}
+                  value={new_keyword || ''}
+                  onChange={(e) => set_new_keyword(e.target.value)}
                   placeholder='Add a keyword'
                 />
                 <Button
                   variant='primary'
                   icon='plus'
-                  onClick={handleAddKeyword}
+                  onClick={handle_add_keyword}
                 />
               </div>
             </div>
@@ -330,18 +341,18 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={publication.link}
-              onChange={(e) => handleChange('link', e.target.value)}
+              value={publication.link || ''}
+              onChange={(e) => handle_change('link', e.target.value)}
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='openAccess'>Open Access?</FormLabel>
+            <FormLabel htmlFor='open_access'>Open Access?</FormLabel>
             <Checkbox
-              id='openAccess'
+              id='open_access'
               label='Yes, this paper is open access'
-              checked={publication.openAccess}
-              onChange={(checked) => handleChange('openAccess', checked)}
+              checked={publication.open_access}
+              onChange={(checked) => handle_change('open_access', checked)}
             />
           </div>
         </form>
@@ -349,12 +360,12 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
 
       <Separator margin='5' />
 
-      {publicationToEdit ? (
+      {publication_to_edit ? (
         <div className='flex space-x-4'>
           <Button
             variant='destructive'
             icon='trash'
-            onClick={confirmDelete}
+            onClick={confirm_delete}
             className='w-full'
           >
             Delete
@@ -362,7 +373,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
           <Button
             variant='primary'
             icon='floppyDisk'
-            onClick={handleSubmit}
+            onClick={handle_submit}
             className='w-full'
           >
             Save
@@ -372,7 +383,7 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
         <Button
           variant='primary'
           icon='plus'
-          onClick={handleSubmit}
+          onClick={handle_submit}
           className='w-full'
         >
           Add

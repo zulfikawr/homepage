@@ -20,22 +20,22 @@ interface CommentRow {
 function mapRowToComment(row: CommentRow): Comment {
   return {
     id: row.id,
-    postId: row.post_id,
+    post_id: row.post_id,
     author: row.author,
     content: row.content,
-    avatarUrl: row.avatar_url,
-    parentId: row.parent_id,
-    createdAt: row.created_at * 1000, // Convert unix epoch to ms
+    avatar_url: row.avatar_url,
+    parent_id: row.parent_id,
+    created_at: row.created_at * 1000, // Convert unix epoch to ms
     likes: row.likes,
   };
 }
 
 export const addComment = async (
-  postId: string,
+  post_id: string,
   author: string,
   content: string,
-  avatarUrl?: string,
-  parentId?: string,
+  avatar_url?: string,
+  parent_id?: string,
 ): Promise<string> => {
   try {
     const db = getDB();
@@ -45,10 +45,10 @@ export const addComment = async (
         `INSERT INTO comments (id, post_id, author, content, avatar_url, parent_id)
        VALUES (?, ?, ?, ?, ?, ?)`,
       )
-      .bind(id, postId, author, content, avatarUrl || null, parentId || null)
+      .bind(id, post_id, author, content, avatar_url || null, parent_id || null)
       .run();
 
-    revalidatePath(`/post/${postId}`);
+    revalidatePath(`/post/${post_id}`);
     revalidatePath('/database/comments');
     return id;
   } catch {
@@ -56,14 +56,14 @@ export const addComment = async (
   }
 };
 
-export const fetchComments = async (postId: string): Promise<Comment[]> => {
+export const fetchComments = async (post_id: string): Promise<Comment[]> => {
   try {
     const db = getDB();
     const { results } = await db
       .prepare(
         'SELECT * FROM comments WHERE post_id = ? ORDER BY created_at DESC',
       )
-      .bind(postId)
+      .bind(post_id)
       .all<CommentRow>();
     return results.map(mapRowToComment);
   } catch {
@@ -71,43 +71,46 @@ export const fetchComments = async (postId: string): Promise<Comment[]> => {
   }
 };
 
-export const likeComment = async (commentId: string): Promise<void> => {
+export const likeComment = async (comment_id: string): Promise<void> => {
   try {
     const db = getDB();
     await db
       .prepare('UPDATE comments SET likes = likes + 1 WHERE id = ?')
-      .bind(commentId)
+      .bind(comment_id)
       .run();
     // In a real app, you'd track WHO liked it in a separate table
   } catch {}
 };
 
-export const deleteComment = async (commentId: string): Promise<void> => {
+export const deleteComment = async (comment_id: string): Promise<void> => {
   try {
     const db = getDB();
     const comment = await db
       .prepare('SELECT post_id FROM comments WHERE id = ?')
-      .bind(commentId)
+      .bind(comment_id)
       .first<{ post_id: string }>();
-    await db.prepare('DELETE FROM comments WHERE id = ?').bind(commentId).run();
+    await db
+      .prepare('DELETE FROM comments WHERE id = ?')
+      .bind(comment_id)
+      .run();
     if (comment) revalidatePath(`/post/${comment.post_id}`);
     revalidatePath('/database/comments');
   } catch {}
 };
 
 export const updateComment = async (
-  commentId: string,
+  comment_id: string,
   newContent: string,
 ): Promise<void> => {
   try {
     const db = getDB();
     const comment = await db
       .prepare('SELECT post_id FROM comments WHERE id = ?')
-      .bind(commentId)
+      .bind(comment_id)
       .first<{ post_id: string }>();
     await db
       .prepare('UPDATE comments SET content = ? WHERE id = ?')
-      .bind(newContent, commentId)
+      .bind(newContent, comment_id)
       .run();
     if (comment) revalidatePath(`/post/${comment.post_id}`);
   } catch {}

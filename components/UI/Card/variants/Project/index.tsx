@@ -29,14 +29,14 @@ export default function ProjectCard({
     ? `/database/projects/${identifier}/edit`
     : `/projects/${identifier}`;
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
     router.push(href);
   };
 
-  const cardContent = (
+  const card_content = (
     <Card
-      onClick={isPreview ? undefined : handleCardClick}
+      onClick={isPreview ? undefined : handle_card_click}
       isActive={isActive}
       isPreview={isPreview}
     >
@@ -104,9 +104,9 @@ export default function ProjectCard({
                 | 'red'
                 | 'default'
               )[] = ['aqua', 'green', 'yellow', 'blue', 'red'];
-              const badgeType = colors[index % colors.length];
+              const badge_type = colors[index % colors.length];
               return (
-                <Badge key={index} variant={badgeType} icon>
+                <Badge key={index} variant={badge_type} icon>
                   {tool}
                 </Badge>
               );
@@ -118,12 +118,12 @@ export default function ProjectCard({
   );
 
   if (isPreview) {
-    return <div className='w-full'>{cardContent}</div>;
+    return <div className='w-full'>{card_content}</div>;
   }
 
   return (
     <Link href={href} prefetch={true} className='block w-full'>
-      {cardContent}
+      {card_content}
     </Link>
   );
 }

@@ -31,17 +31,17 @@ export default function ProjectAnalytics({
   const stats = useMemo(() => {
     if (!projects || projects.length === 0) return null;
 
-    const toolCounts: Record<string, number> = {};
-    let totalToolUsages = 0;
+    const tool_counts: Record<string, number> = {};
+    let total_tool_usages = 0;
 
     projects.forEach((p) => {
       p.tools.forEach((tool) => {
-        toolCounts[tool] = (toolCounts[tool] || 0) + 1;
-        totalToolUsages++;
+        tool_counts[tool] = (tool_counts[tool] || 0) + 1;
+        total_tool_usages++;
       });
     });
 
-    const sortedTools = Object.entries(toolCounts)
+    const sorted_tools = Object.entries(tool_counts)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([name, count], index) => ({
@@ -50,25 +50,25 @@ export default function ProjectAnalytics({
         // Percentage of projects that use this tool
         percentage: Math.round((count / projects.length) * 100),
         // Share of total tool usages (for the bar chart segments if we wanted a stacked bar)
-        share: Math.round((count / totalToolUsages) * 100),
+        share: Math.round((count / total_tool_usages) * 100),
         color: COLORS[index % COLORS.length],
       }));
 
     return {
-      totalProjects: projects.length,
-      topTools: sortedTools,
-      mostUsed: sortedTools[0],
-      totalCompleted: projects.filter((p) => p.status === 'completed').length,
+      total_projects: projects.length,
+      top_tools: sorted_tools,
+      most_used: sorted_tools[0],
+      total_completed: projects.filter((p) => p.status === 'completed').length,
     };
   }, [projects]);
 
   // Helper to normalize icon names
-  const getIconName = (name: string): string => {
-    const lowerName = name.toLowerCase();
-    if (lowerName === 'next.js') return 'nextjs';
-    if (lowerName === 'node.js') return 'nodejs';
-    if (lowerName === 'vue.js') return 'vuejs';
-    return lowerName;
+  const get_icon_name = (name: string): string => {
+    const lower_name = name.toLowerCase();
+    if (lower_name === 'next.js') return 'nextjs';
+    if (lower_name === 'node.js') return 'nodejs';
+    if (lower_name === 'vue.js') return 'vuejs';
+    return lower_name;
   };
 
   const Header = () => (
@@ -88,7 +88,7 @@ export default function ProjectAnalytics({
       </div>
       {!loading && stats && (
         <div className='text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md border'>
-          {stats.totalProjects} Projects Tracked
+          {stats.total_projects} Projects Tracked
         </div>
       )}
     </div>
@@ -132,14 +132,14 @@ export default function ProjectAnalytics({
               <div className='flex items-center gap-4'>
                 <div className='flex items-center justify-center size-16 rounded-xl bg-gruv-bg-soft border border-border shadow-sm'>
                   <Icon
-                    name={getIconName(stats.mostUsed.name)}
+                    name={get_icon_name(stats.most_used.name)}
                     className='size-8 text-foreground'
                   />
                 </div>
                 <div>
                   <div className='flex items-center gap-2'>
                     <h3 className='text-lg font-bold text-foreground'>
-                      {stats.mostUsed.name}
+                      {stats.most_used.name}
                     </h3>
                     <span className='text-[10px] uppercase tracking-wider font-bold text-gruv-bg bg-gruv-green px-1.5 py-0.5 rounded-sm'>
                       Top Pick
@@ -148,7 +148,7 @@ export default function ProjectAnalytics({
                   <p className='text-sm text-muted-foreground mt-0.5'>
                     Used in{' '}
                     <span className='text-foreground font-medium'>
-                      {stats.mostUsed.percentage}%
+                      {stats.most_used.percentage}%
                     </span>{' '}
                     of my projects.
                   </p>
@@ -157,12 +157,12 @@ export default function ProjectAnalytics({
 
               {/* Stats Bars */}
               <div className='space-y-3'>
-                {stats.topTools.map((tool) => (
+                {stats.top_tools.map((tool) => (
                   <div key={tool.name}>
                     <div className='flex items-center justify-between text-xs mb-1.5'>
                       <div className='flex items-center gap-2'>
                         <Icon
-                          name={getIconName(tool.name)}
+                          name={get_icon_name(tool.name)}
                           className='size-3.5 text-muted-foreground'
                         />
                         <span className='font-medium text-muted-foreground'>
@@ -193,7 +193,7 @@ export default function ProjectAnalytics({
               <div className='grid grid-cols-2 gap-2 pt-2'>
                 <div className='bg-muted/30 rounded-lg p-2 text-center border border-border/50'>
                   <div className='text-xl font-bold text-gruv-green'>
-                    {stats.totalCompleted}
+                    {stats.total_completed}
                   </div>
                   <div className='text-[10px] uppercase tracking-wider text-muted-foreground font-medium'>
                     Completed
@@ -201,7 +201,7 @@ export default function ProjectAnalytics({
                 </div>
                 <div className='bg-muted/30 rounded-lg p-2 text-center border border-border/50'>
                   <div className='text-xl font-bold text-gruv-yellow'>
-                    {stats.totalProjects - stats.totalCompleted}
+                    {stats.total_projects - stats.total_completed}
                   </div>
                   <div className='text-[10px] uppercase tracking-wider text-muted-foreground font-medium'>
                     In Progress

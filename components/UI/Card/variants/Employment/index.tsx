@@ -18,14 +18,14 @@ interface EmploymentCardProps {
 }
 
 const JOB_TYPE_LABELS: Record<string, string> = {
-  fullTime: 'Full-time',
-  partTime: 'Part-time',
+  full_time: 'Full-time',
+  part_time: 'Part-time',
   contract: 'Contract',
   freelance: 'Freelance',
   internship: 'Internship',
 };
 
-function formatJobType(key?: string) {
+function format_job_type(key?: string) {
   if (!key) return '';
   if (JOB_TYPE_LABELS[key]) return JOB_TYPE_LABELS[key];
   const spaced = key
@@ -42,7 +42,7 @@ export default function EmploymentCard({
 }: EmploymentCardProps) {
   const router = useRouter();
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
 
     if (openForm) {
@@ -54,12 +54,16 @@ export default function EmploymentCard({
 
   return (
     <div className={isPreview ? 'w-full' : ''}>
-      <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
+      <Card
+        onClick={handle_card_click}
+        openForm={openForm}
+        isPreview={isPreview}
+      >
         <div className='text-normal flex w-full min-w-[22rem] md:min-w-[24rem] items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground'>
           <div className='flex items-center gap-x-2'>
-            {employment.orgLogoUrl && (
+            {employment.organization_logo && (
               <ImageWithFallback
-                src={employment.orgLogoUrl}
+                src={employment.organization_logo}
                 height={24}
                 width={24}
                 alt={`${employment.organization} logo`}
@@ -71,25 +75,25 @@ export default function EmploymentCard({
             <p>{employment.organization}</p>
           </div>
           <Badge variant='yellow' icon='mapPin'>
-            {employment.organizationLocation}
+            {employment.organization_location}
           </Badge>
         </div>
         <div className='flex items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap px-4.5 py-3'>
           <div className='text-sm font-medium tracking-wide text-foreground'>
-            <p>{employment.jobTitle}</p>
+            <p>{employment.job_title}</p>
           </div>
           <div className='flex flex-col items-start text-xs font-medium text-gruv-blue lg:items-center'>
-            {employment.dateString}
+            {employment.date_string}
           </div>
         </div>
 
-        {employment.organizationIndustry && (
+        {employment.organization_industry && (
           <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5  w-full'>
             <p className='text-sm text-muted-foreground'>
-              {trimStr(employment.organizationIndustry, 25)}
+              {trimStr(employment.organization_industry, 25)}
             </p>
             <Badge variant='aqua' className='text-[10px] px-1.5 py-0'>
-              {formatJobType(employment.jobType)}
+              {format_job_type(employment.job_type)}
             </Badge>
           </div>
         )}

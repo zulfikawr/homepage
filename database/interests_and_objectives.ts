@@ -3,9 +3,9 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { getDB } from '@/lib/cloudflare';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
 
-const defaultInterestsData: InterestsAndObjectives = {
+const default_interests_data: InterestsAndObjectives = {
   description:
     'I write articles about diplomacy, economy, climate, and conflicts, with a primary interest in climate and renewable energy in Southeast Asia.',
   objectives: [
@@ -38,7 +38,7 @@ function mapRowToInterests(row: InterestsRow): InterestsAndObjectives {
 export async function getInterestsAndObjectives(): Promise<InterestsAndObjectives> {
   try {
     const db = getDB();
-    if (!db) return defaultInterestsData;
+    if (!db) return default_interests_data;
 
     // Pick a random row
     const row = await db
@@ -48,9 +48,9 @@ export async function getInterestsAndObjectives(): Promise<InterestsAndObjective
     if (row) {
       return mapRowToInterests(row);
     }
-    return defaultInterestsData;
+    return default_interests_data;
   } catch {
-    return defaultInterestsData;
+    return default_interests_data;
   }
 }
 
@@ -70,25 +70,25 @@ export async function updateInterestsAndObjectives(
 
     let id: string;
     let description: string;
-    let objectivesJson: string;
+    let objectives_json: string;
     let conclusion: string;
 
     if (data instanceof FormData) {
       id = (data.get('id') as string) || '1';
       description = data.get('description') as string;
-      objectivesJson = data.get('objectives') as string;
+      objectives_json = data.get('objectives') as string;
       conclusion = data.get('conclusion') as string;
 
       // Validation: ensure objectives is valid JSON
       try {
-        JSON.parse(objectivesJson);
+        JSON.parse(objectives_json);
       } catch {
-        objectivesJson = '[]';
+        objectives_json = '[]';
       }
     } else {
       id = data.id || '1';
       description = data.description;
-      objectivesJson = JSON.stringify(data.objectives || []);
+      objectives_json = JSON.stringify(data.objectives || []);
       conclusion = data.conclusion;
     }
 
@@ -102,7 +102,7 @@ export async function updateInterestsAndObjectives(
          conclusion = excluded.conclusion,
          updated_at = unixepoch()`,
       )
-      .bind(id, description, objectivesJson, conclusion)
+      .bind(id, description, objectives_json, conclusion)
       .run();
 
     revalidatePath('/');

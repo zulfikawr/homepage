@@ -1,3 +1,4 @@
 export interface Resume {
-  fileUrl: string;
+  file: string;
+  file_url: string;
 }

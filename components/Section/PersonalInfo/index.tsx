@@ -3,15 +3,19 @@
 import ImageWithFallback from '@/components/ImageWithFallback';
 import { Skeleton } from '@/components/UI';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import { PersonalInfo } from '@/types/personalInfo';
+import { PersonalInfo } from '@/types/personal_info';
 
 export const PersonalInfoLayout = ({
-  personalInfo,
+  personal_info,
   isLoading = false,
 }: {
-  personalInfo?: PersonalInfo;
+  personal_info?: PersonalInfo;
   isLoading?: boolean;
 }) => {
+  const name = personal_info?.name || 'Zulfikar';
+  const title = personal_info?.title || 'I build things for the web';
+  const avatar = personal_info?.avatar || '/avatar.jpg';
+
   return (
     <section className='flex flex-row items-start justify-between gap-x-4 sm:gap-x-10'>
       <div className='flex flex-col gap-y-1 flex-1 min-w-0'>
@@ -22,9 +26,7 @@ export const PersonalInfoLayout = ({
           {isLoading ? (
             <Skeleton width={220} height={32} className='max-w-[70%]' />
           ) : (
-            <span className='text-gruv-orange truncate'>
-              {personalInfo?.name}
-            </span>
+            <span className='text-gruv-orange truncate'>{name}</span>
           )}
         </h1>
         <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg min-h-6'>
@@ -32,7 +34,7 @@ export const PersonalInfoLayout = ({
             <Skeleton width={200} height={20} className='max-w-full' />
           ) : (
             <p className='text-gruv-aqua dark:text-gruv-aqua/80 text-left'>
-              {personalInfo?.title}
+              {title}
             </p>
           )}
         </div>
@@ -46,11 +48,11 @@ export const PersonalInfoLayout = ({
           />
         ) : (
           <ImageWithFallback
-            src={personalInfo?.avatarUrl || ''}
+            src={avatar}
             height={105}
             width={105}
-            alt={personalInfo?.name || ''}
-            preload
+            alt={name}
+            priority
             className='bg-muted aspect-square object-cover border-2 border-border shadow-brutalist rounded-xl'
             type='square'
             sizes='105px'
@@ -68,5 +70,5 @@ export default function PersonalInfoSection({ data }: { data?: PersonalInfo }) {
     return <PersonalInfoLayout isLoading={true} />;
   }
 
-  return <PersonalInfoLayout personalInfo={data} isLoading={false} />;
+  return <PersonalInfoLayout personal_info={data} isLoading={false} />;
 }

@@ -22,15 +22,15 @@ import { formatDate } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
 
 interface PostFormProps {
-  postToEdit?: Post;
+  post_to_edit?: Post;
 }
 
-const initialPostState: Post = {
+const initial_post_state: Post = {
   id: '',
   title: '',
   excerpt: '',
   categories: [],
-  dateString: '',
+  date_string: '',
   content: '',
   image: '',
   image_url: '',
@@ -38,31 +38,31 @@ const initialPostState: Post = {
   audio_url: '',
 };
 
-const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
-  const [post, setPost] = useState<Post>(postToEdit || initialPostState);
+const PostForm: React.FC<PostFormProps> = ({ post_to_edit }) => {
+  const [post, set_post] = useState<Post>(post_to_edit || initial_post_state);
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [image_file, set_image_file] = useState<File | null>(null);
+  const [audio_file, set_audio_file] = useState<File | null>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (postToEdit?.dateString) {
-      return new Date(postToEdit.dateString);
+  const [selected_date, set_selected_date] = useState<Date>(() => {
+    if (post_to_edit?.date_string) {
+      return new Date(post_to_edit.date_string);
     }
     return new Date('2025-01-01');
   });
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
-      if (postToEdit?.dateString) {
-        setSelectedDate(new Date(postToEdit.dateString));
+      if (post_to_edit?.date_string) {
+        set_selected_date(new Date(post_to_edit.date_string));
       } else {
-        setSelectedDate(new Date());
+        set_selected_date(new Date());
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [postToEdit]);
+  }, [post_to_edit]);
 
-  const currentPreviewPost: Post = {
+  const current_preview_post: Post = {
     id: post.id || 'preview',
     title: post.title || 'Post Title',
     excerpt: post.excerpt || 'This is a post excerpt.',
@@ -73,19 +73,19 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       post.categories && post.categories.length
         ? post.categories
         : ['Post Categories'],
-    dateString: post.dateString || formatDate(selectedDate),
+    date_string: post.date_string || formatDate(selected_date),
   };
 
-  const handleChange = <K extends keyof Post>(field: K, value: Post[K]) => {
-    setPost((prev) => ({ ...prev, [field]: value }));
+  const handle_change = <K extends keyof Post>(field: K, value: Post[K]) => {
+    set_post((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (newDate: Date) => {
-    setSelectedDate(newDate);
-    handleChange('dateString', formatDate(newDate));
+  const handle_date_change = (new_date: Date) => {
+    set_selected_date(new_date);
+    handle_change('date_string', formatDate(new_date));
   };
 
-  const requiredPostFields: {
+  const required_post_fields: {
     key: keyof Post;
     label: string;
     check?: (value: (typeof post)[keyof typeof post]) => boolean;
@@ -98,19 +98,19 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       label: 'Categories',
       check: (val) => Array.isArray(val) && val.length > 0,
     },
-    { key: 'dateString', label: 'Publication date' },
+    { key: 'date_string', label: 'Publication date' },
   ];
 
-  const validateForm = () => {
-    for (const field of requiredPostFields) {
+  const validate_form = () => {
+    for (const field of required_post_fields) {
       const value = post[field.key];
-      const isEmpty = field.check
+      const is_empty = field.check
         ? !field.check(value)
         : typeof value === 'string'
           ? !value.trim()
           : !value;
 
-      if (isEmpty) {
+      if (is_empty) {
         toast.error(`${field.label} is required.`);
         return false;
       }
@@ -120,52 +120,52 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validate_form()) return;
 
     const slug = generateSlug(post.title || '');
-    const postData = {
+    const post_data = {
       ...post,
       slug,
-      dateString: formatDate(selectedDate),
+      date_string: formatDate(selected_date),
     };
-    delete (postData as { id?: string }).id;
+    delete (post_data as { id?: string }).id;
 
     try {
       let result;
-      const recordId = postToEdit?.id || '';
+      const record_id = post_to_edit?.id || '';
 
-      if (imageFile || audioFile) {
-        const formData = new FormData();
-        if (recordId) formData.append('id', recordId);
+      if (image_file || audio_file) {
+        const form_data = new FormData();
+        if (record_id) form_data.append('id', record_id);
 
         // Append all post fields
-        Object.entries(postData).forEach(([key, value]) => {
+        Object.entries(post_data).forEach(([key, value]) => {
           if (key === 'categories' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
+            form_data.append(key, JSON.stringify(value));
           } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
+            form_data.append(key, value.toString());
           }
         });
 
         // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (audioFile) formData.append('audio', audioFile);
+        if (image_file) form_data.append('image', image_file);
+        if (audio_file) form_data.append('audio', audio_file);
 
-        result = postToEdit
-          ? await updatePost(recordId, formData)
-          : await addPost(formData);
+        result = post_to_edit
+          ? await updatePost(record_id, form_data)
+          : await addPost(form_data);
       } else {
-        result = postToEdit
-          ? await updatePost(recordId, postData)
-          : await addPost(postData);
+        result = post_to_edit
+          ? await updatePost(record_id, post_data)
+          : await addPost(post_data);
       }
 
       if (result.success) {
         toast.success(
-          postToEdit
+          post_to_edit
             ? 'Post updated successfully!'
             : 'Post added successfully!',
         );
@@ -180,11 +180,11 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!postToEdit) return;
+  const handle_delete = async () => {
+    if (!post_to_edit) return;
 
     try {
-      const result = await deletePost(postToEdit.id);
+      const result = await deletePost(post_to_edit.id);
 
       if (result.success) {
         toast.success('Post deleted successfully!');
@@ -199,7 +199,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     }
   };
 
-  const confirmDelete = () => {
+  const confirm_delete = () => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
@@ -214,7 +214,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
           <Button
             variant='destructive'
             onClick={() => {
-              handleDelete();
+              handle_delete();
               modal.close();
             }}
           >
@@ -230,21 +230,21 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       <div className='space-y-6'>
         {/* Post Preview */}
         <div className='flex justify-center'>
-          <PostCard post={currentPreviewPost} isPreview />
+          <PostCard post={current_preview_post} isPreview />
         </div>
 
         <Separator margin='5' />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='title' required>
               Title
             </FormLabel>
             <Input
               type='text'
-              value={post.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              value={post.title || ''}
+              onChange={(e) => handle_change('title', e.target.value)}
               placeholder='Post title'
               required
             />
@@ -254,8 +254,8 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               Excerpt
             </FormLabel>
             <Textarea
-              value={post.excerpt}
-              onChange={(e) => handleChange('excerpt', e.target.value)}
+              value={post.excerpt || ''}
+              onChange={(e) => handle_change('excerpt', e.target.value)}
               placeholder='Post excerpt'
               rows={4}
               required
@@ -267,8 +267,8 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               Content
             </FormLabel>
             <Editor
-              content={post.content}
-              onUpdate={(content) => handleChange('content', content)}
+              content={post.content || ''}
+              onUpdate={(content) => handle_change('content', content)}
               className='h-[800px] md:h-[500px]'
             />
           </div>
@@ -280,7 +280,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               type='text'
               value={post.categories?.join(', ') || ''}
               onChange={(e) =>
-                handleChange(
+                handle_change(
                   'categories',
                   e.target.value.split(',').map((cat) => cat.trim()),
                 )
@@ -289,12 +289,12 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
             />
           </div>
           <div>
-            <FormLabel htmlFor='publicationDate' required>
+            <FormLabel htmlFor='publication_date' required>
               Publication Date
             </FormLabel>
             <DateSelect
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={selected_date}
+              onChange={handle_date_change}
               mode='day-month-year'
             />
           </div>
@@ -304,15 +304,16 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               <Input
                 type='text'
                 value={post.image_url || ''}
-                onChange={(e) => handleChange('image_url', e.target.value)}
+                onChange={(e) => handle_change('image_url', e.target.value)}
                 placeholder='https://image-url.com'
               />
               <FileUpload
                 collectionName='posts'
-                recordId={postToEdit?.id}
+                recordId={post_to_edit?.id}
                 fieldName='image'
-                onUploadSuccess={(url) => handleChange('image_url', url)}
-                onFileSelect={setImageFile}
+                existingValue={post.image_url}
+                onUploadSuccess={(url) => handle_change('image_url', url)}
+                onFileSelect={set_image_file}
               />
             </div>
           </div>
@@ -322,16 +323,17 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               <Input
                 type='text'
                 value={post.audio_url || ''}
-                onChange={(e) => handleChange('audio_url', e.target.value)}
+                onChange={(e) => handle_change('audio_url', e.target.value)}
                 placeholder='https://audio-url.com'
               />
               <FileUpload
                 collectionName='posts'
-                recordId={postToEdit?.id}
+                recordId={post_to_edit?.id}
                 fieldName='audio'
+                existingValue={post.audio_url}
                 accept='audio/*'
-                onUploadSuccess={(url) => handleChange('audio_url', url)}
-                onFileSelect={setAudioFile}
+                onUploadSuccess={(url) => handle_change('audio_url', url)}
+                onFileSelect={set_audio_file}
               />
             </div>
           </div>
@@ -340,12 +342,12 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
 
       <Separator margin='5' />
 
-      {postToEdit ? (
+      {post_to_edit ? (
         <div className='flex space-x-4'>
           <Button
             variant='destructive'
             icon='trash'
-            onClick={confirmDelete}
+            onClick={confirm_delete}
             className='w-full'
           >
             Delete
@@ -353,7 +355,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
           <Button
             variant='primary'
             icon='floppyDisk'
-            onClick={handleSubmit}
+            onClick={handle_submit}
             className='w-full'
           >
             Save
@@ -363,7 +365,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
         <Button
           variant='primary'
           icon='plus'
-          onClick={handleSubmit}
+          onClick={handle_submit}
           className='w-full'
         >
           Add

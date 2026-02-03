@@ -6,7 +6,7 @@ import PageTitle from '@/components/PageTitle';
 import { PersonalInfoLayout } from '@/components/Section/PersonalInfo';
 import { useCollection } from '@/hooks';
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
-import { PersonalInfo } from '@/types/personalInfo';
+import { PersonalInfo } from '@/types/personal_info';
 
 export default function PersonalInfoContent() {
   const { data: personalInfoList, loading } = useCollection<PersonalInfo>(

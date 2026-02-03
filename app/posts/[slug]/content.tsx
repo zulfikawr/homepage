@@ -56,7 +56,7 @@ export default function BlogPostContent({
       <Separator margin='6' />
 
       <ViewTransition>
-        <CommentSection postId={post?.id || ''} isLoading={isLoading} />
+        <CommentSection post_id={post?.id || ''} isLoading={isLoading} />
       </ViewTransition>
     </div>
   );

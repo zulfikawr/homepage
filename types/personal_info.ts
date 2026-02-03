@@ -1,5 +1,6 @@
 export interface PersonalInfo {
   name: string;
   title: string;
-  avatarUrl: string;
+  avatar: string;
+  avatar_url: string;
 }

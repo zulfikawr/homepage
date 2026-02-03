@@ -22,18 +22,18 @@ import { mapRecordToFeedback } from '@/lib/mappers';
 import { FeedbackEntry } from '@/types/feedback';
 
 export default function FeedbackResponsesContent() {
-  const { user, loading: authLoading, isAdmin } = useAuth();
+  const { user, loading: auth_loading, isAdmin } = useAuth();
   const router = useRouter();
   const { data: feedbacks, loading } = useCollection<FeedbackEntry>(
     'feedback',
     mapRecordToFeedback,
   );
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = confirm(
+  const handle_delete = async (id: string) => {
+    const confirm_delete = confirm(
       'Are you sure you want to delete this feedback?',
     );
-    if (!confirmDelete) return;
+    if (!confirm_delete) return;
 
     const result = await deleteFeedback(id);
     if (result.success) {
@@ -43,12 +43,12 @@ export default function FeedbackResponsesContent() {
     }
   };
 
-  if (!authLoading && !user) {
+  if (!auth_loading && !user) {
     router.push('/login');
     return null;
   }
 
-  if (!authLoading && user && !isAdmin) {
+  if (!auth_loading && user && !isAdmin) {
     router.push('/');
     return null;
   }
@@ -106,7 +106,7 @@ export default function FeedbackResponsesContent() {
                     <Button
                       variant='destructive'
                       icon='trashSimple'
-                      onClick={() => handleDelete(entry.id)}
+                      onClick={() => handle_delete(entry.id)}
                     />
                   </TableCell>
                 </TableRow>

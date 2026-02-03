@@ -28,7 +28,7 @@ export default function EditEmploymentPage({
         title='Edit Employment'
         subtitle={employment.organization}
       />
-      <EmploymentForm employmentToEdit={employment} />
+      <EmploymentForm employment_to_edit={employment} />
     </div>
   );
 }

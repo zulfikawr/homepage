@@ -21,6 +21,7 @@ interface Props {
   variant?: ButtonVariant;
   nativeType?: 'button' | 'submit' | 'reset';
   icon?: IconName;
+  iconClassName?: string;
   className?: string;
   children?: React.ReactNode;
 }
@@ -34,6 +35,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant = 'default',
       nativeType = 'button',
       icon,
+      iconClassName,
       className,
       children,
       ...rest
@@ -59,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       };
 
       return twMerge(
-        'py-2 px-5 h-8',
+        'h-8',
         variant !== 'primary' && 'w-max',
         !['ghost', 'link', 'ghostLink'].includes(variant) &&
           'shadow-brutalist border-2 brutalist-interactive hover:shadow-brutalist-lg',
@@ -74,7 +76,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={twMerge(
           'cursor-pointer focus:outline-none inline-flex justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing',
           getButtonClasses(),
-          icon && 'gap-2',
+          icon && children && 'gap-2',
           variant === 'link' && 'squiggly-underline',
           variant === 'ghostLink' && 'hover:squiggly-underline',
           className,
@@ -82,7 +84,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         style={{ borderRadius: `${radius}px` }}
         {...rest}
       >
-        {icon && <Icon name={icon} size={20} />}
+        {icon && <Icon name={icon} size={20} className={iconClassName} />}
         {children}
       </button>
     );

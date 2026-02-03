@@ -15,22 +15,24 @@ interface EmploymentRow {
   job_type: string;
   responsibilities: string;
   date_string: string;
-  org_logo_url: string;
+  organization_logo_url: string;
   organization_location: string;
 }
 
 function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
   if (!row) return null;
+  const logo_key = row.organization_logo_url;
   return {
     id: row.id,
     slug: row.slug,
     organization: row.organization,
-    jobTitle: row.job_title,
-    dateString: row.date_string,
-    jobType: row.job_type as Employment['jobType'],
-    orgLogoUrl: row.org_logo_url,
-    organizationIndustry: row.organization_industry,
-    organizationLocation: row.organization_location,
+    job_title: row.job_title,
+    date_string: row.date_string,
+    job_type: row.job_type as Employment['job_type'],
+    organization_logo: logo_key ? `/api/storage/${logo_key}` : '',
+    organization_logo_url: logo_key || '',
+    organization_industry: row.organization_industry,
+    organization_location: row.organization_location,
     responsibilities: row.responsibilities
       ? JSON.parse(row.responsibilities)
       : [],
@@ -89,11 +91,15 @@ export async function addEmployment(
 
     if (data instanceof FormData) {
       payload.organization = data.get('organization') as string;
-      payload.organizationIndustry = data.get('organizationIndustry') as string;
-      payload.jobTitle = data.get('jobTitle') as string;
-      payload.jobType = data.get('jobType') as Employment['jobType'];
-      payload.dateString = data.get('dateString') as string;
-      payload.organizationLocation = data.get('organizationLocation') as string;
+      payload.organization_industry = data.get(
+        'organization_industry',
+      ) as string;
+      payload.job_title = data.get('job_title') as string;
+      payload.job_type = data.get('job_type') as Employment['job_type'];
+      payload.date_string = data.get('date_string') as string;
+      payload.organization_location = data.get(
+        'organization_location',
+      ) as string;
       payload.slug = data.get('slug') as string;
 
       const respStr = data.get('responsibilities') as string;
@@ -103,12 +109,15 @@ export async function addEmployment(
         payload.responsibilities = [];
       }
 
-      const logoFile = data.get('orgLogo') as File | null;
-      const logoUrlInput = data.get('orgLogoUrl') as string | null;
+      const logoFile = data.get('organization_logo') as File | null;
+      const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.orgLogoUrl = await uploadFile(logoFile);
+        payload.organization_logo_url = await uploadFile(logoFile);
       } else if (logoUrlInput) {
-        payload.orgLogoUrl = logoUrlInput.replace('/api/storage/', '');
+        payload.organization_logo_url = logoUrlInput.replace(
+          '/api/storage/',
+          '',
+        );
       }
     } else {
       payload = { ...data };
@@ -122,20 +131,20 @@ export async function addEmployment(
 
     await db
       .prepare(
-        `INSERT INTO employments (id, slug, organization, organization_industry, job_title, job_type, responsibilities, date_string, org_logo_url, organization_location)
+        `INSERT INTO employments (id, slug, organization, organization_industry, job_title, job_type, responsibilities, date_string, organization_logo_url, organization_location)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
         id,
         payload.slug,
         payload.organization,
-        payload.organizationIndustry,
-        payload.jobTitle,
-        payload.jobType,
+        payload.organization_industry,
+        payload.job_title,
+        payload.job_type,
         respJson,
-        payload.dateString,
-        payload.orgLogoUrl || '',
-        payload.organizationLocation || '',
+        payload.date_string,
+        payload.organization_logo_url || '',
+        payload.organization_location || '',
       )
       .run();
 
@@ -182,11 +191,15 @@ export async function updateEmployment(
     let payload: Partial<Employment> = {};
     if (data instanceof FormData) {
       payload.organization = data.get('organization') as string;
-      payload.organizationIndustry = data.get('organizationIndustry') as string;
-      payload.jobTitle = data.get('jobTitle') as string;
-      payload.jobType = data.get('jobType') as Employment['jobType'];
-      payload.dateString = data.get('dateString') as string;
-      payload.organizationLocation = data.get('organizationLocation') as string;
+      payload.organization_industry = data.get(
+        'organization_industry',
+      ) as string;
+      payload.job_title = data.get('job_title') as string;
+      payload.job_type = data.get('job_type') as Employment['job_type'];
+      payload.date_string = data.get('date_string') as string;
+      payload.organization_location = data.get(
+        'organization_location',
+      ) as string;
       payload.slug = data.get('slug') as string;
 
       const respStr = data.get('responsibilities') as string;
@@ -198,12 +211,15 @@ export async function updateEmployment(
         }
       }
 
-      const logoFile = data.get('orgLogo') as File | null;
-      const logoUrlInput = data.get('orgLogoUrl') as string | null;
+      const logoFile = data.get('organization_logo') as File | null;
+      const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.orgLogoUrl = await uploadFile(logoFile);
+        payload.organization_logo_url = await uploadFile(logoFile);
       } else if (logoUrlInput) {
-        payload.orgLogoUrl = logoUrlInput.replace('/api/storage/', '');
+        payload.organization_logo_url = logoUrlInput.replace(
+          '/api/storage/',
+          '',
+        );
       }
     } else {
       payload = { ...data };
@@ -220,29 +236,29 @@ export async function updateEmployment(
       fields.push('slug = ?');
       values.push(payload.slug);
     }
-    if (payload.organizationIndustry !== undefined) {
+    if (payload.organization_industry !== undefined) {
       fields.push('organization_industry = ?');
-      values.push(payload.organizationIndustry);
+      values.push(payload.organization_industry);
     }
-    if (payload.jobTitle !== undefined) {
+    if (payload.job_title !== undefined) {
       fields.push('job_title = ?');
-      values.push(payload.jobTitle);
+      values.push(payload.job_title);
     }
-    if (payload.jobType !== undefined) {
+    if (payload.job_type !== undefined) {
       fields.push('job_type = ?');
-      values.push(payload.jobType);
+      values.push(payload.job_type);
     }
-    if (payload.dateString !== undefined) {
+    if (payload.date_string !== undefined) {
       fields.push('date_string = ?');
-      values.push(payload.dateString);
+      values.push(payload.date_string);
     }
-    if (payload.orgLogoUrl !== undefined) {
-      fields.push('org_logo_url = ?');
-      values.push(payload.orgLogoUrl);
+    if (payload.organization_logo_url !== undefined) {
+      fields.push('organization_logo_url = ?');
+      values.push(payload.organization_logo_url);
     }
-    if (payload.organizationLocation !== undefined) {
+    if (payload.organization_location !== undefined) {
       fields.push('organization_location = ?');
-      values.push(payload.organizationLocation);
+      values.push(payload.organization_location);
     }
     if (payload.responsibilities !== undefined) {
       fields.push('responsibilities = ?');

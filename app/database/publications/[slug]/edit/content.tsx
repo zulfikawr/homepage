@@ -28,7 +28,7 @@ export default function EditPublicationPage({
         title='Edit Publication'
         subtitle={publication.title}
       />
-      <PublicationForm publicationToEdit={publication} />
+      <PublicationForm publication_to_edit={publication} />
     </div>
   );
 }

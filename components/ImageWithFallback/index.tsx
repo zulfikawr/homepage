@@ -8,7 +8,8 @@ import { useRadius } from '@/contexts/radiusContext';
 
 type FallbackType = 'landscape' | 'square' | 'portrait';
 
-interface ImageWithFallbackProps extends ImageProps {
+interface ImageWithFallbackProps extends Omit<ImageProps, 'src'> {
+  src?: string | null | undefined;
   type?: FallbackType;
 }
 
@@ -31,18 +32,28 @@ export default function ImageWithFallback({
 
   const { radius } = useRadius();
 
-  const currentSrc = hasError || !src ? fallback : src;
-  const isStorageUrl =
-    typeof src === 'string' && src.startsWith('/api/storage/');
+  // Determine the effective source
+  let currentSrc: string = fallback;
+  if (!hasError && src && typeof src === 'string' && src.trim() !== '') {
+    currentSrc = src;
+  }
+
+  // Storage URLs and local public images should probably be unoptimized if they fail the URL check
+  const isStorageUrl = currentSrc.startsWith('/api/storage/');
 
   return (
     <Image
       {...props}
-      key={typeof src === 'string' ? src : 'fallback'}
+      key={currentSrc}
       alt={alt}
       src={currentSrc}
       unoptimized={isStorageUrl || props.unoptimized}
-      onError={() => setHasError(true)}
+      onError={() => {
+        if (!hasError) {
+          console.error('ImageWithFallback: error loading', src);
+          setHasError(true);
+        }
+      }}
       onLoad={() => setIsLoading(false)}
       className={twMerge(
         'transition duration-300',

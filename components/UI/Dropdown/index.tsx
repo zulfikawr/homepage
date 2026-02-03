@@ -258,7 +258,7 @@ const DropdownItem = ({
     <button
       type='button'
       onClick={handleClick}
-      className={`w-full text-left px-4 py-2 text-sm transition-colors duration-150 flex items-center gap-2 cursor-pointer ${
+      className={`w-full text-left px-4 py-2 transition-colors duration-150 flex items-center gap-2 cursor-pointer ${
         isActive ? activeStyles : inactiveStyles
       } ${className}`}
       style={{ borderRadius: `${radius}px` }}

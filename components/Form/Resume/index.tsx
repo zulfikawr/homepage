@@ -13,24 +13,25 @@ interface ResumeFormProps {
   data?: Resume;
 }
 
-const initialResumeState: Resume = {
-  fileUrl: '',
+const initial_resume_state: Resume = {
+  file: '',
+  file_url: '',
 };
 
 const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
-  const [resume, setResume] = useState<Resume>(data || initialResumeState);
+  const [resume, set_resume] = useState<Resume>(data || initial_resume_state);
   const router = useRouter();
 
   useEffect(() => {
     if (data) {
       const timer = setTimeout(() => {
-        setResume(data);
+        set_resume(data);
       }, 0);
       return () => clearTimeout(timer);
     }
   }, [data]);
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
     try {
@@ -54,7 +55,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
   return (
     <>
       <div className='space-y-6'>
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='resume' required>
               Resume PDF
@@ -63,8 +64,14 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
               collectionName='resume'
               recordId='1'
               fieldName='file_url'
+              existingValue={resume.file_url}
               accept='application/pdf'
-              onUploadSuccess={(url) => setResume({ fileUrl: url })}
+              onUploadSuccess={(url) => {
+                set_resume({
+                  file_url: url,
+                  file: url.startsWith('/') ? url : `/api/storage/${url}`,
+                });
+              }}
             />
           </div>
         </form>
@@ -73,9 +80,9 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
       <Separator margin='5' />
 
       <div className='flex gap-3'>
-        {resume.fileUrl && (
+        {resume.file_url && (
           <a
-            href={resume.fileUrl}
+            href={resume.file || resume.file_url}
             download='resume.pdf'
             target='_blank'
             rel='noopener noreferrer'
@@ -89,7 +96,7 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
         <Button
           variant='primary'
           icon='floppyDisk'
-          onClick={handleSubmit}
+          onClick={handle_submit}
           className='flex-1'
         >
           Save

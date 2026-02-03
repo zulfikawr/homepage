@@ -179,8 +179,8 @@ export function KbarContent() {
             label: 'Resume',
             desc: 'Download my resume',
             action: () => {
-              if (resume?.fileUrl) {
-                window.open(resume.fileUrl, '_blank');
+              if (resume?.file_url) {
+                window.open(resume.file_url, '_blank');
               }
             },
             icon: 'filePdf',

@@ -19,7 +19,7 @@ import Mask from '@/components/Visual/Mask';
 import { Project } from '@/types/project';
 import { sortByDate } from '@/utilities/sortByDate';
 
-type StatusFilter = 'all' | 'inProgress' | 'completed' | 'upcoming';
+type StatusFilter = 'all' | 'in_progress' | 'completed' | 'upcoming';
 
 export function ProjectsSkeleton() {
   return (
@@ -51,12 +51,12 @@ export function ProjectsSkeleton() {
 }
 
 export default function ProjectsContent({ projects }: { projects: Project[] }) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [search_query, set_search_query] = useState('');
+  const [status_filter, set_status_filter] = useState<StatusFilter>('all');
+  const [selected_tool, set_selected_tool] = useState<string | null>(null);
 
   // Derive unique tools from all projects
-  const allTools = useMemo(() => {
+  const all_tools = useMemo(() => {
     if (!projects) return [];
     const tools = new Set<string>();
     projects.forEach((p) => p.tools.forEach((t) => tools.add(t)));
@@ -64,12 +64,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
   }, [projects]);
 
   // Filter projects based on search, status, and tool
-  const filteredProjects = useMemo(() => {
+  const filtered_projects = useMemo(() => {
     if (!projects) return [];
     let filtered = projects;
 
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    if (search_query) {
+      const q = search_query.toLowerCase();
       filtered = filtered.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -77,35 +77,39 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
       );
     }
 
-    if (selectedTool) {
-      filtered = filtered.filter((p) => p.tools.includes(selectedTool));
+    if (selected_tool) {
+      filtered = filtered.filter((p) => p.tools.includes(selected_tool));
     }
 
     return sortByDate(filtered);
-  }, [projects, searchQuery, selectedTool]);
+  }, [projects, search_query, selected_tool]);
 
-  const pinnedProjects = filteredProjects.filter((p) => p.pinned);
+  const pinned_projects = filtered_projects.filter((p) => p.pinned);
 
   // Show all projects in their respective categories, even if pinned
   // This ensures the sections (WIP, Completed, Upcoming) are always visible if there are projects
-  const wipProjects = filteredProjects.filter((p) => p.status === 'inProgress');
-  const doneProjects = filteredProjects.filter((p) => p.status === 'completed');
-  const upcomingProjects = filteredProjects.filter(
+  const wip_projects = filtered_projects.filter(
+    (p) => p.status === 'in_progress',
+  );
+  const done_projects = filtered_projects.filter(
+    (p) => p.status === 'completed',
+  );
+  const upcoming_projects = filtered_projects.filter(
     (p) => p.status === 'upcoming',
   );
 
-  const showPinned = statusFilter === 'all' && pinnedProjects.length > 0;
-  const showWip =
-    (statusFilter === 'all' || statusFilter === 'inProgress') &&
-    wipProjects.length > 0;
-  const showDone =
-    (statusFilter === 'all' || statusFilter === 'completed') &&
-    doneProjects.length > 0;
-  const showUpcoming =
-    (statusFilter === 'all' || statusFilter === 'upcoming') &&
-    upcomingProjects.length > 0;
+  const show_pinned = status_filter === 'all' && pinned_projects.length > 0;
+  const show_wip =
+    (status_filter === 'all' || status_filter === 'in_progress') &&
+    wip_projects.length > 0;
+  const show_done =
+    (status_filter === 'all' || status_filter === 'completed') &&
+    done_projects.length > 0;
+  const show_upcoming =
+    (status_filter === 'all' || status_filter === 'upcoming') &&
+    upcoming_projects.length > 0;
 
-  const hasResults = showPinned || showWip || showDone || showUpcoming;
+  const has_results = show_pinned || show_wip || show_done || show_upcoming;
 
   return (
     <div className='space-y-8'>
@@ -127,13 +131,13 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             />
             <Input
               placeholder='Search projects...'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={search_query}
+              onChange={(e) => set_search_query(e.target.value)}
               className='pl-9 bg-card/50'
             />
-            {searchQuery && (
+            {search_query && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => set_search_query('')}
                 className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
               >
                 <Icon name='x' className='size-3' />
@@ -144,11 +148,11 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             <Mask>
               <div className='pb-1'>
                 <ToggleGroup
-                  value={statusFilter}
-                  onChange={(v) => setStatusFilter(v as StatusFilter)}
+                  value={status_filter}
+                  onChange={(v) => set_status_filter(v as StatusFilter)}
                   options={[
                     { label: 'All', value: 'all' },
-                    { label: 'WIP', value: 'inProgress', icon: 'hammer' },
+                    { label: 'WIP', value: 'in_progress', icon: 'hammer' },
                     { label: 'Done', value: 'completed', icon: 'checkCircle' },
                     { label: 'Plan', value: 'upcoming', icon: 'calendarPlus' },
                   ]}
@@ -162,26 +166,26 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
         <Mask>
           <div className='flex items-center gap-2 pb-2'>
             <Badge
-              variant={selectedTool === null ? 'primary' : 'outline'}
+              variant={selected_tool === null ? 'primary' : 'outline'}
               className={twMerge(
                 'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                selectedTool !== null && 'hover:bg-primary/20',
+                selected_tool !== null && 'hover:bg-primary/20',
               )}
-              onClick={() => setSelectedTool(null)}
+              onClick={() => set_selected_tool(null)}
             >
               All Tools
             </Badge>
-            {allTools.map((tool) => (
+            {all_tools.map((tool) => (
               <Badge
                 key={tool}
-                variant={selectedTool === tool ? 'primary' : 'outline'}
+                variant={selected_tool === tool ? 'primary' : 'outline'}
                 icon
                 className={twMerge(
                   'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                  selectedTool !== tool && 'hover:bg-primary/20',
+                  selected_tool !== tool && 'hover:bg-primary/20',
                 )}
                 onClick={() =>
-                  setSelectedTool(selectedTool === tool ? null : tool)
+                  set_selected_tool(selected_tool === tool ? null : tool)
                 }
               >
                 {tool}
@@ -192,7 +196,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
       </div>
 
       <div className='space-y-10 min-h-[50vh]'>
-        {!hasResults && (
+        {!has_results && (
           <div className='animate-fade-in flex flex-col items-center justify-center py-12 text-center'>
             <Icon
               name='ghost'
@@ -209,9 +213,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
               variant='outline'
               className='mt-4'
               onClick={() => {
-                setSearchQuery('');
-                setSelectedTool(null);
-                setStatusFilter('all');
+                set_search_query('');
+                set_selected_tool(null);
+                set_status_filter('all');
               }}
             >
               Clear all filters
@@ -220,7 +224,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
         )}
 
         {/* Pinned Section */}
-        {showPinned && (
+        {show_pinned && (
           <section>
             <SectionTitle
               icon='pushPin'
@@ -229,7 +233,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             />
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {pinnedProjects.map((project) => (
+                {pinned_projects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -239,12 +243,14 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {showPinned && (showWip || showDone || showUpcoming) && <Separator />}
+        {show_pinned && (show_wip || show_done || show_upcoming) && (
+          <Separator />
+        )}
 
         {/* Work in Progress Section */}
-        {showWip && (
+        {show_wip && (
           <section>
-            {(statusFilter === 'all' || statusFilter === 'inProgress') && (
+            {(status_filter === 'all' || status_filter === 'in_progress') && (
               <SectionTitle
                 icon='hammer'
                 title='Work in Progress'
@@ -253,7 +259,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {wipProjects.map((project) => (
+                {wip_projects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -263,12 +269,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {showWip && showDone && <Separator />}
+        {show_wip && show_done && <Separator />}
 
         {/* Completed Projects Section */}
-        {showDone && (
+        {show_done && (
           <section>
-            {(statusFilter === 'all' || statusFilter === 'completed') && (
+            {(status_filter === 'all' || status_filter === 'completed') && (
               <SectionTitle
                 icon='checkCircle'
                 title='Completed Projects'
@@ -277,7 +283,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {doneProjects.map((project) => (
+                {done_projects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -287,12 +293,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {showDone && showUpcoming && <Separator />}
+        {show_done && show_upcoming && <Separator />}
 
         {/* Upcoming Projects Section */}
-        {showUpcoming && (
+        {show_upcoming && (
           <section>
-            {(statusFilter === 'all' || statusFilter === 'upcoming') && (
+            {(status_filter === 'all' || status_filter === 'upcoming') && (
               <SectionTitle
                 icon='calendarPlus'
                 title='Upcoming Projects'
@@ -301,7 +307,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {upcomingProjects.map((project) => (
+                {upcoming_projects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>

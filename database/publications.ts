@@ -28,7 +28,7 @@ function mapRowToPublication(row: PublicationRow | null): Publication | null {
     publisher: row.publisher,
     excerpt: row.excerpt,
     keywords: row.keywords ? JSON.parse(row.keywords) : [],
-    openAccess: !!row.open_access,
+    open_access: !!row.open_access,
     link: row.link,
   };
 }
@@ -65,7 +65,7 @@ export async function addPublication(
       payload.publisher = data.get('publisher') as string;
       payload.excerpt = data.get('excerpt') as string;
       payload.link = data.get('link') as string;
-      payload.openAccess = data.get('openAccess') === 'true';
+      payload.open_access = data.get('open_access') === 'true';
       const authorsStr = data.get('authors') as string;
       try {
         payload.authors = JSON.parse(authorsStr);
@@ -100,7 +100,7 @@ export async function addPublication(
         payload.publisher,
         payload.excerpt,
         JSON.stringify(payload.keywords || []),
-        payload.openAccess ? 1 : 0,
+        payload.open_access ? 1 : 0,
         payload.link || '',
       )
       .run();
@@ -143,7 +143,7 @@ export async function updatePublication(
       payload.publisher = data.get('publisher') as string;
       payload.excerpt = data.get('excerpt') as string;
       payload.link = data.get('link') as string;
-      payload.openAccess = data.get('openAccess') === 'true';
+      payload.open_access = data.get('open_access') === 'true';
       const authorsStr = data.get('authors') as string;
       if (authorsStr) {
         try {
@@ -186,9 +186,9 @@ export async function updatePublication(
       fields.push('link = ?');
       values.push(payload.link);
     }
-    if (payload.openAccess !== undefined) {
+    if (payload.open_access !== undefined) {
       fields.push('open_access = ?');
-      values.push(payload.openAccess ? 1 : 0);
+      values.push(payload.open_access ? 1 : 0);
     }
     if (payload.authors !== undefined) {
       fields.push('authors = ?');

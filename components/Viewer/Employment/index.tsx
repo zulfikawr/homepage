@@ -12,9 +12,9 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
           <div className='flex-1 items-center'>
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
               <span className='mr-3 inline-block'>
-                {employment.orgLogoUrl && (
+                {employment.organization_logo_url && (
                   <ImageWithFallback
-                    src={employment.orgLogoUrl}
+                    src={employment.organization_logo_url}
                     alt={employment.organization}
                     width={30}
                     height={30}
@@ -46,9 +46,9 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                   </TableCell>
                   <TableCell>
                     <div className='flex items-center gap-3'>
-                      {employment.orgLogoUrl && (
+                      {employment.organization_logo_url && (
                         <ImageWithFallback
-                          src={employment.orgLogoUrl}
+                          src={employment.organization_logo_url}
                           alt={employment.organization}
                           width={24}
                           height={24}
@@ -65,31 +65,31 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                   <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Position
                   </TableCell>
-                  <TableCell>{employment.jobTitle}</TableCell>
+                  <TableCell>{employment.job_title}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Type
                   </TableCell>
-                  <TableCell>{employment.jobType}</TableCell>
+                  <TableCell>{employment.job_type}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Location
                   </TableCell>
-                  <TableCell>{employment.organizationLocation}</TableCell>
+                  <TableCell>{employment.organization_location}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Duration
                   </TableCell>
-                  <TableCell>{employment.dateString}</TableCell>
+                  <TableCell>{employment.date_string}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className='bg-muted/50 dark:bg-muted font-medium border-r border'>
                     Industry
                   </TableCell>
-                  <TableCell>{employment.organizationIndustry}</TableCell>
+                  <TableCell>{employment.organization_industry}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

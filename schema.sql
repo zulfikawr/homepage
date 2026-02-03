@@ -1,4 +1,4 @@
--- Users / Auth (Basic structure since we are moving off PocketBase auth)
+-- Users / Auth
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS analytics_events (
 CREATE TABLE IF NOT EXISTS books (
   id TEXT PRIMARY KEY,
   slug TEXT UNIQUE,
-  type TEXT, -- 'currentlyReading' | 'read' | 'toRead'
+  type TEXT, -- 'currently_reading' | 'read' | 'to_read'
   title TEXT,
   author TEXT,
   image_url TEXT,
@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS comments (
   author TEXT,
   content TEXT,
   likes INTEGER DEFAULT 0,
+  avatar_url TEXT,
   parent_id TEXT, -- For nested comments
   path TEXT, -- Hierarchy helper
   created_at INTEGER DEFAULT (unixepoch())
@@ -64,10 +65,10 @@ CREATE TABLE IF NOT EXISTS employments (
   organization TEXT,
   organization_industry TEXT,
   job_title TEXT,
-  job_type TEXT,
+  job_type TEXT, -- 'full_time' | 'part_time' | 'contract' | 'freelance' | 'internship'
   responsibilities TEXT, -- JSON array
   date_string TEXT,
-  org_logo_url TEXT,
+  organization_logo_url TEXT,
   organization_location TEXT,
   created_at INTEGER DEFAULT (unixepoch())
 );
@@ -135,7 +136,7 @@ CREATE TABLE IF NOT EXISTS projects (
   description TEXT,
   tools TEXT, -- JSON array
   readme TEXT,
-  status TEXT, -- 'inProgress' | 'completed' | 'upcoming'
+  status TEXT, -- 'in_progress' | 'completed' | 'upcoming'
   link TEXT,
   favicon_url TEXT,
   github_repo_url TEXT,

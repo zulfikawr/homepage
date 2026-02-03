@@ -19,16 +19,16 @@ import { useLoadingToggle } from '@/contexts/loadingContext';
 import { getSpotifyAuthUrl } from '@/lib/spotify-client';
 import { SpotifyTrack } from '@/types/spotify';
 
-const apiCache: {
-  currentTrack: SpotifyTrack | null;
-  isPlaying: boolean;
-  lastPlayedAt: string | null;
-  isAuthorized: boolean;
+const api_cache: {
+  current_track: SpotifyTrack | null;
+  is_playing: boolean;
+  last_played_at: string | null;
+  is_authorized: boolean;
 } = {
-  currentTrack: null,
-  isPlaying: false,
-  lastPlayedAt: null,
-  isAuthorized: true,
+  current_track: null,
+  is_playing: false,
+  last_played_at: null,
+  is_authorized: true,
 };
 
 interface SpotifyBannerProps {
@@ -37,15 +37,15 @@ interface SpotifyBannerProps {
 }
 
 const BannerHeader = ({
-  isPlaying,
+  is_playing,
   isLoading = false,
 }: {
-  isPlaying?: boolean;
+  is_playing?: boolean;
   isLoading?: boolean;
 }) => {
   const GoToMusicButton = (
     <Link href='/music' prefetch={true}>
-      <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (
@@ -66,7 +66,9 @@ const BannerHeader = ({
         ) : (
           <>
             <Icon name='musicNotes' className='size-7 text-gruv-green' />
-            <span>{isPlaying ? 'Currently Listening' : 'Recently Played'}</span>
+            <span>
+              {is_playing ? 'Currently Listening' : 'Recently Played'}
+            </span>
           </>
         )}
       </div>
@@ -82,16 +84,16 @@ const BannerHeader = ({
 
 const SpotifyLayout = ({
   className,
-  isPlaying,
+  is_playing,
   isLoading,
-  currentTrack,
-  lastPlayedAt,
+  current_track,
+  last_played_at,
 }: {
   className?: string;
-  isPlaying?: boolean;
+  is_playing?: boolean;
   isLoading?: boolean;
-  currentTrack?: SpotifyTrack | null;
-  lastPlayedAt?: string | null;
+  current_track?: SpotifyTrack | null;
+  last_played_at?: string | null;
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
@@ -100,8 +102,8 @@ const SpotifyLayout = ({
           <Skeleton width='100%' height='100%' className='rounded-md' />
         ) : (
           <ImageWithFallback
-            src={currentTrack?.album.images[0]?.url}
-            alt={currentTrack?.album.name || ''}
+            src={current_track?.album.images[0]?.url}
+            alt={current_track?.album.name || ''}
             width={200}
             height={200}
             sizes='(max-width: 768px) 64px, 64px'
@@ -116,14 +118,14 @@ const SpotifyLayout = ({
           {isLoading ? (
             <Skeleton width='60%' height={16} as='span' />
           ) : (
-            currentTrack?.name
+            current_track?.name
           )}
         </h3>
         <p className='text-sm text-gruv-yellow font-medium truncate leading-5 h-5 flex items-center'>
           {isLoading ? (
             <Skeleton width='40%' height={14} as='span' />
           ) : (
-            currentTrack?.artists.map((artist) => artist.name).join(', ')
+            current_track?.artists.map((artist) => artist.name).join(', ')
           )}
         </p>
         <div className='flex items-center gap-x-2 leading-4 h-4'>
@@ -138,12 +140,12 @@ const SpotifyLayout = ({
           ) : (
             <>
               <span className='text-xs text-gruv-blue truncate'>
-                {currentTrack?.album.name}
+                {current_track?.album.name}
               </span>
               <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
                 |
               </span>
-              {isPlaying ? (
+              {is_playing ? (
                 <span className='flex items-center gap-x-2 text-xs text-gruv-green font-medium'>
                   <span className='relative flex h-1.5 w-1.5'>
                     <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-aqua opacity-75'></span>
@@ -151,9 +153,9 @@ const SpotifyLayout = ({
                   </span>
                   <span className='truncate'>Playing now</span>
                 </span>
-              ) : lastPlayedAt ? (
+              ) : last_played_at ? (
                 <TimeAgo
-                  date={lastPlayedAt}
+                  date={last_played_at}
                   prefix='Played'
                   className='text-xs text-muted-foreground flex-shrink-0'
                 />
@@ -171,11 +173,11 @@ const SpotifyLayout = ({
 
   return (
     <Card isPreview className={className}>
-      <BannerHeader isPlaying={isPlaying} isLoading={isLoading} />
+      <BannerHeader is_playing={is_playing} isLoading={isLoading} />
       <Separator margin='0' />
-      {!isLoading && currentTrack ? (
+      {!isLoading && current_track ? (
         <Link
-          href={currentTrack.external_urls.spotify}
+          href={current_track.external_urls.spotify}
           target='_blank'
           className='block h-full hover:bg-muted/50 transition-colors'
         >
@@ -189,44 +191,46 @@ const SpotifyLayout = ({
 };
 
 const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
-  const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
-    apiCache.currentTrack,
+  const [current_track, set_current_track] = useState<SpotifyTrack | null>(
+    api_cache.current_track,
   );
-  const [isPlaying, setIsPlaying] = useState(apiCache.isPlaying);
+  const [is_playing, set_is_playing] = useState(api_cache.is_playing);
   const [error] = useState<string | null>(null);
-  const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(
-    apiCache.lastPlayedAt,
+  const [last_played_at, set_last_played_at] = useState<string | null>(
+    api_cache.last_played_at,
   );
-  const [isAuthorized, setIsAuthorized] = useState(apiCache.isAuthorized);
-  const [dataLoading, setDataLoading] = useState(!apiCache.currentTrack);
+  const [is_authorized, set_is_authorized] = useState(api_cache.is_authorized);
+  const [data_loading, set_data_loading] = useState(!api_cache.current_track);
   const { forceLoading, forceEmpty } = useLoadingToggle();
-  const isLoading = dataLoading || forceLoading;
+  const isLoading = data_loading || forceLoading;
 
   const { isAdmin, loading: authLoading } = useAuth();
-  const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
-  const retryDelay = useRef(1000);
-  const isMounted = useRef(false);
+  const prev_track_id = useRef<string | null>(
+    api_cache.current_track?.id || null,
+  );
+  const retry_delay = useRef(1000);
+  const is_mounted = useRef(false);
 
   // Clear interval when unmounting
   useEffect(() => {
-    isMounted.current = true;
+    is_mounted.current = true;
     return () => {
-      isMounted.current = false;
+      is_mounted.current = false;
     };
   }, []);
 
   // Sync state changes to cache
   useEffect(() => {
-    apiCache.currentTrack = currentTrack;
-    apiCache.isPlaying = isPlaying;
-    apiCache.lastPlayedAt = lastPlayedAt;
-    apiCache.isAuthorized = isAuthorized;
-  }, [currentTrack, isPlaying, lastPlayedAt, isAuthorized]);
+    api_cache.current_track = current_track;
+    api_cache.is_playing = is_playing;
+    api_cache.last_played_at = last_played_at;
+    api_cache.is_authorized = is_authorized;
+  }, [current_track, is_playing, last_played_at, is_authorized]);
 
-  const fetchTracksRef = useRef<() => Promise<void>>(null);
+  const fetch_tracks_ref = useRef<() => Promise<void>>(null);
 
-  const fetchTracks = useCallback(async () => {
-    if (!isMounted.current) return;
+  const fetch_tracks = useCallback(async () => {
+    if (!is_mounted.current) return;
 
     try {
       // Use internal API routes to handle token refresh server-side
@@ -234,34 +238,34 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
 
       if (currentResponse.status === 401 || currentResponse.status === 404) {
         // Token issues
-        if (!apiCache.currentTrack) {
-          setIsAuthorized(false);
+        if (!api_cache.current_track) {
+          set_is_authorized(false);
         }
-        setDataLoading(false);
+        set_data_loading(false);
         return;
       }
 
       // Only mark as authorized if we got a successful response
       if (currentResponse.ok) {
-        setIsAuthorized(true);
+        set_is_authorized(true);
       } else {
         // Mark as not authorized for any other error responses
-        setIsAuthorized(false);
+        set_is_authorized(false);
       }
 
       if (currentResponse.status === 429) {
         const retryAfter = currentResponse.headers.get('Retry-After') || '1';
-        retryDelay.current = parseInt(retryAfter) * 1000;
+        retry_delay.current = parseInt(retryAfter) * 1000;
         setTimeout(() => {
-          fetchTracksRef.current?.();
-        }, retryDelay.current);
-        retryDelay.current = Math.min(retryDelay.current * 2, 60000);
+          fetch_tracks_ref.current?.();
+        }, retry_delay.current);
+        retry_delay.current = Math.min(retry_delay.current * 2, 60000);
 
-        setDataLoading(false);
+        set_data_loading(false);
         return;
       }
 
-      let foundCurrentTrack = false;
+      let found_current_track = false;
 
       if (currentResponse.status === 200) {
         const data = (await currentResponse.json()) as {
@@ -273,89 +277,89 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
           // Ad playing - we'll try recently played instead
         } else if (data.item) {
           // We have a currently playing track
-          foundCurrentTrack = true;
+          found_current_track = true;
 
-          if (data.item.id !== prevTrackId.current) {
-            setCurrentTrack(data.item);
-            prevTrackId.current = data.item.id || null;
+          if (data.item.id !== prev_track_id.current) {
+            set_current_track(data.item);
+            prev_track_id.current = data.item.id || null;
           }
 
-          setIsPlaying(data.is_playing);
-          setLastPlayedAt(null);
-          setDataLoading(false);
-          retryDelay.current = 1000;
+          set_is_playing(data.is_playing);
+          set_last_played_at(null);
+          set_data_loading(false);
+          retry_delay.current = 1000;
         }
       }
 
       // If we don't have a current track playing, ALWAYS check recently played
-      if (!foundCurrentTrack) {
+      if (!found_current_track) {
         try {
           const recentRes = await fetch('/api/spotify/recently-played?limit=1');
           if (recentRes.ok) {
-            const recentlyPlayed = (await recentRes.json()) as {
+            const recently_played = (await recentRes.json()) as {
               items: Array<{ track: SpotifyTrack; played_at: string }>;
             };
 
             // Check if we have recent tracks
             if (
-              recentlyPlayed &&
-              recentlyPlayed.items &&
-              recentlyPlayed.items.length > 0
+              recently_played &&
+              recently_played.items &&
+              recently_played.items.length > 0
             ) {
-              const newTrack = recentlyPlayed.items[0].track;
+              const new_track = recently_played.items[0].track;
 
-              setCurrentTrack(newTrack);
-              prevTrackId.current = newTrack.id;
-              setIsPlaying(false);
+              set_current_track(new_track);
+              prev_track_id.current = new_track.id;
+              set_is_playing(false);
 
               // Pass the raw ISO timestamp directly to TimeAgo
-              setLastPlayedAt(recentlyPlayed.items[0].played_at);
+              set_last_played_at(recently_played.items[0].played_at);
             }
           }
         } catch {
           // Ignored
         }
 
-        setDataLoading(false);
+        set_data_loading(false);
       }
     } catch {
       // Set a retry with backoff
       setTimeout(() => {
-        fetchTracksRef.current?.();
-      }, retryDelay.current);
-      retryDelay.current = Math.min(retryDelay.current * 2, 60000);
+        fetch_tracks_ref.current?.();
+      }, retry_delay.current);
+      retry_delay.current = Math.min(retry_delay.current * 2, 60000);
 
-      setDataLoading(false);
+      set_data_loading(false);
     }
   }, []);
 
   // Use an effect to assign the function to the ref
   useEffect(() => {
-    (fetchTracksRef as React.RefObject<() => Promise<void>>).current =
-      fetchTracks;
-  }, [fetchTracks]);
+    (fetch_tracks_ref as React.RefObject<() => Promise<void>>).current =
+      fetch_tracks;
+  }, [fetch_tracks]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetchTracks();
+      fetch_tracks();
     }, 0);
 
     // Adjust polling interval based on state
     const interval = setInterval(
       () => {
         // Don't fetch if we're not mounted or if we're in a retry delay
-        if (isMounted.current && retryDelay.current <= 1000) {
-          fetchTracks();
+        if (is_mounted.current && retry_delay.current <= 1000) {
+          fetch_tracks();
         }
       },
-      isPlaying ? 10000 : 30000,
+      is_playing ? 10000 : 30000,
     ); // 10s when playing, 30s when not
 
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
     };
-  }, [isPlaying, fetchTracks]);
+  }, [is_playing, fetch_tracks]);
 
   if (error || forceEmpty)
     return <CardEmpty message='No data' className={className} />;
@@ -365,12 +369,12 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
       <SpotifyLayout
         className={className}
         isLoading={true}
-        isPlaying={isPlaying}
+        is_playing={is_playing}
       />
     );
   }
 
-  if (!isAuthorized) {
+  if (!is_authorized) {
     return (
       <Card isPreview className={className}>
         <div className='flex w-full items-center justify-between px-4 py-3'>
@@ -404,16 +408,16 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
     );
   }
 
-  if (!currentTrack)
+  if (!current_track)
     return <CardEmpty message='No data' className={className} />;
 
   return (
     <SpotifyLayout
       className={className}
-      isPlaying={isPlaying}
+      is_playing={is_playing}
       isLoading={false}
-      currentTrack={currentTrack}
-      lastPlayedAt={lastPlayedAt}
+      current_track={current_track}
+      last_played_at={last_played_at}
     />
   );
 };

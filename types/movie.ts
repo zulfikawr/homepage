@@ -2,9 +2,10 @@ export interface Movie {
   id: string;
   slug: string;
   title: string;
-  releaseDate: string;
-  imdbId?: string;
-  posterUrl?: string;
-  imdbLink?: string;
-  rating?: number; // 1-5
+  release_date: string;
+  imdb_id?: string;
+  image?: string;
+  poster_url?: string;
+  imdb_link?: string;
+  rating?: number;
 }

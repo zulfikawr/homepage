@@ -29,7 +29,7 @@ export default function EditCertificatePage({
         subtitle={certificate.title}
       />
 
-      <CertificateForm certificateToEdit={certificate} />
+      <CertificateForm certificate_to_edit={certificate} />
     </div>
   );
 }

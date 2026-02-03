@@ -28,14 +28,14 @@ export default function PostCard({
   isPreview,
 }: PostCardProps) {
   const router = useRouter();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const card_ref = useRef<HTMLDivElement>(null);
 
   const identifier = post?.slug;
   const href = openForm
     ? `/database/posts/${identifier}/edit`
     : `/posts/${identifier}`;
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
     router.push(href);
   };
@@ -44,7 +44,7 @@ export default function PostCard({
   useEffect(() => {
     if (isPreview || !post) return;
 
-    const currentRef = cardRef.current;
+    const current_ref = card_ref.current;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -56,34 +56,34 @@ export default function PostCard({
       { rootMargin: '50px' },
     );
 
-    if (currentRef) {
-      observer.observe(currentRef);
+    if (current_ref) {
+      observer.observe(current_ref);
     }
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
+      if (current_ref) {
+        observer.unobserve(current_ref);
       }
     };
   }, [router, href, isPreview, post]);
 
   if (!post) return null;
 
-  const handleShare = async (e: React.MouseEvent) => {
+  const handle_share = async (e: React.MouseEvent) => {
     if (isPreview) return;
     e.stopPropagation();
     try {
-      const shareUrl = `${window.location.origin}/posts/${post.slug}`;
+      const share_url = `${window.location.origin}/posts/${post.slug}`;
       await navigator.share({
         title: post.title,
-        url: shareUrl,
+        url: share_url,
       });
     } catch {
       // Ignored
     }
   };
 
-  const renderMedia = () => {
+  const render_media = () => {
     if (post.image) {
       return (
         <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border-2 border-border shadow-brutalist transition-all hover:shadow-brutalist-xl dark:opacity-90'>
@@ -102,7 +102,7 @@ export default function PostCard({
     return null;
   };
 
-  const renderAudio = () => {
+  const render_audio = () => {
     if (post.audio) {
       return (
         <div className='px-4 pb-4 lg:px-6 lg:pb-6'>
@@ -114,15 +114,15 @@ export default function PostCard({
   };
 
   return (
-    <div ref={cardRef} className={isPreview ? 'w-full' : ''}>
+    <div ref={card_ref} className={isPreview ? 'w-full' : ''}>
       <Card
-        onClick={isPreview ? undefined : handleCardClick}
+        onClick={isPreview ? undefined : handle_card_click}
         openForm={openForm}
         isPreview={isPreview}
         isActive={isActive}
       >
         <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
-          {renderMedia()}
+          {render_media()}
 
           <div className='flex flex-col space-y-4 flex-1'>
             <div className='flex items-center'>
@@ -162,23 +162,23 @@ export default function PostCard({
             <div
               className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-muted-foreground line-clamp-3'
               dangerouslySetInnerHTML={{
-                __html: trimStr(renderMarkdown(post.excerpt), 150),
+                __html: trimStr(renderMarkdown(post.excerpt || ''), 150),
               }}
             />
           </div>
         </div>
-        {renderAudio()}
+        {render_audio()}
 
         <div className='h-auto w-full items-center rounded-bl-md rounded-br-md border-t-2 border-border px-6 py-2 lg:px-8 lg:py-3 '>
           <div className='leading-2 flex items-center justify-between whitespace-nowrap text-xs tracking-wide text-muted-foreground lg:text-sm lg:leading-8'>
             <span className='flex items-center gap-x-2'>
-              <TimeAgo date={post.dateString} prefix='Posted' />
+              <TimeAgo date={post.date_string || ''} prefix='Posted' />
             </span>
             <span className='flex items-center'>
               <Button
                 variant='ghostLink'
                 className='h-auto py-0 px-0 gap-1.5 text-xs lg:text-sm'
-                onClick={handleShare}
+                onClick={handle_share}
               >
                 <Icon name='share' size={14} />
                 Share

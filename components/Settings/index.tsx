@@ -217,24 +217,26 @@ export default function Settings() {
             {isAdmin && (
               <>
                 <div className={sectionTitleClass}>Spotify</div>
-                <Button
-                  icon='spotifyLogo'
-                  className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760] w-full mb-2'
-                  onClick={() => {
-                    const url = getSpotifyAuthUrl();
-                    window.location.href = url;
-                  }}
-                >
-                  Connect with Spotify
-                </Button>
-                <Button
-                  onClick={handleResetSpotify}
-                  disabled={resettingSpotify}
-                  className='w-full'
-                  variant='default'
-                >
-                  {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
-                </Button>
+                <div className='flex flex-col w-full gap-2'>
+                  <Button
+                    icon='spotifyLogo'
+                    className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760] w-full'
+                    onClick={() => {
+                      const url = getSpotifyAuthUrl();
+                      window.location.href = url;
+                    }}
+                  >
+                    Connect with Spotify
+                  </Button>
+                  <Button
+                    onClick={handleResetSpotify}
+                    disabled={resettingSpotify}
+                    variant='default'
+                    className='w-full'
+                  >
+                    {resettingSpotify ? 'Resetting...' : 'Reset Spotify Data'}
+                  </Button>
+                </div>
               </>
             )}
           </>

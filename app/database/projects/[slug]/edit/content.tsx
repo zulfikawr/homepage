@@ -22,7 +22,7 @@ export default function EditProjectPage({ project }: EditProjectPageProps) {
   return (
     <div>
       <PageTitle emoji='🚀' title='Edit Project' subtitle={project.name} />
-      <ProjectForm projectToEdit={project} />
+      <ProjectForm project_to_edit={project} />
     </div>
   );
 }

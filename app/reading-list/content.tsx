@@ -33,7 +33,7 @@ export function ReadingListSkeleton() {
 }
 
 export default function ReadingListContent({ books }: { books: Book[] }) {
-  const booksArray = books || [];
+  const books_array = books || [];
 
   return (
     <div>
@@ -56,13 +56,13 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'currentlyReading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={`grid ${books_array.filter((book) => book.type === 'currently_reading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {booksArray.filter((book) => book.type === 'currentlyReading')
+            {books_array.filter((book) => book.type === 'currently_reading')
               .length > 0 ? (
               <StaggerContainer>
-                {booksArray
-                  .filter((book) => book.type === 'currentlyReading')
+                {books_array
+                  .filter((book) => book.type === 'currently_reading')
                   .map((book) => (
                     <ViewTransition key={book.id}>
                       <BookCard book={book} />
@@ -87,11 +87,11 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={`grid ${books_array.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {booksArray.filter((book) => book.type === 'read').length > 0 ? (
+            {books_array.filter((book) => book.type === 'read').length > 0 ? (
               <StaggerContainer>
-                {booksArray
+                {books_array
                   .filter((book) => book.type === 'read')
                   .map((book) => (
                     <ViewTransition key={book.id}>
@@ -117,12 +117,13 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'toRead').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={`grid ${books_array.filter((book) => book.type === 'to_read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
           >
-            {booksArray.filter((book) => book.type === 'toRead').length > 0 ? (
+            {books_array.filter((book) => book.type === 'to_read').length >
+            0 ? (
               <StaggerContainer>
-                {booksArray
-                  .filter((book) => book.type === 'toRead')
+                {books_array
+                  .filter((book) => book.type === 'to_read')
                   .map((book) => (
                     <ViewTransition key={book.id}>
                       <BookCard book={book} />

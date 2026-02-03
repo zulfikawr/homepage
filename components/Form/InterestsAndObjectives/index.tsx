@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { toast } from '@/components/UI';
 import { Button, FormLabel, Input, Textarea } from '@/components/UI';
 import { Separator } from '@/components/UI/Separator';
-import { updateInterestsAndObjectives } from '@/database/interestsAndObjectives';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { updateInterestsAndObjectives } from '@/database/interests_and_objectives';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
 
 interface InterestsAndObjectivesFormProps {
   data?: InterestsAndObjectives;
 }
 
-const initialInterestsAndObjectivesState: InterestsAndObjectives = {
+const initial_interests_and_objectives_state: InterestsAndObjectives = {
   description: '',
   objectives: [],
   conclusion: '',
@@ -19,33 +19,35 @@ const initialInterestsAndObjectivesState: InterestsAndObjectives = {
 const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
   data,
 }) => {
-  const [interestsAndObjectives, setInterestsAndObjectives] = useState<
+  const [interests_and_objectives, set_interests_and_objectives] = useState<
     InterestsAndObjectives & { id?: string }
-  >(data || initialInterestsAndObjectivesState);
+  >(data || initial_interests_and_objectives_state);
 
-  const [newObjective, setNewObjective] = useState<string>('');
+  const [new_objective, set_new_objective] = useState<string>('');
 
   useEffect(() => {
     if (data) {
       const timer = setTimeout(() => {
-        setInterestsAndObjectives(data);
+        set_interests_and_objectives(data);
       }, 0);
       return () => clearTimeout(timer);
     }
   }, [data]);
 
-  const handleChange = (
+  const handle_change = (
     field: keyof InterestsAndObjectives,
     value: string | string[],
   ) => {
-    setInterestsAndObjectives((prev) => ({ ...prev, [field]: value }));
+    set_interests_and_objectives((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
     try {
-      const result = await updateInterestsAndObjectives(interestsAndObjectives);
+      const result = await updateInterestsAndObjectives(
+        interests_and_objectives,
+      );
 
       if (result.success && result.data) {
         toast.success('Interests and objectives successfully updated!');
@@ -59,42 +61,42 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     }
   };
 
-  const handleAddObjective = () => {
-    if (newObjective.trim()) {
-      const updatedObjectives = [
-        ...(interestsAndObjectives.objectives || []),
-        newObjective.trim(),
+  const handle_add_objective = () => {
+    if (new_objective.trim()) {
+      const updated_objectives = [
+        ...(interests_and_objectives.objectives || []),
+        new_objective.trim(),
       ];
-      handleChange('objectives', updatedObjectives);
-      setNewObjective('');
+      handle_change('objectives', updated_objectives);
+      set_new_objective('');
     }
   };
 
-  const handleRemoveObjective = (index: number) => {
-    const updatedObjectives = interestsAndObjectives.objectives.filter(
+  const handle_remove_objective = (index: number) => {
+    const updated_objectives = interests_and_objectives.objectives.filter(
       (_, i) => i !== index,
     );
-    handleChange('objectives', updatedObjectives);
+    handle_change('objectives', updated_objectives);
   };
 
-  const handleObjectiveChange = (index: number, value: string) => {
-    const updatedObjectives = [...interestsAndObjectives.objectives];
-    updatedObjectives[index] = value;
-    handleChange('objectives', updatedObjectives);
+  const handle_objective_change = (index: number, value: string) => {
+    const updated_objectives = [...interests_and_objectives.objectives];
+    updated_objectives[index] = value;
+    handle_change('objectives', updated_objectives);
   };
 
   return (
     <>
       <div className='space-y-6'>
         {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='description' required>
               Description
             </FormLabel>
             <Textarea
-              value={interestsAndObjectives.description}
-              onChange={(e) => handleChange('description', e.target.value)}
+              value={interests_and_objectives.description || ''}
+              onChange={(e) => handle_change('description', e.target.value)}
               rows={4}
               required
             />
@@ -104,35 +106,35 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
               Objectives
             </FormLabel>
             <div className='space-y-2'>
-              {interestsAndObjectives.objectives.map((objective, index) => (
+              {interests_and_objectives.objectives.map((objective, index) => (
                 <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={objective}
+                    value={objective || ''}
                     onChange={(e) =>
-                      handleObjectiveChange(index, e.target.value)
+                      handle_objective_change(index, e.target.value)
                     }
                   />
                   <Button
                     variant='destructive'
                     icon='trashSimple'
                     className='h-9'
-                    onClick={() => handleRemoveObjective(index)}
+                    onClick={() => handle_remove_objective(index)}
                   />
                 </div>
               ))}
               <div className='flex items-center gap-2'>
                 <Input
                   type='text'
-                  value={newObjective}
-                  onChange={(e) => setNewObjective(e.target.value)}
+                  value={new_objective || ''}
+                  onChange={(e) => set_new_objective(e.target.value)}
                   placeholder='Add an objective'
                 />
                 <Button
                   variant='primary'
                   icon='plus'
                   className='h-9'
-                  onClick={handleAddObjective}
+                  onClick={handle_add_objective}
                 />
               </div>
             </div>
@@ -142,8 +144,8 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
               Conclusion
             </FormLabel>
             <Textarea
-              value={interestsAndObjectives.conclusion}
-              onChange={(e) => handleChange('conclusion', e.target.value)}
+              value={interests_and_objectives.conclusion || ''}
+              onChange={(e) => handle_change('conclusion', e.target.value)}
               rows={3}
               required
             />
@@ -156,7 +158,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
       <Button
         variant='primary'
         icon='floppyDisk'
-        onClick={handleSubmit}
+        onClick={handle_submit}
         className='w-full'
       >
         Save

@@ -6,7 +6,7 @@ import PageTitle from '@/components/PageTitle';
 import { InterestsAndObjectivesLayout } from '@/components/Section/InterestsAndObjectives';
 import { useCollection } from '@/hooks';
 import { mapRecordToInterests } from '@/lib/mappers';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
 
 export default function InterestsAndObjectivesContent() {
   const { data: interestsAndObjectivesList, loading } = useCollection<

@@ -19,14 +19,16 @@ interface MovieRow {
 
 function mapRowToMovie(row: MovieRow | null): Movie | null {
   if (!row) return null;
+  const poster_key = row.poster_url;
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
-    releaseDate: row.release_date,
-    imdbId: row.imdb_id,
-    posterUrl: row.poster_url,
-    imdbLink: row.imdb_link,
+    release_date: row.release_date,
+    imdb_id: row.imdb_id,
+    image: poster_key ? `/api/storage/${poster_key}` : '',
+    poster_url: poster_key || '',
+    imdb_link: row.imdb_link,
     rating: row.rating,
   };
 }
@@ -71,9 +73,9 @@ export async function addMovie(
     if (data instanceof FormData) {
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
-      payload.releaseDate = data.get('releaseDate') as string;
-      payload.imdbId = data.get('imdbId') as string;
-      payload.imdbLink = data.get('imdbLink') as string;
+      payload.release_date = data.get('release_date') as string;
+      payload.imdb_id = data.get('imdb_id') as string;
+      payload.imdb_link = data.get('imdb_link') as string;
       payload.rating = Number(data.get('rating'));
 
       // Generate slug first if not provided
@@ -82,12 +84,12 @@ export async function addMovie(
           payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
       }
 
-      const posterFile = data.get('poster') as File | null;
-      const posterUrlInput = data.get('posterUrl') as string | null;
+      const posterFile = data.get('image') as File | null;
+      const posterUrlInput = data.get('poster_url') as string | null;
       if (posterFile && posterFile.size > 0) {
-        payload.posterUrl = await uploadFile(posterFile, payload.slug);
+        payload.poster_url = await uploadFile(posterFile, payload.slug);
       } else if (posterUrlInput) {
-        payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
+        payload.poster_url = posterUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -107,10 +109,10 @@ export async function addMovie(
         id,
         payload.slug,
         payload.title,
-        payload.releaseDate || '',
-        payload.imdbId || '',
-        payload.posterUrl || '',
-        payload.imdbLink || '',
+        payload.release_date || '',
+        payload.imdb_id || '',
+        payload.poster_url || '',
+        payload.imdb_link || '',
         payload.rating || 0,
       )
       .run();
@@ -149,20 +151,20 @@ export async function updateMovie(
     if (data instanceof FormData) {
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
-      payload.releaseDate = data.get('releaseDate') as string;
-      payload.imdbId = data.get('imdbId') as string;
-      payload.imdbLink = data.get('imdbLink') as string;
+      payload.release_date = data.get('release_date') as string;
+      payload.imdb_id = data.get('imdb_id') as string;
+      payload.imdb_link = data.get('imdb_link') as string;
       payload.rating = Number(data.get('rating'));
 
       // Use existing slug or new one
       const slug = payload.slug || existing.slug;
 
-      const posterFile = data.get('poster') as File | null;
-      const posterUrlInput = data.get('posterUrl') as string | null;
+      const posterFile = data.get('image') as File | null;
+      const posterUrlInput = data.get('poster_url') as string | null;
       if (posterFile && posterFile.size > 0) {
-        payload.posterUrl = await uploadFile(posterFile, slug);
+        payload.poster_url = await uploadFile(posterFile, slug);
       } else if (posterUrlInput) {
-        payload.posterUrl = posterUrlInput.replace('/api/storage/', '');
+        payload.poster_url = posterUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -178,25 +180,25 @@ export async function updateMovie(
       fields.push('slug = ?');
       values.push(payload.slug);
     }
-    if (payload.releaseDate !== undefined) {
+    if (payload.release_date !== undefined) {
       fields.push('release_date = ?');
-      values.push(payload.releaseDate);
+      values.push(payload.release_date);
     }
-    if (payload.imdbId !== undefined) {
+    if (payload.imdb_id !== undefined) {
       fields.push('imdb_id = ?');
-      values.push(payload.imdbId);
+      values.push(payload.imdb_id);
     }
-    if (payload.imdbLink !== undefined) {
+    if (payload.imdb_link !== undefined) {
       fields.push('imdb_link = ?');
-      values.push(payload.imdbLink);
+      values.push(payload.imdb_link);
     }
     if (payload.rating !== undefined) {
       fields.push('rating = ?');
       values.push(payload.rating);
     }
-    if (payload.posterUrl !== undefined) {
+    if (payload.poster_url !== undefined) {
       fields.push('poster_url = ?');
-      values.push(payload.posterUrl);
+      values.push(payload.poster_url);
     }
 
     if (fields.length > 0) {

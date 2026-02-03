@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/UI';
 import CardEmpty from '@/components/UI/Card/variants/Empty';
 import { Separator } from '@/components/UI/Separator';
 import { useLoadingToggle } from '@/contexts/loadingContext';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
 
 export const InterestsAndObjectivesLayout = ({
   data,

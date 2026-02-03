@@ -8,7 +8,6 @@ import { useRadius } from '@/contexts/radiusContext';
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'active' | 'ghost';
   interactive?: boolean;
-  // Legacy props for compatibility
   openForm?: boolean;
   isPreview?: boolean;
   isActive?: boolean;

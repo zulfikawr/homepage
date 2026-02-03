@@ -18,9 +18,9 @@ import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
 import { Employment } from '@/types/employment';
 import { GitHubContributionData } from '@/types/github';
-import { InterestsAndObjectives } from '@/types/interestsAndObjectives';
+import { InterestsAndObjectives } from '@/types/interests_and_objectives';
 import { Movie } from '@/types/movie';
-import { PersonalInfo } from '@/types/personalInfo';
+import { PersonalInfo } from '@/types/personal_info';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
@@ -162,9 +162,9 @@ export async function getGitHubContributionsServer(): Promise<GitHubContribution
     );
 
     return {
-      totalContributions: data.totalContributions,
-      repositoryCount: contributedRepos.length,
-      dailyContributions,
+      total_contributions: data.totalContributions,
+      repository_count: contributedRepos.length,
+      daily_contributions: dailyContributions,
       weeks: weeks.map((week: GitHubGraphQLWeek) =>
         week.contributionDays.map((day: GitHubGraphQLDay) => ({
           date: day.date,
@@ -285,7 +285,7 @@ export async function getGitHubLanguagesServer() {
         percentage: ((lang.bytes / totalBytes) * 100).toFixed(1),
         lines: Math.round(lang.bytes / 40),
       })),
-      totalBytes,
+      total_bytes: totalBytes,
     };
   } catch (error) {
     console.error('Error fetching GitHub languages on server:', error);

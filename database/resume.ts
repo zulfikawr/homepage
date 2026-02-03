@@ -3,11 +3,8 @@
 import { revalidatePath } from 'next/cache';
 
 import { getBucket, getDB } from '@/lib/cloudflare';
+import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';
-
-interface ResumeRow {
-  file_url: string;
-}
 
 async function uploadFile(file: File): Promise<string> {
   const bucket = getBucket();
@@ -28,19 +25,24 @@ async function uploadFile(file: File): Promise<string> {
     throw err;
   }
 
-  return `/api/storage/${key}`;
+  return key;
 }
 
 export async function getResume(): Promise<Resume> {
+  const defaultResume: Resume = { file: '', file_url: '' };
   try {
     const db = getDB();
-    if (!db) return { fileUrl: '' };
+    if (!db) return defaultResume;
+
     const row = await db
       .prepare('SELECT * FROM resume WHERE id = 1')
-      .first<ResumeRow>();
-    return { fileUrl: row?.file_url || '' };
+      .first<Record<string, unknown>>();
+
+    if (!row) return defaultResume;
+
+    return mapRecordToResume(row);
   } catch {
-    return { fileUrl: '' };
+    return defaultResume;
   }
 }
 
@@ -54,32 +56,36 @@ export async function updateResume(
       return { success: false, error: 'Database binding not found' };
     }
 
-    let fileUrl: string = '';
+    let file_url: string = '';
 
     if (data instanceof FormData) {
       const file = data.get('file') as File;
       if (file && file.size > 0) {
         console.log('updateResume: Uploading file...', file.name, file.size);
-        fileUrl = await uploadFile(file);
+        file_url = await uploadFile(file);
       } else {
-        fileUrl = (data.get('fileUrl') as string) || '';
+        file_url = (data.get('file_url') as string) || '';
       }
     } else {
-      fileUrl = data.fileUrl;
+      file_url = data.file_url;
     }
 
-    console.log('updateResume: Saving fileUrl to D1:', fileUrl);
+    // Clean the URL to just the key if it's our API URL
+    file_url = file_url.replace('/api/storage/', '');
+
+    console.log('updateResume: Saving file_url to D1:', file_url);
 
     await db
       .prepare(
         `INSERT INTO resume (id, file_url) VALUES (1, ?)
        ON CONFLICT(id) DO UPDATE SET file_url = excluded.file_url, updated_at = unixepoch()`,
       )
-      .bind(fileUrl)
+      .bind(file_url)
       .run();
 
     revalidatePath('/database/resume');
-    return { success: true, data: { fileUrl } };
+    const updated = await getResume();
+    return { success: true, data: updated };
   } catch (e) {
     console.error('updateResume Error:', e);
     return {

@@ -2,12 +2,12 @@ export interface Employment {
   id: string;
   slug: string;
   organization: string;
-  organizationIndustry?: string;
-  jobTitle: string;
-  jobType: 'fullTime' | 'partTime' | 'contract' | 'freelance' | 'internship';
+  organization_industry?: string;
+  job_title: string;
+  job_type: 'full_time' | 'part_time' | 'contract' | 'freelance' | 'internship';
   responsibilities: string[];
-  dateString: string;
-  orgLogoUrl?: string;
-  orgLogo?: string;
-  organizationLocation?: string;
+  date_string: string;
+  organization_logo?: string;
+  organization_logo_url?: string;
+  organization_location?: string;
 }

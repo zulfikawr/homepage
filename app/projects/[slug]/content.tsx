@@ -65,9 +65,9 @@ const ProjectContent = ({
 
             {/* GitHub Card */}
             <ViewTransition>
-              {project.githubRepoUrl && (
+              {project.github_repo_url && (
                 <GitHubCard
-                  repoUrl={project.githubRepoUrl}
+                  repoUrl={project.github_repo_url}
                   repoName={project.name}
                 />
               )}

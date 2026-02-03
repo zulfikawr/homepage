@@ -99,7 +99,7 @@ export default function PagesContent({ resume }: { resume: Resume | null }) {
         title: 'Resume',
         desc: 'View my CV',
         icon: 'filePdf',
-        href: resume?.fileUrl || '#',
+        href: resume?.file_url || '#',
       },
       {
         title: 'UI',

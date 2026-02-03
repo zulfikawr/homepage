@@ -6,6 +6,6 @@ export interface Publication {
   publisher: string;
   excerpt: string;
   keywords: string[];
-  openAccess: boolean;
+  open_access: boolean;
   link: string;
 }

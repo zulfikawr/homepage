@@ -17,7 +17,7 @@ export default function EditMoviePage({ movie }: EditMoviePageProps) {
         subtitle={movie.title}
       />
 
-      <MovieForm movieToEdit={movie} />
+      <MovieForm movie_to_edit={movie} />
     </div>
   );
 }

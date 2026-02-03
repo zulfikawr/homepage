@@ -14,90 +14,96 @@ import {
   deleteCertificate,
   updateCertificate,
 } from '@/database/certificates';
+import { getFileUrl } from '@/lib/storage';
 import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
+
 interface CertificateFormProps {
-  certificateToEdit?: Certificate;
+  certificate_to_edit?: Certificate;
 }
 
-const initialCertificateState: Certificate = {
+const initial_certificate_state: Certificate = {
   id: '',
   slug: '',
   title: '',
-  issuedBy: '',
-  dateIssued: '',
-  credentialId: '',
-  imageUrl: '',
-  organizationLogoUrl: undefined,
+  issued_by: '',
+  date_issued: '',
+  credential_id: '',
+  image_url: '',
+  organization_logo_url: '',
   link: '',
 };
 
 const CertificateForm: React.FC<CertificateFormProps> = ({
-  certificateToEdit,
+  certificate_to_edit,
 }) => {
-  const [certificate, setCertificate] = useState<Certificate>(
-    certificateToEdit || initialCertificateState,
+  const [certificate, set_certificate] = useState<Certificate>(
+    certificate_to_edit || initial_certificate_state,
   );
 
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [image_file, set_image_file] = useState<File | null>(null);
+  const [logo_file, set_logo_file] = useState<File | null>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (certificateToEdit?.dateIssued) {
-      return new Date(certificateToEdit.dateIssued);
+  const [selected_date, set_selected_date] = useState<Date>(() => {
+    if (certificate_to_edit?.date_issued) {
+      return new Date(certificate_to_edit.date_issued);
     }
     return new Date('2025-01-01');
   });
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
-      if (certificateToEdit?.dateIssued) {
-        setSelectedDate(new Date(certificateToEdit.dateIssued));
+      if (certificate_to_edit?.date_issued) {
+        set_selected_date(new Date(certificate_to_edit.date_issued));
       } else {
-        setSelectedDate(new Date());
+        set_selected_date(new Date());
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [certificateToEdit]);
+  }, [certificate_to_edit]);
 
-  const currentPreviewCertificate: Certificate = {
+  const current_preview_certificate: Certificate = {
     id: certificate.id || 'preview',
     slug: certificate.slug || 'preview',
     title: certificate.title || 'Certificate Title',
-    issuedBy: certificate.issuedBy || 'Issued By',
-    dateIssued: certificate.dateIssued || formatDate(selectedDate),
-    credentialId: certificate.credentialId || 'Credential ID',
-    organizationLogoUrl: certificate.organizationLogoUrl || undefined,
-    imageUrl: certificate.imageUrl,
+    issued_by: certificate.issued_by || 'Issued By',
+    date_issued: certificate.date_issued || formatDate(selected_date),
+    credential_id: certificate.credential_id || 'Credential ID',
+    image: getFileUrl({}, certificate.image_url),
+    organization_logo: getFileUrl({}, certificate.organization_logo_url || ''),
+    organization_logo_url: certificate.organization_logo_url || '',
+    image_url: certificate.image_url,
     link: certificate.link || '#',
   };
 
-  const handleChange = (field: keyof Certificate, value: string) => {
-    setCertificate((prev) => ({ ...prev, [field]: value }));
+  const handle_change = (field: keyof Certificate, value: string) => {
+    set_certificate((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDateChange = (newDate: Date) => {
-    setSelectedDate(newDate);
-    handleChange('dateIssued', formatDate(newDate));
+  const handle_date_change = (new_date: Date) => {
+    set_selected_date(new_date);
+    handle_change('date_issued', formatDate(new_date));
   };
 
-  const requiredCertificateFields: { key: keyof Certificate; label: string }[] =
-    [
-      { key: 'title', label: 'Title' },
-      { key: 'slug', label: 'Slug' },
-      { key: 'link', label: 'Link' },
-      { key: 'issuedBy', label: 'Issued By' },
-      { key: 'dateIssued', label: 'Date Issued' },
-      { key: 'credentialId', label: 'Credential ID' },
-    ];
+  const required_certificate_fields: {
+    key: keyof Certificate;
+    label: string;
+  }[] = [
+    { key: 'title', label: 'Title' },
+    { key: 'slug', label: 'Slug' },
+    { key: 'link', label: 'Link' },
+    { key: 'issued_by', label: 'Issued By' },
+    { key: 'date_issued', label: 'Date Issued' },
+    { key: 'credential_id', label: 'Credential ID' },
+  ];
 
-  const validateForm = () => {
-    for (const field of requiredCertificateFields) {
+  const validate_form = () => {
+    for (const field of required_certificate_fields) {
       const value = certificate[field.key];
-      const isEmpty = typeof value === 'string' ? !value.trim() : !value;
+      const is_empty = typeof value === 'string' ? !value.trim() : !value;
 
-      if (isEmpty) {
+      if (is_empty) {
         toast.error(`${field.label} is required.`);
         return false;
       }
@@ -107,46 +113,46 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
   const router = useRouter();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validate_form()) return;
 
-    const certificateData = {
+    const certificate_data = {
       ...certificate,
-      id: certificateToEdit?.id || '',
+      id: certificate_to_edit?.id || '',
       slug: certificate.slug || generateSlug(certificate.title),
-      dateIssued: formatDate(selectedDate),
+      date_issued: formatDate(selected_date),
     };
 
     try {
       let result;
 
-      if (imageFile || logoFile) {
-        const formData = new FormData();
+      if (image_file || logo_file) {
+        const form_data = new FormData();
         // Append all certificate fields
-        Object.entries(certificateData).forEach(([key, value]) => {
+        Object.entries(certificate_data).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
+            form_data.append(key, value.toString());
           }
         });
 
         // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (logoFile) formData.append('organizationLogo', logoFile);
+        if (image_file) form_data.append('image', image_file);
+        if (logo_file) form_data.append('organization_logo', logo_file);
 
-        result = certificateToEdit
-          ? await updateCertificate(formData)
-          : await addCertificate(formData);
+        result = certificate_to_edit
+          ? await updateCertificate(form_data)
+          : await addCertificate(form_data);
       } else {
-        result = certificateToEdit
-          ? await updateCertificate(certificateData)
-          : await addCertificate(certificateData);
+        result = certificate_to_edit
+          ? await updateCertificate(certificate_data)
+          : await addCertificate(certificate_data);
       }
 
       if (result.success) {
         toast.success(
-          certificateToEdit
+          certificate_to_edit
             ? 'Certificate updated successfully!'
             : 'Certificate added successfully!',
         );
@@ -161,11 +167,11 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!certificateToEdit) return;
+  const handle_delete = async () => {
+    if (!certificate_to_edit) return;
 
     try {
-      const result = await deleteCertificate(certificateToEdit.id);
+      const result = await deleteCertificate(certificate_to_edit.id);
 
       if (result.success) {
         toast.success('Certificate deleted successfully!');
@@ -180,7 +186,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     }
   };
 
-  const confirmDelete = () => {
+  const confirm_delete = () => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
@@ -189,7 +195,10 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           action cannot be undone.
         </p>
         <div className='flex justify-center mb-6'>
-          <CertificateCard certificate={currentPreviewCertificate} isPreview />
+          <CertificateCard
+            certificate={current_preview_certificate}
+            isPreview
+          />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -198,7 +207,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           <Button
             variant='destructive'
             onClick={() => {
-              handleDelete();
+              handle_delete();
               modal.close();
             }}
           >
@@ -213,27 +222,30 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     <>
       <div className='space-y-6'>
         <div className='flex justify-center'>
-          <CertificateCard certificate={currentPreviewCertificate} isPreview />
+          <CertificateCard
+            certificate={current_preview_certificate}
+            isPreview
+          />
         </div>
 
         <Separator margin='5' />
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='title' required>
               Title
             </FormLabel>
             <Input
               type='text'
-              value={certificate.title}
+              value={certificate.title || ''}
               onChange={(e) => {
-                const newTitle = e.target.value;
-                setCertificate((prev) => ({
+                const new_title = e.target.value;
+                set_certificate((prev) => ({
                   ...prev,
-                  title: newTitle,
+                  title: new_title,
                   slug:
-                    prev.slug || !certificateToEdit
-                      ? generateSlug(newTitle)
+                    prev.slug || !certificate_to_edit
+                      ? generateSlug(new_title)
                       : prev.slug,
                 }));
               }}
@@ -247,61 +259,62 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={certificate.slug}
-              onChange={(e) => handleChange('slug', e.target.value)}
+              value={certificate.slug || ''}
+              onChange={(e) => handle_change('slug', e.target.value)}
               placeholder='professional-web-developer'
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='issuedBy' required>
+            <FormLabel htmlFor='issued_by' required>
               Issued By
             </FormLabel>
             <Input
               type='text'
-              value={certificate.issuedBy}
-              onChange={(e) => handleChange('issuedBy', e.target.value)}
+              value={certificate.issued_by || ''}
+              onChange={(e) => handle_change('issued_by', e.target.value)}
               placeholder='Google, Coursera, etc.'
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='dateIssued' required>
+            <FormLabel htmlFor='date_issued' required>
               Date Issued
             </FormLabel>
             <DateSelect
-              value={selectedDate}
-              onChange={handleDateChange}
+              value={selected_date}
+              onChange={handle_date_change}
               mode='month-year'
             />
           </div>
           <div>
-            <FormLabel htmlFor='credentialId' required>
+            <FormLabel htmlFor='credential_id' required>
               Credential ID
             </FormLabel>
             <Input
               type='text'
-              value={certificate.credentialId}
-              onChange={(e) => handleChange('credentialId', e.target.value)}
+              value={certificate.credential_id || ''}
+              onChange={(e) => handle_change('credential_id', e.target.value)}
               placeholder='AB123456789'
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='imageUrl'>Image URL</FormLabel>
+            <FormLabel htmlFor='image_url'>Image URL</FormLabel>
             <div className='flex gap-2'>
               <Input
                 type='text'
-                value={certificate.imageUrl}
-                onChange={(e) => handleChange('imageUrl', e.target.value)}
+                value={certificate.image_url || ''}
+                onChange={(e) => handle_change('image_url', e.target.value)}
                 placeholder='https://example.com/certificate.png'
               />
               <FileUpload
                 collectionName='certificates'
-                recordId={certificateToEdit?.id}
+                recordId={certificate_to_edit?.id}
                 fieldName='image'
-                onUploadSuccess={(url) => handleChange('imageUrl', url)}
-                onFileSelect={setImageFile}
+                existingValue={certificate.image_url}
+                onUploadSuccess={(url) => handle_change('image_url', url)}
+                onFileSelect={set_image_file}
               />
             </div>
           </div>
@@ -311,33 +324,34 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={certificate.link}
-              onChange={(e) => handleChange('link', e.target.value)}
+              value={certificate.link || ''}
+              onChange={(e) => handle_change('link', e.target.value)}
               placeholder='https://example.com/verify/ABC'
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='organizationLogoUrl'>
+            <FormLabel htmlFor='organization_logo_url'>
               Organization Logo URL
             </FormLabel>
             <div className='flex gap-2'>
               <Input
                 type='text'
-                value={certificate.organizationLogoUrl || ''}
+                value={certificate.organization_logo_url || ''}
                 onChange={(e) =>
-                  handleChange('organizationLogoUrl', e.target.value)
+                  handle_change('organization_logo_url', e.target.value)
                 }
                 placeholder='https://example.com/logo.png'
               />
               <FileUpload
                 collectionName='certificates'
-                recordId={certificateToEdit?.id}
-                fieldName='organizationLogo'
+                recordId={certificate_to_edit?.id}
+                fieldName='organization_logo'
+                existingValue={certificate.organization_logo_url}
                 onUploadSuccess={(url) =>
-                  handleChange('organizationLogoUrl', url)
+                  handle_change('organization_logo_url', url)
                 }
-                onFileSelect={setLogoFile}
+                onFileSelect={set_logo_file}
               />
             </div>
           </div>
@@ -346,12 +360,12 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
       <Separator margin='5' />
 
-      {certificateToEdit ? (
+      {certificate_to_edit ? (
         <div className='flex space-x-4'>
           <Button
             variant='destructive'
             icon='trash'
-            onClick={confirmDelete}
+            onClick={confirm_delete}
             className='w-full'
           >
             Delete
@@ -359,7 +373,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
           <Button
             variant='primary'
             icon='floppyDisk'
-            onClick={handleSubmit}
+            onClick={handle_submit}
             className='w-full'
           >
             Save
@@ -369,7 +383,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
         <Button
           variant='primary'
           icon='plus'
-          onClick={handleSubmit}
+          onClick={handle_submit}
           className='w-full'
         >
           Add

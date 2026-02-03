@@ -19,7 +19,7 @@ export default function LoginContent() {
 
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push('/database');
     }
   }, [user, router]);
 
@@ -83,7 +83,7 @@ export default function LoginContent() {
               <span className='w-full border-t border-border' />
             </div>
             <div className='relative flex justify-center text-xs uppercase'>
-              <span className='px-4 text-gruv-fg-dim tracking-widest'>
+              <span className='bg-background px-4 text-gruv-fg-dim tracking-widest'>
                 Or continue with email
               </span>
             </div>

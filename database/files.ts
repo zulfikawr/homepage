@@ -52,6 +52,41 @@ export async function uploadFile(
 
       const fileExt = file.name.split('.').pop() || 'bin';
       key = `posts/${row.slug}/${fieldName}.${fileExt}`;
+    } else if (
+      collectionName === 'projects' ||
+      collectionName === 'employments' ||
+      collectionName === 'movies' ||
+      collectionName === 'books' ||
+      collectionName === 'publications'
+    ) {
+      // Use slug for collections that have it
+      const row = await db
+        .prepare(`SELECT slug FROM ${collectionName} WHERE id = ?`)
+        .bind(recordId)
+        .first<{ slug: string }>();
+
+      if (!row?.slug) {
+        return { success: false, error: `${collectionName} slug not found` };
+      }
+
+      const fileExt = file.name.split('.').pop() || 'bin';
+      key = `${collectionName}/${row.slug}/${fieldName}.${fileExt}`;
+    } else if (collectionName === 'certificates') {
+      // Certificates directory
+      const row = await db
+        .prepare(`SELECT slug FROM certificates WHERE id = ?`)
+        .bind(recordId)
+        .first<{ slug: string }>();
+
+      const folder = row?.slug || recordId;
+      const fileExt = file.name.split('.').pop() || 'bin';
+      key = `certificates/${folder}/${fieldName}.${fileExt}`;
+    } else if (
+      collectionName === 'personal_info' ||
+      collectionName === 'profile'
+    ) {
+      const fileExt = file.name.split('.').pop() || 'bin';
+      key = `profile/${fieldName}.${fileExt}`;
     } else if (collectionName === 'resume') {
       // Resume uses fixed path: profile/resume.pdf
       key = 'profile/resume.pdf';
@@ -76,18 +111,20 @@ export async function uploadFile(
     };
     const table = tableMap[collectionName] || collectionName;
 
-    // Most tables use image_url or similar. This helper might need specific mapping
-    // for every field in every table, but generally we use image_url or file_url now.
-    let field: string;
-    if (fieldName === 'image' || fieldName === 'poster') {
-      field = 'image_url';
-    } else if (fieldName === 'avatar') {
-      field = 'avatar_url';
-    } else if (fieldName === 'audio') {
-      field = 'audio_url';
-    } else {
-      field = fieldName;
-    }
+    const fieldMap: Record<string, string> = {
+      image: 'image_url',
+      poster: 'poster_url',
+      avatar: 'avatar_url',
+      audio: 'audio_url',
+      logo: 'organization_logo_url',
+      organization_logo: 'organization_logo_url',
+      organization_logo_url: 'organization_logo_url',
+      favicon: 'favicon_url',
+      file: 'file_url',
+      file_url: 'file_url',
+    };
+
+    const field = fieldMap[fieldName] || fieldName;
 
     console.log('[uploadFile] Updating database:', {
       table,

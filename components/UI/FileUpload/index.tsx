@@ -17,6 +17,7 @@ interface FileUploadProps {
   fieldName: string;
   className?: string;
   accept?: string;
+  existingValue?: string;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -27,10 +28,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   fieldName,
   className,
   accept = 'image/*',
+  existingValue,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const hasValue = !!selectedFile || !!existingValue;
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -48,6 +52,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    // Also notify success with empty string to clear the value in parent
+    onUploadSuccess('');
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,11 +136,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onClick={handleButtonClick}
         disabled={isUploading}
         icon={
-          isUploading ? undefined : selectedFile ? 'pencilSimpleLine' : 'plus'
+          isUploading ? 'circleNotch' : hasValue ? 'pencilSimpleLine' : 'plus'
         }
         className={twMerge('h-9', isUploading && 'opacity-70')}
+        iconClassName={twMerge(isUploading && 'animate-spin')}
       >
-        {isUploading ? '...' : selectedFile ? 'Replace' : 'Upload'}
+        <span className='hidden sm:inline'>
+          {hasValue ? 'Replace' : 'Upload'}
+        </span>
       </Button>
 
       <Button
@@ -144,17 +153,20 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         icon='folder'
         className='h-9'
       >
-        Select
+        <span className='hidden sm:inline'>Select</span>
       </Button>
 
-      {selectedFile && (
-        <button
+      {hasValue && (
+        <Button
+          variant='destructive'
           onClick={handleRemove}
-          className='text-sm text-muted-foreground hover:text-foreground'
+          disabled={isUploading}
+          icon='trashSimple'
+          className='h-9'
           title='Remove file'
         >
-          Remove
-        </button>
+          <span className='hidden sm:inline'>Remove</span>
+        </Button>
       )}
     </div>
   );

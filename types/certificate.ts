@@ -2,12 +2,12 @@ export interface Certificate {
   id: string;
   slug: string;
   title: string;
-  issuedBy: string;
-  dateIssued: string;
-  credentialId: string;
+  issued_by: string;
+  date_issued: string;
+  credential_id: string;
   image?: string;
-  imageUrl: string;
-  organizationLogo?: string;
-  organizationLogoUrl?: string;
+  image_url: string;
+  organization_logo?: string;
+  organization_logo_url?: string;
   link: string;
 }

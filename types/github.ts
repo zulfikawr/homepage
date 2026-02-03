@@ -5,9 +5,9 @@ export interface GitHubContributionDay {
 }
 
 export interface GitHubContributionData {
-  totalContributions: number;
-  repositoryCount: number;
-  dailyContributions: GitHubContributionDay[];
+  total_contributions: number;
+  repository_count: number;
+  daily_contributions: GitHubContributionDay[];
   weeks: GitHubContributionDay[][];
   year: number;
 }

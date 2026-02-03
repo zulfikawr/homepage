@@ -119,17 +119,17 @@ export const siteConfig = {
   ],
   dataSchema: {
     Project: {
-      status: ['inProgress', 'completed', 'upcoming'],
+      status: ['in_progress', 'completed', 'upcoming'],
       fields: [
         'id',
         'name',
-        'dateString',
+        'date_string',
         'description',
         'tools',
         'status',
         'pinned',
         'slug',
-        'githubRepoUrl',
+        'github_repo_url',
       ],
     },
     Post: {
@@ -138,28 +138,34 @@ export const siteConfig = {
         'title',
         'excerpt',
         'categories',
-        'dateString',
+        'date_string',
         'content',
         'slug',
       ],
     },
     Book: {
-      type: ['currentlyReading', 'read', 'toRead'],
-      fields: ['title', 'author', 'type', 'dateAdded', 'link'],
+      type: ['currently_reading', 'read', 'to_read'],
+      fields: ['title', 'author', 'type', 'date_added', 'link'],
     },
     Employment: {
-      jobType: ['fullTime', 'partTime', 'contract', 'freelance', 'internship'],
+      jobType: [
+        'full_time',
+        'part_time',
+        'contract',
+        'freelance',
+        'internship',
+      ],
       fields: [
         'organization',
-        'jobTitle',
-        'jobType',
+        'job_title',
+        'job_type',
         'responsibilities',
-        'dateString',
-        'organizationLocation',
+        'date_string',
+        'organization_location',
       ],
     },
     Certificate: {
-      fields: ['title', 'issuedBy', 'dateIssued', 'credentialId', 'link'],
+      fields: ['title', 'issued_by', 'date_issued', 'credential_id', 'link'],
     },
     Publication: {
       fields: [
@@ -168,7 +174,7 @@ export const siteConfig = {
         'publisher',
         'excerpt',
         'keywords',
-        'openAccess',
+        'open_access',
         'link',
       ],
     },

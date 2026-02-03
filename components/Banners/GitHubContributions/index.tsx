@@ -17,7 +17,7 @@ import Mask from '@/components/Visual/Mask';
 import { useLoadingToggle } from '@/contexts/loadingContext';
 import { GitHubContributionData } from '@/types/github';
 
-const getIntensityLevel = (count: number) => {
+const get_intensity_level = (count: number) => {
   if (count === 0) return 0;
   if (count <= 2) return 1;
   if (count <= 5) return 2;
@@ -28,13 +28,13 @@ const getIntensityLevel = (count: number) => {
 };
 
 const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
-  const GoToGithubButton = (
+  const GoToithubButton = (
     <Link
       href='https://github.com/zulfikawr'
       target='_blank'
       rel='noopener noreferrer'
     >
-      <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (
@@ -61,10 +61,10 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
       </div>
 
       <div className='hidden md:block'>
-        <Tooltip text='GitHub'>{GoToGithubButton}</Tooltip>
+        <Tooltip text='GitHub'>{GoToithubButton}</Tooltip>
       </div>
 
-      <div className='block md:hidden'>{GoToGithubButton}</div>
+      <div className='block md:hidden'>{GoToithubButton}</div>
     </div>
   );
 };
@@ -92,7 +92,7 @@ export const GitHubContributionsLayout = ({
               {isLoading ? (
                 <Skeleton width={60} height={24} as='span' />
               ) : (
-                data?.totalContributions.toLocaleString()
+                data?.total_contributions?.toLocaleString() || '0'
               )}
             </div>
           </div>
@@ -104,7 +104,7 @@ export const GitHubContributionsLayout = ({
               {isLoading ? (
                 <Skeleton width={35} height={14} as='span' />
               ) : (
-                data?.year
+                data?.year || new Date().getFullYear()
               )}
             </div>
           </div>
@@ -131,15 +131,15 @@ export const GitHubContributionsLayout = ({
                     ))}
                   </div>
                 ))
-              : data?.weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className='flex flex-col gap-1'>
-                    {week.map((day, dayIndex) => (
+              : data?.weeks?.map((week, week_index) => (
+                  <div key={week_index} className='flex flex-col gap-1'>
+                    {week.map((day, day_index) => (
                       <Tooltip
-                        key={`${weekIndex}-${dayIndex}`}
+                        key={`${week_index}-${day_index}`}
                         text={`${day.date}: ${day.count} contributions`}
                       >
                         <div
-                          className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(getIntensityLevel(day.count))}`}
+                          className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(get_intensity_level(day.count))}`}
                         />
                       </Tooltip>
                     ))}

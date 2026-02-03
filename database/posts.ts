@@ -95,7 +95,7 @@ export async function addPost(
       payload.slug = data.get('slug') as string;
       payload.content = data.get('content') as string;
       payload.excerpt = data.get('excerpt') as string;
-      payload.dateString = data.get('dateString') as string;
+      payload.date_string = data.get('date_string') as string;
 
       // Generate slug first if not provided
       if (!payload.slug) {
@@ -143,7 +143,7 @@ export async function addPost(
         payload.image_url,
         payload.audio_url,
         categoriesJson,
-        payload.dateString,
+        payload.date_string,
       )
       .run();
 
@@ -190,7 +190,7 @@ export async function updatePost(
       payload.slug = data.get('slug') as string;
       payload.content = data.get('content') as string;
       payload.excerpt = data.get('excerpt') as string;
-      payload.dateString = data.get('dateString') as string;
+      payload.date_string = data.get('date_string') as string;
 
       const categoriesStr = data.get('categories') as string;
       if (categoriesStr) {
@@ -273,9 +273,9 @@ export async function updatePost(
       fields.push('categories = ?');
       values.push(JSON.stringify(payload.categories));
     }
-    if (payload.dateString !== undefined) {
+    if (payload.date_string !== undefined) {
       fields.push('date_string = ?');
-      values.push(payload.dateString);
+      values.push(payload.date_string);
     }
 
     if (fields.length > 0) {

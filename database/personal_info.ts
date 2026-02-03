@@ -4,12 +4,13 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { getBucket, getDB } from '@/lib/cloudflare';
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
-import { PersonalInfo } from '@/types/personalInfo';
+import { PersonalInfo } from '@/types/personal_info';
 
 const defaultData: PersonalInfo = {
   name: 'Zulfikar',
   title: 'I build things for the web',
-  avatarUrl: '/avatar.jpg',
+  avatar: '/avatar.jpg',
+  avatar_url: '/avatar.jpg',
 };
 
 interface PersonalInfoRow {
@@ -71,28 +72,28 @@ export async function updatePersonalInfo(
 
     let name: string;
     let title: string;
-    let avatarKey: string | null = null;
+    let avatar_key: string | null = null;
 
     if (data instanceof FormData) {
       name = data.get('name') as string;
       title = data.get('title') as string;
 
-      const avatarFile = data.get('avatar') as File;
-      const avatarUrlInput = data.get('avatarUrl') as string;
+      const avatar_file = data.get('avatar') as File;
+      const avatar_url_input = data.get('avatar_url') as string;
 
-      if (avatarFile && avatarFile.size > 0) {
+      if (avatar_file && avatar_file.size > 0) {
         // Priority 1: New file upload
-        avatarKey = await uploadFile(avatarFile);
-      } else if (avatarUrlInput) {
+        avatar_key = await uploadFile(avatar_file);
+      } else if (avatar_url_input) {
         // Priority 2: URL string provided
         // If it's one of our own storage URLs, just store the key
-        avatarKey = avatarUrlInput.replace('/api/storage/', '');
+        avatar_key = avatar_url_input.replace('/api/storage/', '');
       }
     } else {
       name = data.name;
       title = data.title;
-      avatarKey = data.avatarUrl
-        ? data.avatarUrl.replace('/api/storage/', '')
+      avatar_key = data.avatar_url
+        ? data.avatar_url.replace('/api/storage/', '')
         : null;
     }
 
@@ -107,7 +108,7 @@ export async function updatePersonalInfo(
          avatar_url = COALESCE(excluded.avatar_url, personal_info.avatar_url),
          updated_at = unixepoch()`,
       )
-      .bind(name, title, avatarKey)
+      .bind(name, title, avatar_key)
       .run();
 
     revalidatePath('/');

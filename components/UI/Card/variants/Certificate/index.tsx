@@ -22,7 +22,7 @@ export default function CertificateCard({
 }: CertificateCardProps) {
   const router = useRouter();
 
-  const handleCardClick = () => {
+  const handle_card_click = () => {
     if (isPreview) return;
 
     const identifier = certificate.slug || certificate.id;
@@ -35,7 +35,11 @@ export default function CertificateCard({
 
   return (
     <div className={isPreview ? 'w-full' : ''}>
-      <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
+      <Card
+        onClick={handle_card_click}
+        openForm={openForm}
+        isPreview={isPreview}
+      >
         <div className='block md:hidden'>
           {/* Mobile layout */}
           <div className='w-full'>
@@ -43,7 +47,7 @@ export default function CertificateCard({
               <ImageWithFallback
                 width={300}
                 height={200}
-                src={certificate.imageUrl}
+                src={certificate.image}
                 alt={certificate.title}
                 className='w-full h-full rounded-t-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
                 loading='lazy'
@@ -57,11 +61,11 @@ export default function CertificateCard({
             </div>
             <div className='p-4 space-y-1'>
               <div className='flex items-center space-x-2'>
-                {certificate.organizationLogoUrl && (
+                {certificate.organization_logo && (
                   <ImageWithFallback
                     width={14}
                     height={14}
-                    src={certificate.organizationLogoUrl}
+                    src={certificate.organization_logo}
                     alt={certificate.title}
                     loading='lazy'
                     type='square'
@@ -69,14 +73,14 @@ export default function CertificateCard({
                   />
                 )}
                 <p className='text-xs font-light text-muted-foreground'>
-                  {certificate.issuedBy}
+                  {certificate.issued_by}
                 </p>
               </div>
               <p className='text-xs font-light text-muted-foreground'>
-                Issued {certificate.dateIssued}
+                Issued {certificate.date_issued}
               </p>
               <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded w-fit'>
-                Credential ID: {certificate.credentialId}
+                Credential ID: {certificate.credential_id}
               </p>
             </div>
           </div>
@@ -88,7 +92,7 @@ export default function CertificateCard({
             <ImageWithFallback
               width={200}
               height={150}
-              src={certificate.imageUrl}
+              src={certificate.image}
               alt={certificate.title}
               className='rounded-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
               loading='lazy'
@@ -101,11 +105,11 @@ export default function CertificateCard({
             </p>
             <Separator margin='2' />
             <div className='flex items-center space-x-2'>
-              {certificate.organizationLogoUrl && (
+              {certificate.organization_logo && (
                 <ImageWithFallback
                   width={14}
                   height={14}
-                  src={certificate.organizationLogoUrl}
+                  src={certificate.organization_logo}
                   alt={certificate.title}
                   loading='lazy'
                   type='square'
@@ -113,18 +117,18 @@ export default function CertificateCard({
                 />
               )}
               <p className='text-xs font-light text-muted-foreground'>
-                {certificate.issuedBy}
+                {certificate.issued_by}
               </p>
             </div>
             <div className='flex items-center space-x-2'>
               <p className='text-xs font-light text-muted-foreground'>
-                Issued {certificate.dateIssued}
+                Issued {certificate.date_issued}
               </p>
               <span className='text-muted-foreground font-light text-xs'>
                 |
               </span>
               <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded'>
-                Credential ID: {certificate.credentialId}
+                Credential ID: {certificate.credential_id}
               </p>
             </div>
           </div>

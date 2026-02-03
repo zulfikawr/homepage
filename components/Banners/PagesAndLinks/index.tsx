@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { Card, Skeleton } from '@/components/UI';
 import { Button, Icon, Separator, Tooltip } from '@/components/UI';
+import { IconName } from '@/components/UI/Icon';
 import Mask from '@/components/Visual/Mask';
 import { Resume } from '@/types/resume';
 
@@ -14,9 +15,9 @@ const PagesAndLinksBanner = ({
   resume: Resume | null;
   isLoading?: boolean;
 }) => {
-  const ViewAllButton = (
+  const view_all_button = (
     <Link href='/pages' prefetch={true}>
-      <Button className='h-7 p-1 dark:bg-muted tracking-normal'>
+      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (
@@ -26,7 +27,7 @@ const PagesAndLinksBanner = ({
     </Link>
   );
 
-  const navLinks = [
+  const nav_links = [
     {
       label: 'Contacts',
       href: '/contacts',
@@ -35,7 +36,7 @@ const PagesAndLinksBanner = ({
     },
     {
       label: 'Résumé',
-      href: resume?.fileUrl || '#',
+      href: resume?.file_url || '#',
       icon: 'filePdf',
       color: 'text-gruv-red',
       target: '_blank',
@@ -84,16 +85,16 @@ const PagesAndLinksBanner = ({
         </div>
 
         <div className='hidden md:block'>
-          <Tooltip text='All Pages'>{ViewAllButton}</Tooltip>
+          <Tooltip text='All Pages'>{view_all_button}</Tooltip>
         </div>
 
-        <div className='block md:hidden'>{ViewAllButton}</div>
+        <div className='block md:hidden'>{view_all_button}</div>
       </div>
 
       <Separator margin='0' />
 
       <Mask className='scrollbar-hide'>
-        <div className='inline-flex min-w-full items-center px-4 py-4 gap-x-2.5 whitespace-nowrap'>
+        <div className='inline-flex min-w-full items-center p-4 gap-x-2.5 whitespace-nowrap'>
           {isLoading
             ? Array(6)
                 .fill(0)
@@ -105,7 +106,7 @@ const PagesAndLinksBanner = ({
                     className='rounded-md shadow-brutalist border-2'
                   />
                 ))
-            : navLinks.map((link) => (
+            : nav_links.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
@@ -115,11 +116,11 @@ const PagesAndLinksBanner = ({
                     link.target === '_blank' ? 'noopener noreferrer' : undefined
                   }
                 >
-                  <Button className='group/btn px-3 dark:bg-muted tracking-normal gap-2'>
+                  <Button className='group/btn !px-4 dark:bg-muted tracking-normal gap-2'>
                     <span
                       className={`${link.color} group-hover/btn:text-accent-foreground`}
                     >
-                      <Icon name={link.icon} />
+                      <Icon name={link.icon as IconName} />
                     </span>
                     {link.label}
                   </Button>

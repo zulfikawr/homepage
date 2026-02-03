@@ -20,15 +20,19 @@ interface CertificateRow {
 
 function mapRowToCertificate(row: CertificateRow | null): Certificate | null {
   if (!row) return null;
+  const image_key = row.image_url;
+  const logo_key = row.organization_logo_url;
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
-    issuedBy: row.issued_by,
-    dateIssued: row.date_issued,
-    credentialId: row.credential_id,
-    imageUrl: row.image_url,
-    organizationLogoUrl: row.organization_logo_url,
+    issued_by: row.issued_by,
+    date_issued: row.date_issued,
+    credential_id: row.credential_id,
+    image: image_key ? `/api/storage/${image_key}` : '',
+    image_url: image_key || '',
+    organization_logo: logo_key ? `/api/storage/${logo_key}` : '',
+    organization_logo_url: logo_key || '',
     link: row.link,
   };
 }
@@ -73,25 +77,28 @@ export async function addCertificate(
     if (data instanceof FormData) {
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
-      payload.issuedBy = data.get('issuedBy') as string;
-      payload.dateIssued = data.get('dateIssued') as string;
-      payload.credentialId = data.get('credentialId') as string;
+      payload.issued_by = data.get('issued_by') as string;
+      payload.date_issued = data.get('date_issued') as string;
+      payload.credential_id = data.get('credential_id') as string;
       payload.link = data.get('link') as string;
 
       const imageFile = data.get('image') as File | null;
-      const imageUrlInput = data.get('imageUrl') as string | null;
+      const imageUrlInput = data.get('image_url') as string | null;
       if (imageFile && imageFile.size > 0) {
-        payload.imageUrl = await uploadFile(imageFile, 'cert');
+        payload.image_url = await uploadFile(imageFile, 'cert');
       } else if (imageUrlInput) {
-        payload.imageUrl = imageUrlInput.replace('/api/storage/', '');
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
-      const logoUrlInput = data.get('organizationLogoUrl') as string | null;
+      const logoFile = data.get('organization_logo') as File | null;
+      const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.organizationLogoUrl = await uploadFile(logoFile, 'logo');
+        payload.organization_logo_url = await uploadFile(logoFile, 'logo');
       } else if (logoUrlInput) {
-        payload.organizationLogoUrl = logoUrlInput.replace('/api/storage/', '');
+        payload.organization_logo_url = logoUrlInput.replace(
+          '/api/storage/',
+          '',
+        );
       }
     } else {
       payload = { ...data };
@@ -111,11 +118,11 @@ export async function addCertificate(
         id,
         payload.slug,
         payload.title,
-        payload.issuedBy,
-        payload.dateIssued,
-        payload.credentialId,
-        payload.imageUrl || '',
-        payload.organizationLogoUrl || '',
+        payload.issued_by,
+        payload.date_issued,
+        payload.credential_id,
+        payload.image_url || '',
+        payload.organization_logo_url || '',
         payload.link || '',
       )
       .run();
@@ -155,24 +162,27 @@ export async function updateCertificate(
     if (data instanceof FormData) {
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
-      payload.issuedBy = data.get('issuedBy') as string;
-      payload.dateIssued = data.get('dateIssued') as string;
-      payload.credentialId = data.get('credentialId') as string;
+      payload.issued_by = data.get('issued_by') as string;
+      payload.date_issued = data.get('date_issued') as string;
+      payload.credential_id = data.get('credential_id') as string;
       payload.link = data.get('link') as string;
       const imageFile = data.get('image') as File | null;
-      const imageUrlInput = data.get('imageUrl') as string | null;
+      const imageUrlInput = data.get('image_url') as string | null;
       if (imageFile && imageFile.size > 0) {
-        payload.imageUrl = await uploadFile(imageFile, 'cert');
+        payload.image_url = await uploadFile(imageFile, 'cert');
       } else if (imageUrlInput) {
-        payload.imageUrl = imageUrlInput.replace('/api/storage/', '');
+        payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
-      const logoUrlInput = data.get('organizationLogoUrl') as string | null;
+      const logoFile = data.get('organization_logo') as File | null;
+      const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.organizationLogoUrl = await uploadFile(logoFile, 'logo');
+        payload.organization_logo_url = await uploadFile(logoFile, 'logo');
       } else if (logoUrlInput) {
-        payload.organizationLogoUrl = logoUrlInput.replace('/api/storage/', '');
+        payload.organization_logo_url = logoUrlInput.replace(
+          '/api/storage/',
+          '',
+        );
       }
     } else {
       payload = { ...data };
@@ -188,29 +198,29 @@ export async function updateCertificate(
       fields.push('slug = ?');
       values.push(payload.slug);
     }
-    if (payload.issuedBy !== undefined) {
+    if (payload.issued_by !== undefined) {
       fields.push('issued_by = ?');
-      values.push(payload.issuedBy);
+      values.push(payload.issued_by);
     }
-    if (payload.dateIssued !== undefined) {
+    if (payload.date_issued !== undefined) {
       fields.push('date_issued = ?');
-      values.push(payload.dateIssued);
+      values.push(payload.date_issued);
     }
-    if (payload.credentialId !== undefined) {
+    if (payload.credential_id !== undefined) {
       fields.push('credential_id = ?');
-      values.push(payload.credentialId);
+      values.push(payload.credential_id);
     }
     if (payload.link !== undefined) {
       fields.push('link = ?');
       values.push(payload.link);
     }
-    if (payload.imageUrl !== undefined) {
+    if (payload.image_url !== undefined) {
       fields.push('image_url = ?');
-      values.push(payload.imageUrl);
+      values.push(payload.image_url);
     }
-    if (payload.organizationLogoUrl !== undefined) {
+    if (payload.organization_logo_url !== undefined) {
       fields.push('organization_logo_url = ?');
-      values.push(payload.organizationLogoUrl);
+      values.push(payload.organization_logo_url);
     }
 
     if (fields.length > 0) {

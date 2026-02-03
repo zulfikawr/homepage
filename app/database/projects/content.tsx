@@ -16,7 +16,7 @@ import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 import { sortByDate } from '@/utilities/sortByDate';
 
-type StatusFilter = 'all' | 'inProgress' | 'completed' | 'upcoming';
+type StatusFilter = 'all' | 'in_progress' | 'completed' | 'upcoming';
 
 export default function ProjectsDatabase() {
   const router = useRouter();
@@ -27,12 +27,12 @@ export default function ProjectsDatabase() {
     error,
   } = useCollection<Project>('projects', mapRecordToProject);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [search_query, set_search_query] = useState('');
+  const [status_filter, set_status_filter] = useState<StatusFilter>('all');
+  const [selected_tool, set_selected_tool] = useState<string | null>(null);
 
   // Derive unique tools from all projects
-  const allTools = useMemo(() => {
+  const all_tools = useMemo(() => {
     if (!projects) return [];
     const tools = new Set<string>();
     projects.forEach((p) => p.tools.forEach((t) => tools.add(t)));
@@ -40,12 +40,12 @@ export default function ProjectsDatabase() {
   }, [projects]);
 
   // Filter projects based on search, status, and tool
-  const filteredProjects = useMemo(() => {
+  const filtered_projects = useMemo(() => {
     if (!projects) return [];
     let filtered = projects;
 
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    if (search_query) {
+      const q = search_query.toLowerCase();
       filtered = filtered.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -53,20 +53,20 @@ export default function ProjectsDatabase() {
       );
     }
 
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter((p) => p.status === statusFilter);
+    if (status_filter !== 'all') {
+      filtered = filtered.filter((p) => p.status === status_filter);
     }
 
-    if (selectedTool) {
-      filtered = filtered.filter((p) => p.tools.includes(selectedTool));
+    if (selected_tool) {
+      filtered = filtered.filter((p) => p.tools.includes(selected_tool));
     }
 
     return sortByDate(filtered);
-  }, [projects, searchQuery, statusFilter, selectedTool]);
+  }, [projects, search_query, status_filter, selected_tool]);
 
   if (error) return <CardEmpty message='Failed to load projects' />;
 
-  const handleAddProject = () => {
+  const handle_add_project = () => {
     router.push('/database/projects/new');
   };
 
@@ -84,26 +84,26 @@ export default function ProjectsDatabase() {
             />
             <Input
               placeholder='Search projects...'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={search_query}
+              onChange={(e) => set_search_query(e.target.value)}
               className='pl-9 bg-card/50'
             />
-            {searchQuery && (
+            {search_query && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => set_search_query('')}
                 className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
               >
-                <Icon name='x' className='size-3' />
+                <Icon name='x' className='size-4' />
               </button>
             )}
           </div>
           <div className='overflow-x-auto pb-1 -mb-1 scrollbar-hide'>
             <ToggleGroup
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v as StatusFilter)}
+              value={status_filter}
+              onChange={(v) => set_status_filter(v as StatusFilter)}
               options={[
                 { label: 'All', value: 'all' },
-                { label: 'WIP', value: 'inProgress', icon: 'hammer' },
+                { label: 'WIP', value: 'in_progress', icon: 'hammer' },
                 { label: 'Done', value: 'completed', icon: 'checkCircle' },
                 { label: 'Plan', value: 'upcoming', icon: 'calendarPlus' },
               ]}
@@ -115,26 +115,26 @@ export default function ProjectsDatabase() {
         <Mask className='-m-1 scrollbar-hide pb-2'>
           <div className='flex items-center gap-2 m-1'>
             <Badge
-              variant={selectedTool === null ? 'primary' : 'outline'}
+              variant={selected_tool === null ? 'primary' : 'outline'}
               className={twMerge(
                 'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                selectedTool !== null && 'hover:bg-primary/20',
+                selected_tool !== null && 'hover:bg-primary/20',
               )}
-              onClick={() => setSelectedTool(null)}
+              onClick={() => set_selected_tool(null)}
             >
               All Tools
             </Badge>
-            {allTools.map((tool) => (
+            {all_tools.map((tool) => (
               <Badge
                 key={tool}
-                variant={selectedTool === tool ? 'primary' : 'outline'}
+                variant={selected_tool === tool ? 'primary' : 'outline'}
                 icon
                 className={twMerge(
                   'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                  selectedTool !== tool && 'hover:bg-primary/20',
+                  selected_tool !== tool && 'hover:bg-primary/20',
                 )}
                 onClick={() =>
-                  setSelectedTool(selectedTool === tool ? null : tool)
+                  set_selected_tool(selected_tool === tool ? null : tool)
                 }
               >
                 {tool}
@@ -156,7 +156,7 @@ export default function ProjectsDatabase() {
                 <Button
                   variant='primary'
                   icon='plus'
-                  onClick={handleAddProject}
+                  onClick={handle_add_project}
                   className='my-8 mx-auto'
                 >
                   Add New Project
@@ -164,9 +164,9 @@ export default function ProjectsDatabase() {
               </Card>
             </ViewTransition>
 
-            {filteredProjects.length > 0 ? (
+            {filtered_projects.length > 0 ? (
               <StaggerContainer>
-                {filteredProjects.map((project) => (
+                {filtered_projects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} openForm />
                   </ViewTransition>
@@ -188,9 +188,9 @@ export default function ProjectsDatabase() {
                   variant='outline'
                   className='mt-4'
                   onClick={() => {
-                    setSearchQuery('');
-                    setSelectedTool(null);
-                    setStatusFilter('all');
+                    set_search_query('');
+                    set_selected_tool(null);
+                    set_status_filter('all');
                   }}
                 >
                   Clear filters

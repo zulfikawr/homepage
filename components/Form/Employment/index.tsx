@@ -26,119 +26,123 @@ import { formatDateRange } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
 
 interface EmploymentFormProps {
-  employmentToEdit?: Employment;
+  employment_to_edit?: Employment;
 }
 
-const initialEmploymentState: Employment = {
+const initial_employment_state: Employment = {
   id: '',
   slug: '',
   organization: '',
-  organizationIndustry: '',
-  jobTitle: '',
-  jobType: 'fullTime',
+  organization_industry: '',
+  job_title: '',
+  job_type: 'full_time',
   responsibilities: [],
-  dateString: '',
-  orgLogoUrl: '',
-  organizationLocation: '',
+  date_string: '',
+  organization_logo: '',
+  organization_logo_url: '',
+  organization_location: '',
 };
 
 const EmploymentForm: React.FC<EmploymentFormProps> = ({
-  employmentToEdit,
+  employment_to_edit,
 }) => {
-  const [employment, setEmployment] = useState<Employment>(
-    employmentToEdit || initialEmploymentState,
+  const [employment, set_employment] = useState<Employment>(
+    employment_to_edit || initial_employment_state,
   );
-  const [isPresent, setIsPresent] = useState(
-    employmentToEdit?.dateString?.includes('Present') || false,
+  const [is_present, set_is_present] = useState(
+    employment_to_edit?.date_string?.includes('Present') || false,
   );
-  const [newResponsibility, setNewResponsibility] = useState('');
-  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [new_responsibility, set_new_responsibility] = useState('');
+  const [logo_file, set_logo_file] = useState<File | null>(null);
 
-  const [startDate, setStartDate] = useState<Date>(() => {
-    if (employmentToEdit?.dateString) {
-      const [startStr] = employmentToEdit.dateString.split(' - ');
-      return new Date(startStr);
+  const [start_date, set_start_date] = useState<Date>(() => {
+    if (employment_to_edit?.date_string) {
+      const [start_str] = employment_to_edit.date_string.split(' - ');
+      return new Date(start_str);
     }
     return new Date('2025-01-01');
   });
-  const [endDate, setEndDate] = useState<Date>(() => {
-    if (employmentToEdit?.dateString) {
-      const [, endStr] = employmentToEdit.dateString.split(' - ');
-      return endStr === 'Present' ? new Date() : new Date(endStr);
+  const [end_date, set_end_date] = useState<Date>(() => {
+    if (employment_to_edit?.date_string) {
+      const [, end_str] = employment_to_edit.date_string.split(' - ');
+      return end_str === 'Present' ? new Date() : new Date(end_str);
     }
     return new Date('2025-01-01');
   });
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
-      if (employmentToEdit?.dateString) {
-        const [startStr, endStr] = employmentToEdit.dateString.split(' - ');
-        setStartDate(new Date(startStr));
-        setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
+      if (employment_to_edit?.date_string) {
+        const [start_str, end_str] =
+          employment_to_edit.date_string.split(' - ');
+        set_start_date(new Date(start_str));
+        set_end_date(end_str === 'Present' ? new Date() : new Date(end_str));
       } else {
         const now = new Date();
-        setStartDate(now);
-        setEndDate(now);
+        set_start_date(now);
+        set_end_date(now);
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [employmentToEdit]);
+  }, [employment_to_edit]);
 
-  const currentPreviewEmployment: Employment = {
+  const current_preview_employment: Employment = {
     id: employment.id || 'preview',
     slug: employment.slug || 'preview',
     organization: employment.organization || 'Organization Name',
-    organizationIndustry:
-      employment.organizationIndustry || 'Organization Industry',
-    jobTitle: employment.jobTitle || 'Job Title',
-    jobType: employment.jobType || 'fullTime',
+    organization_industry:
+      employment.organization_industry || 'Organization Industry',
+    job_title: employment.job_title || 'Job Title',
+    job_type: employment.job_type || 'full_time',
     responsibilities: employment.responsibilities || [
       'Responsibility 1',
       'Responsibility 2',
     ],
-    dateString: employment.dateString || formatDateRange(startDate, endDate),
-    orgLogoUrl: employment.orgLogoUrl || '/images/placeholder-square.png',
-    organizationLocation:
-      employment.organizationLocation || 'Organization Location',
+    date_string:
+      employment.date_string || formatDateRange(start_date, end_date),
+    organization_logo:
+      employment.organization_logo_url || '/images/placeholder-square.png',
+    organization_location:
+      employment.organization_location || 'Organization Location',
   };
 
-  const handleChange = (field: keyof Employment, value: string | string[]) => {
-    setEmployment((prev) => ({ ...prev, [field]: value }));
+  const handle_change = (field: keyof Employment, value: string | string[]) => {
+    set_employment((prev) => ({ ...prev, [field]: value }));
   };
 
-  const requiredEmploymentFields: {
-    key: keyof typeof employment | 'dateRange';
+  const required_employment_fields: {
+    key: keyof typeof employment | 'date_range';
     label: string;
     check?: (value: (typeof employment)[keyof typeof employment]) => boolean;
   }[] = [
     { key: 'organization', label: 'Organization name' },
-    { key: 'jobTitle', label: 'Job title' },
-    { key: 'jobType', label: 'Job type' },
+    { key: 'job_title', label: 'Job title' },
+    { key: 'job_type', label: 'Job type' },
     {
       key: 'responsibilities',
       label: 'At least one responsibility',
       check: (val) => Array.isArray(val) && val.length > 0,
     },
     {
-      key: 'dateRange',
+      key: 'date_range',
       label: 'Date range',
-      check: () => !!startDate && !!endDate,
+      check: () => !!start_date && !!end_date,
     },
   ];
 
-  const validateForm = () => {
-    for (const field of requiredEmploymentFields) {
+  const validate_form = () => {
+    for (const field of required_employment_fields) {
       const value =
-        field.key === 'dateRange'
+        field.key === 'date_range'
           ? null
           : employment[field.key as keyof typeof employment];
-      const isEmpty = field.check
+      const is_empty = field.check
         ? !field.check(value)
         : typeof value === 'string'
           ? !value.trim()
           : !value;
 
-      if (isEmpty) {
+      if (is_empty) {
         toast.error(`${field.label} is required.`);
         return false;
       }
@@ -148,44 +152,44 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
   const router = useRouter();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validate_form()) return;
 
-    const employmentData = {
+    const employment_data = {
       ...employment,
-      id: employmentToEdit?.id || '',
+      id: employment_to_edit?.id || '',
       slug: employment.slug || generateSlug(employment.organization),
-      dateString: formatDateRange(startDate, endDate, isPresent),
+      date_string: formatDateRange(start_date, end_date, is_present),
     };
 
     try {
       let result;
 
-      if (logoFile) {
-        const formData = new FormData();
-        Object.entries(employmentData).forEach(([key, value]) => {
+      if (logo_file) {
+        const form_data = new FormData();
+        Object.entries(employment_data).forEach(([key, value]) => {
           if (key === 'responsibilities' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
+            form_data.append(key, JSON.stringify(value));
           } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
+            form_data.append(key, value.toString());
           }
         });
-        formData.append('orgLogo', logoFile);
+        form_data.append('organization_logo', logo_file);
 
-        result = employmentToEdit
-          ? await updateEmployment(formData)
-          : await addEmployment(formData);
+        result = employment_to_edit
+          ? await updateEmployment(form_data)
+          : await addEmployment(form_data);
       } else {
-        result = employmentToEdit
-          ? await updateEmployment(employmentData)
-          : await addEmployment(employmentData);
+        result = employment_to_edit
+          ? await updateEmployment(employment_data)
+          : await addEmployment(employment_data);
       }
 
       if (result.success) {
         toast.success(
-          employmentToEdit
+          employment_to_edit
             ? 'Employment updated successfully!'
             : 'Employment added successfully!',
         );
@@ -200,11 +204,11 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!employmentToEdit) return;
+  const handle_delete = async () => {
+    if (!employment_to_edit) return;
 
     try {
-      const result = await deleteEmployment(employmentToEdit.id);
+      const result = await deleteEmployment(employment_to_edit.id);
 
       if (result.success) {
         toast.success('Employment deleted successfully!');
@@ -219,7 +223,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     }
   };
 
-  const confirmDelete = () => {
+  const confirm_delete = () => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
@@ -228,7 +232,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <EmploymentCard employment={currentPreviewEmployment} isPreview />
+          <EmploymentCard employment={current_preview_employment} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -237,7 +241,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           <Button
             variant='destructive'
             onClick={() => {
-              handleDelete();
+              handle_delete();
               modal.close();
             }}
           >
@@ -248,33 +252,33 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     );
   };
 
-  const handleAddResponsibility = () => {
-    if (newResponsibility.trim()) {
-      handleChange('responsibilities', [
+  const handle_add_responsibility = () => {
+    if (new_responsibility.trim()) {
+      handle_change('responsibilities', [
         ...employment.responsibilities,
-        newResponsibility.trim(),
+        new_responsibility.trim(),
       ]);
-      setNewResponsibility('');
+      set_new_responsibility('');
     }
   };
 
-  const handleRemoveResponsibility = (index: number) => {
-    const updatedResponsibilities = employment.responsibilities.filter(
+  const handle_remove_responsibility = (index: number) => {
+    const updated_responsibilities = employment.responsibilities.filter(
       (_, i) => i !== index,
     );
-    handleChange('responsibilities', updatedResponsibilities);
+    handle_change('responsibilities', updated_responsibilities);
   };
 
-  const jobTypeOptions = [
-    { key: 'fullTime', label: 'Full-time' },
-    { key: 'partTime', label: 'Part-time' },
+  const job_type_options = [
+    { key: 'full_time', label: 'Full-time' },
+    { key: 'part_time', label: 'Part-time' },
     { key: 'contract', label: 'Contract' },
     { key: 'freelance', label: 'Freelance' },
     { key: 'internship', label: 'Internship' },
   ];
 
-  const currentJobType = jobTypeOptions.find(
-    (opt) => opt.key === employment.jobType,
+  const current_job_type = job_type_options.find(
+    (opt) => opt.key === employment.job_type,
   );
 
   return (
@@ -282,46 +286,46 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       <div className='space-y-6'>
         {/* Employment Preview */}
         <div className='flex justify-center'>
-          <EmploymentCard employment={currentPreviewEmployment} isPreview />
+          <EmploymentCard employment={current_preview_employment} isPreview />
         </div>
 
         <Separator margin='5' />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
-            <FormLabel htmlFor='jobTitle' required>
+            <FormLabel htmlFor='job_title' required>
               Job Title
             </FormLabel>
             <Input
               type='text'
-              value={employment.jobTitle}
-              onChange={(e) => handleChange('jobTitle', e.target.value)}
+              value={employment.job_title || ''}
+              onChange={(e) => handle_change('job_title', e.target.value)}
               placeholder='Web Developer'
               required
             />
           </div>
 
           <div>
-            <FormLabel htmlFor='jobType' required>
+            <FormLabel htmlFor='job_type' required>
               Job Type
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-foreground'>
-                  {currentJobType?.label}
-                  <Icon name='caretDown' className='size-3' />
+                <Button className='flex items-center justify-between w-full text-base'>
+                  {current_job_type?.label}
+                  <Icon name='caretDown' className='size-4' />
                 </Button>
               }
               className='w-full'
               matchTriggerWidth
             >
               <div className='flex flex-col p-1 space-y-1 w-full'>
-                {jobTypeOptions.map((option) => (
+                {job_type_options.map((option) => (
                   <DropdownItem
                     key={option.key}
-                    onClick={() => handleChange('jobType', option.key)}
-                    isActive={option.key === employment.jobType}
+                    onClick={() => handle_change('job_type', option.key)}
+                    isActive={option.key === employment.job_type}
                   >
                     {option.label}
                   </DropdownItem>
@@ -338,35 +342,38 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={responsibility}
+                    value={responsibility || ''}
                     onChange={(e) => {
-                      const updatedResponsibilities = [
+                      const updated_responsibilities = [
                         ...employment.responsibilities,
                       ];
-                      updatedResponsibilities[index] = e.target.value;
-                      handleChange('responsibilities', updatedResponsibilities);
+                      updated_responsibilities[index] = e.target.value;
+                      handle_change(
+                        'responsibilities',
+                        updated_responsibilities,
+                      );
                     }}
                   />
                   <Button
                     variant='destructive'
                     icon='trashSimple'
                     className='h-9'
-                    onClick={() => handleRemoveResponsibility(index)}
+                    onClick={() => handle_remove_responsibility(index)}
                   />
                 </div>
               ))}
               <div className='flex items-center gap-2'>
                 <Input
                   type='text'
-                  value={newResponsibility}
-                  onChange={(e) => setNewResponsibility(e.target.value)}
+                  value={new_responsibility}
+                  onChange={(e) => set_new_responsibility(e.target.value)}
                   placeholder='Add a responsibility'
                 />
                 <Button
                   variant='primary'
                   icon='plus'
                   className='h-9'
-                  onClick={handleAddResponsibility}
+                  onClick={handle_add_responsibility}
                 />
               </div>
             </div>
@@ -375,11 +382,11 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             <div>
               <FormLabel required>Start Date</FormLabel>
               <DateSelect
-                value={startDate}
-                onChange={(newDate) => {
-                  setStartDate(newDate);
-                  if (isPresent) {
-                    setEndDate(newDate);
+                value={start_date}
+                onChange={(new_date) => {
+                  set_start_date(new_date);
+                  if (is_present) {
+                    set_end_date(new_date);
                   }
                 }}
                 mode='day-month-year'
@@ -388,21 +395,21 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             <div>
               <FormLabel>End Date</FormLabel>
               <DateSelect
-                value={endDate}
-                onChange={setEndDate}
+                value={end_date}
+                onChange={set_end_date}
                 mode='day-month-year'
-                className={isPresent ? 'opacity-50' : ''}
-                disabled={isPresent}
+                className={is_present ? 'opacity-50' : ''}
+                disabled={is_present}
               />
             </div>
 
             <Checkbox
-              id='isPresent'
-              checked={isPresent}
+              id='is_present'
+              checked={is_present}
               onChange={(checked) => {
-                setIsPresent(checked);
+                set_is_present(checked);
                 if (checked) {
-                  setEndDate(new Date());
+                  set_end_date(new Date());
                 }
               }}
               label='I currently working on this organization'
@@ -414,15 +421,15 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={employment.organization}
+              value={employment.organization || ''}
               onChange={(e) => {
-                const newOrg = e.target.value;
-                setEmployment((prev) => ({
+                const new_org = e.target.value;
+                set_employment((prev) => ({
                   ...prev,
-                  organization: newOrg,
+                  organization: new_org,
                   slug:
-                    prev.slug || !employmentToEdit
-                      ? generateSlug(newOrg)
+                    prev.slug || !employment_to_edit
+                      ? generateSlug(new_org)
                       : prev.slug,
                 }));
               }}
@@ -436,54 +443,59 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             </FormLabel>
             <Input
               type='text'
-              value={employment.slug}
-              onChange={(e) => handleChange('slug', e.target.value)}
+              value={employment.slug || ''}
+              onChange={(e) => handle_change('slug', e.target.value)}
               placeholder='organization-name'
               required
             />
           </div>
           <div>
-            <FormLabel htmlFor='organizationLogoUrl' required>
+            <FormLabel htmlFor='organization_logo_url' required>
               Organization Logo
             </FormLabel>
             <div className='flex gap-2'>
               <Input
                 type='text'
-                value={employment.orgLogoUrl}
-                onChange={(e) => handleChange('orgLogoUrl', e.target.value)}
+                value={employment.organization_logo_url || ''}
+                onChange={(e) =>
+                  handle_change('organization_logo_url', e.target.value)
+                }
                 placeholder='https://organization-logo.com'
               />
               <FileUpload
                 collectionName='employments'
-                recordId={employmentToEdit?.id}
-                fieldName='orgLogo'
-                onUploadSuccess={(url) => handleChange('orgLogoUrl', url)}
-                onFileSelect={setLogoFile}
+                recordId={employment_to_edit?.id}
+                fieldName='organization_logo'
+                existingValue={employment.organization_logo_url}
+                onUploadSuccess={(url) =>
+                  handle_change('organization_logo_url', url)
+                }
+                onFileSelect={set_logo_file}
               />
             </div>
           </div>
           <div>
-            <FormLabel htmlFor='organizationIndustry'>
+            <FormLabel htmlFor='organization_industry'>
               Organization Industry
             </FormLabel>
             <Input
               type='text'
-              value={employment.organizationIndustry}
+              value={employment.organization_industry || ''}
               onChange={(e) =>
-                handleChange('organizationIndustry', e.target.value)
+                handle_change('organization_industry', e.target.value)
               }
               placeholder='Artificial Intelligence'
             />
           </div>
           <div>
-            <FormLabel htmlFor='organizationLocation'>
+            <FormLabel htmlFor='organization_location'>
               Organization Location
             </FormLabel>
             <Input
               type='text'
-              value={employment.organizationLocation}
+              value={employment.organization_location || ''}
               onChange={(e) =>
-                handleChange('organizationLocation', e.target.value)
+                handle_change('organization_location', e.target.value)
               }
               placeholder='Organization location'
             />
@@ -493,12 +505,12 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
 
       <Separator margin='5' />
 
-      {employmentToEdit ? (
+      {employment_to_edit ? (
         <div className='flex space-x-4'>
           <Button
             variant='destructive'
             icon='trash'
-            onClick={confirmDelete}
+            onClick={confirm_delete}
             className='w-full'
           >
             Delete
@@ -506,7 +518,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           <Button
             variant='primary'
             icon='floppyDisk'
-            onClick={handleSubmit}
+            onClick={handle_submit}
             className='w-full'
           >
             Save
@@ -516,7 +528,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
         <Button
           variant='primary'
           icon='plus'
-          onClick={handleSubmit}
+          onClick={handle_submit}
           className='w-full'
         >
           Add

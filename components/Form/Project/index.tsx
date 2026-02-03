@@ -27,10 +27,10 @@ import { formatDateRange } from '@/utilities/formatDate';
 import { generateSlug } from '@/utilities/generateSlug';
 
 interface ProjectFormProps {
-  projectToEdit?: Project;
+  project_to_edit?: Project;
 }
 
-const initialProjectState: Project = {
+const initial_project_state: Project = {
   id: '',
   name: '',
   image: '',
@@ -38,70 +38,70 @@ const initialProjectState: Project = {
   tools: [],
   link: '',
   favicon: '',
-  dateString: '',
+  date_string: '',
   readme: '',
-  status: 'inProgress',
+  status: 'in_progress',
   pinned: false,
   slug: '',
-  githubRepoUrl: '',
+  github_repo_url: '',
 };
 
-const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
-  const [project, setProject] = useState<Project>(
-    projectToEdit || initialProjectState,
+const ProjectForm: React.FC<ProjectFormProps> = ({ project_to_edit }) => {
+  const [project, set_project] = useState<Project>(
+    project_to_edit || initial_project_state,
   );
-  const [isPresent, setIsPresent] = useState(
-    projectToEdit?.dateString?.includes('Present') || false,
+  const [is_present, set_is_present] = useState(
+    project_to_edit?.date_string?.includes('Present') || false,
   );
 
-  const [newTool, setNewTool] = useState('');
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [faviconFile, setFaviconFile] = useState<File | null>(null);
+  const [new_tool, set_new_tool] = useState('');
+  const [image_file, set_image_file] = useState<File | null>(null);
+  const [favicon_file, set_favicon_file] = useState<File | null>(null);
 
   // Use a stable mounted state to handle hydration safely
-  const [mounted, setMounted] = useState(false);
+  const [mounted, set_mounted] = useState(false);
 
   // Debounced image for preview
-  const [displayImage, setDisplayImage] = useState(project.image);
+  const [display_image, set_display_image] = useState(project.image);
   useEffect(() => {
-    setMounted(true);
+    set_mounted(true);
     const timer = setTimeout(() => {
-      setDisplayImage(project.image);
+      set_display_image(project.image);
     }, 2000); // 2 second debounce for better UX
     return () => clearTimeout(timer);
   }, [project.image]);
 
-  const [startDate, setStartDate] = useState<Date>(new Date('2025-01-01'));
-  const [endDate, setEndDate] = useState<Date>(new Date('2025-01-01'));
+  const [start_date, set_start_date] = useState<Date>(new Date('2025-01-01'));
+  const [end_date, set_end_date] = useState<Date>(new Date('2025-01-01'));
 
   useEffect(() => {
     if (!mounted) return;
 
-    if (projectToEdit?.dateString) {
-      const [startStr, endStr] = projectToEdit.dateString.split(' - ');
-      setStartDate(new Date(startStr));
-      setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
+    if (project_to_edit?.date_string) {
+      const [start_str, end_str] = project_to_edit.date_string.split(' - ');
+      set_start_date(new Date(start_str));
+      set_end_date(end_str === 'Present' ? new Date() : new Date(end_str));
     } else {
       const now = new Date();
-      setStartDate(now);
-      setEndDate(now);
+      set_start_date(now);
+      set_end_date(now);
     }
-  }, [projectToEdit, mounted]);
+  }, [project_to_edit, mounted]);
 
   // GitHub fetch states
-  const [githubUrl, setGithubUrl] = useState('');
-  const [githubLoading, setGithubLoading] = useState(false);
-  const [githubError, setGithubError] = useState<string | null>(null);
+  const [github_url, set_github_url] = useState('');
+  const [github_loading, set_github_loading] = useState(false);
+  const [github_error, set_github_error] = useState<string | null>(null);
 
-  const fetchGitHubData = async () => {
-    if (!githubUrl || !githubUrl.includes('github.com/')) return;
+  const fetch_github_data = async () => {
+    if (!github_url || !github_url.includes('github.com/')) return;
 
-    setGithubLoading(true);
-    setGithubError(null);
+    set_github_loading(true);
+    set_github_error(null);
 
     try {
       // Extract owner and repo from URL
-      const parts = githubUrl.replace(/\/$/, '').split('/');
+      const parts = github_url.replace(/\/$/, '').split('/');
       const repo = parts.pop();
       const owner = parts.pop();
 
@@ -121,111 +121,114 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       const data = (await res.json()) as GitHubRepoResponse;
 
       // Update project state with GitHub data
-      setProject((prev) => ({
+      set_project((prev) => ({
         ...prev,
         name: data.name || prev.name,
         description: data.description || prev.description,
         link: data.homepage || data.html_url || prev.link,
-        githubRepoUrl: data.html_url || prev.githubRepoUrl,
+        github_repo_url: data.html_url || prev.github_repo_url,
         tools: data.language ? [data.language] : prev.tools,
         image: prev.image, // Keep existing image by default
       }));
 
       // Try to fetch languages for more tools
-      const langRes = await fetch(data.languages_url);
-      if (langRes.ok) {
-        const langs = (await langRes.json()) as Record<string, number>;
-        const topLangs = Object.keys(langs).slice(0, 5);
-        if (topLangs.length > 0) {
-          handleChange('tools', topLangs);
+      const lang_res = await fetch(data.languages_url);
+      if (lang_res.ok) {
+        const langs = (await lang_res.json()) as Record<string, number>;
+        const top_langs = Object.keys(langs).slice(0, 5);
+        if (top_langs.length > 0) {
+          handle_change('tools', top_langs);
         }
       }
 
       // Try to fetch README
-      const readmeRes = await fetch(
+      const readme_res = await fetch(
         `https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`,
       );
-      if (readmeRes.ok) {
-        const readmeText = await readmeRes.text();
-        handleChange('readme', readmeText);
+      if (readme_res.ok) {
+        const readme_text = await readme_res.text();
+        handle_change('readme', readme_text);
 
         // Try to find an image in the README (markdown or html)
-        const mdImageRegex = /!\[.*?\]\((.*?)\)/;
-        const htmlImageRegex = /<img.*?src=["'](.*?)["']/;
+        const md_image_regex = /!\[.*?\]\((.*?)\)/;
+        const html_image_regex = /<img.*?src=["'](.*?)["']/;
         const match =
-          readmeText.match(mdImageRegex) || readmeText.match(htmlImageRegex);
+          readme_text.match(md_image_regex) ||
+          readme_text.match(html_image_regex);
 
         if (match && match[1]) {
-          let imageUrl = match[1];
+          let image_url = match[1];
           // Handle relative paths
-          if (!imageUrl.startsWith('http')) {
-            imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${imageUrl.replace(/^\.\//, '')}`;
+          if (!image_url.startsWith('http')) {
+            image_url = `https://raw.githubusercontent.com/${owner}/${repo}/main/${image_url.replace(/^\.\//, '')}`;
           }
-          handleChange('image', imageUrl);
+          handle_change('image', image_url);
         }
       }
 
       toast.success('GitHub data fetched successfully!');
-      setGithubUrl('');
+      set_github_url('');
     } catch (err) {
-      setGithubError(err instanceof Error ? err.message : String(err));
+      set_github_error(err instanceof Error ? err.message : String(err));
       toast.error('Failed to fetch GitHub data');
     } finally {
-      setGithubLoading(false);
+      set_github_loading(false);
     }
   };
 
-  const currentPreviewProject: Project = {
+  const current_preview_project: Project = {
     id: project.id || 'preview',
     name: project.name || 'Project Name',
-    image: displayImage || '/images/placeholder.png',
+    image: display_image || '/images/placeholder.png',
+    image_url: display_image || '/images/placeholder.png',
     description: project.description || 'Project Description',
     tools: project.tools.length ? project.tools : ['Project Tools'],
     link: project.link || '#',
     favicon: project.favicon || '',
-    dateString: project.dateString || formatDateRange(startDate, endDate),
+    favicon_url: project.favicon || '',
+    date_string: project.date_string || formatDateRange(start_date, end_date),
     readme: project.readme || '',
-    status: project.status || 'inProgress',
+    status: project.status || 'in_progress',
     pinned: project.pinned || false,
     slug: project.slug || 'preview',
   };
 
-  const handleChange = (
+  const handle_change = (
     field: keyof Project,
     value: string | string[] | Date,
   ) => {
-    setProject((prev) => ({ ...prev, [field]: value }));
+    set_project((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleAddTool = () => {
-    const trimmed = newTool.trim();
+  const handle_add_tool = () => {
+    const trimmed = new_tool.trim();
     if (trimmed && !project.tools.includes(trimmed)) {
-      handleChange('tools', [...project.tools, trimmed]);
-      setNewTool('');
+      handle_change('tools', [...project.tools, trimmed]);
+      set_new_tool('');
     }
   };
 
-  const handleRemoveTool = (index: number) => {
+  const handle_remove_tool = (index: number) => {
     const updated = project.tools.filter((_, i) => i !== index);
-    handleChange('tools', updated);
+    handle_change('tools', updated);
   };
 
-  const handleToolChange = (index: number, value: string) => {
+  const handle_tool_change = (index: number, value: string) => {
     const updated = [...project.tools];
     updated[index] = value;
-    handleChange('tools', updated);
+    handle_change('tools', updated);
   };
 
-  const togglePin = () => {
-    const newPinnedStatus = !project.pinned;
-    setProject((prevProject) => ({
-      ...prevProject,
-      pinned: newPinnedStatus,
+  const toggle_pin = () => {
+    const new_pinned_status = !project.pinned;
+    set_project((prev_project) => ({
+      ...prev_project,
+      pinned: new_pinned_status,
     }));
   };
 
-  const requiredProjectFields: {
-    key: keyof Project | 'dateRange';
+  const required_project_fields: {
+    key: keyof Project | 'date_range';
     label: string;
     check?: (value: (typeof project)[keyof typeof project]) => boolean;
   }[] = [
@@ -238,23 +241,23 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       check: (val) => Array.isArray(val) && val.length > 0,
     },
     {
-      key: 'dateRange',
+      key: 'date_range',
       label: 'Date range',
-      check: () => !!startDate && !!endDate,
+      check: () => !!start_date && !!end_date,
     },
   ];
 
-  const validateForm = () => {
-    for (const field of requiredProjectFields) {
+  const validate_form = () => {
+    for (const field of required_project_fields) {
       const value =
-        field.key === 'dateRange' ? null : project[field.key as keyof Project];
-      const isEmpty = field.check
+        field.key === 'date_range' ? null : project[field.key as keyof Project];
+      const is_empty = field.check
         ? !field.check(value)
         : typeof value === 'string'
           ? !value.trim()
           : !value;
 
-      if (isEmpty) {
+      if (is_empty) {
         toast.error(`${field.label} is required.`);
         return false;
       }
@@ -264,48 +267,48 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e?: React.SyntheticEvent) => {
+  const handle_submit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validate_form()) return;
 
-    const projectData = {
+    const project_data = {
       ...project,
-      id: projectToEdit?.id || generateSlug(project.name),
-      dateString: formatDateRange(startDate, endDate, isPresent),
+      id: project_to_edit?.id || generateSlug(project.name),
+      date_string: formatDateRange(start_date, end_date, is_present),
       readme: project.readme || '',
     };
 
     try {
       let result;
 
-      if (imageFile || faviconFile) {
-        const formData = new FormData();
+      if (image_file || favicon_file) {
+        const form_data = new FormData();
         // Append all project fields
-        Object.entries(projectData).forEach(([key, value]) => {
+        Object.entries(project_data).forEach(([key, value]) => {
           if (key === 'tools' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
+            form_data.append(key, JSON.stringify(value));
           } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
+            form_data.append(key, value.toString());
           }
         });
 
         // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (faviconFile) formData.append('favicon', faviconFile);
+        if (image_file) form_data.append('image', image_file);
+        if (favicon_file) form_data.append('favicon', favicon_file);
 
-        result = projectToEdit
-          ? await updateProject(formData)
-          : await addProject(formData);
+        result = project_to_edit
+          ? await updateProject(form_data)
+          : await addProject(form_data);
       } else {
-        result = projectToEdit
-          ? await updateProject(projectData)
-          : await addProject(projectData);
+        result = project_to_edit
+          ? await updateProject(project_data)
+          : await addProject(project_data);
       }
 
       if (result.success) {
         toast.success(
-          projectToEdit
+          project_to_edit
             ? 'Project updated successfully!'
             : 'Project added successfully!',
         );
@@ -323,11 +326,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!projectToEdit) return;
+  const handle_delete = async () => {
+    if (!project_to_edit) return;
 
     try {
-      const result = await deleteProject(projectToEdit.id);
+      const result = await deleteProject(project_to_edit.id);
 
       if (result.success) {
         toast.success('Project deleted successfully!');
@@ -342,7 +345,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     }
   };
 
-  const confirmDelete = () => {
+  const confirm_delete = () => {
     modal.open(
       <div className='p-6'>
         <h2 className='text-xl font-semibold mb-4'>Confirm Deletion</h2>
@@ -351,7 +354,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           cannot be undone.
         </p>
         <div className='mb-6'>
-          <ProjectCard project={currentPreviewProject} isPreview />
+          <ProjectCard project={current_preview_project} isPreview />
         </div>
         <div className='flex justify-end space-x-4'>
           <Button variant='default' onClick={() => modal.close()}>
@@ -360,7 +363,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           <Button
             variant='destructive'
             onClick={() => {
-              handleDelete();
+              handle_delete();
               modal.close();
             }}
           >
@@ -371,20 +374,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     );
   };
 
-  const statusOptions: { key: string; label: string; icon: IconName }[] = [
-    { key: 'inProgress', label: 'Work in Progress', icon: 'gear' },
+  const status_options: { key: string; label: string; icon: IconName }[] = [
+    { key: 'in_progress', label: 'Work in Progress', icon: 'gear' },
     { key: 'completed', label: 'Completed', icon: 'checkCircle' },
     { key: 'upcoming', label: 'Upcoming', icon: 'clock' },
   ];
 
-  const currentStatus = statusOptions.find((opt) => opt.key === project.status);
+  const current_status = status_options.find(
+    (opt) => opt.key === project.status,
+  );
 
   return (
     <>
       <div className='space-y-6'>
         {/* Project Preview */}
         <div className='flex justify-center'>
-          <ProjectCard project={currentPreviewProject} isPreview />
+          <ProjectCard project={current_preview_project} isPreview />
         </div>
 
         <Separator margin='5' />
@@ -397,40 +402,40 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               id='github-fetch'
               type='text'
               placeholder='https://github.com/username/repo'
-              value={githubUrl}
-              onChange={(e) => setGithubUrl(e.target.value)}
+              value={github_url || ''}
+              onChange={(e) => set_github_url(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e?.preventDefault();
-                  fetchGitHubData();
+                  fetch_github_data();
                 }
               }}
             />
             <Button
               variant='primary'
-              onClick={fetchGitHubData}
-              disabled={githubLoading}
+              onClick={fetch_github_data}
+              disabled={github_loading}
             >
-              {githubLoading ? 'Fetching...' : 'Fetch'}
+              {github_loading ? 'Fetching...' : 'Fetch'}
             </Button>
           </div>
-          {githubError && (
-            <p className='text-xs text-destructive'>{githubError}</p>
+          {github_error && (
+            <p className='text-xs text-destructive'>{github_error}</p>
           )}
         </div>
 
         <Separator margin='5' />
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handle_submit} className='space-y-4'>
           <div>
             <FormLabel htmlFor='name' required>
               Name
             </FormLabel>
             <Input
               type='text'
-              value={project.name}
-              onChange={(e) => handleChange('name', e.target.value)}
+              value={project.name || ''}
+              onChange={(e) => handle_change('name', e.target.value)}
               placeholder='Project name'
               required
             />
@@ -441,16 +446,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             </FormLabel>
             <Input
               type='text'
-              value={project.image}
-              onChange={(e) => handleChange('image', e.target.value)}
+              value={project.image || ''}
+              onChange={(e) => handle_change('image', e.target.value)}
               placeholder='Image URL or select file below'
               className='mb-2'
             />
             <FileUpload
               collectionName='projects'
               fieldName='image'
-              onFileSelect={setImageFile}
-              onUploadSuccess={(url) => handleChange('image', url)}
+              existingValue={project.image}
+              onFileSelect={set_image_file}
+              onUploadSuccess={(url) => handle_change('image', url)}
               accept='image/*'
             />
           </div>
@@ -459,8 +465,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               Description
             </FormLabel>
             <Textarea
-              value={project.description}
-              onChange={(e) => handleChange('description', e.target.value)}
+              value={project.description || ''}
+              onChange={(e) => handle_change('description', e.target.value)}
               placeholder='Project description'
               rows={4}
               required
@@ -475,24 +481,28 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 <div key={index} className='flex items-center gap-2'>
                   <Input
                     type='text'
-                    value={tool}
-                    onChange={(e) => handleToolChange(index, e.target.value)}
+                    value={tool || ''}
+                    onChange={(e) => handle_tool_change(index, e.target.value)}
                   />
                   <Button
                     variant='destructive'
                     icon='trashSimple'
-                    onClick={() => handleRemoveTool(index)}
+                    onClick={() => handle_remove_tool(index)}
                   />
                 </div>
               ))}
               <div className='flex items-center gap-2'>
                 <Input
                   type='text'
-                  value={newTool}
-                  onChange={(e) => setNewTool(e.target.value)}
+                  value={new_tool || ''}
+                  onChange={(e) => set_new_tool(e.target.value)}
                   placeholder='Add a keyword'
                 />
-                <Button variant='primary' icon='plus' onClick={handleAddTool} />
+                <Button
+                  variant='primary'
+                  icon='plus'
+                  onClick={handle_add_tool}
+                />
               </div>
             </div>
           </div>
@@ -500,11 +510,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <div>
               <FormLabel required>Start Date</FormLabel>
               <DateSelect
-                value={startDate}
-                onChange={(newDate) => {
-                  setStartDate(newDate);
-                  if (isPresent) {
-                    setEndDate(newDate);
+                value={start_date}
+                onChange={(new_date) => {
+                  set_start_date(new_date);
+                  if (is_present) {
+                    set_end_date(new_date);
                   }
                 }}
                 mode='month-year'
@@ -513,20 +523,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <div>
               <FormLabel>End Date</FormLabel>
               <DateSelect
-                value={endDate}
-                onChange={setEndDate}
+                value={end_date}
+                onChange={set_end_date}
                 mode='month-year'
-                disabled={isPresent}
+                disabled={is_present}
               />
             </div>
 
             <Checkbox
-              id='isPresent'
-              checked={isPresent}
+              id='is_present'
+              checked={is_present}
               onChange={(checked) => {
-                setIsPresent(checked);
+                set_is_present(checked);
                 if (checked) {
-                  setEndDate(new Date());
+                  set_end_date(new Date());
                 }
               }}
               label='I currently working on this project'
@@ -540,10 +550,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               trigger={
                 <Button className='w-full flex items-center justify-between gap-2 text-sm md:text-md text-foreground px-2'>
                   <div className='flex items-center gap-2'>
-                    {currentStatus?.icon && (
-                      <Icon name={currentStatus.icon} className='size-4.5' />
+                    {current_status?.icon && (
+                      <Icon name={current_status.icon} className='size-4.5' />
                     )}
-                    <span>{currentStatus?.label}</span>
+                    <span>{current_status?.label}</span>
                   </div>
                   <Icon name='caretDown' className='size-3' />
                 </Button>
@@ -552,10 +562,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               matchTriggerWidth
             >
               <div className='flex flex-col p-1 space-y-1 w-full'>
-                {statusOptions.map((option) => (
+                {status_options.map((option) => (
                   <DropdownItem
                     key={option.key}
-                    onClick={() => handleChange('status', option.key)}
+                    onClick={() => handle_change('status', option.key)}
                     isActive={option.key === project.status}
                     icon={option.icon}
                   >
@@ -569,34 +579,37 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <FormLabel htmlFor='link'>Link</FormLabel>
             <Input
               type='text'
-              value={project.link}
-              onChange={(e) => handleChange('link', e.target.value)}
+              value={project.link || ''}
+              onChange={(e) => handle_change('link', e.target.value)}
               placeholder='https://project-link.com'
             />
           </div>
           <div>
-            <FormLabel htmlFor='githubRepoUrl'>GitHub Repository URL</FormLabel>
+            <FormLabel htmlFor='github_repo_url'>
+              GitHub Repository URL
+            </FormLabel>
             <Input
               type='text'
-              value={project.githubRepoUrl || ''}
-              onChange={(e) => handleChange('githubRepoUrl', e.target.value)}
+              value={project.github_repo_url || ''}
+              onChange={(e) => handle_change('github_repo_url', e.target.value)}
               placeholder='https://github.com/username/repo'
             />
           </div>
           <div>
-            <FormLabel htmlFor='faviconUrl'>Favicon</FormLabel>
+            <FormLabel htmlFor='favicon_url'>Favicon</FormLabel>
             <Input
               type='text'
               value={project.favicon || ''}
-              onChange={(e) => handleChange('favicon', e.target.value)}
+              onChange={(e) => handle_change('favicon', e.target.value)}
               placeholder='Favicon URL or select file below'
               className='mb-2'
             />
             <FileUpload
               collectionName='projects'
               fieldName='favicon'
-              onFileSelect={setFaviconFile}
-              onUploadSuccess={(url) => handleChange('favicon', url)}
+              existingValue={project.favicon}
+              onFileSelect={set_favicon_file}
+              onUploadSuccess={(url) => handle_change('favicon', url)}
               accept='image/*'
             />
           </div>
@@ -604,20 +617,20 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <FormLabel htmlFor='readme'>Readme (optional)</FormLabel>
             <Editor
               content={project.readme || ''}
-              onUpdate={(content) => handleChange('readme', content)}
+              onUpdate={(content) => handle_change('readme', content)}
             />
           </div>
 
           <Separator margin='5' />
 
-          {projectToEdit ? (
+          {project_to_edit ? (
             <div className='flex space-x-4'>
               <Button
                 variant='destructive'
                 icon='trash'
                 onClick={(e) => {
                   e?.preventDefault();
-                  confirmDelete();
+                  confirm_delete();
                 }}
                 className='w-full'
               >
@@ -629,7 +642,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   icon='pushPinSlash'
                   onClick={(e) => {
                     e?.preventDefault();
-                    togglePin();
+                    toggle_pin();
                   }}
                   className='w-full'
                 >
@@ -640,7 +653,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   icon='pushPin'
                   onClick={(e) => {
                     e?.preventDefault();
-                    togglePin();
+                    toggle_pin();
                   }}
                   className='w-full'
                 >
@@ -664,7 +677,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   icon='pushPinSlash'
                   onClick={(e) => {
                     e?.preventDefault();
-                    togglePin();
+                    toggle_pin();
                   }}
                   className='w-full'
                 >
@@ -675,7 +688,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   icon='pushPin'
                   onClick={(e) => {
                     e?.preventDefault();
-                    togglePin();
+                    toggle_pin();
                   }}
                   className='w-full'
                 >

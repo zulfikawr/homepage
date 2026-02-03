@@ -23,9 +23,9 @@ interface CommentCardProps {
   onDelete?: () => Promise<void>;
   onEdit?: (newContent: string) => Promise<void>;
   level?: number;
-  currentUserName?: string;
-  currentUserId?: string;
-  isAdmin?: boolean;
+  current_user_name?: string;
+  current_user_id?: string;
+  is_admin?: boolean;
   replies?: Comment[];
   isLoading?: boolean;
 }
@@ -37,84 +37,84 @@ export default function CommentCard({
   onDelete,
   onEdit,
   level = 0,
-  currentUserName,
-  currentUserId,
-  isAdmin,
+  current_user_name,
+  current_user_id,
+  is_admin,
   replies = [],
   isLoading = false,
 }: CommentCardProps) {
-  const [isReplying, setIsReplying] = useState(false);
-  const [replyContent, setReplyContent] = useState('');
-  const [replyAuthor, setReplyAuthor] = useState(
-    currentUserName || 'Anonymous',
+  const [is_replying, set_is_replying] = useState(false);
+  const [reply_content, set_reply_content] = useState('');
+  const [reply_author, set_reply_author] = useState(
+    current_user_name || 'Anonymous',
   );
-  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(comment?.content || '');
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [is_submit_loading, set_is_submit_loading] = useState(false);
+  const [is_liking, set_is_liking] = useState(false);
+  const [is_editing, set_is_editing] = useState(false);
+  const [edit_content, set_edit_content] = useState(comment?.content || '');
+  const [is_updating, set_is_updating] = useState(false);
 
-  const handleReplyChange = (val: string) => {
-    if (val.length <= MAX_CHARS) setReplyContent(val);
+  const handle_reply_change = (val: string) => {
+    if (val.length <= MAX_CHARS) set_reply_content(val);
   };
 
-  const handleEditChange = (val: string) => {
-    if (val.length <= MAX_CHARS) setEditContent(val);
+  const handle_edit_change = (val: string) => {
+    if (val.length <= MAX_CHARS) set_edit_content(val);
   };
 
-  const handleSubmitReply = async () => {
-    if (!replyContent.trim() || !onReply) return;
+  const handle_submit_reply = async () => {
+    if (!reply_content.trim() || !onReply) return;
 
-    if (replyContent.length > MAX_CHARS) {
+    if (reply_content.length > MAX_CHARS) {
       toast.error(`Reply cannot exceed ${MAX_CHARS} characters.`);
       return;
     }
 
-    setIsSubmitLoading(true);
+    set_is_submit_loading(true);
     try {
-      const safeContent = escapeHtml(replyContent.trim());
-      const safeAuthor = escapeHtml(replyAuthor.trim());
+      const safe_content = escapeHtml(reply_content.trim());
+      const safe_author = escapeHtml(reply_author.trim());
 
-      await onReply(safeAuthor, safeContent);
-      setReplyContent('');
-      setReplyAuthor(currentUserName || 'Anonymous');
-      setIsReplying(false);
+      await onReply(safe_author, safe_content);
+      set_reply_content('');
+      set_reply_author(current_user_name || 'Anonymous');
+      set_is_replying(false);
     } catch {
       toast.error('Failed to post reply.');
     } finally {
-      setIsSubmitLoading(false);
+      set_is_submit_loading(false);
     }
   };
 
-  const handleEditSubmit = async () => {
-    if (!editContent.trim() || !onEdit) return;
+  const handle_edit_submit = async () => {
+    if (!edit_content.trim() || !onEdit) return;
 
-    if (editContent.length > MAX_CHARS) {
+    if (edit_content.length > MAX_CHARS) {
       toast.error(`Comment cannot exceed ${MAX_CHARS} characters.`);
       return;
     }
 
-    setIsUpdating(true);
+    set_is_updating(true);
     try {
-      const safeContent = escapeHtml(editContent.trim());
-      await onEdit(safeContent);
-      setIsEditing(false);
+      const safe_content = escapeHtml(edit_content.trim());
+      await onEdit(safe_content);
+      set_is_editing(false);
     } catch {
       toast.error('Failed to update comment.');
     } finally {
-      setIsUpdating(false);
+      set_is_updating(false);
     }
   };
 
-  const handleLike = async () => {
+  const handle_like = async () => {
     if (!onLike) return;
-    setIsLiking(true);
+    set_is_liking(true);
     try {
       await onLike();
     } catch {
       // Ignore like error
     } finally {
-      setIsLiking(false);
+      set_is_liking(false);
     }
   };
 
@@ -129,7 +129,7 @@ export default function CommentCard({
               <Skeleton width={32} height={32} variant='circle' />
             ) : (
               <ImageWithFallback
-                src={comment?.avatarUrl || ''}
+                src={comment?.avatar_url || ''}
                 alt={comment?.author || ''}
                 width={32}
                 height={32}
@@ -146,7 +146,7 @@ export default function CommentCard({
                     <span className='font-medium dark:text-foreground'>
                       {comment?.author}
                     </span>
-                    {comment?.parentId && (
+                    {comment?.parent_id && (
                       <span className='text-xs text-muted-foreground'>
                         replying
                       </span>
@@ -158,7 +158,7 @@ export default function CommentCard({
                 {isLoading ? (
                   <Skeleton width={60} height={10} />
                 ) : (
-                  comment?.createdAt && getTimeAgo(comment.createdAt)
+                  comment?.created_at && getTimeAgo(comment.created_at)
                 )}
               </span>
             </div>
@@ -166,7 +166,7 @@ export default function CommentCard({
 
           {!isLoading &&
             onDelete &&
-            (currentUserId === comment?.author || isAdmin) && (
+            (current_user_id === comment?.author || is_admin) && (
               <div className='flex items-center gap-x-1'>
                 <Dropdown
                   trigger={
@@ -176,7 +176,7 @@ export default function CommentCard({
                   }
                 >
                   <DropdownItem
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => set_is_editing(true)}
                     icon='pencilSimpleLine'
                   >
                     Edit
@@ -194,19 +194,19 @@ export default function CommentCard({
         </div>
 
         <div className='mt-4'>
-          {isEditing ? (
+          {is_editing ? (
             <div className='space-y-4'>
-              <Editor content={editContent} onUpdate={handleEditChange} />
+              <Editor content={edit_content} onUpdate={handle_edit_change} />
               <div className='flex justify-end gap-x-2'>
-                <Button onClick={() => setIsEditing(false)} variant='outline'>
+                <Button onClick={() => set_is_editing(false)} variant='outline'>
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleEditSubmit}
-                  disabled={isUpdating || !editContent.trim()}
+                  onClick={handle_edit_submit}
+                  disabled={is_updating || !edit_content.trim()}
                   variant='primary'
                 >
-                  {isUpdating ? 'Saving...' : 'Save'}
+                  {is_updating ? 'Saving...' : 'Save'}
                 </Button>
               </div>
             </div>
@@ -236,10 +236,10 @@ export default function CommentCard({
           ) : (
             <>
               <button
-                onClick={handleLike}
-                disabled={isLiking}
+                onClick={handle_like}
+                disabled={is_liking}
                 className={`flex items-center gap-x-1 text-sm font-medium transition-colors ${
-                  isLiking
+                  is_liking
                     ? 'text-primary'
                     : 'text-muted-foreground hover:text-primary'
                 }`}
@@ -252,7 +252,7 @@ export default function CommentCard({
               </button>
 
               <button
-                onClick={() => setIsReplying(!isReplying)}
+                onClick={() => set_is_replying(!is_replying)}
                 className='text-sm font-medium text-muted-foreground hover:text-primary transition-colors'
               >
                 Reply
@@ -261,19 +261,19 @@ export default function CommentCard({
           )}
         </div>
 
-        {isReplying && (
+        {is_replying && (
           <div className='mt-4 space-y-4 rounded-md bg-muted/50 p-4 dark:bg-background'>
-            <Editor content={replyContent} onUpdate={handleReplyChange} />
+            <Editor content={reply_content} onUpdate={handle_reply_change} />
             <div className='flex justify-end gap-x-2'>
-              <Button onClick={() => setIsReplying(false)} variant='outline'>
+              <Button onClick={() => set_is_replying(false)} variant='outline'>
                 Cancel
               </Button>
               <Button
-                onClick={handleSubmitReply}
-                disabled={isSubmitLoading || !replyContent.trim()}
+                onClick={handle_submit_reply}
+                disabled={is_submit_loading || !reply_content.trim()}
                 variant='primary'
               >
-                {isSubmitLoading ? 'Posting...' : 'Post Reply'}
+                {is_submit_loading ? 'Posting...' : 'Post Reply'}
               </Button>
             </div>
           </div>
@@ -291,8 +291,8 @@ export default function CommentCard({
               onDelete={onDelete}
               onEdit={onEdit}
               level={level + 1}
-              currentUserId={currentUserId}
-              isAdmin={isAdmin}
+              current_user_id={current_user_id}
+              is_admin={is_admin}
             />
           ))}
         </div>
