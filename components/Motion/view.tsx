@@ -2,8 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-import { useScrollDirection } from '@/hooks';
-
 interface Props {
   children: React.ReactNode;
   delay?: number;
@@ -22,14 +20,24 @@ const ViewTransition = ({
   className = '',
 }: Props) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [verticalOrigin, setVerticalOrigin] = useState<'top' | 'bottom'>(
+    'bottom',
+  );
   const ref = useRef<HTMLDivElement>(null);
-  const scrollDirection = useScrollDirection();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         // Fire immediately without debounce for snappier response
         setIsVisible(entry.isIntersecting);
+
+        // Determine if the element is entering/leaving from the top or bottom
+        // based on its position relative to the viewport.
+        if (entry.boundingClientRect.top < 0) {
+          setVerticalOrigin('top');
+        } else {
+          setVerticalOrigin('bottom');
+        }
       },
       {
         threshold: 0,
@@ -61,29 +69,18 @@ const ViewTransition = ({
   const getTransform = () => {
     if (isVisible) return 'translate(0, 0)';
 
-    // Use opposite direction when scrolling up for smoother appearance
-    const effectiveDirection =
-      direction !== 'none' && scrollDirection === 'up'
-        ? scrollDirection === 'up' && direction === 'up'
-          ? 'down'
-          : direction === 'down'
-            ? 'up'
-            : direction
-        : direction;
+    // If direction is explicitly horizontal or none, respect it
+    if (direction === 'left') return `translateX(${distance}px)`;
+    if (direction === 'right') return `translateX(-${distance}px)`;
+    if (direction === 'none') return 'none';
 
-    switch (effectiveDirection) {
-      case 'up':
-        return `translateY(${distance}px)`;
-      case 'down':
-        return `translateY(-${distance}px)`;
-      case 'left':
-        return `translateX(${distance}px)`;
-      case 'right':
-        return `translateX(-${distance}px)`;
-      case 'none':
-        return 'none';
-      default:
-        return 'none';
+    // For vertical animations (up/down), adapt to the entry direction
+    // If entering from top (scrolling up), we want to start ABOVE (-distance) and move down
+    // If entering from bottom (scrolling down), we want to start BELOW (+distance) and move up
+    if (verticalOrigin === 'top') {
+      return `translateY(-${distance}px)`;
+    } else {
+      return `translateY(${distance}px)`;
     }
   };
 

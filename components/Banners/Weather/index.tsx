@@ -533,14 +533,14 @@ const WeatherLayout = ({
 
   return (
     <Card
-      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 px-4 py-3 min-h-[120px]`}
+      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 min-h-[120px]`}
       isPreview
     >
       {!isLoading && (
         <WeatherVisuals type={currentType} isDaytime={isDaytime} />
       )}
 
-      <div className='relative h-full flex flex-col z-30 gap-y-4'>
+      <div className='relative h-full flex flex-col z-30 gap-y-4 px-4 py-3'>
         {/* Header */}
         <div className='flex w-full items-center justify-between pointer-events-none'>
           <div
