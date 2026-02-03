@@ -4,12 +4,12 @@ import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { cookies } from 'next/headers';
 import Script from 'next/script';
 
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
-import { Drawer } from '@/components/UI';
-import { Modal } from '@/components/UI';
-import { Toast } from '@/components/UI';
-import DynamicBackground from '@/components/Visual/Background';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
+import { Drawer } from '@/components/ui';
+import { Modal } from '@/components/ui';
+import { Toast } from '@/components/ui';
+import DynamicBackground from '@/components/visual/background';
 
 import Providers from './providers';
 

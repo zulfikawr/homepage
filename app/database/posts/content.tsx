@@ -2,12 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Button, Card } from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import PostCard from '@/components/UI/Card/variants/Post';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Button, Card } from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
+import PostCard from '@/components/ui/card/variants/post';
 import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';

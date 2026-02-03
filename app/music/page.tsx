@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
-  played_at: string;
+  playedAt: string;
 }
 
 export default async function MusicPage() {

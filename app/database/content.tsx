@@ -1,9 +1,9 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import NavigationCard from '@/components/UI/Card/variants/Navigation';
-import { IconName } from '@/components/UI/Icon';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import NavigationCard from '@/components/ui/card/variants/navigation';
+import { IconName } from '@/components/ui/icon';
 
 export default function DatabaseContent() {
   const databaseCategories: {

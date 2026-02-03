@@ -1,10 +1,10 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import CertificateCard from '@/components/UI/Card/variants/Certificate';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import CertificateCard from '@/components/ui/card/variants/certificate';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
 import { Certificate } from '@/types/certificate';
 
 export function CertificatesSkeleton() {

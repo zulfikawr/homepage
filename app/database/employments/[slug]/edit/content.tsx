@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import EmploymentForm from '@/components/Form/Employment';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import EmploymentForm from '@/components/form/employment';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Employment } from '@/types/employment';
 
 interface EditEmploymentPageProps {
@@ -28,7 +28,7 @@ export default function EditEmploymentPage({
         title='Edit Employment'
         subtitle={employment.organization}
       />
-      <EmploymentForm employment_to_edit={employment} />
+      <EmploymentForm employmentToEdit={employment} />
     </div>
   );
 }

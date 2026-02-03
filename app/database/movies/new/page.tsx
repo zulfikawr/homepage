@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 
-import { FormSkeleton } from '@/components/Form/Loading';
+import { FormSkeleton } from '@/components/form/loading';
 
 import NewMovieContent from './content';
 

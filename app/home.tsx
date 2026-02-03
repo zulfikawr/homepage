@@ -1,18 +1,18 @@
 import React, { Suspense } from 'react';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import Banners from '@/components/Section/Banners';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import Banners from '@/components/section/banners';
 import EmploymentSection, {
   EmploymentLayout,
-} from '@/components/Section/Employment';
+} from '@/components/section/employment';
 import InterestsAndObjectivesSection, {
   InterestsAndObjectivesLayout,
-} from '@/components/Section/InterestsAndObjectives';
+} from '@/components/section/interests-and-objectives';
 import PersonalInfoSection, {
   PersonalInfoLayout,
-} from '@/components/Section/PersonalInfo';
-import PostSection, { PostLayout } from '@/components/Section/Post';
-import ProjectSection, { ProjectLayout } from '@/components/Section/Project';
+} from '@/components/section/personal-info';
+import PostSection, { PostLayout } from '@/components/section/post';
+import ProjectSection, { ProjectLayout } from '@/components/section/project';
 import {
   getEmployments,
   getInterestsAndObjectives,

@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     const data = (await spotifyRes.json()) as {
-      items: Array<{ track: SpotifyTrack; played_at: string }>;
+      items: Array<{ track: SpotifyTrack; playedAt: string }>;
     };
     return NextResponse.json(data);
   } catch (error: unknown) {

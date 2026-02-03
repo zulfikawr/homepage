@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import { ThemeProvider } from 'next-themes';
 
-import { ThemeSync } from '@/components/Visual/ThemeSync';
-import { AuthProvider } from '@/contexts/authContext';
-import { BackgroundProvider } from '@/contexts/backgroundContext';
-import { LoadingProvider } from '@/contexts/loadingContext';
-import { RadiusProvider } from '@/contexts/radiusContext';
-import { TitleProvider } from '@/contexts/titleContext';
-import { WeatherProvider } from '@/contexts/weatherContext';
+import { ThemeSync } from '@/components/visual/theme-sync';
+import { AuthProvider } from '@/contexts/auth-context';
+import { BackgroundProvider } from '@/contexts/background-context';
+import { LoadingProvider } from '@/contexts/loading-context';
+import { RadiusProvider } from '@/contexts/radius-context';
+import { TitleProvider } from '@/contexts/title-context';
+import { WeatherProvider } from '@/contexts/weather-context';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {

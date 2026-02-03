@@ -1,12 +1,12 @@
 'use client';
 
-import PersonalInfoForm from '@/components/Form/PersonalInfo';
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { PersonalInfoLayout } from '@/components/Section/PersonalInfo';
+import PersonalInfoForm from '@/components/form/personal-info';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { PersonalInfoLayout } from '@/components/section/personal-info';
 import { useCollection } from '@/hooks';
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
-import { PersonalInfo } from '@/types/personal_info';
+import { PersonalInfo } from '@/types/personal-info';
 
 export default function PersonalInfoContent() {
   const { data: personalInfoList, loading } = useCollection<PersonalInfo>(

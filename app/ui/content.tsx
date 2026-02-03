@@ -2,35 +2,35 @@
 
 import { useState } from 'react';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import SectionTitle from '@/components/SectionTitle';
-import { Badge } from '@/components/UI/Badge';
-import { Button } from '@/components/UI/Button';
-import { Card } from '@/components/UI/Card';
-import { Checkbox } from '@/components/UI/Checkbox';
-import { drawer } from '@/components/UI/Drawer';
-import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
-import { Icon } from '@/components/UI/Icon';
-import { Input } from '@/components/UI/Input';
-import { Label } from '@/components/UI/Label';
-import { modal } from '@/components/UI/Modal';
-import { Separator } from '@/components/UI/Separator';
-import { Skeleton } from '@/components/UI/Skeleton';
-import { Slider } from '@/components/UI/Slider';
-import { Switch } from '@/components/UI/Switch';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import SectionTitle from '@/components/section-title';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { drawer } from '@/components/ui/drawer';
+import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
+import { Icon } from '@/components/ui/icon';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { modal } from '@/components/ui/modal';
+import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
   TableCell,
   TableHeader,
   TableRow,
-} from '@/components/UI/Table';
-import { Textarea } from '@/components/UI/Textarea';
-import { toast } from '@/components/UI/Toast';
-import { Toggle } from '@/components/UI/Toggle';
-import { ToggleGroup } from '@/components/UI/ToggleGroup';
-import { Tooltip } from '@/components/UI/Tooltip';
+} from '@/components/ui/table';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/components/ui/toast';
+import { Toggle } from '@/components/ui/toggle';
+import { ToggleGroup } from '@/components/ui/toggle-group';
+import { Tooltip } from '@/components/ui/tooltip';
 
 export default function UIContent() {
   const [toggleGroupValue, setToggleGroupValue] = useState('left');

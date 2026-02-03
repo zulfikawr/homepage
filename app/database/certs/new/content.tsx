@@ -1,7 +1,7 @@
 'use client';
 
-import CertificateForm from '@/components/Form/Certificate';
-import PageTitle from '@/components/PageTitle';
+import CertificateForm from '@/components/form/certificate';
+import PageTitle from '@/components/page-title';
 
 export default function NewCertificateContent() {
   return (

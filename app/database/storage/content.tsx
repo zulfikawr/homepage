@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-import PageTitle from '@/components/PageTitle';
+import PageTitle from '@/components/page-title';
 import {
   Button,
   Checkbox,
@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
   toast,
-} from '@/components/UI';
+} from '@/components/ui';
 
 interface FileItem {
   type: 'folder' | 'file';

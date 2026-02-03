@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Card } from '@/components/UI';
-import { toast } from '@/components/UI';
-import { Button, FormLabel, Input, Textarea } from '@/components/UI';
-import { Separator } from '@/components/UI/Separator';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Card } from '@/components/ui';
+import { toast } from '@/components/ui';
+import { Button, FormLabel, Input, Textarea } from '@/components/ui';
+import { Separator } from '@/components/ui/separator';
 import { createFeedback } from '@/database/feedback';
-import { escapeHtml } from '@/utilities/escapeHtml';
+import { escapeHtml } from '@/utilities/escape-html';
 
 const MAX_CHARS = 5000;
 

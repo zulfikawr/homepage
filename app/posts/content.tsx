@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from 'react';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Icon, Toggle } from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import PostCard from '@/components/UI/Card/variants/Post';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Icon, Toggle } from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
+import PostCard from '@/components/ui/card/variants/post';
 import { Post } from '@/types/post';
-import { sortByDate } from '@/utilities/sortByDate';
+import { sortByDate } from '@/utilities/sort-by-date';
 
 export function PostsSkeleton() {
   return (

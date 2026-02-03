@@ -3,24 +3,24 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import SpotifyBanner from '@/components/Banners/Spotify';
-import ImageWithFallback from '@/components/ImageWithFallback';
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Button, Icon, Tooltip } from '@/components/UI';
-import { Skeleton } from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import PlaylistCard from '@/components/UI/Card/variants/Playlist/Spotify';
-import { Dropdown, DropdownItem } from '@/components/UI/Dropdown';
-import { useLoadingToggle } from '@/contexts/loadingContext';
-import { useRadius } from '@/contexts/radiusContext';
+import SpotifyBanner from '@/components/banners/spotify';
+import ImageWithFallback from '@/components/image-with-fallback';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Button, Icon, Tooltip } from '@/components/ui';
+import { Skeleton } from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
+import PlaylistCard from '@/components/ui/card/variants/playlist/spotify';
+import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
+import { useLoadingToggle } from '@/contexts/loading-context';
+import { useRadius } from '@/contexts/radius-context';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
-import { getTimeAgo } from '@/utilities/timeAgo';
+import { getTimeAgo } from '@/utilities/time-ago';
 
 interface RecentlyPlayedItem {
   track: SpotifyTrack;
-  played_at: string;
+  playedAt: string;
 }
 
 type TimeRange = 'short_term' | 'medium_term' | 'long_term';
@@ -106,9 +106,9 @@ export default function SpotifyMusicContent({
 
       const [recentRes, topRes, artistsRes, playlistsRes] = await Promise.all([
         fetch('/api/spotify/recently-played?limit=10'),
-        fetch(`/api/spotify/top-tracks?limit=10&time_range=${tracksTimeRange}`),
+        fetch(`/api/spotify/top-tracks?limit=10&timeRange=${tracksTimeRange}`),
         fetch(
-          `/api/spotify/top-artists?limit=10&time_range=${artistsTimeRange}`,
+          `/api/spotify/top-artists?limit=10&timeRange=${artistsTimeRange}`,
         ),
         fetch('/api/spotify/playlists?limit=10'),
       ]);
@@ -130,8 +130,8 @@ export default function SpotifyMusicContent({
       setTopArtists(artistsData?.items || []);
       setPlaylists(playlistsData?.items || []);
 
-      if (recentData?.items?.[0]?.played_at) {
-        setLastPlayedAt(recentData.items[0].played_at);
+      if (recentData?.items?.[0]?.playedAt) {
+        setLastPlayedAt(recentData.items[0].playedAt);
       }
 
       setDataLoading({
@@ -159,7 +159,7 @@ export default function SpotifyMusicContent({
       setDataLoading((prev) => ({ ...prev, topTracks: true }));
 
       const res = await fetch(
-        `/api/spotify/top-tracks?limit=10&time_range=${tracksTimeRange}`,
+        `/api/spotify/top-tracks?limit=10&timeRange=${tracksTimeRange}`,
       );
 
       if (!res.ok) {
@@ -181,7 +181,7 @@ export default function SpotifyMusicContent({
       setDataLoading((prev) => ({ ...prev, topArtists: true }));
 
       const res = await fetch(
-        `/api/spotify/top-artists?limit=10&time_range=${artistsTimeRange}`,
+        `/api/spotify/top-artists?limit=10&timeRange=${artistsTimeRange}`,
       );
 
       if (!res.ok) {
@@ -206,8 +206,8 @@ export default function SpotifyMusicContent({
     ) {
       loadData();
     } else {
-      if (initialRecent?.[0]?.played_at) {
-        setLastPlayedAt(initialRecent[0].played_at);
+      if (initialRecent?.[0]?.playedAt) {
+        setLastPlayedAt(initialRecent[0].playedAt);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

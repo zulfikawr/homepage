@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { toast } from '@/components/UI';
-import { Skeleton } from '@/components/UI';
+import { toast } from '@/components/ui';
+import { Skeleton } from '@/components/ui';
 
 function CallbackContent() {
   const router = useRouter();

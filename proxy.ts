@@ -10,7 +10,7 @@ interface NextRequestWithGeo extends NextRequest {
 export default async function proxy(request: NextRequest) {
   const req = request as NextRequestWithGeo;
 
-  const isAdminCookie = req.cookies.get('is_admin');
+  const isAdminCookie = req.cookies.get('isAdmin');
   const isAdmin = isAdminCookie?.value === 'true';
 
   const isDatabaseRoute = req.nextUrl.pathname.startsWith('/database');
@@ -36,7 +36,7 @@ export default async function proxy(request: NextRequest) {
     const analyticsData = {
       path: req.nextUrl.pathname,
       referrer: req.headers.get('referer') || 'Direct',
-      userAgent: req.headers.get('user-agent') || 'Unknown',
+      user_agent: req.headers.get('user-agent') || 'Unknown',
       country: country,
     };
 

@@ -14,7 +14,7 @@ interface PostRow {
   content: string;
   excerpt: string;
   image_url: string;
-  audio_url: string;
+  audioUrl: string;
   categories: string;
   date_string: string;
 }
@@ -112,7 +112,8 @@ export async function addPost(
       }
 
       const audioFile = data.get('audio') as File;
-      const audioUrlInput = data.get('audio_url') as string;
+      const audioUrlInput = (data.get('audio_url') ||
+        data.get('audioUrl')) as string;
       if (audioFile && audioFile.size > 0) {
         payload.audio_url = await uploadFile(audioFile, payload.slug, 'audio');
       } else if (audioUrlInput) {
@@ -131,7 +132,7 @@ export async function addPost(
 
     await db
       .prepare(
-        `INSERT INTO posts (id, slug, title, content, excerpt, image_url, audio_url, categories, date_string)
+        `INSERT INTO posts (id, slug, title, content, excerpt, image_url, audioUrl, categories, date_string)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
@@ -227,13 +228,14 @@ export async function updatePost(
       }
 
       const audioFile = data.get('audio') as File;
-      const audioUrlInput = data.get('audio_url') as string;
+      const audioUrlInput = (data.get('audio_url') ||
+        data.get('audioUrl')) as string;
       if (audioFile && audioFile.size > 0) {
         payload.audio_url = await uploadFile(audioFile, slug, 'audio');
       } else if (audioUrlInput) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');
       } else {
-        // Don't update audio_url if no new data provided
+        // Don't update audioUrl if no new data provided
         payload.audio_url = undefined;
       }
     } else {
@@ -266,7 +268,7 @@ export async function updatePost(
       values.push(payload.image_url);
     }
     if (payload.audio_url !== undefined) {
-      fields.push('audio_url = ?');
+      fields.push('audioUrl = ?');
       values.push(payload.audio_url);
     }
     if (payload.categories !== undefined) {

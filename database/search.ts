@@ -46,7 +46,7 @@ export async function searchDatabase(query: string): Promise<SearchResult[]> {
   const db = getDB();
   if (!db) return [];
 
-  const search_terms = `%${query.toLowerCase().trim()}%`;
+  const searchTerms = `%${query.toLowerCase().trim()}%`;
 
   try {
     const [posts, projects, books, publications] = await Promise.all([
@@ -54,25 +54,25 @@ export async function searchDatabase(query: string): Promise<SearchResult[]> {
         .prepare(
           'SELECT id, title, slug, excerpt, date_string FROM posts WHERE title LIKE ? OR content LIKE ? OR excerpt LIKE ? LIMIT 5',
         )
-        .bind(search_terms, search_terms, search_terms)
+        .bind(searchTerms, searchTerms, searchTerms)
         .all<PostRow>(),
       db
         .prepare(
           'SELECT id, name, slug, description FROM projects WHERE name LIKE ? OR description LIKE ? OR readme LIKE ? LIMIT 5',
         )
-        .bind(search_terms, search_terms, search_terms)
+        .bind(searchTerms, searchTerms, searchTerms)
         .all<ProjectRow>(),
       db
         .prepare(
           'SELECT id, title, author, slug FROM books WHERE title LIKE ? OR author LIKE ? LIMIT 5',
         )
-        .bind(search_terms, search_terms)
+        .bind(searchTerms, searchTerms)
         .all<BookRow>(),
       db
         .prepare(
           'SELECT id, title, slug FROM publications WHERE title LIKE ? OR excerpt LIKE ? OR publisher LIKE ? LIMIT 5',
         )
-        .bind(search_terms, search_terms, search_terms)
+        .bind(searchTerms, searchTerms, searchTerms)
         .all<PublicationRow>(),
     ]);
 

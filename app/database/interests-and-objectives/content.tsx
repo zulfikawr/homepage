@@ -1,17 +1,17 @@
 'use client';
 
-import InterestsAndObjectivesForm from '@/components/Form/InterestsAndObjectives';
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { InterestsAndObjectivesLayout } from '@/components/Section/InterestsAndObjectives';
+import InterestsAndObjectivesForm from '@/components/form/interests-and-objectives';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { InterestsAndObjectivesLayout } from '@/components/section/interests-and-objectives';
 import { useCollection } from '@/hooks';
 import { mapRecordToInterests } from '@/lib/mappers';
-import { InterestsAndObjectives } from '@/types/interests_and_objectives';
+import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 
 export default function InterestsAndObjectivesContent() {
   const { data: interestsAndObjectivesList, loading } = useCollection<
     InterestsAndObjectives & { id: string }
-  >('interests_and_objectives', mapRecordToInterests);
+  >('interestsAndObjectives', mapRecordToInterests);
 
   const interestsAndObjectives =
     interestsAndObjectivesList && interestsAndObjectivesList.length > 0

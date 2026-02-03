@@ -2,12 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Button, Card } from '@/components/UI';
-import CertificateCard from '@/components/UI/Card/variants/Certificate';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Button, Card } from '@/components/ui';
+import CertificateCard from '@/components/ui/card/variants/certificate';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
 import { useCollection } from '@/hooks';
 import { mapRecordToCertificate } from '@/lib/mappers';
 import { Certificate } from '@/types/certificate';

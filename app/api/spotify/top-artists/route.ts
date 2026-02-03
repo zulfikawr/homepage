@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get('limit') || '10';
-    const time_range = searchParams.get('time_range') || 'short_term';
+    const timeRange = searchParams.get('timeRange') || 'short_term';
     const accessToken = await getAccessToken();
 
     const spotifyRes = await fetch(
-      `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}`,
+      `https://api.spotify.com/v1/me/top/artists?limit=${limit}&timeRange=${timeRange}`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
         next: { revalidate: 3600 },

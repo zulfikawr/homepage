@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 
-import { ViewTransition } from '@/components/Motion';
-import GitHubCard from '@/components/UI/Card/variants/GitHub';
-import ProjectCard from '@/components/UI/Card/variants/Project';
-import { MarkdownRenderer } from '@/components/UI/MarkdownRenderer';
-import { Separator } from '@/components/UI/Separator';
-import { useTitle } from '@/contexts/titleContext';
+import { ViewTransition } from '@/components/motion';
+import GitHubCard from '@/components/ui/card/variants/github';
+import ProjectCard from '@/components/ui/card/variants/project';
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
+import { Separator } from '@/components/ui/separator';
+import { useTitle } from '@/contexts/title-context';
 import { Project } from '@/types/project';
 
 const ProjectContent = ({

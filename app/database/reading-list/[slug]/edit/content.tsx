@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import BookForm from '@/components/Form/Book';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import BookForm from '@/components/form/book';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Book } from '@/types/book';
 
 interface EditBookPageProps {
@@ -23,7 +23,7 @@ export default function EditBookPage({ book }: EditBookPageProps) {
     <div>
       <PageTitle emoji='📚' title={`Edit Book`} subtitle={book.title} />
 
-      <BookForm book_to_edit={book} />
+      <BookForm bookToEdit={book} />
     </div>
   );
 }

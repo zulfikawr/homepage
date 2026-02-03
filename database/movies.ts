@@ -19,15 +19,15 @@ interface MovieRow {
 
 function mapRowToMovie(row: MovieRow | null): Movie | null {
   if (!row) return null;
-  const poster_key = row.poster_url;
+  const posterKey = row.poster_url;
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     release_date: row.release_date,
     imdb_id: row.imdb_id,
-    image: poster_key ? `/api/storage/${poster_key}` : '',
-    poster_url: poster_key || '',
+    image: posterKey ? `/api/storage/${posterKey}` : '',
+    poster_url: posterKey || '',
     imdb_link: row.imdb_link,
     rating: row.rating,
   };

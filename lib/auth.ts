@@ -14,7 +14,7 @@ export interface AppUser {
 export function getCurrentAuth() {
   if (typeof window === 'undefined') return { user: null, isAdmin: false };
 
-  const authData = localStorage.getItem('auth_user');
+  const authData = localStorage.getItem('authUser');
   if (!authData) return { user: null, isAdmin: false };
 
   try {
@@ -46,14 +46,14 @@ export function getAuthCookie() {
 }
 
 export function login(user: AppUser) {
-  localStorage.setItem('auth_user', JSON.stringify(user));
+  localStorage.setItem('authUser', JSON.stringify(user));
   // Set a simple cookie for middleware/server-side checks
-  document.cookie = `is_admin=${user.role === 'admin' ? 'true' : 'false'}; path=/; max-age=86400`;
+  document.cookie = `isAdmin=${user.role === 'admin' ? 'true' : 'false'}; path=/; max-age=86400`;
   window.dispatchEvent(new Event('storage'));
 }
 
 export function logout() {
-  localStorage.removeItem('auth_user');
-  document.cookie = 'is_admin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  localStorage.removeItem('authUser');
+  document.cookie = 'isAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   window.dispatchEvent(new Event('storage'));
 }

@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import CertificateForm from '@/components/Form/Certificate';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import CertificateForm from '@/components/form/certificate';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Certificate } from '@/types/certificate';
 
 interface EditCertificatePageProps {
@@ -29,7 +29,7 @@ export default function EditCertificatePage({
         subtitle={certificate.title}
       />
 
-      <CertificateForm certificate_to_edit={certificate} />
+      <CertificateForm certificateToEdit={certificate} />
     </div>
   );
 }

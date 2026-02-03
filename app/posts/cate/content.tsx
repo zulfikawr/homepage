@@ -3,9 +3,9 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Label } from '@/components/UI';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Label } from '@/components/ui';
 import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';

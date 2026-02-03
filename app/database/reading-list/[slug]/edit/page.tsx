@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { FormSkeleton } from '@/components/Form/Loading';
+import { FormSkeleton } from '@/components/form/loading';
 import { getBookById } from '@/database/books';
 
 import EditBookPage from './content';

@@ -2,13 +2,13 @@
 
 import { useMemo } from 'react';
 
-import VisitorGeographyBanner from '@/components/Banners/VisitorGeography';
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Card } from '@/components/UI';
-import { Icon, Skeleton } from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { AnalyticsEvent } from '@/types/analytics';
+import VisitorGeographyBanner from '@/components/banners/visitor-geography';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Card } from '@/components/ui';
+import { Icon, Skeleton } from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { AnalyticsEvent } from '@/types/analytics-event';
 
 export function AnalyticsSkeleton() {
   return (

@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Button, FormLabel, Input, Skeleton } from '@/components/UI';
-import { useAuth } from '@/contexts/authContext';
-import { useAuthActions } from '@/hooks/useAuthActions';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Button, FormLabel, Input, Skeleton } from '@/components/ui';
+import { useAuth } from '@/contexts/auth-context';
+import { useAuthActions } from '@/hooks/use-auth-actions';
 
 export default function LoginContent() {
   const { handleGithubLogin, handleLogin, loading } = useAuthActions();

@@ -1,7 +1,7 @@
 'use client';
 
-import MovieForm from '@/components/Form/Movie';
-import PageTitle from '@/components/PageTitle';
+import MovieForm from '@/components/form/movie';
+import PageTitle from '@/components/page-title';
 import { Movie } from '@/types/movie';
 
 interface EditMoviePageProps {
@@ -17,7 +17,7 @@ export default function EditMoviePage({ movie }: EditMoviePageProps) {
         subtitle={movie.title}
       />
 
-      <MovieForm movie_to_edit={movie} />
+      <MovieForm movieToEdit={movie} />
     </div>
   );
 }

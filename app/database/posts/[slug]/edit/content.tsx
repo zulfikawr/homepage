@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import PostForm from '@/components/Form/Post';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import PostForm from '@/components/form/post';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Post } from '@/types/post';
 
 interface EditPostPageProps {
@@ -22,7 +22,7 @@ export default function EditPostPage({ post }: EditPostPageProps) {
   return (
     <div>
       <PageTitle emoji='📰' title='Edit Post' subtitle={post.title} />
-      <PostForm post_to_edit={post} />
+      <PostForm postToEdit={post} />
     </div>
   );
 }

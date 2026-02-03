@@ -21,7 +21,7 @@ interface EmploymentRow {
 
 function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
   if (!row) return null;
-  const logo_key = row.organization_logo_url;
+  const logoKey = row.organization_logo_url;
   return {
     id: row.id,
     slug: row.slug,
@@ -29,8 +29,8 @@ function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
     job_title: row.job_title,
     date_string: row.date_string,
     job_type: row.job_type as Employment['job_type'],
-    organization_logo: logo_key ? `/api/storage/${logo_key}` : '',
-    organization_logo_url: logo_key || '',
+    organization_logo: logoKey ? `/api/storage/${logoKey}` : '',
+    organization_logo_url: logoKey || '',
     organization_industry: row.organization_industry,
     organization_location: row.organization_location,
     responsibilities: row.responsibilities
@@ -109,7 +109,7 @@ export async function addEmployment(
         payload.responsibilities = [];
       }
 
-      const logoFile = data.get('organization_logo') as File | null;
+      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
         payload.organization_logo_url = await uploadFile(logoFile);
@@ -211,7 +211,7 @@ export async function updateEmployment(
         }
       }
 
-      const logoFile = data.get('organization_logo') as File | null;
+      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
         payload.organization_logo_url = await uploadFile(logoFile);

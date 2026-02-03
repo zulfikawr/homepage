@@ -3,21 +3,21 @@
 import { useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import ProjectAnalytics from '@/components/Banners/ProjectAnalytics';
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import SectionTitle from '@/components/SectionTitle';
-import { Badge } from '@/components/UI/Badge';
-import { Button } from '@/components/UI/Button';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import ProjectCard from '@/components/UI/Card/variants/Project';
-import { Icon } from '@/components/UI/Icon';
-import { Input } from '@/components/UI/Input';
-import { Separator } from '@/components/UI/Separator';
-import { ToggleGroup } from '@/components/UI/ToggleGroup';
-import Mask from '@/components/Visual/Mask';
+import ProjectAnalytics from '@/components/banners/project-analytics';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import SectionTitle from '@/components/section-title';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { CardLoading } from '@/components/ui/card/variants/loading';
+import ProjectCard from '@/components/ui/card/variants/project';
+import { Icon } from '@/components/ui/icon';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { ToggleGroup } from '@/components/ui/toggle-group';
+import Mask from '@/components/visual/mask';
 import { Project } from '@/types/project';
-import { sortByDate } from '@/utilities/sortByDate';
+import { sortByDate } from '@/utilities/sort-by-date';
 
 type StatusFilter = 'all' | 'in_progress' | 'completed' | 'upcoming';
 
@@ -51,12 +51,12 @@ export function ProjectsSkeleton() {
 }
 
 export default function ProjectsContent({ projects }: { projects: Project[] }) {
-  const [search_query, set_search_query] = useState('');
-  const [status_filter, set_status_filter] = useState<StatusFilter>('all');
-  const [selected_tool, set_selected_tool] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
 
   // Derive unique tools from all projects
-  const all_tools = useMemo(() => {
+  const allTools = useMemo(() => {
     if (!projects) return [];
     const tools = new Set<string>();
     projects.forEach((p) => p.tools.forEach((t) => tools.add(t)));
@@ -64,12 +64,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
   }, [projects]);
 
   // Filter projects based on search, status, and tool
-  const filtered_projects = useMemo(() => {
+  const filteredProjects = useMemo(() => {
     if (!projects) return [];
     let filtered = projects;
 
-    if (search_query) {
-      const q = search_query.toLowerCase();
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -77,39 +77,37 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
       );
     }
 
-    if (selected_tool) {
-      filtered = filtered.filter((p) => p.tools.includes(selected_tool));
+    if (selectedTool) {
+      filtered = filtered.filter((p) => p.tools.includes(selectedTool));
     }
 
     return sortByDate(filtered);
-  }, [projects, search_query, selected_tool]);
+  }, [projects, searchQuery, selectedTool]);
 
-  const pinned_projects = filtered_projects.filter((p) => p.pinned);
+  const pinnedProjects = filteredProjects.filter((p) => p.pinned);
 
   // Show all projects in their respective categories, even if pinned
   // This ensures the sections (WIP, Completed, Upcoming) are always visible if there are projects
-  const wip_projects = filtered_projects.filter(
+  const wipProjects = filteredProjects.filter(
     (p) => p.status === 'in_progress',
   );
-  const done_projects = filtered_projects.filter(
-    (p) => p.status === 'completed',
-  );
-  const upcoming_projects = filtered_projects.filter(
+  const doneProjects = filteredProjects.filter((p) => p.status === 'completed');
+  const upcomingProjects = filteredProjects.filter(
     (p) => p.status === 'upcoming',
   );
 
-  const show_pinned = status_filter === 'all' && pinned_projects.length > 0;
-  const show_wip =
-    (status_filter === 'all' || status_filter === 'in_progress') &&
-    wip_projects.length > 0;
-  const show_done =
-    (status_filter === 'all' || status_filter === 'completed') &&
-    done_projects.length > 0;
-  const show_upcoming =
-    (status_filter === 'all' || status_filter === 'upcoming') &&
-    upcoming_projects.length > 0;
+  const showPinned = statusFilter === 'all' && pinnedProjects.length > 0;
+  const showWip =
+    (statusFilter === 'all' || statusFilter === 'in_progress') &&
+    wipProjects.length > 0;
+  const showDone =
+    (statusFilter === 'all' || statusFilter === 'completed') &&
+    doneProjects.length > 0;
+  const showUpcoming =
+    (statusFilter === 'all' || statusFilter === 'upcoming') &&
+    upcomingProjects.length > 0;
 
-  const has_results = show_pinned || show_wip || show_done || show_upcoming;
+  const hasResults = showPinned || showWip || showDone || showUpcoming;
 
   return (
     <div className='space-y-8'>
@@ -131,13 +129,13 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             />
             <Input
               placeholder='Search projects...'
-              value={search_query}
-              onChange={(e) => set_search_query(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className='pl-9 bg-card/50'
             />
-            {search_query && (
+            {searchQuery && (
               <button
-                onClick={() => set_search_query('')}
+                onClick={() => setSearchQuery('')}
                 className='absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground'
               >
                 <Icon name='x' className='size-3' />
@@ -148,8 +146,8 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             <Mask>
               <div className='pb-1'>
                 <ToggleGroup
-                  value={status_filter}
-                  onChange={(v) => set_status_filter(v as StatusFilter)}
+                  value={statusFilter}
+                  onChange={(v) => setStatusFilter(v as StatusFilter)}
                   options={[
                     { label: 'All', value: 'all' },
                     { label: 'WIP', value: 'in_progress', icon: 'hammer' },
@@ -166,26 +164,26 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
         <Mask>
           <div className='flex items-center gap-2 pb-2'>
             <Badge
-              variant={selected_tool === null ? 'primary' : 'outline'}
+              variant={selectedTool === null ? 'primary' : 'outline'}
               className={twMerge(
                 'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                selected_tool !== null && 'hover:bg-primary/20',
+                selectedTool !== null && 'hover:bg-primary/20',
               )}
-              onClick={() => set_selected_tool(null)}
+              onClick={() => setSelectedTool(null)}
             >
               All Tools
             </Badge>
-            {all_tools.map((tool) => (
+            {allTools.map((tool) => (
               <Badge
                 key={tool}
-                variant={selected_tool === tool ? 'primary' : 'outline'}
+                variant={selectedTool === tool ? 'primary' : 'outline'}
                 icon
                 className={twMerge(
                   'cursor-pointer whitespace-nowrap px-3 py-1.5 text-xs transition-all',
-                  selected_tool !== tool && 'hover:bg-primary/20',
+                  selectedTool !== tool && 'hover:bg-primary/20',
                 )}
                 onClick={() =>
-                  set_selected_tool(selected_tool === tool ? null : tool)
+                  setSelectedTool(selectedTool === tool ? null : tool)
                 }
               >
                 {tool}
@@ -196,7 +194,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
       </div>
 
       <div className='space-y-10 min-h-[50vh]'>
-        {!has_results && (
+        {!hasResults && (
           <div className='animate-fade-in flex flex-col items-center justify-center py-12 text-center'>
             <Icon
               name='ghost'
@@ -213,9 +211,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
               variant='outline'
               className='mt-4'
               onClick={() => {
-                set_search_query('');
-                set_selected_tool(null);
-                set_status_filter('all');
+                setSearchQuery('');
+                setSelectedTool(null);
+                setStatusFilter('all');
               }}
             >
               Clear all filters
@@ -224,7 +222,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
         )}
 
         {/* Pinned Section */}
-        {show_pinned && (
+        {showPinned && (
           <section>
             <SectionTitle
               icon='pushPin'
@@ -233,7 +231,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             />
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {pinned_projects.map((project) => (
+                {pinnedProjects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -243,14 +241,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {show_pinned && (show_wip || show_done || show_upcoming) && (
-          <Separator />
-        )}
+        {showPinned && (showWip || showDone || showUpcoming) && <Separator />}
 
         {/* Work in Progress Section */}
-        {show_wip && (
+        {showWip && (
           <section>
-            {(status_filter === 'all' || status_filter === 'in_progress') && (
+            {(statusFilter === 'all' || statusFilter === 'in_progress') && (
               <SectionTitle
                 icon='hammer'
                 title='Work in Progress'
@@ -259,7 +255,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {wip_projects.map((project) => (
+                {wipProjects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -269,12 +265,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {show_wip && show_done && <Separator />}
+        {showWip && showDone && <Separator />}
 
         {/* Completed Projects Section */}
-        {show_done && (
+        {showDone && (
           <section>
-            {(status_filter === 'all' || status_filter === 'completed') && (
+            {(statusFilter === 'all' || statusFilter === 'completed') && (
               <SectionTitle
                 icon='checkCircle'
                 title='Completed Projects'
@@ -283,7 +279,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {done_projects.map((project) => (
+                {doneProjects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>
@@ -293,12 +289,12 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
           </section>
         )}
 
-        {show_done && show_upcoming && <Separator />}
+        {showDone && showUpcoming && <Separator />}
 
         {/* Upcoming Projects Section */}
-        {show_upcoming && (
+        {showUpcoming && (
           <section>
-            {(status_filter === 'all' || status_filter === 'upcoming') && (
+            {(statusFilter === 'all' || statusFilter === 'upcoming') && (
               <SectionTitle
                 icon='calendarPlus'
                 title='Upcoming Projects'
@@ -307,7 +303,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {upcoming_projects.map((project) => (
+                {upcomingProjects.map((project) => (
                   <ViewTransition key={project.id}>
                     <ProjectCard project={project} />
                   </ViewTransition>

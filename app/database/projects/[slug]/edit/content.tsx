@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import ProjectForm from '@/components/Form/Project';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import ProjectForm from '@/components/form/project';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Project } from '@/types/project';
 
 interface EditProjectPageProps {
@@ -22,7 +22,7 @@ export default function EditProjectPage({ project }: EditProjectPageProps) {
   return (
     <div>
       <PageTitle emoji='🚀' title='Edit Project' subtitle={project.name} />
-      <ProjectForm project_to_edit={project} />
+      <ProjectForm projectToEdit={project} />
     </div>
   );
 }

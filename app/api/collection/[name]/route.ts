@@ -16,9 +16,9 @@ export async function GET(
       return NextResponse.json({ error: 'DB not available' }, { status: 500 });
 
     const tableMap: Record<string, string> = {
-      profile: 'personal_info',
-      reading_list: 'books',
-      interests_and_objectives: 'interests_objectives',
+      profile: 'personalInfo',
+      readingList: 'books',
+      interestsAndObjectives: 'interestsObjectives',
     };
 
     const table = tableMap[name] || name;
@@ -31,12 +31,12 @@ export async function GET(
       'employments',
       'publications',
       'sections',
-      'personal_info',
-      'interests_objectives',
+      'personalInfo',
+      'interestsObjectives',
       'feedback',
       'comments',
       'resume',
-      'analytics_events',
+      'analyticsEvents',
       'movies',
     ];
 

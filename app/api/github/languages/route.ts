@@ -164,7 +164,7 @@ export async function GET() {
     return NextResponse.json(
       {
         languages: languagesWithPercentage,
-        totalBytes,
+        total_bytes: totalBytes,
       },
       {
         headers: {

@@ -1,11 +1,11 @@
-import { AnalyticsEvent } from '@/types/analytics';
+import { AnalyticsEvent } from '@/types/analytics-event';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
 import { Comment } from '@/types/comment';
 import { Employment } from '@/types/employment';
-import { InterestsAndObjectives } from '@/types/interests_and_objectives';
+import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 import { Movie } from '@/types/movie';
-import { PersonalInfo } from '@/types/personal_info';
+import { PersonalInfo } from '@/types/personal-info';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
@@ -23,19 +23,19 @@ export type BaseDatabaseRow = {
 };
 
 export function mapRecordToPost(row: BaseDatabaseRow): Post {
-  const image_key = (row.image_url || row.image) as string;
-  const audio_key = (row.audio_url || row.audio) as string;
+  const imageKey = (row.image_url || row.image) as string;
+  const audioKey = (row.audioUrl || row.audio) as string;
 
   return {
     id: row.id as string,
     title: row.title as string,
     content: row.content as string,
     excerpt: row.excerpt as string,
-    date_string: (row.date_string || row.dateString) as string,
-    image: getFileUrl({}, image_key),
-    image_url: image_key,
-    audio: getFileUrl({}, audio_key),
-    audio_url: audio_key,
+    date_string: (row.date_string || row.date_string) as string,
+    image: getFileUrl({}, imageKey),
+    image_url: imageKey,
+    audio: getFileUrl({}, audioKey),
+    audio_url: audioKey,
     slug: row.slug as string,
     categories:
       typeof row.categories === 'string'
@@ -45,7 +45,7 @@ export function mapRecordToPost(row: BaseDatabaseRow): Post {
 }
 
 export function mapRecordToBook(row: BaseDatabaseRow): Book {
-  const image_key = (row.image_url || row.imageURL || '') as string;
+  const imageKey = (row.image_url || row.imageURL || '') as string;
 
   return {
     id: row.id as string,
@@ -55,35 +55,35 @@ export function mapRecordToBook(row: BaseDatabaseRow): Book {
       .toLowerCase() as Book['type'],
     title: row.title as string,
     author: row.author as string,
-    image: getFileUrl({}, image_key),
-    image_url: image_key,
+    image: getFileUrl({}, imageKey),
+    image_url: imageKey,
     link: row.link as string,
-    date_added: (row.date_added || row.dateAdded) as string,
+    date_added: (row.date_added || row.date_added) as string,
   };
 }
 
 export function mapRecordToCertificate(row: BaseDatabaseRow): Certificate {
-  const image_key = (row.image_url || row.imageUrl) as string;
-  const logo_key = (row.organization_logo_url ||
-    row.organizationLogoUrl) as string;
+  const imageKey = (row.image_url || row.image_url) as string;
+  const logoKey = (row.organization_logo_url ||
+    row.organization_logo_url) as string;
 
   return {
     id: row.id as string,
     slug: row.slug as string,
     title: row.title as string,
-    issued_by: (row.issued_by || row.issuedBy) as string,
-    date_issued: (row.date_issued || row.dateIssued) as string,
-    credential_id: (row.credential_id || row.credentialId) as string,
-    image: getFileUrl({}, image_key),
-    image_url: image_key,
-    organization_logo: getFileUrl({}, logo_key),
-    organization_logo_url: logo_key,
+    issued_by: (row.issued_by || row.issued_by) as string,
+    date_issued: (row.date_issued || row.date_issued) as string,
+    credential_id: (row.credential_id || row.credential_id) as string,
+    image: getFileUrl({}, imageKey),
+    image_url: imageKey,
+    organization_logo: getFileUrl({}, logoKey),
+    organization_logo_url: logoKey,
     link: row.link as string,
   };
 }
 
 export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
-  const logo_key = (row.organization_logo_url ||
+  const logoKey = (row.organization_logo_url ||
     row.org_logo_url ||
     row.orgLogoUrl) as string;
 
@@ -91,17 +91,17 @@ export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
     id: row.id as string,
     slug: row.slug as string,
     organization: row.organization as string,
-    job_title: (row.job_title || row.jobTitle) as string,
-    date_string: (row.date_string || row.dateString) as string,
+    job_title: (row.job_title || row.job_title) as string,
+    date_string: (row.date_string || row.date_string) as string,
     job_type: (row.job_type as string)
       ?.replace(/([A-Z])/g, '_$1')
       .toLowerCase() as Employment['job_type'],
-    organization_logo: getFileUrl({}, logo_key),
-    organization_logo_url: logo_key,
+    organization_logo: getFileUrl({}, logoKey),
+    organization_logo_url: logoKey,
     organization_industry: (row.organization_industry ||
-      row.organizationIndustry) as string,
+      row.organization_industry) as string,
     organization_location: (row.organization_location ||
-      row.organizationLocation) as string,
+      row.organization_location) as string,
     responsibilities:
       typeof row.responsibilities === 'string'
         ? JSON.parse(row.responsibilities)
@@ -124,42 +124,42 @@ export function mapRecordToInterests(
 }
 
 export function mapRecordToMovie(row: BaseDatabaseRow): Movie {
-  const poster_key = (row.poster_url || row.posterUrl || '') as string;
+  const posterKey = (row.poster_url || row.poster_url || '') as string;
 
   return {
     id: row.id as string,
     slug: row.slug as string,
     title: row.title as string,
-    release_date: (row.release_date || row.releaseDate) as string,
-    imdb_id: (row.imdb_id || row.imdbId) as string,
-    image: getFileUrl({}, poster_key),
-    poster_url: poster_key,
-    imdb_link: (row.imdb_link || row.imdbLink) as string,
+    release_date: (row.release_date || row.release_date) as string,
+    imdb_id: (row.imdb_id || row.imdb_id) as string,
+    image: getFileUrl({}, posterKey),
+    poster_url: posterKey,
+    imdb_link: (row.imdb_link || row.imdb_link) as string,
     rating: row.rating as number,
   };
 }
 
 export function mapRecordToPersonalInfo(row: BaseDatabaseRow): PersonalInfo {
-  const avatar_key = (row.avatar_url || row.avatarUrl || '') as string;
+  const avatarKey = (row.avatar_url || row.avatar_url || '') as string;
 
   return {
     name: row.name as string,
     title: row.title as string,
-    avatar: getFileUrl({}, avatar_key),
-    avatar_url: avatar_key,
+    avatar: getFileUrl({}, avatarKey),
+    avatar_url: avatarKey,
   };
 }
 
 export function mapRecordToProject(row: BaseDatabaseRow): Project {
-  const image_key = (row.image_url || row.image) as string;
-  const favicon_key = (row.favicon_url || row.favicon) as string;
+  const imageKey = (row.image_url || row.image) as string;
+  const faviconKey = (row.favicon_url || row.favicon) as string;
 
   return {
     id: row.id as string,
     name: row.name as string,
-    date_string: (row.date_string || row.dateString) as string,
-    image: getFileUrl({}, image_key),
-    image_url: image_key,
+    date_string: (row.date_string || row.date_string) as string,
+    image: getFileUrl({}, imageKey),
+    image_url: imageKey,
     description: row.description as string,
     tools:
       typeof row.tools === 'string'
@@ -170,11 +170,11 @@ export function mapRecordToProject(row: BaseDatabaseRow): Project {
       ?.replace(/([A-Z])/g, '_$1')
       .toLowerCase() as Project['status'],
     link: row.link as string,
-    favicon: getFileUrl({}, favicon_key),
-    favicon_url: favicon_key,
+    favicon: getFileUrl({}, faviconKey),
+    favicon_url: faviconKey,
     pinned: !!row.pinned,
     slug: row.slug as string,
-    github_repo_url: (row.github_repo_url || row.githubRepoUrl) as string,
+    github_repo_url: (row.github_repo_url || row.github_repo_url) as string,
   };
 }
 
@@ -185,7 +185,7 @@ export function mapRecordToPublication(row: BaseDatabaseRow): Publication {
     title: row.title as string,
     publisher: row.publisher as string,
     link: row.link as string,
-    open_access: !!row.open_access || !!row.openAccess,
+    open_access: !!row.open_access || !!row.open_access,
     excerpt: row.excerpt as string,
     authors:
       typeof row.authors === 'string'
@@ -211,25 +211,25 @@ export function mapRecordToSection(row: BaseDatabaseRow): Section {
 }
 
 export function mapRecordToResume(row: BaseDatabaseRow): Resume {
-  const file_key = (row.file_url || row.fileUrl || '') as string;
+  const fileKey = (row.fileUrl || row.file_url || '') as string;
 
   return {
-    file: getFileUrl({}, file_key),
-    file_url: file_key,
+    file: getFileUrl({}, fileKey),
+    file_url: fileKey,
   };
 }
 
 export function mapRecordToComment(row: BaseDatabaseRow): Comment {
-  const avatar_key = (row.avatar_url || row.avatarUrl) as string;
+  const avatarKey = (row.avatar_url || row.avatar_url) as string;
 
   return {
     id: row.id as string,
-    post_id: (row.post_id || row.postId) as string,
+    post_id: (row.post_id || row.post_id) as string,
     author: row.author as string,
     content: row.content as string,
-    avatar: getFileUrl({}, avatar_key),
-    avatar_url: avatar_key,
-    parent_id: (row.parent_id || row.parentId) as string,
+    avatar: getFileUrl({}, avatarKey),
+    avatar_url: avatarKey,
+    parent_id: (row.parent_id || row.parent_id) as string,
     created_at: row.created_at
       ? (row.created_at as number) * 1000
       : new Date((row.created as string) || Date.now()).getTime(),

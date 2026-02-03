@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { toast } from '@/components/UI';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { toast } from '@/components/ui';
 import {
   Button,
   Table,
@@ -13,27 +13,27 @@ import {
   TableHeader,
   TableRow,
   TableSkeleton,
-} from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { useAuth } from '@/contexts/authContext';
+} from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { useAuth } from '@/contexts/auth-context';
 import { deleteFeedback } from '@/database/feedback';
 import { useCollection } from '@/hooks';
 import { mapRecordToFeedback } from '@/lib/mappers';
 import { FeedbackEntry } from '@/types/feedback';
 
 export default function FeedbackResponsesContent() {
-  const { user, loading: auth_loading, isAdmin } = useAuth();
+  const { user, loading: authLoading, isAdmin } = useAuth();
   const router = useRouter();
   const { data: feedbacks, loading } = useCollection<FeedbackEntry>(
     'feedback',
     mapRecordToFeedback,
   );
 
-  const handle_delete = async (id: string) => {
-    const confirm_delete = confirm(
+  const handleDelete = async (id: string) => {
+    const confirmDelete = confirm(
       'Are you sure you want to delete this feedback?',
     );
-    if (!confirm_delete) return;
+    if (!confirmDelete) return;
 
     const result = await deleteFeedback(id);
     if (result.success) {
@@ -43,12 +43,12 @@ export default function FeedbackResponsesContent() {
     }
   };
 
-  if (!auth_loading && !user) {
+  if (!authLoading && !user) {
     router.push('/login');
     return null;
   }
 
-  if (!auth_loading && user && !isAdmin) {
+  if (!authLoading && user && !isAdmin) {
     router.push('/');
     return null;
   }
@@ -106,7 +106,7 @@ export default function FeedbackResponsesContent() {
                     <Button
                       variant='destructive'
                       icon='trashSimple'
-                      onClick={() => handle_delete(entry.id)}
+                      onClick={() => handleDelete(entry.id)}
                     />
                   </TableCell>
                 </TableRow>

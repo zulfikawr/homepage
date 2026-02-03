@@ -1,7 +1,7 @@
 'use client';
 
-import MovieForm from '@/components/Form/Movie';
-import PageTitle from '@/components/PageTitle';
+import MovieForm from '@/components/form/movie';
+import PageTitle from '@/components/page-title';
 
 export default function NewMovieContent() {
   return (

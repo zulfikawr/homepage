@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     interface UserRow {
       id: string;
       email: string;
-      password_hash: string;
+      passwordHash: string;
       role: string;
     }
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     // For simplicity, we are doing a direct comparison.
     // In production, you'd use bcrypt/argon2.
-    if (user.password_hash !== password) {
+    if (user.passwordHash !== password) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 },

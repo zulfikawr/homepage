@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Card } from '@/components/UI';
-import NavigationCard from '@/components/UI/Card/variants/Navigation';
-import { IconName } from '@/components/UI/Icon';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Card } from '@/components/ui';
+import NavigationCard from '@/components/ui/card/variants/navigation';
+import { IconName } from '@/components/ui/icon';
 
 interface ContactItem {
   platform: string;

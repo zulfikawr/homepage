@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 
-import ResumeForm from '@/components/Form/Resume';
-import { ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
+import ResumeForm from '@/components/form/resume';
+import { ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
 import { useCollection } from '@/hooks';
 import { mapRecordToResume } from '@/lib/mappers';
 import { Resume } from '@/types/resume';

@@ -82,7 +82,7 @@ export async function uploadFile(
       const fileExt = file.name.split('.').pop() || 'bin';
       key = `certificates/${folder}/${fieldName}.${fileExt}`;
     } else if (
-      collectionName === 'personal_info' ||
+      collectionName === 'personalInfo' ||
       collectionName === 'profile'
     ) {
       const fileExt = file.name.split('.').pop() || 'bin';
@@ -106,8 +106,8 @@ export async function uploadFile(
 
     // Map collection names to table names if they differ
     const tableMap: Record<string, string> = {
-      profile: 'personal_info',
-      reading_list: 'books',
+      profile: 'personalInfo',
+      readingList: 'books',
     };
     const table = tableMap[collectionName] || collectionName;
 
@@ -115,13 +115,13 @@ export async function uploadFile(
       image: 'image_url',
       poster: 'poster_url',
       avatar: 'avatar_url',
-      audio: 'audio_url',
+      audio: 'audioUrl',
       logo: 'organization_logo_url',
-      organization_logo: 'organization_logo_url',
+      organizationLogo: 'organization_logo_url',
       organization_logo_url: 'organization_logo_url',
       favicon: 'favicon_url',
-      file: 'file_url',
-      file_url: 'file_url',
+      file: 'fileUrl',
+      fileUrl: 'fileUrl',
     };
 
     const field = fieldMap[fieldName] || fieldName;

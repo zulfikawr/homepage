@@ -19,15 +19,15 @@ interface BookRow {
 
 function mapRowToBook(row: BookRow | null): Book | null {
   if (!row) return null;
-  const image_key = row.image_url;
+  const imageKey = row.image_url;
   return {
     id: row.id,
     slug: row.slug,
     type: row.type as Book['type'],
     title: row.title,
     author: row.author,
-    image: image_key ? `/api/storage/${image_key}` : '',
-    image_url: image_key || '',
+    image: imageKey ? `/api/storage/${imageKey}` : '',
+    image_url: imageKey || '',
     link: row.link,
     date_added: row.date_added,
   };
@@ -119,7 +119,7 @@ export async function addBook(
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
-    revalidateTag('reading_list', 'max');
+    revalidateTag('readingList', 'max');
 
     const newBook = await getBookById(id);
     if (!newBook) throw new Error('Failed to retrieve book after creation');
@@ -213,7 +213,7 @@ export async function updateBook(
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
-    revalidateTag('reading_list', 'max');
+    revalidateTag('readingList', 'max');
 
     const updated = await getBookById(recordId);
     return { success: true, book: updated! };
@@ -240,7 +240,7 @@ export async function deleteBook(
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
-    revalidateTag('reading_list', 'max');
+    revalidateTag('readingList', 'max');
 
     return { success: true };
   } catch (error) {

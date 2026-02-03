@@ -29,7 +29,7 @@ export async function GET() {
     }
 
     const trackData = (await spotifyRes.json()) as {
-      is_playing: boolean;
+      isPlaying: boolean;
       item: SpotifyTrack | null;
     };
     return NextResponse.json(trackData);

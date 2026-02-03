@@ -20,8 +20,8 @@ interface CertificateRow {
 
 function mapRowToCertificate(row: CertificateRow | null): Certificate | null {
   if (!row) return null;
-  const image_key = row.image_url;
-  const logo_key = row.organization_logo_url;
+  const imageKey = row.image_url;
+  const logoKey = row.organization_logo_url;
   return {
     id: row.id,
     slug: row.slug,
@@ -29,10 +29,10 @@ function mapRowToCertificate(row: CertificateRow | null): Certificate | null {
     issued_by: row.issued_by,
     date_issued: row.date_issued,
     credential_id: row.credential_id,
-    image: image_key ? `/api/storage/${image_key}` : '',
-    image_url: image_key || '',
-    organization_logo: logo_key ? `/api/storage/${logo_key}` : '',
-    organization_logo_url: logo_key || '',
+    image: imageKey ? `/api/storage/${imageKey}` : '',
+    image_url: imageKey || '',
+    organization_logo: logoKey ? `/api/storage/${logoKey}` : '',
+    organization_logo_url: logoKey || '',
     link: row.link,
   };
 }
@@ -90,7 +90,7 @@ export async function addCertificate(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organization_logo') as File | null;
+      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
         payload.organization_logo_url = await uploadFile(logoFile, 'logo');
@@ -174,7 +174,7 @@ export async function updateCertificate(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organization_logo') as File | null;
+      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
         payload.organization_logo_url = await uploadFile(logoFile, 'logo');

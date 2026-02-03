@@ -8,7 +8,7 @@ export async function POST() {
     if (!db) throw new Error('DB not available');
 
     await db
-      .prepare('DELETE FROM spotify_tokens WHERE id = ?')
+      .prepare('DELETE FROM spotifyTokens WHERE id = ?')
       .bind('spotify')
       .run();
 

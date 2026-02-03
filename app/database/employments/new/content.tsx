@@ -1,7 +1,7 @@
 'use client';
 
-import EmploymentForm from '@/components/Form/Employment';
-import PageTitle from '@/components/PageTitle';
+import EmploymentForm from '@/components/form/employment';
+import PageTitle from '@/components/page-title';
 
 export default function NewEmploymentContent() {
   return (

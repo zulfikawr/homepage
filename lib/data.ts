@@ -13,14 +13,14 @@ import {
   mapRecordToResume,
   mapRecordToSection,
 } from '@/lib/mappers';
-import { AnalyticsEvent } from '@/types/analytics';
+import { AnalyticsEvent } from '@/types/analytics-event';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
 import { Employment } from '@/types/employment';
 import { GitHubContributionData } from '@/types/github';
-import { InterestsAndObjectives } from '@/types/interests_and_objectives';
+import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 import { Movie } from '@/types/movie';
-import { PersonalInfo } from '@/types/personal_info';
+import { PersonalInfo } from '@/types/personal-info';
 import { Post } from '@/types/post';
 import { Project } from '@/types/project';
 import { Publication } from '@/types/publication';
@@ -154,7 +154,7 @@ export async function getGitHubContributionsServer(): Promise<GitHubContribution
     if (!data) return null;
 
     const weeks = data.weeks || [];
-    const dailyContributions = weeks.flatMap((week: GitHubGraphQLWeek) =>
+    const daily_contributions = weeks.flatMap((week: GitHubGraphQLWeek) =>
       week.contributionDays.map((day: GitHubGraphQLDay) => ({
         date: day.date,
         count: day.contributionCount,
@@ -164,15 +164,15 @@ export async function getGitHubContributionsServer(): Promise<GitHubContribution
     return {
       total_contributions: data.totalContributions,
       repository_count: contributedRepos.length,
-      daily_contributions: dailyContributions,
+      daily_contributions: daily_contributions,
       weeks: weeks.map((week: GitHubGraphQLWeek) =>
         week.contributionDays.map((day: GitHubGraphQLDay) => ({
           date: day.date,
           count: day.contributionCount,
         })),
       ),
-      year: dailyContributions[0]
-        ? new Date(dailyContributions[0].date).getFullYear()
+      year: daily_contributions[0]
+        ? new Date(daily_contributions[0].date).getFullYear()
         : new Date().getFullYear(),
     };
   } catch (error) {

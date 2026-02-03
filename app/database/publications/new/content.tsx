@@ -1,7 +1,7 @@
 'use client';
 
-import PublicationForm from '@/components/Form/Publication';
-import PageTitle from '@/components/PageTitle';
+import PublicationForm from '@/components/form/publication';
+import PageTitle from '@/components/page-title';
 
 export default function NewPublicationContent() {
   return (

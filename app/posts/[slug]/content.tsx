@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 
-import CommentSection from '@/components/CommentSection';
-import { ViewTransition } from '@/components/Motion';
-import PostContent from '@/components/PostContent';
-import { Separator } from '@/components/UI';
-import PostCard from '@/components/UI/Card/variants/Post';
-import { useTitle } from '@/contexts/titleContext';
+import CommentSection from '@/components/comment-section';
+import { ViewTransition } from '@/components/motion';
+import PostContent from '@/components/post-content';
+import { Separator } from '@/components/ui';
+import PostCard from '@/components/ui/card/variants/post';
+import { useTitle } from '@/contexts/title-context';
 import { Post } from '@/types/post';
 
 interface BlogPostContentProps {

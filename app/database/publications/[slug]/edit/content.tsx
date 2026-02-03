@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 
-import PublicationForm from '@/components/Form/Publication';
-import PageTitle from '@/components/PageTitle';
-import { useTitle } from '@/contexts/titleContext';
+import PublicationForm from '@/components/form/publication';
+import PageTitle from '@/components/page-title';
+import { useTitle } from '@/contexts/title-context';
 import { Publication } from '@/types/publication';
 
 interface EditPublicationPageProps {
@@ -28,7 +28,7 @@ export default function EditPublicationPage({
         title='Edit Publication'
         subtitle={publication.title}
       />
-      <PublicationForm publication_to_edit={publication} />
+      <PublicationForm publicationToEdit={publication} />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
-import PostForm from '@/components/Form/Post';
-import PageTitle from '@/components/PageTitle';
+import PostForm from '@/components/form/post';
+import PageTitle from '@/components/page-title';
 
 export default function NewPostContent() {
   return (

@@ -27,9 +27,9 @@ export const getSpotifyAuthUrl = () => {
   ].join(' ');
 
   const params = new URLSearchParams({
-    client_id: clientId,
-    response_type: 'code',
-    redirect_uri: redirectUri,
+    clientId: clientId,
+    responseType: 'code',
+    redirectUri: redirectUri,
     scope: SCOPES,
   });
 

@@ -160,20 +160,20 @@ export async function GET() {
 
 function processContributionCalendar(
   data: GitHubGraphQLData,
-  repositoryCount: number,
+  repository_count: number,
 ) {
   const weeks = data.weeks || [];
-  const totalContributions = data.totalContributions || 0;
+  const total_contributions = data.totalContributions || 0;
 
   // Flatten the weeks into daily contributions
-  const dailyContributions: {
+  const daily_contributions: {
     date: string;
     count: number;
   }[] = [];
 
   weeks.forEach((week: GitHubGraphQLWeek) => {
     week.contributionDays.forEach((day: GitHubGraphQLDay) => {
-      dailyContributions.push({
+      daily_contributions.push({
         date: day.date,
         count: day.contributionCount,
       });
@@ -181,15 +181,15 @@ function processContributionCalendar(
   });
 
   // Get the year from the first date
-  const firstDate = dailyContributions[0]?.date;
+  const firstDate = daily_contributions[0]?.date;
   const year = firstDate
     ? new Date(firstDate).getFullYear()
     : new Date().getFullYear();
 
   return {
-    totalContributions,
-    repositoryCount,
-    dailyContributions,
+    total_contributions: total_contributions,
+    repository_count: repository_count,
+    daily_contributions: daily_contributions,
     weeks: weeks.map((week: GitHubGraphQLWeek) =>
       week.contributionDays.map((day: GitHubGraphQLDay) => ({
         date: day.date,

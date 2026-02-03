@@ -1,10 +1,10 @@
 'use client';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
-import MovieCard from '@/components/UI/Card/variants/Movie';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
+import MovieCard from '@/components/ui/card/variants/movie';
 import { Movie } from '@/types/movie';
 
 export function MoviesSkeleton() {

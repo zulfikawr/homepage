@@ -137,10 +137,10 @@ export async function getRecentlyPlayed(limit = 10) {
   return res.json();
 }
 
-export async function getTopTracks(limit = 10, time_range = 'short_term') {
+export async function getTopTracks(limit = 10, timeRange = 'short_term') {
   const accessToken = await getAccessToken();
   const res = await fetch(
-    `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${time_range}`,
+    `https://api.spotify.com/v1/me/top/tracks?limit=${limit}&time_range=${timeRange}`,
     {
       headers: { Authorization: `Bearer ${accessToken}` },
       next: { revalidate: 3600 },
@@ -150,10 +150,10 @@ export async function getTopTracks(limit = 10, time_range = 'short_term') {
   return res.json();
 }
 
-export async function getTopArtists(limit = 10, time_range = 'short_term') {
+export async function getTopArtists(limit = 10, timeRange = 'short_term') {
   const accessToken = await getAccessToken();
   const res = await fetch(
-    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${time_range}`,
+    `https://api.spotify.com/v1/me/top/artists?limit=${limit}&time_range=${timeRange}`,
     {
       headers: { Authorization: `Bearer ${accessToken}` },
       next: { revalidate: 3600 },

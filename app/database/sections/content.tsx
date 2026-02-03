@@ -2,19 +2,19 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import Banners from '@/components/Section/Banners';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import Banners from '@/components/section/banners';
 // Preview Components
-import EmploymentSection from '@/components/Section/Employment';
-import InterestsAndObjectivesSection from '@/components/Section/InterestsAndObjectives';
-import PersonalInfoSection from '@/components/Section/PersonalInfo';
-import PostSection from '@/components/Section/Post';
-import ProjectSection from '@/components/Section/Project';
-import { drawer } from '@/components/UI';
-import { toast } from '@/components/UI';
-import { Button, Icon, Skeleton, Switch } from '@/components/UI';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
+import EmploymentSection from '@/components/section/employment';
+import InterestsAndObjectivesSection from '@/components/section/interests-and-objectives';
+import PersonalInfoSection from '@/components/section/personal-info';
+import PostSection from '@/components/section/post';
+import ProjectSection from '@/components/section/project';
+import { drawer } from '@/components/ui';
+import { toast } from '@/components/ui';
+import { Button, Icon, Skeleton, Switch } from '@/components/ui';
+import CardEmpty from '@/components/ui/card/variants/empty';
 import { updateSection } from '@/database/sections';
 import { useCollection } from '@/hooks';
 import {
@@ -36,7 +36,7 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
     mapRecordToEmployment,
   );
   const { data: interests } = useCollection(
-    'interests_and_objectives',
+    'interestsAndObjectives',
     mapRecordToInterests,
   );
 

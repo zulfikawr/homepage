@@ -1,7 +1,7 @@
 'use client';
 
-import BookForm from '@/components/Form/Book';
-import PageTitle from '@/components/PageTitle';
+import BookForm from '@/components/form/book';
+import PageTitle from '@/components/page-title';
 
 export default function NewBookContent() {
   return (

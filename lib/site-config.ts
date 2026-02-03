@@ -148,7 +148,7 @@ export const siteConfig = {
       fields: ['title', 'author', 'type', 'date_added', 'link'],
     },
     Employment: {
-      jobType: [
+      job_type: [
         'full_time',
         'part_time',
         'contract',

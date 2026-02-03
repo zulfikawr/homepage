@@ -56,31 +56,34 @@ export async function updateResume(
       return { success: false, error: 'Database binding not found' };
     }
 
-    let file_url: string = '';
+    let fileUrl: string = '';
 
     if (data instanceof FormData) {
       const file = data.get('file') as File;
       if (file && file.size > 0) {
         console.log('updateResume: Uploading file...', file.name, file.size);
-        file_url = await uploadFile(file);
+        fileUrl = await uploadFile(file);
       } else {
-        file_url = (data.get('file_url') as string) || '';
+        fileUrl =
+          (data.get('file_url') as string) ||
+          (data.get('fileUrl') as string) ||
+          '';
       }
     } else {
-      file_url = data.file_url;
+      fileUrl = data.file_url;
     }
 
     // Clean the URL to just the key if it's our API URL
-    file_url = file_url.replace('/api/storage/', '');
+    fileUrl = fileUrl.replace('/api/storage/', '');
 
-    console.log('updateResume: Saving file_url to D1:', file_url);
+    console.log('updateResume: Saving fileUrl to D1:', fileUrl);
 
     await db
       .prepare(
-        `INSERT INTO resume (id, file_url) VALUES (1, ?)
-       ON CONFLICT(id) DO UPDATE SET file_url = excluded.file_url, updated_at = unixepoch()`,
+        `INSERT INTO resume (id, fileUrl) VALUES (1, ?)
+       ON CONFLICT(id) DO UPDATE SET fileUrl = excluded.fileUrl, updated_at = unixepoch()`,
       )
-      .bind(file_url)
+      .bind(fileUrl)
       .run();
 
     revalidatePath('/database/resume');

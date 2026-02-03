@@ -2,12 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 
-import { StaggerContainer, ViewTransition } from '@/components/Motion';
-import PageTitle from '@/components/PageTitle';
-import { Button, Card } from '@/components/UI';
-import BookCard from '@/components/UI/Card/variants/Book';
-import CardEmpty from '@/components/UI/Card/variants/Empty';
-import { CardLoading } from '@/components/UI/Card/variants/Loading';
+import { StaggerContainer, ViewTransition } from '@/components/motion';
+import PageTitle from '@/components/page-title';
+import { Button, Card } from '@/components/ui';
+import BookCard from '@/components/ui/card/variants/book';
+import CardEmpty from '@/components/ui/card/variants/empty';
+import { CardLoading } from '@/components/ui/card/variants/loading';
 import { useCollection } from '@/hooks';
 import { mapRecordToBook } from '@/lib/mappers';
 import { Book } from '@/types/book';
@@ -19,7 +19,7 @@ export default function ReadingListDatabase() {
     data: books,
     loading,
     error,
-  } = useCollection<Book>('reading_list', mapRecordToBook);
+  } = useCollection<Book>('readingList', mapRecordToBook);
 
   if (error) return <CardEmpty message='Failed to load books' />;
 

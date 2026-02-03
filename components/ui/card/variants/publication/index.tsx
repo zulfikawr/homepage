@@ -1,0 +1,90 @@
+import { useRouter } from 'next/navigation';
+
+import { Publication } from '@/types/publication';
+import openLink from '@/utilities/external-link';
+
+import { Badge, Icon } from '../../..';
+import { Card } from '../..';
+
+interface PublicationCardProps {
+  publication: Publication;
+  openForm?: boolean;
+  isPreview?: boolean;
+  isActive?: boolean;
+}
+
+export default function PublicationCard({
+  publication,
+  openForm,
+  isPreview,
+  isActive,
+}: PublicationCardProps) {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    if (isPreview) return;
+
+    if (openForm) {
+      router.push(`/database/publications/${publication.slug}/edit`);
+    } else {
+      openLink(publication.link);
+    }
+  };
+
+  return (
+    <div className={isPreview ? 'w-full' : ''}>
+      <Card
+        onClick={handleCardClick}
+        openForm={openForm}
+        isPreview={isPreview}
+        isActive={isActive}
+      >
+        <div className='p-4 space-y-2'>
+          <p className='text-lg line-clamp-2 text-ellipsis font-medium leading-tight dark:text-foreground'>
+            {publication.title}
+          </p>
+          <p className='text-sm font-light text-muted-foreground'>
+            {publication.authors.join(', ')}
+          </p>
+          <div className='flex flex-wrap gap-2 pt-2'>
+            {publication.keywords.map((keyword, index) => {
+              const colors: (
+                | 'aqua'
+                | 'green'
+                | 'yellow'
+                | 'blue'
+                | 'red'
+                | 'default'
+              )[] = ['blue', 'aqua', 'green', 'yellow', 'red'];
+              const badgeType = colors[index % colors.length];
+              return (
+                <Badge key={index} variant={badgeType}>
+                  {keyword}
+                </Badge>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className='flex w-full items-center justify-between border-t-2 border-border px-4 py-2 text-xs font-light text-muted-foreground  dark:text-muted-foreground'>
+          <span>{publication.publisher}</span>
+          <span>
+            {publication.open_access ? (
+              <span className='flex items-center gap-2 text-gruv-green font-medium'>
+                <Icon name='lockOpen' className='size-4.5' />
+                Open Access
+              </span>
+            ) : (
+              <span className='flex items-center gap-2 text-gruv-red font-medium'>
+                <Icon name='lock' className='size-4.5' />
+                Restricted Access
+              </span>
+            )}
+          </span>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export { PublicationCard };

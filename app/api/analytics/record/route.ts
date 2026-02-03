@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const data = (await request.json()) as {
       path: string;
       referrer: string;
-      userAgent: string;
+      user_agent: string;
       country: string;
     };
 
@@ -16,9 +16,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'DB not available' }, { status: 500 });
     }
 
-    const isBot = /bot|crawler|spider|crawling/i.test(data.userAgent || '')
-      ? 1
-      : 0;
+    const user_agent = data.user_agent || 'Unknown';
+    const is_bot = /bot|crawler|spider|crawling/i.test(user_agent) ? 1 : 0;
 
     await db
       .prepare(
@@ -29,8 +28,8 @@ export async function POST(request: NextRequest) {
         data.path,
         data.country || 'Unknown',
         data.referrer || 'Direct',
-        data.userAgent || 'Unknown',
-        isBot,
+        user_agent,
+        is_bot,
       )
       .run();
 
