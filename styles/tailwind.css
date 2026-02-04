@@ -414,7 +414,7 @@
     --secondary: #4c566a;
     --secondary-foreground: #d8dee9;
     --muted: #434c5e;
-    --muted-foreground: #4c566a;
+    --muted-foreground: #919ab0;
     --accent: #81a1c1;
     --accent-foreground: #eceff4;
     --destructive: #bf616a;
@@ -427,7 +427,7 @@
     --theme-bg-soft: #3b4252;
     --theme-bg-dark: #242933;
     --theme-fg: #d8dee9;
-    --theme-fg-dim: #4c566a;
+    --theme-fg-dim: #919ab0;
     --theme-orange: #d08770;
     --theme-green: #a3be8c;
     --theme-yellow: #ebcb8b;
@@ -436,9 +436,9 @@
     --theme-aqua: #8fbcbb;
     --theme-purple: #b48ead;
 
-    --heatmap-0: #3b4252;
-    --heatmap-1: #434c5e;
-    --heatmap-2: #4c566a;
+    --heatmap-0: #434c5e;
+    --heatmap-1: #4c566a;
+    --heatmap-2: #5e81ac;
     --heatmap-3: #a3be8c;
     --heatmap-4: #ebcb8b;
     --heatmap-5: #d08770;
