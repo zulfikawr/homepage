@@ -389,7 +389,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     type='button'
                     onClick={() => handleChange('rating', i)}
                     onMouseDown={(e) => e?.preventDefault()}
-                    className={`p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
+                    className={`p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform ${filled ? 'text-theme-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
                     aria-label={`${i} star`}
                   >
                     <div className='w-4 h-4'>

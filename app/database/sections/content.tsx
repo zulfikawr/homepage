@@ -188,7 +188,7 @@ export default function SectionDatabase() {
                   onDragEnd={onDragEnd}
                   className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card ${
                     draggedItem?.id === section.id
-                      ? 'opacity-50 scale-95 border-gruv-blue'
+                      ? 'opacity-50 scale-95 border-theme-blue'
                       : 'opacity-100'
                   } cursor-grab active:cursor-grabbing`}
                 >
@@ -220,7 +220,7 @@ export default function SectionDatabase() {
         )}
       </div>
 
-      <div className='p-4 rounded-md bg-gruv-blue/10 dark:bg-gruv-blue/30/20 border border-gruv-blue/30 dark:border-gruv-blue/50 text-xs text-gruv-blue dark:text-gruv-blue'>
+      <div className='p-4 rounded-md bg-theme-blue/10 dark:bg-theme-blue/30/20 border border-theme-blue/30 dark:border-theme-blue/50 text-xs text-theme-blue dark:text-theme-blue'>
         <p>
           Drag sections to change their appearance order on the home page. Use
           the switches to show or hide sections.

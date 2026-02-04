@@ -30,11 +30,11 @@ const SectionTitle = ({
   const iconColor = useMemo(() => {
     if (!title) return 'text-primary';
     const colors = [
-      'text-gruv-aqua',
-      'text-gruv-green',
-      'text-gruv-yellow',
-      'text-gruv-blue',
-      'text-gruv-red',
+      'text-theme-aqua',
+      'text-theme-green',
+      'text-theme-yellow',
+      'text-theme-blue',
+      'text-theme-red',
       'text-primary',
     ];
     const charCodeSum = title

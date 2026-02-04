@@ -82,7 +82,7 @@ export default function ProjectAnalytics({
           </>
         ) : (
           <>
-            <Icon name='chartBar' className='size-7 text-gruv-aqua' />
+            <Icon name='chartBar' className='size-7 text-theme-aqua' />
             <span>Tech Stack Radar</span>
           </>
         )}
@@ -131,7 +131,7 @@ export default function ProjectAnalytics({
             <div className='space-y-6'>
               {/* Highlight Section */}
               <div className='flex items-center gap-4'>
-                <div className='flex items-center justify-center size-16 rounded-xl bg-gruv-bg-soft border border-border shadow-sm'>
+                <div className='flex items-center justify-center size-16 rounded-xl bg-theme-bg-soft border border-border shadow-sm'>
                   <Icon
                     name={getIconName(stats.mostUsed.name)}
                     className='size-8 text-foreground'
@@ -142,7 +142,7 @@ export default function ProjectAnalytics({
                     <h3 className='text-lg font-bold text-foreground'>
                       {stats.mostUsed.name}
                     </h3>
-                    <span className='text-[10px] uppercase tracking-wider font-bold text-gruv-bg bg-gruv-green px-1.5 py-0.5 rounded-sm'>
+                    <span className='text-[10px] uppercase tracking-wider font-bold text-theme-bg bg-theme-green px-1.5 py-0.5 rounded-sm'>
                       Top Pick
                     </span>
                   </div>
@@ -193,7 +193,7 @@ export default function ProjectAnalytics({
               {/* Mini Footer Stats */}
               <div className='grid grid-cols-2 gap-2 pt-2'>
                 <div className='bg-muted/30 rounded-lg p-2 text-center border border-border/50'>
-                  <div className='text-xl font-bold text-gruv-green'>
+                  <div className='text-xl font-bold text-theme-green'>
                     {stats.totalCompleted}
                   </div>
                   <div className='text-[10px] uppercase tracking-wider text-muted-foreground font-medium'>
@@ -201,7 +201,7 @@ export default function ProjectAnalytics({
                   </div>
                 </div>
                 <div className='bg-muted/30 rounded-lg p-2 text-center border border-border/50'>
-                  <div className='text-xl font-bold text-gruv-yellow'>
+                  <div className='text-xl font-bold text-theme-yellow'>
                     {stats.totalProjects - stats.totalCompleted}
                   </div>
                   <div className='text-[10px] uppercase tracking-wider text-muted-foreground font-medium'>

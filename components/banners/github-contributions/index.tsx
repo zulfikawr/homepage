@@ -61,7 +61,7 @@ const BannerHeader = ({
           </>
         ) : (
           <>
-            <Icon name='githubLogo' className='size-7 text-gruv-orange' />
+            <Icon name='githubLogo' className='size-7 text-primary' />
             <span>GitHub Contributions</span>
           </>
         )}
@@ -101,7 +101,7 @@ export const GitHubContributionsLayout = ({
             <p className='text-xs text-muted-foreground h-4 leading-4 flex items-center'>
               Total Contributions
             </p>
-            <div className='text-2xl font-bold text-gruv-aqua h-8 leading-8 flex items-center'>
+            <div className='text-2xl font-bold text-theme-aqua h-8 leading-8 flex items-center'>
               {isLoading ? (
                 <Skeleton width={60} height={24} as='span' />
               ) : (
@@ -113,7 +113,7 @@ export const GitHubContributionsLayout = ({
             <p className='text-xs text-muted-foreground h-4 leading-4 flex items-center'>
               Year
             </p>
-            <div className='text-sm text-gruv-fg-dim font-medium h-5 leading-5 flex items-center'>
+            <div className='text-sm text-theme-fg-dim font-medium h-5 leading-5 flex items-center'>
               {isLoading ? (
                 <Skeleton width={35} height={14} as='span' />
               ) : (
@@ -152,7 +152,7 @@ export const GitHubContributionsLayout = ({
                         text={`${day.date}: ${day.count} contributions`}
                       >
                         <div
-                          className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-gruv-orange/50 ${getHeatmapIntensityClass(getIntensityLevel(day.count))}`}
+                          className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-theme-orange/50 ${getHeatmapIntensityClass(getIntensityLevel(day.count))}`}
                         />
                       </Tooltip>
                     ))}

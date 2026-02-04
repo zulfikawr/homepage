@@ -34,32 +34,32 @@ const PagesAndLinksBanner = ({
       label: 'Contacts',
       href: '/contacts',
       icon: 'addressBook',
-      color: 'text-gruv-aqua',
+      color: 'text-theme-aqua',
     },
     {
       label: 'Résumé',
       href: resume?.file_url || '#',
       icon: 'filePdf',
-      color: 'text-gruv-red',
+      color: 'text-theme-red',
       target: '_blank',
     },
     {
       label: 'Projects',
       href: '/projects',
       icon: 'package',
-      color: 'text-gruv-yellow',
+      color: 'text-theme-yellow',
     },
     {
       label: 'Publications',
       href: '/publications',
       icon: 'newspaper',
-      color: 'text-gruv-green',
+      color: 'text-theme-green',
     },
     {
       label: 'Music',
       href: '/music',
       icon: 'musicNotes',
-      color: 'text-gruv-blue',
+      color: 'text-theme-blue',
     },
     {
       label: 'Feedback',
@@ -80,7 +80,7 @@ const PagesAndLinksBanner = ({
             </>
           ) : (
             <>
-              <Icon name='cube' className='size-7 text-gruv-red' />
+              <Icon name='cube' className='size-7 text-theme-red' />
               <span>Pages & Links</span>
             </>
           )}

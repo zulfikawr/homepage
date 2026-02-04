@@ -52,7 +52,7 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         <SectionTitle
           icon='eye'
           title='Currently Reading'
-          iconClassName='text-gruv-green'
+          iconClassName='text-theme-green'
         />
         <div className='mt-4'>
           <div
@@ -83,7 +83,7 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         <SectionTitle
           icon='checks'
           title='Read'
-          iconClassName='text-gruv-yellow'
+          iconClassName='text-theme-yellow'
         />
         <div className='mt-4'>
           <div
@@ -113,7 +113,7 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         <SectionTitle
           icon='bookmarks'
           title='To Read'
-          iconClassName='text-gruv-blue'
+          iconClassName='text-theme-blue'
         />
         <div className='mt-4'>
           <div

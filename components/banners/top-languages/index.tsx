@@ -78,7 +78,7 @@ const BannerHeader = ({
           </>
         ) : (
           <>
-            <Icon name='code' className='size-7 text-gruv-yellow' />
+            <Icon name='code' className='size-7 text-theme-yellow' />
             <span>Top Languages</span>
           </>
         )}

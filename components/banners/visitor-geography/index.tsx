@@ -38,7 +38,7 @@ const BannerHeader = ({
           </>
         ) : (
           <>
-            <Icon name='globe' className='size-7 text-gruv-blue' />
+            <Icon name='globe' className='size-7 text-theme-blue' />
             <span>Visitor Geography</span>
           </>
         )}

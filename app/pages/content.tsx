@@ -111,11 +111,11 @@ export default function PagesContent({ resume }: { resume: Resume | null }) {
 
   const colors = [
     'text-destructive',
-    'text-gruv-orange',
-    'text-gruv-yellow',
-    'text-gruv-green',
-    'text-gruv-aqua',
-    'text-gruv-blue',
+    'text-theme-orange',
+    'text-theme-yellow',
+    'text-theme-green',
+    'text-theme-aqua',
+    'text-theme-blue',
     'text-primary',
     'text-muted-foreground',
   ];

@@ -77,47 +77,47 @@ export default function GitHubCard({
           <div className='flex flex-col h-full p-4 sm:p-5 gap-3'>
             {/* Header with icon and name */}
             <div className='flex items-start justify-between gap-3'>
-              <h3 className='text-base font-semibold text-foreground truncate dark:text-gruv-fg'>
+              <h3 className='text-base font-semibold text-foreground truncate dark:text-theme-fg'>
                 {repoName}
               </h3>
               <Icon
                 name='arrowSquareOut'
-                className='h-4 w-4 text-muted-foreground flex-shrink-0 dark:text-gruv-fg-dim'
+                className='h-4 w-4 text-muted-foreground flex-shrink-0 dark:text-theme-fg-dim'
               />
             </div>
 
             {/* Description from GitHub */}
             {data.description && (
-              <p className='text-sm text-muted-foreground line-clamp-2 dark:text-gruv-fg-dim'>
+              <p className='text-sm text-muted-foreground line-clamp-2 dark:text-theme-fg-dim'>
                 {data.description}
               </p>
             )}
 
             {/* Language badge */}
             {data.language && (
-              <div className='text-xs font-medium text-muted-foreground dark:text-gruv-fg-dim'>
+              <div className='text-xs font-medium text-muted-foreground dark:text-theme-fg-dim'>
                 <span className='inline-flex items-center gap-1.5'>
-                  <span className='inline-block h-2 w-2 rounded-full bg-primary dark:bg-gruv-aqua'></span>
+                  <span className='inline-block h-2 w-2 rounded-full bg-primary dark:bg-theme-aqua'></span>
                   {data.language}
                 </span>
               </div>
             )}
 
             {/* Stats footer */}
-            <div className='flex items-center gap-4 mt-auto pt-3 border-t border-border dark:border-gruv-bg-soft'>
-              <div className='flex items-center gap-1.5 text-xs text-muted-foreground dark:text-gruv-fg-dim'>
+            <div className='flex items-center gap-4 mt-auto pt-3 border-t border-border dark:border-theme-bg-soft'>
+              <div className='flex items-center gap-1.5 text-xs text-muted-foreground dark:text-theme-fg-dim'>
                 <Icon
                   name='star'
-                  className='h-4 w-4 text-gruv-yellow dark:text-gruv-yellow'
+                  className='h-4 w-4 text-theme-yellow dark:text-theme-yellow'
                 />
                 <span className='font-medium'>
                   {data.stars.toLocaleString()}
                 </span>
               </div>
-              <div className='flex items-center gap-1.5 text-xs text-muted-foreground dark:text-gruv-fg-dim'>
+              <div className='flex items-center gap-1.5 text-xs text-muted-foreground dark:text-theme-fg-dim'>
                 <Icon
                   name='gitFork'
-                  className='h-4 w-4 text-gruv-blue dark:text-gruv-blue'
+                  className='h-4 w-4 text-theme-blue dark:text-theme-blue'
                 />
                 <span className='font-medium'>
                   {data.forks.toLocaleString()}

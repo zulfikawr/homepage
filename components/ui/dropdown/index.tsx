@@ -131,19 +131,18 @@ const Dropdown = ({
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      // Ignore clicks inside the menu
-      if (menuRef.current && menuRef.current.contains(event.target as Node)) {
-        return;
-      }
-      // Ignore clicks on the trigger (let the trigger's onClick handle toggling)
-      if (
-        triggerRef.current &&
-        triggerRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as HTMLElement;
+
+      // Ignore clicks inside the menu or on the trigger
+      if (menuRef.current?.contains(target) || triggerRef.current?.contains(target)) {
         return;
       }
 
-      event.stopPropagation();
+      // Ignore clicks inside any other dropdown content (handles nested portals)
+      if (target.closest('[data-dropdown-content="true"]')) {
+        return;
+      }
+
       handleClose();
     };
 
@@ -176,6 +175,7 @@ const Dropdown = ({
           aria-expanded={isOpen}
           role='button'
           className='group inline-flex w-full items-center relative'
+          data-dropdown-content='true'
         >
           {trigger}
         </div>
@@ -188,13 +188,14 @@ const Dropdown = ({
               <div
                 className='fixed inset-0 z-[9998] bg-transparent cursor-default'
                 aria-hidden='true'
+                onClick={handleClose}
               />
             )}
             <div
               ref={menuRef}
               className={`fixed z-[9999] ${
                 matchTriggerWidth ? '' : 'w-max'
-              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
+              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out max-h-[70vh] overflow-y-auto ${
                 isOpen
                   ? 'opacity-100 scale-y-100'
                   : 'opacity-0 scale-y-95 pointer-events-none'
@@ -202,6 +203,7 @@ const Dropdown = ({
                 ${effectStyles}
               `}
               role='menu'
+              data-dropdown-content='true'
               style={{
                 top: menuCoords.top,
                 left: menuCoords.left,

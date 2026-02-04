@@ -42,22 +42,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = use(cookies());
-  const theme = cookieStore.get('theme')?.value;
-  const isDark = theme === 'dark';
+  const theme = cookieStore.get('theme')?.value || 'system';
 
   return (
     <html
       lang='en-us'
       suppressHydrationWarning
-      className={isDark ? 'dark' : ''}
-      style={{ colorScheme: isDark ? 'dark' : 'light' }}
+      className={theme !== 'system' ? theme : ''}
     >
       <head>
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';}else{d.classList.remove('dark');d.style.colorScheme='light';}}catch(e){}})()",
+              "(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;if(t!=='system'){d.classList.add(t);}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){d.classList.add('dark');}}catch(e){}})()",
           }}
         />
         <link rel='preconnect' href='https://api.iconify.design' />

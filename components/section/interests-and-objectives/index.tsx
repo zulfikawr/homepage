@@ -51,7 +51,7 @@ export const InterestsAndObjectivesLayout = ({
                 </li>
               ))
             : data?.objectives.map((objective, index) => (
-                <li key={index} className='pl-3 text-gruv-aqua'>
+                <li key={index} className='pl-3 text-theme-aqua'>
                   <span className='text-muted-foreground font-light'>
                     {objective}
                   </span>

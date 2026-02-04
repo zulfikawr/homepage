@@ -16,7 +16,7 @@ export function Kbar() {
         aria-label='Command + K to open the command palette'
         role='button'
         onClick={() => drawer.open(<KbarContent />)}
-        className='absolute left-3 top-[7px] z-10 rounded-md border bg-gruv-orange/10 px-1.5 py-0.5 text-xs text-gruv-orange dark:bg-gruv-orange/20 dark:text-gruv-orange font-bold cursor-pointer hover:bg-gruv-orange/20'
+        className='absolute left-3 top-[7px] z-10 rounded-md border bg-primary/10 px-1.5 py-0.5 text-xs text-primary dark:bg-primary/20 dark:text-primary font-bold cursor-pointer hover:bg-primary/20'
       >
         ⌘+K
       </div>

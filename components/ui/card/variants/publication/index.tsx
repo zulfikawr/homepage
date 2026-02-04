@@ -70,12 +70,12 @@ export default function PublicationCard({
           <span>{publication.publisher}</span>
           <span>
             {publication.open_access ? (
-              <span className='flex items-center gap-2 text-gruv-green font-medium'>
+              <span className='flex items-center gap-2 text-theme-green font-medium'>
                 <Icon name='lockOpen' className='size-4.5' />
                 Open Access
               </span>
             ) : (
-              <span className='flex items-center gap-2 text-gruv-red font-medium'>
+              <span className='flex items-center gap-2 text-theme-red font-medium'>
                 <Icon name='lock' className='size-4.5' />
                 Restricted Access
               </span>

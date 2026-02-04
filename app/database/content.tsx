@@ -93,12 +93,12 @@ export default function DatabaseContent() {
   ];
 
   const colors = [
-    'text-gruv-orange',
-    'text-gruv-yellow',
-    'text-gruv-green',
-    'text-gruv-aqua',
-    'text-gruv-blue',
-    'text-gruv-red',
+    'text-theme-orange',
+    'text-theme-yellow',
+    'text-theme-green',
+    'text-theme-aqua',
+    'text-theme-blue',
+    'text-theme-red',
     'text-primary',
     'text-muted-foreground',
   ];

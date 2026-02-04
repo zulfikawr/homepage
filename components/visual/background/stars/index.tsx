@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import Stars from './component';
@@ -7,7 +8,13 @@ import Stars from './component';
 export default function StarsBackground() {
   const { resolvedTheme } = useTheme();
 
-  const starColor = resolvedTheme === 'dark' ? '#ebdbb2' : '#3c3836';
+  const [starColor, setStarColor] = useState('#ebdbb2');
+
+  useEffect(() => {
+    const style = getComputedStyle(document.documentElement);
+    const color = style.getPropertyValue('--foreground').trim() || '#ebdbb2';
+    setStarColor(color);
+  }, [resolvedTheme]);
 
   return (
     <div className='fixed inset-0 -z-10 h-screen w-screen pointer-events-none overflow-hidden'>
@@ -21,14 +28,15 @@ export default function StarsBackground() {
           background-image:
             radial-gradient(
               circle at top right,
-              rgba(254, 128, 25, 0.08),
+              var(--color-theme-orange),
               transparent
             ),
             radial-gradient(
               circle at 20% 80%,
-              rgba(142, 192, 124, 0.08),
+              var(--color-theme-aqua),
               transparent
             );
+          background-blend-mode: soft-light;
         }
       `}</style>
     </div>

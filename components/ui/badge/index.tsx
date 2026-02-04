@@ -44,15 +44,15 @@ const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         case 'primary':
           return 'bg-primary text-primary-foreground hover:brightness-110 hover:shadow-brutalist-xl';
         case 'aqua':
-          return 'bg-gruv-aqua/15 text-gruv-aqua border-gruv-aqua/30 hover:bg-gruv-aqua/25 hover:border-gruv-aqua/60';
+          return 'bg-theme-aqua/15 text-theme-aqua border-theme-aqua/30 hover:bg-theme-aqua/25 hover:border-theme-aqua/60';
         case 'green':
-          return 'bg-gruv-green/15 text-gruv-green border-gruv-green/30 hover:bg-gruv-green/25 hover:border-gruv-green/60';
+          return 'bg-theme-green/15 text-theme-green border-theme-green/30 hover:bg-theme-green/25 hover:border-theme-green/60';
         case 'yellow':
-          return 'bg-gruv-yellow/15 text-gruv-yellow border-gruv-yellow/30 hover:bg-gruv-yellow/25 hover:border-gruv-yellow/60';
+          return 'bg-theme-yellow/15 text-theme-yellow border-theme-yellow/30 hover:bg-theme-yellow/25 hover:border-theme-yellow/60';
         case 'blue':
-          return 'bg-gruv-blue/15 text-gruv-blue border-gruv-blue/30 hover:bg-gruv-blue/25 hover:border-gruv-blue/60';
+          return 'bg-theme-blue/15 text-theme-blue border-theme-blue/30 hover:bg-theme-blue/25 hover:border-theme-blue/60';
         case 'red':
-          return 'bg-gruv-red/15 text-gruv-red border-gruv-red/30 hover:bg-gruv-red/25 hover:border-gruv-red/60';
+          return 'bg-theme-red/15 text-theme-red border-theme-red/30 hover:bg-theme-red/25 hover:border-theme-red/60';
         case 'outline':
           return 'bg-transparent text-foreground border-border hover:border-primary hover:bg-primary/10 hover:text-primary hover:shadow-brutalist-xl';
         default:

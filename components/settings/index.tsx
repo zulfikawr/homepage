@@ -17,6 +17,19 @@ const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },
   { label: 'Light', value: 'light', icon: 'sun' },
   { label: 'Dark', value: 'dark', icon: 'moon' },
+  { label: 'Gruvbox Light', value: 'gruvbox-light', icon: 'palette' },
+  { label: 'Gruvbox Dark', value: 'gruvbox-dark', icon: 'palette' },
+  { label: 'Monokai', value: 'monokai', icon: 'palette' },
+  { label: 'Dracula', value: 'dracula', icon: 'palette' },
+  { label: 'Nord', value: 'nord', icon: 'palette' },
+  { label: 'Catppuccin', value: 'catppuccin', icon: 'palette' },
+  { label: 'Tokyo Night', value: 'tokyo-night', icon: 'palette' },
+  { label: 'Solarized', value: 'solarized', icon: 'palette' },
+  { label: 'Everforest', value: 'everforest', icon: 'palette' },
+  { label: 'Rose Pine', value: 'rose-pine', icon: 'palette' },
+  { label: 'One Dark', value: 'one-dark', icon: 'palette' },
+  { label: 'Kanagawa', value: 'kanagawa', icon: 'palette' },
+  { label: 'Nightfly', value: 'nightfly', icon: 'palette' },
 ];
 
 const backgroundOptions: { label: string; value: string; icon: IconName }[] = [
@@ -152,7 +165,43 @@ export default function Settings() {
         />
 
         <div className={sectionTitleClass}>Theme</div>
-        <ToggleGroup value={theme} onChange={setTheme} options={themeOptions} />
+        <Dropdown
+          trigger={
+            <Button
+              variant='default'
+              aria-label='Select theme'
+              className='w-full flex items-center justify-between gap-2 px-4'
+            >
+              <div className='flex items-center gap-2'>
+                {themeOptions.find((o) => o.value === theme) && (
+                  <Icon
+                    name={themeOptions.find((o) => o.value === theme)!.icon}
+                    className='size-4.5'
+                  />
+                )}
+                <span>
+                  {themeOptions.find((o) => o.value === theme)?.label ||
+                    'Select Theme'}
+                </span>
+              </div>
+              <Icon name='caretDown' className='size-4.5' />
+            </Button>
+          }
+          className='w-full'
+          matchTriggerWidth
+        >
+          {themeOptions.map((option) => (
+            <DropdownItem
+              key={option.value}
+              onClick={() => setTheme(option.value)}
+              isActive={theme === option.value}
+              className='flex items-center gap-2'
+            >
+              <Icon name={option.icon} className='size-4.5' />
+              <span>{option.label}</span>
+            </DropdownItem>
+          ))}
+        </Dropdown>
 
         {process.env.NODE_ENV === 'development' && (
           <>
@@ -220,7 +269,7 @@ export default function Settings() {
                 <div className='flex flex-col w-full gap-2'>
                   <Button
                     icon='spotifyLogo'
-                    className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760] w-full'
+                    className='bg-[#1DB954] text-theme-bg font-bold hover:bg-[#1ed760] w-full'
                     onClick={() => {
                       const url = getSpotifyAuthUrl();
                       window.location.href = url;

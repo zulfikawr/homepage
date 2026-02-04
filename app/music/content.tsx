@@ -276,7 +276,7 @@ export default function SpotifyMusicContent({
             onClick={() => setActiveTab('recent')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'recent'
-                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                ? 'border-theme-green text-theme-green dark:text-theme-green'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
@@ -287,7 +287,7 @@ export default function SpotifyMusicContent({
             onClick={() => setActiveTab('top')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'top'
-                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                ? 'border-theme-green text-theme-green dark:text-theme-green'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
@@ -298,7 +298,7 @@ export default function SpotifyMusicContent({
             onClick={() => setActiveTab('artists')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'artists'
-                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                ? 'border-theme-green text-theme-green dark:text-theme-green'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >
@@ -309,7 +309,7 @@ export default function SpotifyMusicContent({
             onClick={() => setActiveTab('playlists')}
             className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
               activeTab === 'playlists'
-                ? 'border-gruv-green text-gruv-green dark:text-gruv-green'
+                ? 'border-theme-green text-theme-green dark:text-theme-green'
                 : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
             }`}
           >

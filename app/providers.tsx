@@ -24,6 +24,23 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         attribute='class'
         defaultTheme='system'
         enableSystem={true}
+        themes={[
+          'light',
+          'dark',
+          'gruvbox-light',
+          'gruvbox-dark',
+          'monokai',
+          'dracula',
+          'nord',
+          'catppuccin',
+          'tokyo-night',
+          'solarized',
+          'everforest',
+          'rose-pine',
+          'one-dark',
+          'kanagawa',
+          'nightfly',
+        ]}
       >
         <ThemeSync />
         <BackgroundProvider>

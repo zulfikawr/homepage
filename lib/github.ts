@@ -60,13 +60,13 @@ export async function getGitHubContributions(): Promise<GitHubContributionData |
  */
 export function getGruvboxIntensityColor(intensity: number): string {
   const colors = {
-    0: '#ebdbb2', // gruv-bg-light (empty)
+    0: '#ebdbb2', // theme-bg-light (empty)
     1: '#d5c4a1', // light-medium (low)
     2: '#bdae93', // medium (medium)
-    3: '#79740e', // gruv-green (high)
-    4: '#b57614', // gruv-yellow (very high)
-    5: '#af3a03', // gruv-orange (extra high)
-    6: '#9d0006', // gruv-red (extreme)
+    3: '#79740e', // theme-green (high)
+    4: '#b57614', // theme-yellow (very high)
+    5: '#af3a03', // theme-orange (extra high)
+    6: '#9d0006', // theme-red (extreme)
   };
 
   return colors[intensity as keyof typeof colors] || colors[0];
@@ -77,13 +77,13 @@ export function getGruvboxIntensityColor(intensity: number): string {
  */
 export function getGruvboxIntensityColorDark(intensity: number): string {
   const colors = {
-    0: '#3c3836', // gruv-bg-dark (empty)
-    1: '#504945', // gruv-bg-soft (low)
+    0: '#3c3836', // theme-bg-dark (empty)
+    1: '#504945', // theme-bg-soft (low)
     2: '#665c54', // medium
-    3: '#b8bb26', // gruv-green (high)
-    4: '#fabd2f', // gruv-yellow (very high)
-    5: '#fe8019', // gruv-orange (extra high)
-    6: '#fb4934', // gruv-red (extreme)
+    3: '#b8bb26', // theme-green (high)
+    4: '#fabd2f', // theme-yellow (very high)
+    5: '#fe8019', // theme-orange (extra high)
+    6: '#fb4934', // theme-red (extreme)
   };
 
   return colors[intensity as keyof typeof colors] || colors[0];

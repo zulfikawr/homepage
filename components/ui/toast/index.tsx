@@ -140,23 +140,23 @@ const getVariantProps = (
     case 'info':
       return {
         icon: 'info',
-        bgClass: 'bg-gruv-yellow',
-        textClass: 'text-gruv-bg',
-        borderClass: 'border-gruv-bg',
+        bgClass: 'bg-theme-yellow',
+        textClass: 'text-theme-bg',
+        borderClass: 'border-theme-bg',
       };
     case 'success':
       return {
         icon: 'checkCircle',
-        bgClass: 'bg-gruv-blue',
-        textClass: 'text-gruv-bg',
-        borderClass: 'border-gruv-bg',
+        bgClass: 'bg-theme-blue',
+        textClass: 'text-theme-bg',
+        borderClass: 'border-theme-bg',
       };
     case 'error':
       return {
         icon: 'warning',
-        bgClass: 'bg-gruv-red',
-        textClass: 'text-gruv-bg',
-        borderClass: 'border-gruv-bg',
+        bgClass: 'bg-theme-red',
+        textClass: 'text-theme-bg',
+        borderClass: 'border-theme-bg',
       };
     default:
       return {

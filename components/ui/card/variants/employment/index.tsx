@@ -78,7 +78,7 @@ export default function EmploymentCard({
           <div className='text-sm font-medium tracking-wide text-foreground'>
             <p>{employment.job_title}</p>
           </div>
-          <div className='flex flex-col items-start text-xs font-medium text-gruv-blue lg:items-center'>
+          <div className='flex flex-col items-start text-xs font-medium text-theme-blue lg:items-center'>
             {employment.date_string}
           </div>
         </div>

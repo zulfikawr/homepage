@@ -72,7 +72,7 @@ const BannerHeader = ({
           </>
         ) : (
           <>
-            <Icon name='musicNotes' className='size-7 text-gruv-green' />
+            <Icon name='musicNotes' className='size-7 text-theme-green' />
             <span>{isPlaying ? 'Currently Listening' : 'Recently Played'}</span>
           </>
         )}
@@ -123,14 +123,14 @@ const SpotifyLayout = ({
       </div>
 
       <div className='flex-col min-w-0 space-y-1 flex-1'>
-        <h3 className='font-bold text-md text-gruv-aqua truncate leading-6 h-6 flex items-center'>
+        <h3 className='font-bold text-md text-theme-aqua truncate leading-6 h-6 flex items-center'>
           {isLoading ? (
             <Skeleton width={160} height={18} as='span' />
           ) : (
             currentTrack?.name
           )}
         </h3>
-        <p className='text-sm text-gruv-yellow font-medium truncate leading-5 h-5 flex items-center'>
+        <p className='text-sm text-theme-yellow font-medium truncate leading-5 h-5 flex items-center'>
           {isLoading ? (
             <Skeleton width={120} height={14} as='span' />
           ) : (
@@ -148,17 +148,17 @@ const SpotifyLayout = ({
             </>
           ) : (
             <>
-              <span className='text-xs text-gruv-blue truncate'>
+              <span className='text-xs text-theme-blue truncate'>
                 {currentTrack?.album.name}
               </span>
               <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
                 |
               </span>
               {isPlaying ? (
-                <span className='flex items-center gap-x-2 text-xs text-gruv-green font-medium'>
+                <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium'>
                   <span className='relative flex h-1.5 w-1.5'>
-                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-gruv-aqua opacity-75'></span>
-                    <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-gruv-aqua'></span>
+                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-aqua opacity-75'></span>
+                    <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-theme-aqua'></span>
                   </span>
                   <span className='truncate'>Playing now</span>
                 </span>
@@ -397,7 +397,7 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
       <Card isPreview>
         <div className='flex w-full items-center justify-between px-4 py-3'>
           <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-            <Icon name='musicNotes' className='size-7 text-gruv-green' />
+            <Icon name='musicNotes' className='size-7 text-theme-green' />
             <span>Spotify Integration</span>
           </div>
         </div>
@@ -408,7 +408,7 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
           {isAdmin ? (
             <Button
               icon='spotifyLogo'
-              className='bg-[#1DB954] text-gruv-bg font-bold hover:bg-[#1ed760]'
+              className='bg-[#1DB954] text-theme-bg font-bold hover:bg-[#1ed760]'
               onClick={() => {
                 const url = getSpotifyAuthUrl();
                 window.location.href = url;

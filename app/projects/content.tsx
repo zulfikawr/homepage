@@ -227,7 +227,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             <SectionTitle
               icon='pushPin'
               title='Pinned'
-              iconClassName='text-gruv-red'
+              iconClassName='text-theme-red'
             />
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
@@ -250,7 +250,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
               <SectionTitle
                 icon='hammer'
                 title='Work in Progress'
-                iconClassName='text-gruv-yellow'
+                iconClassName='text-theme-yellow'
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
@@ -274,7 +274,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
               <SectionTitle
                 icon='checkCircle'
                 title='Completed Projects'
-                iconClassName='text-gruv-green'
+                iconClassName='text-theme-green'
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
@@ -298,7 +298,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
               <SectionTitle
                 icon='calendarPlus'
                 title='Upcoming Projects'
-                iconClassName='text-gruv-blue'
+                iconClassName='text-theme-blue'
               />
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>

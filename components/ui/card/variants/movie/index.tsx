@@ -38,7 +38,7 @@ export default function MovieCard({
     const filled = index <= rating;
     return (
       <div
-        className={`p-0.5 ${filled ? 'text-gruv-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
+        className={`p-0.5 ${filled ? 'text-theme-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
         aria-hidden
       >
         <Icon name='star' className='size-[12px] md:size-4.5' />
@@ -75,7 +75,7 @@ export default function MovieCard({
                 <p className='lg:text-normal line-clamp-1 text-ellipsis text-sm font-medium leading-tight tracking-wider dark:text-foreground'>
                   {movie.title}
                 </p>
-                <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-medium tracking-wide text-gruv-aqua lg:text-sm'>
+                <p className='line-clamp-1 text-ellipsis whitespace-nowrap text-xs font-medium tracking-wide text-theme-aqua lg:text-sm'>
                   Released {movie.release_date}
                 </p>
               </div>
@@ -84,7 +84,7 @@ export default function MovieCard({
             <Separator margin='0' />
 
             <div className='flex items-center gap-2 px-4.5 py-2 text-xs font-light text-muted-foreground'>
-              <span className='text-gruv-aqua/80 font-medium'>Rating</span>
+              <span className='text-theme-aqua/80 font-medium'>Rating</span>
               <div className='flex items-center gap-0.5'>
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star key={i} index={i} />

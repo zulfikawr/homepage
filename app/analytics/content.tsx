@@ -21,10 +21,10 @@ export function AnalyticsSkeleton() {
 
       <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
         {[
-          'text-gruv-aqua',
-          'text-gruv-green',
-          'text-gruv-yellow',
-          'text-gruv-blue',
+          'text-theme-aqua',
+          'text-theme-green',
+          'text-theme-yellow',
+          'text-theme-blue',
         ].map((color, i) => (
           <Card
             key={i}
@@ -145,25 +145,25 @@ export default function AnalyticsContent({
               label: 'Total Views',
               value: stats.totalViews.toLocaleString(),
               icon: 'eye' as const,
-              color: 'text-gruv-aqua',
+              color: 'text-theme-aqua',
             },
             {
               label: 'Unique Visitors',
               value: stats.uniqueVisitors.toLocaleString(),
               icon: 'users' as const,
-              color: 'text-gruv-green',
+              color: 'text-theme-green',
             },
             {
               label: 'Real-time',
               value: 'Active Now',
               icon: 'clock' as const,
-              color: 'text-gruv-yellow',
+              color: 'text-theme-yellow',
             },
             {
               label: 'Status',
               value: 'Healthy',
               icon: 'checkCircle' as const,
-              color: 'text-gruv-blue',
+              color: 'text-theme-blue',
             },
           ].map((stat, i) => (
             <ViewTransition key={i}>
@@ -199,7 +199,7 @@ export default function AnalyticsContent({
               {/* Countries List */}
               <Card isPreview className='p-6'>
                 <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-                  <Icon name='mapPin' size={18} className='text-gruv-yellow' />
+                  <Icon name='mapPin' size={18} className='text-theme-yellow' />
                   Top Countries
                 </h3>
                 <div className='space-y-5'>
@@ -248,7 +248,7 @@ export default function AnalyticsContent({
               {/* Top Routes */}
               <Card isPreview className='p-6'>
                 <h3 className='text-md font-semibold mb-6 flex items-center gap-2 text-foreground'>
-                  <Icon name='article' size={18} className='text-gruv-blue' />
+                  <Icon name='article' size={18} className='text-theme-blue' />
                   Top Pages
                 </h3>
                 <div className='space-y-4'>
@@ -314,8 +314,8 @@ export default function AnalyticsContent({
                             size={20}
                             className={
                               device.type === 'Desktop'
-                                ? 'text-gruv-blue'
-                                : 'text-gruv-aqua'
+                                ? 'text-theme-blue'
+                                : 'text-theme-aqua'
                             }
                           />
                         </div>
@@ -348,7 +348,7 @@ export default function AnalyticsContent({
                   <Icon
                     name='shareNetwork'
                     size={18}
-                    className='text-gruv-green'
+                    className='text-theme-green'
                   />
                   Top Referrers
                 </h3>
@@ -361,7 +361,7 @@ export default function AnalyticsContent({
                       <span className='text-muted-foreground'>
                         {referrer.name}
                       </span>
-                      <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-foreground dark:text-gruv-fg'>
+                      <span className='font-medium py-1 px-2 bg-muted rounded text-xs text-foreground dark:text-theme-fg'>
                         {referrer.count.toLocaleString()}
                       </span>
                     </div>

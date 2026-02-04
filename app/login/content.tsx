@@ -83,7 +83,7 @@ export default function LoginContent() {
               <span className='w-full border-t border-border' />
             </div>
             <div className='relative flex justify-center text-xs uppercase'>
-              <span className='bg-background px-4 text-gruv-fg-dim tracking-widest'>
+              <span className='bg-background px-4 text-theme-fg-dim tracking-widest'>
                 Or continue with email
               </span>
             </div>
@@ -92,7 +92,7 @@ export default function LoginContent() {
           <form onSubmit={onPasswordLogin} className='space-y-6'>
             <div className='space-y-5'>
               <div className='space-y-2'>
-                <FormLabel htmlFor='email' className='text-gruv-fg-dim text-sm'>
+                <FormLabel htmlFor='email' className='text-theme-fg-dim text-sm'>
                   Email Address
                 </FormLabel>
                 <Input
@@ -109,7 +109,7 @@ export default function LoginContent() {
                 <FormLabel
                   htmlFor='password'
                   required
-                  className='text-gruv-fg-dim text-sm'
+                  className='text-theme-fg-dim text-sm'
                 >
                   Password
                 </FormLabel>
@@ -125,7 +125,7 @@ export default function LoginContent() {
             </div>
 
             {error && (
-              <p className='text-sm text-gruv-red text-center italic'>
+              <p className='text-sm text-theme-red text-center italic'>
                 {error}
               </p>
             )}
@@ -133,7 +133,7 @@ export default function LoginContent() {
             <Button
               variant='primary'
               nativeType='submit'
-              className='w-full h-12 bg-gruv-orange hover:bg-gruv-orange/90 text-gruv-bg-dark font-bold'
+              className='w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold'
               icon='signIn'
             >
               Sign In

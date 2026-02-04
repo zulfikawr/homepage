@@ -26,14 +26,14 @@ export const PersonalInfoLayout = ({
           {isLoading ? (
             <Skeleton width={220} height={32} className='max-w-[70%]' />
           ) : (
-            <span className='text-gruv-orange truncate'>{name}</span>
+            <span className='text-primary truncate'>{name}</span>
           )}
         </h1>
-        <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-gruv-aqua dark:text-gruv-aqua squiggly-underline lg:text-lg min-h-6'>
+        <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-primary/80 dark:text-primary/80 squiggly-underline lg:text-lg min-h-6'>
           {isLoading ? (
             <Skeleton width={200} height={20} className='max-w-full' />
           ) : (
-            <p className='text-gruv-aqua dark:text-gruv-aqua/80 text-left'>
+            <p className='text-accent text-left'>
               {title}
             </p>
           )}
@@ -52,7 +52,7 @@ export const PersonalInfoLayout = ({
             height={105}
             width={105}
             alt={name}
-            priority
+            preload
             className='bg-muted aspect-square object-cover border-2 border-border shadow-brutalist rounded-xl'
             type='square'
             sizes='105px'

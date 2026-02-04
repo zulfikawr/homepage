@@ -75,7 +75,7 @@ export default function CertificateCard({
               <p className='text-xs font-light text-muted-foreground'>
                 Issued {certificate.date_issued}
               </p>
-              <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded w-fit'>
+              <p className='text-xs font-light text-theme-aqua/80 bg-theme-aqua/5 px-1.5 py-0.5 rounded w-fit'>
                 Credential ID: {certificate.credential_id}
               </p>
             </div>
@@ -123,7 +123,7 @@ export default function CertificateCard({
               <span className='text-muted-foreground font-light text-xs'>
                 |
               </span>
-              <p className='text-xs font-light text-gruv-aqua/80 bg-gruv-aqua/5 px-1.5 py-0.5 rounded'>
+              <p className='text-xs font-light text-theme-aqua/80 bg-theme-aqua/5 px-1.5 py-0.5 rounded'>
                 Credential ID: {certificate.credential_id}
               </p>
             </div>
@@ -132,8 +132,8 @@ export default function CertificateCard({
 
         {/* Footer */}
         <div className='flex w-full items-center justify-between border-t border-border px-4 py-2 text-xs font-medium text-muted-foreground  dark:text-muted-foreground'>
-          <span className='text-gruv-aqua'>Certificate</span>
-          <span className='text-gruv-blue hover:underline cursor-pointer'>
+          <span className='text-theme-aqua'>Certificate</span>
+          <span className='text-theme-blue hover:underline cursor-pointer'>
             View
           </span>
         </div>

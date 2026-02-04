@@ -10,7 +10,7 @@ interface AudioPlayerProps {
 }
 
 const SLIDER_CLASSNAME =
-  'flex-1 h-1.5 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gruv-green [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-sm [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-gruv-green [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-sm';
+  'flex-1 h-1.5 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-theme-green [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-sm [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-theme-green [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-sm';
 
 export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -116,7 +116,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
           onChange={handleSliderChange}
           className={SLIDER_CLASSNAME}
           style={{
-            background: `linear-gradient(to right, var(--color-gruv-green) 0%, var(--color-gruv-green) ${progress}%, rgba(128,128,128,0.2) ${progress}%, rgba(128,128,128,0.2) 100%)`,
+            background: `linear-gradient(to right, var(--color-theme-green) 0%, var(--color-theme-green) ${progress}%, rgba(128,128,128,0.2) ${progress}%, rgba(128,128,128,0.2) 100%)`,
           }}
         />
 

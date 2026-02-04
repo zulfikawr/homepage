@@ -32,12 +32,12 @@ const PageTitle = ({
   }, [emoji, title, setHeaderTitle, isLoading]);
 
   const badgeStyles = {
-    red: 'rounded-md border-2 border-gruv-red/40 bg-gruv-red/15 px-2.5 py-1 text-xs font-medium text-gruv-red dark:border-gruv-red/50 dark:bg-gruv-red/20 shadow-brutalist-sm brutalist-interactive',
+    red: 'rounded-md border-2 border-theme-red/40 bg-theme-red/15 px-2.5 py-1 text-xs font-medium text-theme-red dark:border-theme-red/50 dark:bg-theme-red/20 shadow-brutalist-sm brutalist-interactive',
     yellow:
-      'rounded-md border-2 border-gruv-yellow/40 bg-gruv-yellow/15 px-2.5 py-1 text-xs font-medium text-gruv-yellow dark:border-gruv-yellow/50 dark:bg-gruv-yellow/20 shadow-brutalist-sm brutalist-interactive',
+      'rounded-md border-2 border-theme-yellow/40 bg-theme-yellow/15 px-2.5 py-1 text-xs font-medium text-theme-yellow dark:border-theme-yellow/50 dark:bg-theme-yellow/20 shadow-brutalist-sm brutalist-interactive',
     green:
-      'rounded-md border-2 border-gruv-green/40 bg-gruv-green/15 px-2.5 py-1 text-xs font-medium text-gruv-green dark:border-gruv-green/50 dark:bg-gruv-green/20 shadow-brutalist-sm brutalist-interactive',
-    blue: 'rounded-md border-2 border-gruv-blue/40 bg-gruv-blue/15 px-2.5 py-1 text-xs font-medium text-gruv-blue dark:border-gruv-blue/50 dark:bg-gruv-blue/20 shadow-brutalist-sm brutalist-interactive',
+      'rounded-md border-2 border-theme-green/40 bg-theme-green/15 px-2.5 py-1 text-xs font-medium text-theme-green dark:border-theme-green/50 dark:bg-theme-green/20 shadow-brutalist-sm brutalist-interactive',
+    blue: 'rounded-md border-2 border-theme-blue/40 bg-theme-blue/15 px-2.5 py-1 text-xs font-medium text-theme-blue dark:border-theme-blue/50 dark:bg-theme-blue/20 shadow-brutalist-sm brutalist-interactive',
   };
 
   return (

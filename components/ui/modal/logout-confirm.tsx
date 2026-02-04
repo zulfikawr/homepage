@@ -12,7 +12,7 @@ interface LogoutConfirmProps {
 export const LogoutConfirm: React.FC<LogoutConfirmProps> = ({ onConfirm }) => (
   <div className='flex flex-col gap-4 p-6'>
     <h2 className='text-xl font-semibold text-primary'>Confirm Logout</h2>
-    <p className='text-gruv-aqua'>Are you sure you want to logout?</p>
+    <p className='text-theme-aqua'>Are you sure you want to logout?</p>
     <div className='flex justify-end space-x-4'>
       <Button onClick={() => modal.close()} className='px-4 md:px-6'>
         Cancel
