@@ -1,5 +1,6 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
@@ -8,14 +9,15 @@ import CardEmpty from '@/components/ui/card/variants/empty';
 import WorldMapVisualization from '@/components/visual/world-map';
 import { useLoadingToggle } from '@/contexts/loading-context';
 
-const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
+const BannerHeader = ({
+  isLoading = false,
+  showMoreButton = true,
+}: {
+  isLoading?: boolean;
+  showMoreButton?: boolean;
+}) => {
   const ViewAnalyticsButton = (
-    <Link
-      href='/analytics'
-      prefetch={true}
-      target='_blank'
-      rel='noopener noreferrer'
-    >
+    <Link href='/analytics' prefetch={true}>
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
@@ -42,11 +44,15 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
         )}
       </div>
 
-      <div className='hidden md:block'>
-        <Tooltip text='View Analytics'>{ViewAnalyticsButton}</Tooltip>
-      </div>
+      {showMoreButton && (
+        <>
+          <div className='hidden md:block'>
+            <Tooltip text='View Analytics'>{ViewAnalyticsButton}</Tooltip>
+          </div>
 
-      <div className='block md:hidden'>{ViewAnalyticsButton}</div>
+          <div className='block md:hidden'>{ViewAnalyticsButton}</div>
+        </>
+      )}
     </div>
   );
 };
@@ -55,14 +61,16 @@ export const VisitorGeographyLayout = ({
   isLoading,
   data,
   error,
+  showMoreButton = true,
 }: {
   isLoading: boolean;
   data: { code: string; name: string; count: number }[] | null;
   error: string | null;
+  showMoreButton?: boolean;
 }) => {
   return (
     <Card isPreview className='h-full'>
-      <BannerHeader isLoading={isLoading} />
+      <BannerHeader isLoading={isLoading} showMoreButton={showMoreButton} />
 
       <Separator margin='0' />
 
@@ -85,21 +93,46 @@ export const VisitorGeographyLayout = ({
   );
 };
 
+const emptySubscribe = () => () => {};
+
 export default function VisitorGeographyBanner({
-  className,
   data = [],
   isLoading = false,
+  showMoreButton = true,
 }: {
-  className?: string;
   data?: { code: string; name: string; count: number }[];
   isLoading?: boolean;
+  showMoreButton?: boolean;
 }) {
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const { forceLoading } = useLoadingToggle();
   const loading = isLoading || forceLoading;
 
+  if (!mounted) {
+    return (
+      <div className='h-full'>
+        <VisitorGeographyLayout
+          isLoading={true}
+          data={null}
+          error={null}
+          showMoreButton={showMoreButton}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className={className}>
-      <VisitorGeographyLayout isLoading={loading} data={data} error={null} />
+    <div>
+      <VisitorGeographyLayout
+        isLoading={loading}
+        data={data}
+        error={null}
+        showMoreButton={showMoreButton}
+      />
     </div>
   );
 }

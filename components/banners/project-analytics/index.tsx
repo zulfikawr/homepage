@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo } from 'react';
-import { twMerge } from 'tailwind-merge';
 
 import { Card, Icon, Separator, Skeleton } from '@/components/ui';
+import { useLoadingToggle } from '@/contexts/loading-context';
 import { Project } from '@/types/project';
 
 // Gruvbox palette for visualization
@@ -20,14 +20,15 @@ const COLORS = [
 interface ProjectAnalyticsProps {
   projects: Project[];
   loading?: boolean;
-  className?: string;
 }
 
 export default function ProjectAnalytics({
   projects,
-  loading,
-  className,
+  loading: initialLoading,
 }: ProjectAnalyticsProps) {
+  const { forceLoading } = useLoadingToggle();
+  const loading = initialLoading || forceLoading;
+
   const stats = useMemo(() => {
     if (!projects || projects.length === 0) return null;
 
@@ -95,7 +96,7 @@ export default function ProjectAnalytics({
   );
 
   return (
-    <div className={twMerge('w-full', className)}>
+    <div className='w-full'>
       <Card isPreview>
         <Header />
         <Separator margin='0' />

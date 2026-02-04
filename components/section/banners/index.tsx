@@ -77,10 +77,10 @@ const Banners = () => {
         <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
           <StaggerContainer initialDelay={0.2}>
             <ViewTransition key='spotify' className='h-full'>
-              <SpotifyBanner className='h-full' />
+              <SpotifyBanner />
             </ViewTransition>
             <ViewTransition key='weather' className='h-full'>
-              <WeatherBanner className='h-full' />
+              <WeatherBanner />
             </ViewTransition>
           </StaggerContainer>
         </div>

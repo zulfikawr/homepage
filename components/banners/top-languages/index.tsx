@@ -1,5 +1,6 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
@@ -44,7 +45,13 @@ const getLanguageIcon = (name: string): string => {
   return iconMap[name] || 'code';
 };
 
-const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
+const BannerHeader = ({
+  isLoading = false,
+  showMoreButton = true,
+}: {
+  isLoading?: boolean;
+  showMoreButton?: boolean;
+}) => {
   const GoToGithubButton = (
     <Link
       href='https://github.com/zulfikawr?tab=repositories'
@@ -53,7 +60,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
     >
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
-          <Skeleton width={20} height={20} />
+          <Skeleton width={20} height={20} className='rounded-sm' />
         ) : (
           <Icon name='caretRight' className='size-5' />
         )}
@@ -67,7 +74,7 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
         {isLoading ? (
           <>
             <Skeleton width={28} height={28} className='rounded-md' />
-            <Skeleton width={180} height={20} />
+            <Skeleton width={120} height={24} />
           </>
         ) : (
           <>
@@ -77,11 +84,15 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
         )}
       </div>
 
-      <div className='hidden md:block'>
-        <Tooltip text='View Repositories'>{GoToGithubButton}</Tooltip>
-      </div>
+      {showMoreButton && (
+        <>
+          <div className='hidden md:block'>
+            <Tooltip text='View Repositories'>{GoToGithubButton}</Tooltip>
+          </div>
 
-      <div className='block md:hidden'>{GoToGithubButton}</div>
+          <div className='block md:hidden'>{GoToGithubButton}</div>
+        </>
+      )}
     </div>
   );
 };
@@ -89,15 +100,17 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
 export const TopLanguagesLayout = ({
   isLoading,
   data,
+  showMoreButton = true,
 }: {
   isLoading: boolean;
   data: LanguageData | null;
+  showMoreButton?: boolean;
 }) => {
   const topLanguage = data?.languages?.[0];
 
   return (
     <Card isPreview>
-      <BannerHeader isLoading={isLoading} />
+      <BannerHeader isLoading={isLoading} showMoreButton={showMoreButton} />
 
       <Separator margin='0' />
 
@@ -105,7 +118,9 @@ export const TopLanguagesLayout = ({
         <div className='flex items-center gap-4'>
           <div className='flex-shrink-0'>
             {isLoading ? (
-              <Skeleton width={64} height={64} className='rounded-lg' />
+              <div className='w-16 h-16 rounded-lg flex items-center justify-center'>
+                <Skeleton width={48} height={48} className='rounded-lg' />
+              </div>
             ) : topLanguage ? (
               <div className='w-16 h-16 rounded-lg bg-transparent flex items-center justify-center'>
                 <Icon
@@ -119,8 +134,12 @@ export const TopLanguagesLayout = ({
           <div className='flex-1 space-y-1'>
             {isLoading ? (
               <>
-                <Skeleton width={120} height={24} />
-                <Skeleton width={80} height={20} />
+                <h3 className='text-xl font-bold h-7 flex items-center'>
+                  <Skeleton width={120} height={24} as='span' />
+                </h3>
+                <p className='text-sm h-5 flex items-center'>
+                  <Skeleton width={80} height={16} as='span' />
+                </p>
               </>
             ) : topLanguage ? (
               <>
@@ -143,8 +162,16 @@ export const TopLanguagesLayout = ({
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className='space-y-1.5'>
                   <div className='flex items-center justify-between'>
-                    <Skeleton width={80} height={14} />
-                    <Skeleton width={40} height={14} />
+                    <div className='flex items-center gap-2'>
+                      <Skeleton
+                        width={12}
+                        height={12}
+                        variant='circle'
+                        className='flex-shrink-0'
+                      />
+                      <Skeleton width={80} height={12} />
+                    </div>
+                    <Skeleton width={60} height={12} />
                   </div>
                   <Skeleton width='100%' height={8} className='rounded-full' />
                 </div>
@@ -191,23 +218,43 @@ export const TopLanguagesLayout = ({
   );
 };
 
+const emptySubscribe = () => () => {};
+
 export default function TopLanguagesBanner({
-  className,
   data,
   isLoading = false,
+  showMoreButton = true,
 }: {
-  className?: string;
   data: LanguageData | null;
   isLoading?: boolean;
+  showMoreButton?: boolean;
 }) {
   const { forceLoading } = useLoadingToggle();
   const loading = isLoading || forceLoading;
 
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  if (!mounted) {
+    return (
+      <div>
+        <TopLanguagesLayout
+          isLoading={true}
+          data={null}
+          showMoreButton={showMoreButton}
+        />
+      </div>
+    );
+  }
+
   if (!data && !loading) {
     return (
-      <div className={className}>
+      <div>
         <Card isPreview>
-          <BannerHeader />
+          <BannerHeader showMoreButton={showMoreButton} />
           <Separator margin='0' />
           <CardEmpty message='No language data available' />
         </Card>
@@ -216,8 +263,12 @@ export default function TopLanguagesBanner({
   }
 
   return (
-    <div className={className}>
-      <TopLanguagesLayout isLoading={loading} data={data} />
+    <div>
+      <TopLanguagesLayout
+        isLoading={loading}
+        data={data}
+        showMoreButton={showMoreButton}
+      />
     </div>
   );
 }

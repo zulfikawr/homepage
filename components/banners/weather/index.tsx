@@ -500,7 +500,6 @@ const WeatherSeparator = ({
 );
 
 const WeatherLayout = ({
-  className,
   isLoading,
   isDaytime,
   currentType,
@@ -508,7 +507,6 @@ const WeatherLayout = ({
   weatherData,
   weatherLabels,
 }: {
-  className?: string;
   isLoading: boolean;
   isDaytime: boolean;
   currentType: Exclude<WeatherType, 'auto'>;
@@ -533,7 +531,7 @@ const WeatherLayout = ({
 
   return (
     <Card
-      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} min-h-[120px]`}
+      className={`bg-gradient-to-br ${getBgGradient()} min-h-[120px] h-full`}
       isPreview
     >
       {!isLoading && (
@@ -632,7 +630,7 @@ const WeatherLayout = ({
   );
 };
 
-const WeatherBanner = ({ className }: { className?: string }) => {
+const WeatherBanner = () => {
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -756,7 +754,6 @@ const WeatherBanner = ({ className }: { className?: string }) => {
 
   return (
     <WeatherLayout
-      className={className}
       isLoading={isLoading}
       isDaytime={isDaytime}
       currentType={currentType}

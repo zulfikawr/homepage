@@ -11,9 +11,11 @@ import { Resume } from '@/types/resume';
 const PagesAndLinksBanner = ({
   resume,
   isLoading = false,
+  showMoreButton = true,
 }: {
   resume: Resume | null;
   isLoading?: boolean;
+  showMoreButton?: boolean;
 }) => {
   const viewAllButton = (
     <Link href='/pages' prefetch={true}>
@@ -84,11 +86,15 @@ const PagesAndLinksBanner = ({
           )}
         </div>
 
-        <div className='hidden md:block'>
-          <Tooltip text='All Pages'>{viewAllButton}</Tooltip>
-        </div>
+        {showMoreButton && (
+          <>
+            <div className='hidden md:block'>
+              <Tooltip text='All Pages'>{viewAllButton}</Tooltip>
+            </div>
 
-        <div className='block md:hidden'>{viewAllButton}</div>
+            <div className='block md:hidden'>{viewAllButton}</div>
+          </>
+        )}
       </div>
 
       <Separator margin='0' />

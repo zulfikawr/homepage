@@ -1,6 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import Link from 'next/link';
 
 import ImageWithFallback from '@/components/image-with-fallback';
@@ -33,21 +39,22 @@ const apiCache: {
 
 interface SpotifyBannerProps {
   showMoreButton?: boolean;
-  className?: string;
 }
 
 const BannerHeader = ({
   isPlaying,
   isLoading = false,
+  showMoreButton = true,
 }: {
   isPlaying?: boolean;
   isLoading?: boolean;
+  showMoreButton?: boolean;
 }) => {
   const GoToMusicButton = (
     <Link href='/music' prefetch={true}>
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
-          <Skeleton width={20} height={20} />
+          <Skeleton width={20} height={20} className='rounded-sm' />
         ) : (
           <Icon name='caretRight' className='size-5' />
         )}
@@ -61,7 +68,7 @@ const BannerHeader = ({
         {isLoading ? (
           <>
             <Skeleton width={28} height={28} className='rounded-md' />
-            <Skeleton width={160} height={20} />
+            <Skeleton width={140} height={24} />
           </>
         ) : (
           <>
@@ -71,27 +78,31 @@ const BannerHeader = ({
         )}
       </div>
 
-      <div className='hidden md:block'>
-        <Tooltip text='Music Stats'>{GoToMusicButton}</Tooltip>
-      </div>
+      {showMoreButton && (
+        <>
+          <div className='hidden md:block'>
+            <Tooltip text='Music Stats'>{GoToMusicButton}</Tooltip>
+          </div>
 
-      <div className='block md:hidden'>{GoToMusicButton}</div>
+          <div className='block md:hidden'>{GoToMusicButton}</div>
+        </>
+      )}
     </div>
   );
 };
 
 const SpotifyLayout = ({
-  className,
   isPlaying,
   isLoading,
   currentTrack,
   lastPlayedAt,
+  showMoreButton = true,
 }: {
-  className?: string;
   isPlaying?: boolean;
   isLoading?: boolean;
   currentTrack?: SpotifyTrack | null;
   lastPlayedAt?: string | null;
+  showMoreButton?: boolean;
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
@@ -114,14 +125,14 @@ const SpotifyLayout = ({
       <div className='flex-col min-w-0 space-y-1 flex-1'>
         <h3 className='font-bold text-md text-gruv-aqua truncate leading-6 h-6 flex items-center'>
           {isLoading ? (
-            <Skeleton width='60%' height={16} as='span' />
+            <Skeleton width={160} height={18} as='span' />
           ) : (
             currentTrack?.name
           )}
         </h3>
         <p className='text-sm text-gruv-yellow font-medium truncate leading-5 h-5 flex items-center'>
           {isLoading ? (
-            <Skeleton width='40%' height={14} as='span' />
+            <Skeleton width={120} height={14} as='span' />
           ) : (
             currentTrack?.artists.map((artist) => artist.name).join(', ')
           )}
@@ -129,11 +140,11 @@ const SpotifyLayout = ({
         <div className='flex items-center gap-x-2 leading-4 h-4'>
           {isLoading ? (
             <>
-              <Skeleton width='30%' height={12} as='span' />
+              <Skeleton width={100} height={12} as='span' />
               <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
                 |
               </span>
-              <Skeleton width='25%' height={12} as='span' />
+              <Skeleton width={80} height={12} as='span' />
             </>
           ) : (
             <>
@@ -170,8 +181,12 @@ const SpotifyLayout = ({
   );
 
   return (
-    <Card isPreview className={className}>
-      <BannerHeader isPlaying={isPlaying} isLoading={isLoading} />
+    <Card isPreview className='h-full'>
+      <BannerHeader
+        isPlaying={isPlaying}
+        isLoading={isLoading}
+        showMoreButton={showMoreButton}
+      />
       <Separator margin='0' />
       {!isLoading && currentTrack ? (
         <Link
@@ -188,7 +203,16 @@ const SpotifyLayout = ({
   );
 };
 
-const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
+const emptySubscribe = () => () => {};
+
+const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
+  showMoreButton = true,
+}) => {
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(
     apiCache.currentTrack,
   );
@@ -357,22 +381,20 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
     };
   }, [isPlaying, fetchTracks]);
 
-  if (error || forceEmpty)
-    return <CardEmpty message='No data' className={className} />;
+  if (error || forceEmpty) return <CardEmpty message='No data' />;
 
-  if (isLoading || authLoading) {
+  if (!mounted || isLoading || authLoading) {
     return (
       <SpotifyLayout
-        className={className}
         isLoading={true}
         isPlaying={isPlaying}
+        showMoreButton={showMoreButton}
       />
     );
   }
-
   if (!isAuthorized) {
     return (
-      <Card isPreview className={className}>
+      <Card isPreview>
         <div className='flex w-full items-center justify-between px-4 py-3'>
           <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
             <Icon name='musicNotes' className='size-7 text-gruv-green' />
@@ -404,16 +426,15 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({ className }) => {
     );
   }
 
-  if (!currentTrack)
-    return <CardEmpty message='No data' className={className} />;
+  if (!currentTrack) return <CardEmpty message='No data' />;
 
   return (
     <SpotifyLayout
-      className={className}
       isPlaying={isPlaying}
       isLoading={false}
       currentTrack={currentTrack}
       lastPlayedAt={lastPlayedAt}
+      showMoreButton={showMoreButton}
     />
   );
 };

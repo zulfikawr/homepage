@@ -189,7 +189,10 @@ export default function AnalyticsContent({
         <div className='lg:col-span-2 space-y-8'>
           <StaggerContainer>
             <ViewTransition>
-              <VisitorGeographyBanner data={stats.countries} />
+              <VisitorGeographyBanner
+                data={stats.countries}
+                showMoreButton={false}
+              />
             </ViewTransition>
 
             <ViewTransition>

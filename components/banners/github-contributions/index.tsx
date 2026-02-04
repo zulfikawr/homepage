@@ -1,5 +1,6 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
@@ -27,8 +28,14 @@ const getIntensityLevel = (count: number) => {
   return 6;
 };
 
-const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
-  const GoToithubButton = (
+const BannerHeader = ({
+  isLoading = false,
+  showMoreButton = true,
+}: {
+  isLoading?: boolean;
+  showMoreButton?: boolean;
+}) => {
+  const GoToGithubButton = (
     <Link
       href='https://github.com/zulfikawr'
       target='_blank'
@@ -60,11 +67,15 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
         )}
       </div>
 
-      <div className='hidden md:block'>
-        <Tooltip text='GitHub'>{GoToithubButton}</Tooltip>
-      </div>
+      {showMoreButton && (
+        <>
+          <div className='hidden md:block'>
+            <Tooltip text='GitHub'>{GoToGithubButton}</Tooltip>
+          </div>
 
-      <div className='block md:hidden'>{GoToithubButton}</div>
+          <div className='block md:hidden'>{GoToGithubButton}</div>
+        </>
+      )}
     </div>
   );
 };
@@ -72,13 +83,15 @@ const BannerHeader = ({ isLoading = false }: { isLoading?: boolean }) => {
 export const GitHubContributionsLayout = ({
   isLoading,
   data,
+  showMoreButton = true,
 }: {
   isLoading: boolean;
   data: GitHubContributionData | null;
+  showMoreButton?: boolean;
 }) => {
   return (
     <Card isPreview>
-      <BannerHeader isLoading={isLoading} />
+      <BannerHeader isLoading={isLoading} showMoreButton={showMoreButton} />
 
       <Separator margin='0' />
 
@@ -156,18 +169,44 @@ export const GitHubContributionsLayout = ({
   );
 };
 
+const emptySubscribe = () => () => {};
+
 export default function GitHubContributionsBanner({
   data,
   isLoading = false,
+  showMoreButton = true,
 }: {
   data: GitHubContributionData | null;
   isLoading?: boolean;
+  showMoreButton?: boolean;
 }) {
   const { forceLoading } = useLoadingToggle();
   const loading = isLoading || forceLoading;
 
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+
+  if (!mounted) {
+    return (
+      <GitHubContributionsLayout
+        isLoading={true}
+        data={null}
+        showMoreButton={showMoreButton}
+      />
+    );
+  }
+
   if (!data && !loading)
     return <CardEmpty message='No data - Check GITHUB_TOKEN' />;
 
-  return <GitHubContributionsLayout isLoading={loading} data={data} />;
+  return (
+    <GitHubContributionsLayout
+      isLoading={loading}
+      data={data}
+      showMoreButton={showMoreButton}
+    />
+  );
 }
