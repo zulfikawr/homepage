@@ -63,7 +63,6 @@ export default function SpotifyMusicContent({
   const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>(
     initialPlaylists || [],
   );
-  const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(null);
   const [topArtists, setTopArtists] = useState<SpotifyArtist[]>(
     initialTopArtists || [],
   );
@@ -129,10 +128,6 @@ export default function SpotifyMusicContent({
       setTopTracks(topData?.items || []);
       setTopArtists(artistsData?.items || []);
       setPlaylists(playlistsData?.items || []);
-
-      if (recentData?.items?.[0]?.playedAt) {
-        setLastPlayedAt(recentData.items[0].playedAt);
-      }
 
       setDataLoading({
         recentTracks: false,
@@ -206,9 +201,7 @@ export default function SpotifyMusicContent({
     ) {
       loadData();
     } else {
-      if (initialRecent?.[0]?.playedAt) {
-        setLastPlayedAt(initialRecent[0].playedAt);
-      }
+      // Data already provided by server
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -373,7 +366,7 @@ export default function SpotifyMusicContent({
                         </p>
                       </div>
                       <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                        {getTimeAgo(lastPlayedAt)}
+                        {getTimeAgo(item.playedAt)}
                       </div>
                     </div>
                   </ViewTransition>

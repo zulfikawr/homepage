@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
-import { SpotifyTrack } from '@/types/spotify';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +12,7 @@ export async function GET(request: NextRequest) {
       `https://api.spotify.com/v1/me/player/recently-played?limit=${limit}`,
       {
         headers: { Authorization: `Bearer ${accessToken}` },
-        next: { revalidate: 300 },
+        cache: 'no-store',
       },
     );
 
@@ -24,10 +23,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = (await spotifyRes.json()) as {
-      items: Array<{ track: SpotifyTrack; playedAt: string }>;
-    };
-    return NextResponse.json(data);
+    const data = await spotifyRes.json();
+    const items = data.items.map(
+      (item: { track: unknown; played_at: string }) => ({
+        track: item.track,
+        playedAt: item.played_at,
+      }),
+    );
+
+    return NextResponse.json({ items });
   } catch (error: unknown) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },

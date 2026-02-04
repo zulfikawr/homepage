@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
-import { SpotifyTrack } from '@/types/spotify';
 
 export async function GET() {
   try {
@@ -13,7 +12,7 @@ export async function GET() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-        next: { revalidate: 60 },
+        cache: 'no-store',
       },
     );
 
@@ -28,11 +27,11 @@ export async function GET() {
       );
     }
 
-    const trackData = (await spotifyRes.json()) as {
-      isPlaying: boolean;
-      item: SpotifyTrack | null;
-    };
-    return NextResponse.json(trackData);
+    const trackData = await spotifyRes.json();
+    return NextResponse.json({
+      isPlaying: trackData.is_playing,
+      item: trackData.item,
+    });
   } catch (error: unknown) {
     console.error('API Spotify Error:', error);
     return NextResponse.json(

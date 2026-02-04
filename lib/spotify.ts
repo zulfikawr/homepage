@@ -134,7 +134,13 @@ export async function getRecentlyPlayed(limit = 10) {
     },
   );
   if (!res.ok) throw new Error('Failed to fetch recently played');
-  return res.json();
+  const data = await res.json();
+  return {
+    items: data.items.map((item: { track: unknown; played_at: string }) => ({
+      track: item.track,
+      playedAt: item.played_at,
+    })),
+  };
 }
 
 export async function getTopTracks(limit = 10, timeRange = 'short_term') {
