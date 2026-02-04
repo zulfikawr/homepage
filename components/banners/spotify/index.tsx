@@ -177,12 +177,12 @@ const SpotifyLayout = ({
         <Link
           href={currentTrack.external_urls.spotify}
           target='_blank'
-          className='block h-full hover:bg-muted/50 transition-colors'
+          className='flex-1 flex items-center hover:bg-muted/50 transition-colors'
         >
           {content}
         </Link>
       ) : (
-        content
+        <div className='flex-1 flex items-center'>{content}</div>
       )}
     </Card>
   );

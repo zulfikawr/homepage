@@ -533,7 +533,7 @@ const WeatherLayout = ({
 
   return (
     <Card
-      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} transition-all duration-1000 min-h-[120px]`}
+      className={`${className || ''} bg-gradient-to-br ${getBgGradient()} min-h-[120px]`}
       isPreview
     >
       {!isLoading && (
