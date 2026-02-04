@@ -33,9 +33,7 @@ export const PersonalInfoLayout = ({
           {isLoading ? (
             <Skeleton width={200} height={20} className='max-w-full' />
           ) : (
-            <p className='text-accent text-left'>
-              {title}
-            </p>
+            <p className='text-accent text-left'>{title}</p>
           )}
         </div>
       </div>

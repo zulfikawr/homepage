@@ -8,19 +8,24 @@ import Waves from './component';
 export default function WavesBackground() {
   const { resolvedTheme } = useTheme();
 
-  // Use a ref or state to get computed styles if needed, 
+  // Use a ref or state to get computed styles if needed,
   // but for canvas we often need hex/rgba.
   // We can use a trick: read the CSS variable from the document.
-  const [colors, setColors] = useState({ line: '#8ec07c', bg: 'rgba(235, 219, 178, 0.1)' });
+  const [colors, setColors] = useState({
+    line: '#8ec07c',
+    bg: 'rgba(235, 219, 178, 0.1)',
+  });
 
   useEffect(() => {
     const style = getComputedStyle(document.documentElement);
     const line = style.getPropertyValue('--theme-aqua').trim() || '#8ec07c';
     const fg = style.getPropertyValue('--foreground').trim() || '#3c3836';
-    
-    setColors({
-      line,
-      bg: `${fg}1a`, // Add hex opacity if it's hex, or just use a fixed opacity
+
+    requestAnimationFrame(() => {
+      setColors({
+        line,
+        bg: `${fg}1a`, // Add hex opacity if it's hex, or just use a fixed opacity
+      });
     });
   }, [resolvedTheme]);
 

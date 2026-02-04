@@ -13,7 +13,9 @@ export default function StarsBackground() {
   useEffect(() => {
     const style = getComputedStyle(document.documentElement);
     const color = style.getPropertyValue('--foreground').trim() || '#ebdbb2';
-    setStarColor(color);
+    requestAnimationFrame(() => {
+      setStarColor(color);
+    });
   }, [resolvedTheme]);
 
   return (

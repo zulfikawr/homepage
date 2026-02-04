@@ -6,16 +6,21 @@ import DigitalRain from './component';
 export default function DigitalRainBackground() {
   const { resolvedTheme } = useTheme();
 
-  const [colors, setColors] = useState({ char: '#b8bb26', fade: 'rgba(40, 40, 40, 0.05)' });
+  const [colors, setColors] = useState({
+    char: '#b8bb26',
+    fade: 'rgba(40, 40, 40, 0.05)',
+  });
 
   useEffect(() => {
     const style = getComputedStyle(document.documentElement);
     const char = style.getPropertyValue('--theme-green').trim() || '#b8bb26';
     const bg = style.getPropertyValue('--background').trim() || '#282828';
-    
-    setColors({
-      char,
-      fade: bg.startsWith('#') ? `${bg}0d` : bg, // 0d is approx 0.05 opacity in hex
+
+    requestAnimationFrame(() => {
+      setColors({
+        char,
+        fade: bg.startsWith('#') ? `${bg}0d` : bg, // 0d is approx 0.05 opacity in hex
+      });
     });
   }, [resolvedTheme]);
 

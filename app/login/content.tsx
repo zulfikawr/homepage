@@ -92,7 +92,10 @@ export default function LoginContent() {
           <form onSubmit={onPasswordLogin} className='space-y-6'>
             <div className='space-y-5'>
               <div className='space-y-2'>
-                <FormLabel htmlFor='email' className='text-theme-fg-dim text-sm'>
+                <FormLabel
+                  htmlFor='email'
+                  className='text-theme-fg-dim text-sm'
+                >
                   Email Address
                 </FormLabel>
                 <Input

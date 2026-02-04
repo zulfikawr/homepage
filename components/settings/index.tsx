@@ -15,8 +15,6 @@ import { getSpotifyAuthUrl } from '@/lib/spotify-client';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'System', value: 'system', icon: 'desktop' },
-  { label: 'Light', value: 'light', icon: 'sun' },
-  { label: 'Dark', value: 'dark', icon: 'moon' },
   { label: 'Gruvbox Light', value: 'gruvbox-light', icon: 'palette' },
   { label: 'Gruvbox Dark', value: 'gruvbox-dark', icon: 'palette' },
   { label: 'Monokai', value: 'monokai', icon: 'palette' },

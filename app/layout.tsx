@@ -96,7 +96,7 @@ export default function RootLayout({
       >
         <Providers>
           <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
-          
+
           {/* Base background color layer */}
           <div className='fixed inset-0 bg-background -z-20' />
 

@@ -6,16 +6,21 @@ import ParticleNetwork from './component';
 export default function ParticleNetworkBackground() {
   const { resolvedTheme } = useTheme();
 
-  const [colors, setColors] = useState({ particle: '#83a598', line: 'rgba(235, 219, 178, 0.2)' });
+  const [colors, setColors] = useState({
+    particle: '#83a598',
+    line: 'rgba(235, 219, 178, 0.2)',
+  });
 
   useEffect(() => {
     const style = getComputedStyle(document.documentElement);
     const particle = style.getPropertyValue('--theme-blue').trim() || '#83a598';
     const fg = style.getPropertyValue('--foreground').trim() || '#ebdbb2';
-    
-    setColors({
-      particle,
-      line: fg.startsWith('#') ? `${fg}33` : fg, // 33 is approx 0.2 opacity in hex
+
+    requestAnimationFrame(() => {
+      setColors({
+        particle,
+        line: fg.startsWith('#') ? `${fg}33` : fg, // 33 is approx 0.2 opacity in hex
+      });
     });
   }, [resolvedTheme]);
 

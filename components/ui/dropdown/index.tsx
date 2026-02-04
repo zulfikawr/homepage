@@ -134,7 +134,10 @@ const Dropdown = ({
       const target = event.target as HTMLElement;
 
       // Ignore clicks inside the menu or on the trigger
-      if (menuRef.current?.contains(target) || triggerRef.current?.contains(target)) {
+      if (
+        menuRef.current?.contains(target) ||
+        triggerRef.current?.contains(target)
+      ) {
         return;
       }
 

@@ -124,102 +124,90 @@
 @layer base {
   :root {
     color-scheme: light;
-    /* Neutral Light Palette */
-    --background: #ffffff;
-    --foreground: #09090b;
-    --card: #ffffff;
-    --card-header: #f4f4f5;
-    --card-foreground: #09090b;
-    --popover: #ffffff;
-    --popover-foreground: #09090b;
-    --primary: #18181b;
-    --primary-foreground: #fafafa;
-    --secondary: #f4f4f5;
-    --secondary-foreground: #18181b;
-    --muted: #f4f4f5;
-    --muted-foreground: #71717a;
-    --accent: #f4f4f5;
-    --accent-foreground: #18181b;
-    --destructive: #ef4444;
-    --destructive-foreground: #fafafa;
-    --border: #e4e4e7;
-    --ring: #18181b;
-    --radius: 0.25rem;
+    --background: #fff9e1;
+    --foreground: #3c3836;
+    --card: #f9f5d7;
+    --card-header: #ebdbb2;
+    --card-foreground: #3c3836;
+    --popover: #f9f5d7;
+    --popover-foreground: #3c3836;
+    --primary: #fe8019;
+    --primary-foreground: #fbf1c7;
+    --secondary: #d5c4a1;
+    --secondary-foreground: #3c3836;
+    --muted: #ebdbb2;
+    --muted-foreground: #7c6f64;
+    --accent: #fe8019;
+    --accent-foreground: #fbf1c7;
+    --destructive: #9d0006;
+    --destructive-foreground: #fbf1c7;
+    --border: #d5c4a1;
+    --ring: #fe8019;
 
-    /* Semantic Theme Variables (Standard Light) */
-    --theme-bg: #f4f4f5;
-    --theme-bg-soft: #e4e4e7;
-    --theme-bg-dark: #27272a;
-    --theme-bg-light: #ffffff;
-    --theme-fg: #18181b;
-    --theme-fg-dim: #71717a;
-    --theme-orange: #f97316;
-    --theme-green: #22c55e;
-    --theme-yellow: #eab308;
-    --theme-blue: #3b82f6;
-    --theme-red: #ef4444;
-    --theme-aqua: #06b6d4;
-    --theme-purple: #a855f7;
-    --theme-purple-dim: #7c3aed;
+    --theme-bg: #ebdbb2;
+    --theme-bg-soft: #d5c4a1;
+    --theme-bg-dark: #7c6f64;
+    --theme-fg: #3c3836;
+    --theme-fg-dim: #7c6f64;
+    --theme-orange: #fe8019;
+    --theme-green: #79740e;
+    --theme-yellow: #b57614;
+    --theme-blue: #076678;
+    --theme-red: #af3a03;
+    --theme-aqua: #427b58;
+    --theme-purple: #8f3f71;
 
-    /* Heatmap Levels (Light) */
-    --heatmap-0: #f4f4f5;
-    --heatmap-1: #e4e4e7;
-    --heatmap-2: #d4d4d8;
-    --heatmap-3: #22c55e;
-    --heatmap-4: #eab308;
-    --heatmap-5: #f97316;
-    --heatmap-6: #ef4444;
+    --heatmap-0: #ebdbb2;
+    --heatmap-1: #d5c4a1;
+    --heatmap-2: #bdae93;
+    --heatmap-3: #79740e;
+    --heatmap-4: #b57614;
+    --heatmap-5: #af3a03;
+    --heatmap-6: #9d0006;
   }
 
   .dark {
     color-scheme: dark;
-    /* Neutral Dark Palette */
-    --background: #09090b;
-    --foreground: #fafafa;
-    --card: #09090b;
-    --card-header: #18181b;
-    --card-foreground: #fafafa;
-    --popover: #09090b;
-    --popover-foreground: #fafafa;
-    --primary: #fafafa;
-    --primary-foreground: #18181b;
-    --secondary: #27272a;
-    --secondary-foreground: #fafafa;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
-    --accent: #27272a;
-    --accent-foreground: #fafafa;
-    --destructive: #7f1d1d;
-    --destructive-foreground: #fafafa;
-    --border: #27272a;
-    --ring: #d4d4d8;
-    --radius: 0.25rem;
+    --background: #282828;
+    --foreground: #ebdbb2;
+    --card: #32302f;
+    --card-header: #3c3836;
+    --card-foreground: #ebdbb2;
+    --popover: #3c3836;
+    --popover-foreground: #ebdbb2;
+    --primary: #fe8019;
+    --primary-foreground: #282828;
+    --secondary: #504945;
+    --secondary-foreground: #ebdbb2;
+    --muted: #3c3836;
+    --muted-foreground: #a89984;
+    --accent: #fe8019;
+    --accent-foreground: #282828;
+    --destructive: #fb4934;
+    --destructive-foreground: #ebdbb2;
+    --border: #fe80191a;
+    --ring: #fe8019;
 
-    /* Semantic Theme Variables (Standard Dark) */
-    --theme-bg: #18181b;
-    --theme-bg-soft: #27272a;
-    --theme-bg-dark: #09090b;
-    --theme-bg-light: #3f3f46;
-    --theme-fg: #fafafa;
-    --theme-fg-dim: #a1a1aa;
-    --theme-orange: #fb923c;
-    --theme-green: #4ade80;
-    --theme-yellow: #facc15;
-    --theme-blue: #60a5fa;
-    --theme-red: #f87171;
-    --theme-aqua: #22d3ee;
-    --theme-purple: #c084fc;
-    --theme-purple-dim: #a78bfa;
+    --theme-bg: #282828;
+    --theme-bg-soft: #32302f;
+    --theme-bg-dark: #1d2021;
+    --theme-fg: #ebdbb2;
+    --theme-fg-dim: #a89984;
+    --theme-orange: #fe8019;
+    --theme-green: #b8bb26;
+    --theme-yellow: #fabd2f;
+    --theme-blue: #83a598;
+    --theme-red: #fb4934;
+    --theme-aqua: #8ec07c;
+    --theme-purple: #d3869b;
 
-    /* Heatmap Levels (Dark) */
-    --heatmap-0: #18181b;
-    --heatmap-1: #27272a;
-    --heatmap-2: #3f3f46;
-    --heatmap-3: #4ade80;
-    --heatmap-4: #facc15;
-    --heatmap-5: #fb923c;
-    --heatmap-6: #f87171;
+    --heatmap-0: #3c3836;
+    --heatmap-1: #504945;
+    --heatmap-2: #665c54;
+    --heatmap-3: #b8bb26;
+    --heatmap-4: #fabd2f;
+    --heatmap-5: #fe8019;
+    --heatmap-6: #fb4934;
   }
 
   .gruvbox-light {
@@ -538,18 +526,18 @@
   .solarized {
     color-scheme: dark;
     --background: #002b36;
-    --foreground: #839496;
+    --foreground: #93a1a1;
     --card: #073642;
-    --card-header: #586e75;
-    --card-foreground: #93a1a1;
+    --card-header: #00212b;
+    --card-foreground: #eee8d5;
     --popover: #073642;
-    --popover-foreground: #93a1a1;
+    --popover-foreground: #eee8d5;
     --primary: #268bd2;
     --primary-foreground: #fdf6e3;
     --secondary: #586e75;
-    --secondary-foreground: #839496;
+    --secondary-foreground: #93a1a1;
     --muted: #073642;
-    --muted-foreground: #657b83;
+    --muted-foreground: #839496;
     --accent: #2aa198;
     --accent-foreground: #fdf6e3;
     --destructive: #dc322f;
@@ -561,8 +549,8 @@
     --theme-bg: #002b36;
     --theme-bg-soft: #073642;
     --theme-bg-dark: #00212b;
-    --theme-fg: #839496;
-    --theme-fg-dim: #657b83;
+    --theme-fg: #93a1a1;
+    --theme-fg-dim: #839496;
     --theme-orange: #cb4b16;
     --theme-green: #859900;
     --theme-yellow: #b58900;
@@ -571,9 +559,9 @@
     --theme-aqua: #2aa198;
     --theme-purple: #6c71c4;
 
-    --heatmap-0: #073642;
+    --heatmap-0: #0a4b5c;
     --heatmap-1: #586e75;
-    --heatmap-2: #657b83;
+    --heatmap-2: #268bd2;
     --heatmap-3: #859900;
     --heatmap-4: #b58900;
     --heatmap-5: #cb4b16;
