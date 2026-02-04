@@ -50,18 +50,14 @@ export default function RootLayout({
       lang='en-us'
       suppressHydrationWarning
       className={isDark ? 'dark' : ''}
-      style={
-        isDark
-          ? { colorScheme: 'dark', background: '#282828' }
-          : { colorScheme: 'light', background: '#fff9e1' }
-      }
+      style={{ colorScheme: isDark ? 'dark' : 'light' }}
     >
       <head>
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html:
-              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';d.style.background='#282828';}else{d.classList.remove('dark');d.style.colorScheme='light';d.style.background='#fff9e1';}}catch(e){}})()",
+              "(function(){try{var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(isDark){d.classList.add('dark');d.style.colorScheme='dark';}else{d.classList.remove('dark');d.style.colorScheme='light';}}catch(e){}})()",
           }}
         />
         <link rel='preconnect' href='https://api.iconify.design' />
@@ -102,11 +98,15 @@ export default function RootLayout({
       >
         <Providers>
           <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
+          
+          {/* Base background color layer */}
+          <div className='fixed inset-0 bg-background -z-20' />
+
           {/* Background layer */}
           <DynamicBackground />
 
           {/* Content layer */}
-          <div className='relative z-20 min-h-screen bg-background/50 flex flex-col'>
+          <div className='relative z-20 min-h-screen flex flex-col'>
             <Suspense fallback={null}>
               <Header />
             </Suspense>

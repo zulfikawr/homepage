@@ -211,7 +211,7 @@
 
   html,
   body {
-    @apply font-sans bg-background text-foreground;
+    @apply font-sans text-foreground;
     font-optical-sizing: auto;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
