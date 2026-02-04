@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
+import { SpotifyRecentlyPlayed } from '@/types/spotify';
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,13 +24,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const data = await spotifyRes.json();
-    const items = data.items.map(
-      (item: { track: unknown; played_at: string }) => ({
-        track: item.track,
-        playedAt: item.played_at,
-      }),
-    );
+    const data = (await spotifyRes.json()) as SpotifyRecentlyPlayed;
+    const items = data.items.map((item) => ({
+      track: item.track,
+      playedAt: item.played_at,
+    }));
 
     return NextResponse.json({ items });
   } catch (error: unknown) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { getAccessToken } from '@/lib/spotify';
+import { SpotifyCurrentlyPlaying } from '@/types/spotify';
 
 export async function GET() {
   try {
@@ -27,7 +28,7 @@ export async function GET() {
       );
     }
 
-    const trackData = await spotifyRes.json();
+    const trackData = (await spotifyRes.json()) as SpotifyCurrentlyPlaying;
     return NextResponse.json({
       isPlaying: trackData.is_playing,
       item: trackData.item,

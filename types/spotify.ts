@@ -30,3 +30,17 @@ export interface SpotifyArtist {
   };
   genres: string[];
 }
+
+export interface SpotifyCurrentlyPlaying {
+  is_playing: boolean;
+  item: SpotifyTrack | null;
+}
+
+export interface SpotifyRecentlyPlayedItem {
+  track: SpotifyTrack;
+  played_at: string;
+}
+
+export interface SpotifyRecentlyPlayed {
+  items: SpotifyRecentlyPlayedItem[];
+}

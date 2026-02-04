@@ -1,3 +1,5 @@
+import { SpotifyRecentlyPlayed } from '@/types/spotify';
+
 import { getDB } from './cloudflare';
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
@@ -134,9 +136,9 @@ export async function getRecentlyPlayed(limit = 10) {
     },
   );
   if (!res.ok) throw new Error('Failed to fetch recently played');
-  const data = await res.json();
+  const data = (await res.json()) as SpotifyRecentlyPlayed;
   return {
-    items: data.items.map((item: { track: unknown; played_at: string }) => ({
+    items: data.items.map((item) => ({
       track: item.track,
       playedAt: item.played_at,
     })),
