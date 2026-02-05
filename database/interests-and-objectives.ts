@@ -42,7 +42,7 @@ export async function getInterestsAndObjectives(): Promise<InterestsAndObjective
 
     // Pick a random row
     const row = await db
-      .prepare('SELECT * FROM interestsObjectives ORDER BY RANDOM() LIMIT 1')
+      .prepare('SELECT * FROM interests_objectives ORDER BY RANDOM() LIMIT 1')
       .first<InterestsRow>();
 
     if (row) {
@@ -94,7 +94,7 @@ export async function updateInterestsAndObjectives(
 
     await db
       .prepare(
-        `INSERT INTO interestsObjectives (id, description, objectives, conclusion)
+        `INSERT INTO interests_objectives (id, description, objectives, conclusion)
        VALUES (?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          description = excluded.description,

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui';
 import { Button, FileUpload, FormLabel } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
-import { updateResume } from '@/database/resume';
 import { Resume } from '@/types/resume';
 
 interface ResumeFormProps {
@@ -35,13 +34,29 @@ const ResumeForm: React.FC<ResumeFormProps> = ({ data }) => {
     e?.preventDefault();
 
     try {
-      const result = await updateResume(resume);
+      const response = await fetch('/api/collection/resume', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(resume),
+      });
 
-      if (result.success && result.data) {
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
+      if (result.success) {
         toast.success('Resume successfully updated!');
         router.push('/database');
-      } else if (result.error) {
-        toast.error(`Error updating resume: ${result.error}`);
+      } else {
+        toast.error(result.error || 'Failed to update resume.');
       }
     } catch (error) {
       toast.error(

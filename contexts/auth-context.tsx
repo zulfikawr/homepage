@@ -32,8 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { user: currentUser, isAdmin: currentIsAdmin } = getCurrentAuth();
       setUser(currentUser);
       setIsAdmin(currentIsAdmin);
-      // Sync to cookie for middleware
-      document.cookie = getAuthCookie();
+
+      // Sync to cookie for server-side checks if user exists
+      if (currentUser) {
+        document.cookie = `isAdmin=${currentIsAdmin ? 'true' : 'false'}; path=/; max-age=86400; SameSite=Lax; Secure`;
+      }
+
       setLoading(false);
     };
 

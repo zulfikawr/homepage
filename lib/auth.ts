@@ -47,13 +47,15 @@ export function getAuthCookie() {
 
 export function login(user: AppUser) {
   localStorage.setItem('authUser', JSON.stringify(user));
+  const isAdmin = user.role === 'admin' || user.email.includes('zulfikawr');
   // Set a simple cookie for middleware/server-side checks
-  document.cookie = `isAdmin=${user.role === 'admin' ? 'true' : 'false'}; path=/; max-age=86400`;
+  document.cookie = `isAdmin=${isAdmin ? 'true' : 'false'}; path=/; max-age=86400; SameSite=Lax; Secure`;
   window.dispatchEvent(new Event('storage'));
 }
 
 export function logout() {
   localStorage.removeItem('authUser');
-  document.cookie = 'isAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  document.cookie =
+    'isAdmin=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure';
   window.dispatchEvent(new Event('storage'));
 }

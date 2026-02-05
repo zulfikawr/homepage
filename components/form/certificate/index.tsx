@@ -9,11 +9,6 @@ import { toast } from '@/components/ui';
 import { Button, FileUpload, FormLabel, Input } from '@/components/ui';
 import CertificateCard from '@/components/ui/card/variants/certificate';
 import { Separator } from '@/components/ui/separator';
-import {
-  addCertificate,
-  deleteCertificate,
-  updateCertificate,
-} from '@/database/certificates';
 import { getFileUrl } from '@/lib/storage';
 import { Certificate } from '@/types/certificate';
 import { formatDate } from '@/utilities/format-date';
@@ -57,11 +52,15 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
       if (certificateToEdit?.date_issued) {
         setSelectedDate(new Date(certificateToEdit.date_issued));
       } else {
-        setSelectedDate(new Date());
+        const now = new Date();
+        setSelectedDate(now);
+        if (!certificate.date_issued) {
+          handleChange('date_issued', formatDate(now));
+        }
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [certificateToEdit]);
+  }, [certificateToEdit, certificate.date_issued]);
 
   const currentPreviewCertificate: Certificate = {
     id: certificate.id || 'preview',
@@ -126,29 +125,35 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     };
 
     try {
-      let result;
+      const formData = new FormData();
 
-      if (imageFile || logoFile) {
-        const formData = new FormData();
-        // Append all certificate fields
-        Object.entries(certificateData).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
-          }
-        });
+      // Append all certificate fields
+      Object.entries(certificateData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
 
-        // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (logoFile) formData.append('organizationLogo', logoFile);
+      // Append files
+      if (imageFile) formData.append('image', imageFile);
+      if (logoFile) formData.append('organizationLogo', logoFile);
 
-        result = certificateToEdit
-          ? await updateCertificate(formData)
-          : await addCertificate(formData);
-      } else {
-        result = certificateToEdit
-          ? await updateCertificate(certificateData)
-          : await addCertificate(certificateData);
+      const response = await fetch('/api/collection/certificates', {
+        method: certificateToEdit ? 'PUT' : 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -157,6 +162,8 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             : 'Certificate added successfully!',
         );
         router.push('/database/certs');
+      } else {
+        toast.error(result.error || 'Failed to save the certificate.');
       }
     } catch (error) {
       toast.error(
@@ -171,11 +178,30 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     if (!certificateToEdit) return;
 
     try {
-      const result = await deleteCertificate(certificateToEdit.id);
+      const response = await fetch(
+        `/api/collection/certificates?id=${certificateToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Certificate deleted successfully!');
         router.push('/database/certs');
+      } else {
+        toast.error(result.error || 'Failed to delete the certificate.');
       }
     } catch (error) {
       toast.error(

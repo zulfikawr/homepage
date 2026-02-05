@@ -48,7 +48,7 @@ export async function getPersonalInfo(): Promise<PersonalInfo> {
     if (!db) return defaultData;
 
     const row = await db
-      .prepare('SELECT * FROM personalInfo WHERE id = 1')
+      .prepare('SELECT * FROM personal_info WHERE id = 1')
       .first<PersonalInfoRow>();
 
     if (!row) return defaultData;
@@ -100,12 +100,12 @@ export async function updatePersonalInfo(
     // Upsert into singleton table
     await db
       .prepare(
-        `INSERT INTO personalInfo (id, name, title, avatar_url)
+        `INSERT INTO personal_info (id, name, title, avatar_url)
        VALUES (1, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          name = excluded.name,
          title = excluded.title,
-         avatar_url = COALESCE(excluded.avatar_url, personalInfo.avatar_url),
+         avatar_url = COALESCE(excluded.avatar_url, personal_info.avatar_url),
          updated_at = unixepoch()`,
       )
       .bind(name, title, avatarKey)

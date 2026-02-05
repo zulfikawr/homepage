@@ -76,34 +76,53 @@ export async function addSection(
  * Updates an existing section in the database.
  */
 export async function updateSection(
-  id: string,
-  data: Partial<Section>,
+  data: (Partial<Section> & { id: string }) | FormData,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
   try {
     const db = getDB();
+    let recordId: string;
+    let payload: Partial<Section> = {};
+
+    if (data instanceof FormData) {
+      recordId = data.get('id') as string;
+      if (data.has('name')) payload.name = data.get('name') as string;
+      if (data.has('title')) payload.title = data.get('title') as string;
+      if (data.has('enabled')) {
+        const enabled = data.get('enabled');
+        payload.enabled = enabled === 'true' || enabled === '1';
+      }
+      if (data.has('order')) {
+        payload.order = Number(data.get('order'));
+      }
+    } else {
+      recordId = data.id;
+      payload = { ...data };
+    }
+
+    if (!recordId) return { success: false, error: 'ID required' };
 
     const fields: string[] = [];
     const values: (string | number | boolean | null | undefined)[] = [];
 
-    if (data.name !== undefined) {
+    if (payload.name !== undefined) {
       fields.push('name = ?');
-      values.push(data.name);
+      values.push(payload.name);
     }
-    if (data.title !== undefined) {
+    if (payload.title !== undefined) {
       fields.push('title = ?');
-      values.push(data.title);
+      values.push(payload.title);
     }
-    if (data.enabled !== undefined) {
+    if (payload.enabled !== undefined) {
       fields.push('enabled = ?');
-      values.push(data.enabled ? 1 : 0);
+      values.push(payload.enabled ? 1 : 0);
     }
-    if (data.order !== undefined) {
+    if (payload.order !== undefined) {
       fields.push('sort_order = ?');
-      values.push(data.order);
+      values.push(payload.order);
     }
 
     if (fields.length > 0) {
-      values.push(id);
+      values.push(recordId);
       await db
         .prepare(`UPDATE sections SET ${fields.join(', ')} WHERE id = ?`)
         .bind(...values)
@@ -115,7 +134,7 @@ export async function updateSection(
     revalidateTag('sections', 'max');
 
     const sections = await getSections();
-    const updated = sections.find((s) => s.id === id);
+    const updated = sections.find((s) => s.id === recordId);
 
     return { success: true, section: updated };
   } catch (error: unknown) {

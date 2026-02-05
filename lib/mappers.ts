@@ -25,7 +25,7 @@ export type BaseDatabaseRow = {
 
 export function mapRecordToPost(row: BaseDatabaseRow): Post {
   const imageKey = (row.image_url || row.image) as string;
-  const audioKey = (row.audioUrl || row.audio) as string;
+  const audioKey = (row.audio_url || row.audio) as string;
 
   return {
     id: row.id as string,
@@ -38,10 +38,15 @@ export function mapRecordToPost(row: BaseDatabaseRow): Post {
     audio: getFileUrl({}, audioKey),
     audio_url: audioKey,
     slug: row.slug as string,
-    categories:
-      typeof row.categories === 'string'
-        ? JSON.parse(row.categories)
-        : (row.categories as string[]) || [],
+    categories: (() => {
+      if (typeof row.categories !== 'string')
+        return (row.categories as string[]) || [];
+      try {
+        return JSON.parse(row.categories);
+      } catch {
+        return [];
+      }
+    })(),
   };
 }
 
@@ -103,10 +108,15 @@ export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
       row.organization_industry) as string,
     organization_location: (row.organization_location ||
       row.organization_location) as string,
-    responsibilities:
-      typeof row.responsibilities === 'string'
-        ? JSON.parse(row.responsibilities)
-        : (row.responsibilities as string[]) || [],
+    responsibilities: (() => {
+      if (typeof row.responsibilities !== 'string')
+        return (row.responsibilities as string[]) || [];
+      try {
+        return JSON.parse(row.responsibilities);
+      } catch {
+        return [];
+      }
+    })(),
   };
 }
 
@@ -117,10 +127,15 @@ export function mapRecordToInterests(
     id: row.id as string,
     description: row.description as string,
     conclusion: row.conclusion as string,
-    objectives:
-      typeof row.objectives === 'string'
-        ? JSON.parse(row.objectives)
-        : (row.objectives as string[]) || [],
+    objectives: (() => {
+      if (typeof row.objectives !== 'string')
+        return (row.objectives as string[]) || [];
+      try {
+        return JSON.parse(row.objectives);
+      } catch {
+        return [];
+      }
+    })(),
   };
 }
 
@@ -162,10 +177,14 @@ export function mapRecordToProject(row: BaseDatabaseRow): Project {
     image: getFileUrl({}, imageKey),
     image_url: imageKey,
     description: row.description as string,
-    tools:
-      typeof row.tools === 'string'
-        ? JSON.parse(row.tools)
-        : (row.tools as string[]) || [],
+    tools: (() => {
+      if (typeof row.tools !== 'string') return (row.tools as string[]) || [];
+      try {
+        return JSON.parse(row.tools);
+      } catch {
+        return [];
+      }
+    })(),
     readme: row.readme as string,
     status: (row.status as string)
       ?.replace(/([A-Z])/g, '_$1')
@@ -188,14 +207,24 @@ export function mapRecordToPublication(row: BaseDatabaseRow): Publication {
     link: row.link as string,
     open_access: !!row.open_access || !!row.open_access,
     excerpt: row.excerpt as string,
-    authors:
-      typeof row.authors === 'string'
-        ? JSON.parse(row.authors)
-        : (row.authors as string[]) || [],
-    keywords:
-      typeof row.keywords === 'string'
-        ? JSON.parse(row.keywords)
-        : (row.keywords as string[]) || [],
+    authors: (() => {
+      if (typeof row.authors !== 'string')
+        return (row.authors as string[]) || [];
+      try {
+        return JSON.parse(row.authors);
+      } catch {
+        return [];
+      }
+    })(),
+    keywords: (() => {
+      if (typeof row.keywords !== 'string')
+        return (row.keywords as string[]) || [];
+      try {
+        return JSON.parse(row.keywords);
+      } catch {
+        return [];
+      }
+    })(),
   };
 }
 

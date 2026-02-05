@@ -21,7 +21,6 @@ import {
 import { ProjectCard } from '@/components/ui/card/variants/project';
 import { IconName } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
-import { addProject, deleteProject, updateProject } from '@/database/projects';
 import { Project } from '@/types/project';
 import { formatDateRange } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -71,8 +70,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     return () => clearTimeout(timer);
   }, [project.image]);
 
-  const [startDate, setStartDate] = useState<Date>(new Date('2025-01-01'));
-  const [endDate, setEndDate] = useState<Date>(new Date('2025-01-01'));
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
 
   useEffect(() => {
     if (!mounted) return;
@@ -279,31 +278,37 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     };
 
     try {
-      let result;
+      const formData = new FormData();
 
-      if (imageFile || faviconFile) {
-        const formData = new FormData();
-        // Append all project fields
-        Object.entries(projectData).forEach(([key, value]) => {
-          if (key === 'tools' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
-          } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
-          }
-        });
+      // Append all project fields
+      Object.entries(projectData).forEach(([key, value]) => {
+        if (key === 'tools' && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
 
-        // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (faviconFile) formData.append('favicon', faviconFile);
+      // Append files
+      if (imageFile) formData.append('image', imageFile);
+      if (faviconFile) formData.append('favicon', faviconFile);
 
-        result = projectToEdit
-          ? await updateProject(formData)
-          : await addProject(formData);
-      } else {
-        result = projectToEdit
-          ? await updateProject(projectData)
-          : await addProject(projectData);
+      const response = await fetch('/api/collection/projects', {
+        method: projectToEdit ? 'PUT' : 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -329,11 +334,30 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     if (!projectToEdit) return;
 
     try {
-      const result = await deleteProject(projectToEdit.id);
+      const response = await fetch(
+        `/api/collection/projects?id=${projectToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Project deleted successfully!');
         router.push('/database/projects');
+      } else {
+        toast.error(result.error || 'Failed to delete the project.');
       }
     } catch (error) {
       toast.error(

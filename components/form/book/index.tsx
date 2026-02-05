@@ -16,7 +16,6 @@ import {
 } from '@/components/ui';
 import { BookCard } from '@/components/ui/card/variants/book';
 import { Separator } from '@/components/ui/separator';
-import { addBook, deleteBook, updateBook } from '@/database/books';
 import { Book } from '@/types/book';
 import { formatDate } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -50,11 +49,15 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       if (!bookToEdit?.date_added) {
-        setSelectedDate(new Date());
+        const now = new Date();
+        setSelectedDate(now);
+        if (!book.date_added) {
+          handleChange('date_added', formatDate(now));
+        }
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [bookToEdit?.date_added]);
+  }, [bookToEdit?.date_added, book.date_added]);
 
   const currentPreviewBook: Book = {
     id: book.id || 'preview',
@@ -113,9 +116,23 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
     };
 
     try {
-      const result = bookToEdit
-        ? await updateBook(bookData)
-        : await addBook(bookData);
+      const response = await fetch('/api/collection/books', {
+        method: bookToEdit ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookData),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -124,6 +141,8 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
             : 'Book added successfully!',
         );
         router.push('/database/reading-list');
+      } else {
+        toast.error(result.error || 'Failed to save the book.');
       }
     } catch (error) {
       toast.error(
@@ -138,11 +157,30 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
     if (!bookToEdit) return;
 
     try {
-      const result = await deleteBook(bookToEdit.id);
+      const response = await fetch(
+        `/api/collection/books?id=${bookToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Book deleted successfully!');
         router.push('/database/reading-list');
+      } else {
+        toast.error(result.error || 'Failed to delete the book.');
       }
     } catch (error) {
       toast.error(

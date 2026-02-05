@@ -13,7 +13,6 @@ import { Button, FormLabel, Input } from '@/components/ui';
 import { MovieCard } from '@/components/ui/card/variants/movie';
 import { Icon } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
-import { addMovie, deleteMovie, updateMovie } from '@/database/movies';
 import { Movie } from '@/types/movie';
 import { formatDate } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -53,8 +52,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
     setSelectedDate(initialDate);
     if (movieToEdit) {
       setMovie(movieToEdit);
+    } else if (!movie.release_date) {
+      handleChange('release_date', formatDate(initialDate));
     }
-  }, [initialDate, movieToEdit]);
+  }, [initialDate, movieToEdit, movie.release_date]);
 
   const currentPreview: Movie = {
     id: movie.id || 'preview',
@@ -173,9 +174,24 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
     } as Movie;
 
     try {
-      const result = movieToEdit
-        ? await updateMovie(movieData)
-        : await addMovie(movieData);
+      const response = await fetch('/api/collection/movies', {
+        method: movieToEdit ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(movieData),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
       if (result.success) {
         toast.success(
           movieToEdit
@@ -183,6 +199,8 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
             : 'Movie added successfully!',
         );
         router.push('/database/movies');
+      } else {
+        toast.error(result.error || 'Failed to save the movie.');
       }
     } catch (error) {
       toast.error(
@@ -196,16 +214,36 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
   const handleDelete = async () => {
     if (!movieToEdit) return;
     try {
-      const result = await deleteMovie(movieToEdit.id);
+      const response = await fetch(
+        `/api/collection/movies?id=${movieToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
       if (result.success) {
         toast.success('Movie deleted successfully!');
         router.push('/database/movies');
+      } else {
+        toast.error(result.error || 'Failed to delete the movie.');
       }
     } catch (error) {
       toast.error(
         error instanceof Error
-          ? `Error deleting movie: ${error.message}`
-          : 'Unknown error',
+          ? `Error deleting the movie: ${error.message}`
+          : 'An unknown error occurred while deleting the movie.',
       );
     }
   };

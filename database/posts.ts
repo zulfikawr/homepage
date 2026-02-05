@@ -14,7 +14,7 @@ interface PostRow {
   content: string;
   excerpt: string;
   image_url: string;
-  audioUrl: string;
+  audio_url: string;
   categories: string;
   date_string: string;
 }
@@ -83,29 +83,48 @@ export async function getPostById(id: string): Promise<Post | null> {
  */
 export async function addPost(
   data: Omit<Post, 'id'> | FormData,
-): Promise<{ success: boolean; post?: Post; error?: string }> {
+): Promise<{ success: boolean; data?: Post; error?: string }> {
   try {
     const db = getDB();
-    const id = crypto.randomUUID();
+    if (!db)
+      return { success: false, error: 'Database connection not available' };
+
+    // Fallback for ID generation if crypto is not available in some environments
+    const id =
+      typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).substring(2) + Date.now().toString(36);
+
     let payload: Partial<Post> = {};
 
     if (data instanceof FormData) {
-      // Handle FormData
+      console.log('addPost: received FormData');
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
       payload.content = data.get('content') as string;
       payload.excerpt = data.get('excerpt') as string;
       payload.date_string = data.get('date_string') as string;
 
-      // Generate slug first if not provided
-      if (!payload.slug) {
-        payload.slug =
-          payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+      const categoriesStr = data.get('categories') as string;
+      if (categoriesStr) {
+        try {
+          payload.categories = JSON.parse(categoriesStr);
+        } catch {
+          payload.categories = [];
+        }
       }
+
+      // Generate slug first if not provided
+      if (!payload.slug && payload.title) {
+        payload.slug = payload.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      }
+
+      if (!payload.slug) payload.slug = id;
 
       const imageFile = data.get('image') as File;
       const imageUrlInput = data.get('image_url') as string;
       if (imageFile && imageFile.size > 0) {
+        console.log('addPost: uploading image...', imageFile.name);
         payload.image_url = await uploadFile(imageFile, payload.slug, 'image');
       } else if (imageUrlInput) {
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
@@ -115,36 +134,40 @@ export async function addPost(
       const audioUrlInput = (data.get('audio_url') ||
         data.get('audioUrl')) as string;
       if (audioFile && audioFile.size > 0) {
+        console.log('addPost: uploading audio...', audioFile.name);
         payload.audio_url = await uploadFile(audioFile, payload.slug, 'audio');
       } else if (audioUrlInput) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');
       }
     } else {
+      console.log('addPost: received object');
       payload = { ...data };
     }
 
     // Default values
-    if (!payload.slug)
+    if (!payload.slug) {
       payload.slug =
         payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
+    }
 
     const categoriesJson = JSON.stringify(payload.categories || []);
 
+    console.log('addPost: inserting into DB...', payload.slug);
     await db
       .prepare(
-        `INSERT INTO posts (id, slug, title, content, excerpt, image_url, audioUrl, categories, date_string)
+        `INSERT INTO posts (id, slug, title, content, excerpt, image_url, audio_url, categories, date_string)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
         id,
         payload.slug,
-        payload.title,
-        payload.content,
-        payload.excerpt,
-        payload.image_url,
-        payload.audio_url,
+        payload.title ?? '',
+        payload.content ?? '',
+        payload.excerpt ?? '',
+        payload.image_url ?? null,
+        payload.audio_url ?? null,
         categoriesJson,
-        payload.date_string,
+        payload.date_string ?? '',
       )
       .run();
 
@@ -153,9 +176,9 @@ export async function addPost(
     revalidateTag('posts', 'max');
 
     const newPost = await getPostById(id);
-    return { success: true, post: newPost! };
+    return { success: true, data: newPost || undefined };
   } catch (error: unknown) {
-    console.error('Add post error:', error);
+    console.error('CRITICAL: Add post error:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : String(error),
@@ -169,24 +192,21 @@ export async function addPost(
 export async function updatePost(
   id: string,
   data: Partial<Post> | FormData,
-): Promise<{ success: boolean; post?: Post; error?: string }> {
+): Promise<{ success: boolean; data?: Post; error?: string }> {
   try {
-    console.log('[updatePost] Starting update for:', id);
     const db = getDB();
+    if (!db)
+      return { success: false, error: 'Database connection not available' };
+
     let recordId = id;
 
     // Resolve ID if slug is passed
     const existing = await getPostById(id);
     if (!existing) return { success: false, error: 'Post not found' };
     recordId = existing.id;
-    console.log('[updatePost] Existing post:', {
-      id: recordId,
-      slug: existing.slug,
-    });
 
     let payload: Partial<Post> = {};
     if (data instanceof FormData) {
-      console.log('[updatePost] Processing FormData');
       payload.title = data.get('title') as string;
       payload.slug = data.get('slug') as string;
       payload.content = data.get('content') as string;
@@ -207,24 +227,11 @@ export async function updatePost(
 
       const imageFile = data.get('image') as File;
       const imageUrlInput = data.get('image_url') as string;
-      console.log('[updatePost] Image data:', {
-        hasImageFile: imageFile?.size > 0,
-        imageUrlInput,
-      });
 
       if (imageFile && imageFile.size > 0) {
-        console.log('[updatePost] Uploading new image file');
         payload.image_url = await uploadFile(imageFile, slug, 'image');
-      } else if (imageUrlInput) {
-        console.log('[updatePost] Using existing image URL');
+      } else if (imageUrlInput !== undefined && imageUrlInput !== null) {
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
-      } else {
-        console.log(
-          '[updatePost] No image data, keeping existing:',
-          existing.image_url,
-        );
-        // Don't update image_url if no new data provided
-        payload.image_url = undefined;
       }
 
       const audioFile = data.get('audio') as File;
@@ -232,11 +239,8 @@ export async function updatePost(
         data.get('audioUrl')) as string;
       if (audioFile && audioFile.size > 0) {
         payload.audio_url = await uploadFile(audioFile, slug, 'audio');
-      } else if (audioUrlInput) {
+      } else if (audioUrlInput !== undefined && audioUrlInput !== null) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');
-      } else {
-        // Don't update audioUrl if no new data provided
-        payload.audio_url = undefined;
       }
     } else {
       payload = { ...data };
@@ -263,12 +267,11 @@ export async function updatePost(
       values.push(payload.excerpt);
     }
     if (payload.image_url !== undefined) {
-      console.log('[updatePost] Will update image_url to:', payload.image_url);
       fields.push('image_url = ?');
       values.push(payload.image_url);
     }
     if (payload.audio_url !== undefined) {
-      fields.push('audioUrl = ?');
+      fields.push('audio_url = ?');
       values.push(payload.audio_url);
     }
     if (payload.categories !== undefined) {
@@ -283,12 +286,6 @@ export async function updatePost(
     if (fields.length > 0) {
       values.push(recordId);
       const query = `UPDATE posts SET ${fields.join(', ')} WHERE id = ?`;
-      console.log(
-        '[updatePost] Executing query:',
-        query,
-        'with values:',
-        values,
-      );
       await db
         .prepare(query)
         .bind(...values)
@@ -301,10 +298,7 @@ export async function updatePost(
     revalidateTag('posts', 'max');
 
     const updated = await getPostById(recordId);
-    console.log('[updatePost] Updated post:', {
-      image_url: updated?.image_url,
-    });
-    return { success: true, post: updated! };
+    return { success: true, data: updated || undefined };
   } catch (error: unknown) {
     console.error('Update post error:', error);
     return {
@@ -322,6 +316,8 @@ export async function deletePost(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const db = getDB();
+    if (!db)
+      return { success: false, error: 'Database connection not available' };
     // Resolve ID
     const existing = await getPostById(id);
     if (!existing) return { success: false, error: 'Post not found' };

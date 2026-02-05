@@ -11,7 +11,6 @@ import type { IconName } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import DynamicBackground from '@/components/visual/background';
 import { useBackground } from '@/contexts/background-context';
-import { updateCustomizationSettings } from '@/database/customization';
 import { CustomizationSettings } from '@/types/customization';
 
 const themeOptions: { label: string; value: string; icon: IconName }[] = [
@@ -178,7 +177,24 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const result = await updateCustomizationSettings(settings);
+      const response = await fetch('/api/collection/customization_settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
       if (result.success) {
         // Immediately apply to local storage/current session
         if (settings.default_theme) setTheme(settings.default_theme);
@@ -190,8 +206,12 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
       } else {
         toast.error(result.error || 'Failed to update settings');
       }
-    } catch {
-      toast.error('An error occurred while saving');
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while saving',
+      );
     } finally {
       setLoading(false);
     }

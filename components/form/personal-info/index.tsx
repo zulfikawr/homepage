@@ -7,7 +7,6 @@ import ImageWithFallback from '@/components/image-with-fallback';
 import { toast } from '@/components/ui';
 import { Button, FileUpload, FormLabel, Input } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
-import { updatePersonalInfo } from '@/database/personal-info';
 import { PersonalInfo } from '@/types/personal-info';
 
 interface PersonalInfoFormProps {
@@ -45,22 +44,38 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data }) => {
     e?.preventDefault();
 
     try {
-      let result;
+      const formData = new FormData();
+      formData.append('name', personalInfo.name || '');
+      formData.append('title', personalInfo.title || '');
 
       if (avatarFile) {
-        const formData = new FormData();
-        formData.append('name', personalInfo.name || '');
-        formData.append('title', personalInfo.title || '');
         formData.append('avatar', avatarFile);
-
-        result = await updatePersonalInfo(formData);
-      } else {
-        result = await updatePersonalInfo(personalInfo);
+      } else if (personalInfo.avatar_url) {
+        formData.append('avatar_url', personalInfo.avatar_url);
       }
 
-      if (result.success && result.data) {
+      const response = await fetch('/api/collection/profile', {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
+      if (result.success) {
         toast.success('Personal info successfully updated!');
         router.push('/database');
+      } else {
+        toast.error(result.error || 'Failed to update personal info.');
       }
     } catch (error) {
       toast.error(

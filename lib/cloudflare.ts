@@ -119,12 +119,46 @@ class HTTPD1Database implements D1Database {
       body: JSON.stringify({ sql, params }),
     });
 
-    const data = (await response.json()) as D1HttpResponse;
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `D1 HTTP API Error: ${response.status} ${response.statusText} - ${text}`,
+      );
+    }
 
-    if (!response.ok || !data.success) {
-      const errorMsg = data.errors?.[0]?.message || response.statusText;
+    let data: D1HttpResponse;
+    try {
+      data = (await response.json()) as D1HttpResponse;
+    } catch {
+      throw new Error('D1 HTTP API Error: Received invalid JSON response');
+    }
+
+    if (!data.success) {
+      const errorMsg = data.errors?.[0]?.message || 'Unknown D1 error';
       throw new Error(`D1 HTTP API Error: ${errorMsg}`);
     }
+
+    if (
+      !data.result ||
+      !Array.isArray(data.result) ||
+      data.result.length === 0
+    ) {
+      // Some queries like INSERT might return success but empty results array in some API versions
+      // but usually they return an object with meta.
+      return {
+        results: [],
+        meta: {
+          duration: 0,
+          rows_read: 0,
+          rows_written: 0,
+          last_row_id: 0,
+          changed_db: false,
+          size_after: 0,
+          changes: 0,
+        },
+      };
+    }
+
     return data.result[0];
   }
 }

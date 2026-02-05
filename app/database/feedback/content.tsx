@@ -16,7 +16,6 @@ import {
 } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { useAuth } from '@/contexts/auth-context';
-import { deleteFeedback } from '@/database/feedback';
 import { useCollection } from '@/hooks';
 import { mapRecordToFeedback } from '@/lib/mappers';
 import { FeedbackEntry } from '@/types/feedback';
@@ -35,11 +34,23 @@ export default function FeedbackResponsesContent() {
     );
     if (!confirmDelete) return;
 
-    const result = await deleteFeedback(id);
-    if (result.success) {
-      toast.success('Feedback deleted successfully');
-    } else {
-      toast.error('Failed to delete feedback: ' + result.error);
+    try {
+      const response = await fetch(`/api/collection/feedback?id=${id}`, {
+        method: 'DELETE',
+      });
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+      if (result.success) {
+        toast.success('Feedback deleted successfully');
+        router.refresh();
+      } else {
+        toast.error('Failed to delete feedback: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Delete feedback error:', error);
+      toast.error('Failed to delete feedback');
     }
   };
 

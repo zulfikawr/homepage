@@ -8,11 +8,6 @@ import { toast } from '@/components/ui';
 import { Button, Checkbox, FormLabel, Input } from '@/components/ui';
 import PublicationCard from '@/components/ui/card/variants/publication';
 import { Separator } from '@/components/ui/separator';
-import {
-  addPublication,
-  deletePublication,
-  updatePublication,
-} from '@/database/publications';
 import { Publication } from '@/types/publication';
 import { generateSlug } from '@/utilities/generate-slug';
 
@@ -145,9 +140,23 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     };
 
     try {
-      const result = publicationToEdit
-        ? await updatePublication(newPublication)
-        : await addPublication(newPublication);
+      const response = await fetch('/api/collection/publications', {
+        method: publicationToEdit ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPublication),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -156,6 +165,8 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
             : 'Publication added successfully!',
         );
         router.push('/database/publications');
+      } else {
+        toast.error(result.error || 'Failed to save the publication.');
       }
     } catch (error) {
       toast.error(
@@ -170,16 +181,35 @@ const PublicationForm: React.FC<PublicationFormProps> = ({
     if (!publicationToEdit) return;
 
     try {
-      const result = await deletePublication(publicationToEdit.id);
+      const response = await fetch(
+        `/api/collection/publications?id=${publicationToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Publication deleted successfully!');
         router.push('/database/publications');
+      } else {
+        toast.error(result.error || 'Failed to delete the publication.');
       }
     } catch (error) {
       toast.error(
         error instanceof Error
-          ? `Error deleting publication: ${error.message}`
+          ? `Error deleting the publication: ${error.message}`
           : 'An unknown error occurred while deleting the publication.',
       );
     }

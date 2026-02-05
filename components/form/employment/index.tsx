@@ -16,11 +16,6 @@ import {
 } from '@/components/ui';
 import { EmploymentCard } from '@/components/ui/card/variants/employment';
 import { Separator } from '@/components/ui/separator';
-import {
-  addEmployment,
-  deleteEmployment,
-  updateEmployment,
-} from '@/database/employments';
 import { Employment } from '@/types/employment';
 import { formatDateRange } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -60,14 +55,14 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       const [startStr] = employmentToEdit.date_string.split(' - ');
       return new Date(startStr);
     }
-    return new Date('2025-01-01');
+    return new Date();
   });
   const [endDate, setEndDate] = useState<Date>(() => {
     if (employmentToEdit?.date_string) {
       const [, endStr] = employmentToEdit.date_string.split(' - ');
       return endStr === 'Present' ? new Date() : new Date(endStr);
     }
-    return new Date('2025-01-01');
+    return new Date();
   });
 
   useEffect(() => {
@@ -163,27 +158,35 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     };
 
     try {
-      let result;
+      const formData = new FormData();
+      Object.entries(employmentData).forEach(([key, value]) => {
+        if (key === 'responsibilities' && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
 
       if (logoFile) {
-        const formData = new FormData();
-        Object.entries(employmentData).forEach(([key, value]) => {
-          if (key === 'responsibilities' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
-          } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
-          }
-        });
         formData.append('organizationLogo', logoFile);
-
-        result = employmentToEdit
-          ? await updateEmployment(formData)
-          : await addEmployment(formData);
-      } else {
-        result = employmentToEdit
-          ? await updateEmployment(employmentData)
-          : await addEmployment(employmentData);
       }
+
+      const response = await fetch('/api/collection/employments', {
+        method: employmentToEdit ? 'PUT' : 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -192,6 +195,8 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             : 'Employment added successfully!',
         );
         router.push('/database/employments');
+      } else {
+        toast.error(result.error || 'Failed to save the employment.');
       }
     } catch (error) {
       toast.error(
@@ -206,11 +211,30 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     if (!employmentToEdit) return;
 
     try {
-      const result = await deleteEmployment(employmentToEdit.id);
+      const response = await fetch(
+        `/api/collection/employments?id=${employmentToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Employment deleted successfully!');
         router.push('/database/employments');
+      } else {
+        toast.error(result.error || 'Failed to delete the employment.');
       }
     } catch (error) {
       toast.error(

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { toast } from '@/components/ui';
 import { Button, FormLabel, Input, Textarea } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
-import { updateInterestsAndObjectives } from '@/database/interests-and-objectives';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 
 interface InterestsAndObjectivesFormProps {
@@ -45,10 +44,30 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     e?.preventDefault();
 
     try {
-      const result = await updateInterestsAndObjectives(interestsAndObjectives);
+      const response = await fetch('/api/collection/interestsAndObjectives', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(interestsAndObjectives),
+      });
 
-      if (result.success && result.data) {
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
+
+      if (result.success) {
         toast.success('Interests and objectives successfully updated!');
+      } else {
+        toast.error(
+          result.error || 'Failed to update interests and objectives.',
+        );
       }
     } catch (error) {
       toast.error(

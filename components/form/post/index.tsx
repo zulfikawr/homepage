@@ -16,7 +16,6 @@ import {
 } from '@/components/ui';
 import PostCard from '@/components/ui/card/variants/post';
 import { Separator } from '@/components/ui/separator';
-import { addPost, deletePost, updatePost } from '@/database/posts';
 import { Post } from '@/types/post';
 import { formatDate } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -56,11 +55,15 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       if (postToEdit?.date_string) {
         setSelectedDate(new Date(postToEdit.date_string));
       } else {
-        setSelectedDate(new Date());
+        const now = new Date();
+        setSelectedDate(now);
+        if (!post.date_string) {
+          handleChange('date_string', formatDate(now));
+        }
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [postToEdit]);
+  }, [postToEdit, post.date_string]);
 
   const currentPreviewPost: Post = {
     id: post.id || 'preview',
@@ -134,34 +137,40 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     delete (postData as { id?: string }).id;
 
     try {
-      let result;
       const recordId = postToEdit?.id || '';
 
-      if (imageFile || audioFile) {
-        const formData = new FormData();
-        if (recordId) formData.append('id', recordId);
+      const formData = new FormData();
+      if (recordId) formData.append('id', recordId);
 
-        // Append all post fields
-        Object.entries(postData).forEach(([key, value]) => {
-          if (key === 'categories' && Array.isArray(value)) {
-            formData.append(key, JSON.stringify(value));
-          } else if (value !== undefined && value !== null) {
-            formData.append(key, value.toString());
-          }
-        });
+      // Append all post fields
+      Object.entries(postData).forEach(([key, value]) => {
+        if (key === 'categories' && Array.isArray(value)) {
+          formData.append(key, JSON.stringify(value));
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
 
-        // Append files
-        if (imageFile) formData.append('image', imageFile);
-        if (audioFile) formData.append('audio', audioFile);
+      // Append files
+      if (imageFile) formData.append('image', imageFile);
+      if (audioFile) formData.append('audio', audioFile);
 
-        result = postToEdit
-          ? await updatePost(recordId, formData)
-          : await addPost(formData);
-      } else {
-        result = postToEdit
-          ? await updatePost(recordId, postData)
-          : await addPost(postData);
+      const response = await fetch('/api/collection/posts', {
+        method: postToEdit ? 'PUT' : 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
       }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success(
@@ -170,6 +179,8 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
             : 'Post added successfully!',
         );
         router.push('/database/posts');
+      } else {
+        toast.error(result.error || 'Failed to save the post.');
       }
     } catch (error) {
       toast.error(
@@ -184,11 +195,30 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     if (!postToEdit) return;
 
     try {
-      const result = await deletePost(postToEdit.id);
+      const response = await fetch(
+        `/api/collection/posts?id=${postToEdit.id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { error?: string };
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`,
+        );
+      }
+
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
 
       if (result.success) {
         toast.success('Post deleted successfully!');
         router.push('/database/posts');
+      } else {
+        toast.error(result.error || 'Failed to delete the post.');
       }
     } catch (error) {
       toast.error(
@@ -337,40 +367,43 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
               />
             </div>
           </div>
+
+          <Separator margin='5' />
+
+          {postToEdit ? (
+            <div className='flex space-x-4'>
+              <Button
+                variant='destructive'
+                icon='trash'
+                onClick={(e) => {
+                  e?.preventDefault();
+                  confirmDelete();
+                }}
+                className='w-full'
+              >
+                Delete
+              </Button>
+              <Button
+                variant='primary'
+                nativeType='submit'
+                icon='floppyDisk'
+                className='w-full'
+              >
+                Save
+              </Button>
+            </div>
+          ) : (
+            <Button
+              variant='primary'
+              nativeType='submit'
+              icon='plus'
+              className='w-full'
+            >
+              Add
+            </Button>
+          )}
         </form>
       </div>
-
-      <Separator margin='5' />
-
-      {postToEdit ? (
-        <div className='flex space-x-4'>
-          <Button
-            variant='destructive'
-            icon='trash'
-            onClick={confirmDelete}
-            className='w-full'
-          >
-            Delete
-          </Button>
-          <Button
-            variant='primary'
-            icon='floppyDisk'
-            onClick={handleSubmit}
-            className='w-full'
-          >
-            Save
-          </Button>
-        </div>
-      ) : (
-        <Button
-          variant='primary'
-          icon='plus'
-          onClick={handleSubmit}
-          className='w-full'
-        >
-          Add
-        </Button>
-      )}
     </>
   );
 };

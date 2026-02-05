@@ -15,7 +15,6 @@ import { drawer } from '@/components/ui';
 import { toast } from '@/components/ui';
 import { Button, Icon, Skeleton, Switch } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { updateSection } from '@/database/sections';
 import { useCollection } from '@/hooks';
 import {
   mapRecordToEmployment,
@@ -96,7 +95,15 @@ export default function SectionDatabase() {
     );
 
     try {
-      const result = await updateSection(section.id, { enabled: newEnabled });
+      const response = await fetch('/api/collection/sections', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: section.id, enabled: newEnabled }),
+      });
+      const result = (await response.json()) as {
+        success: boolean;
+        error?: string;
+      };
       if (!result.success) {
         throw new Error(result.error || 'Failed to update section');
       }
@@ -133,7 +140,13 @@ export default function SectionDatabase() {
     setDraggedItem(null);
     try {
       const updates = localSections.map((section, index) =>
-        updateSection(section.id, { order: index }),
+        fetch('/api/collection/sections', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: section.id, order: index }),
+        }).then(
+          (res) => res.json() as Promise<{ success: boolean; error?: string }>,
+        ),
       );
       const results = await Promise.all(updates);
       const failed = results.find((r) => !r.success);

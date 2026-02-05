@@ -80,8 +80,8 @@ export async function updateResume(
 
     await db
       .prepare(
-        `INSERT INTO resume (id, fileUrl) VALUES (1, ?)
-       ON CONFLICT(id) DO UPDATE SET fileUrl = excluded.fileUrl, updated_at = unixepoch()`,
+        `INSERT INTO resume (id, file_url) VALUES (1, ?)
+       ON CONFLICT(id) DO UPDATE SET file_url = excluded.file_url, updated_at = unixepoch()`,
       )
       .bind(fileUrl)
       .run();
