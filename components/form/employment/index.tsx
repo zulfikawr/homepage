@@ -310,9 +310,9 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='flex items-center justify-between w-full text-base'>
+                <Button className='flex items-center justify-between w-full text-base px-2'>
                   {currentJobType?.label}
-                  <Icon name='caretDown' className='size-4' />
+                  <Icon name='caretDown' className='size-4 opacity-50' />
                 </Button>
               }
               className='w-full'

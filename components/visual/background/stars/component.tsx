@@ -134,9 +134,11 @@ const Stars: React.FC<StarsProps> = ({
     };
 
     const resize = () => {
+      const parent = canvas.parentElement;
+      if (!parent) return;
       scale = window.devicePixelRatio || 1;
-      width = window.innerWidth * scale;
-      height = window.innerHeight * scale;
+      width = parent.clientWidth * scale;
+      height = parent.clientHeight * scale;
       canvas.width = width;
       canvas.height = height;
       stars.forEach(placeStar);

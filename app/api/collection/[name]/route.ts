@@ -38,6 +38,7 @@ export async function GET(
       'resume',
       'analyticsEvents',
       'movies',
+      'customization_settings',
     ];
 
     if (!whitelist.includes(table)) {

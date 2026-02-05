@@ -10,6 +10,7 @@ import { Drawer } from '@/components/ui';
 import { Modal } from '@/components/ui';
 import { Toast } from '@/components/ui';
 import DynamicBackground from '@/components/visual/background';
+import { getCustomizationSettings } from '@/database/customization';
 
 import Providers from './providers';
 
@@ -42,7 +43,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = use(cookies());
-  const theme = cookieStore.get('theme')?.value || 'system';
+  const customization = use(getCustomizationSettings());
+  const theme =
+    cookieStore.get('theme')?.value || customization.default_theme || 'system';
 
   return (
     <html
@@ -54,8 +57,7 @@ export default function RootLayout({
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
-            __html:
-              "(function(){try{var t=localStorage.getItem('theme')||'system';var d=document.documentElement;if(t!=='system'){d.classList.add(t);}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){d.classList.add('dark');}}catch(e){}})()",
+            __html: `(function(){try{var t=localStorage.getItem('theme')||'${customization.default_theme}';var d=document.documentElement;if(t!=='system'){d.classList.add(t);}else if(window.matchMedia('(prefers-color-scheme:dark)').matches){d.classList.add('dark');}}catch(e){}})()`,
           }}
         />
         <link rel='preconnect' href='https://api.iconify.design' />
@@ -94,7 +96,10 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative`}
       >
-        <Providers>
+        <Providers
+          defaultTheme={customization.default_theme}
+          defaultBackground={customization.default_background}
+        >
           <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
 
           {/* Base background color layer */}

@@ -548,7 +548,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                     )}
                     <span>{currentStatus?.label}</span>
                   </div>
-                  <Icon name='caretDown' className='size-3' />
+                  <Icon name='caretDown' className='size-3 opacity-50' />
                 </Button>
               }
               className='w-full'

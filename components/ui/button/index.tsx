@@ -62,6 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
       return twMerge(
         'h-8',
+        (variant === 'link' || variant === 'ghostLink') && 'h-fit',
         variant !== 'primary' && 'w-max',
         !['ghost', 'link', 'ghostLink'].includes(variant) &&
           'shadow-brutalist border-2 brutalist-interactive hover:shadow-brutalist-lg',
@@ -74,7 +75,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={nativeType}
         className={twMerge(
-          'cursor-pointer focus:outline-none inline-flex justify-center items-center text-sm lg:text-md tracking-wider inline-flex select-none effect-pressing',
+          'cursor-pointer focus:outline-none flex items-center justify-center text-sm lg:text-md tracking-wider select-none effect-pressing',
           getButtonClasses(),
           icon && children && 'gap-2',
           variant === 'link' && 'squiggly-underline',

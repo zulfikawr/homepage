@@ -232,7 +232,7 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
               trigger={
                 <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-foreground'>
                   {currentType?.label}
-                  <Icon name='caretDown' className='size-3' />
+                  <Icon name='caretDown' className='size-3 opacity-50' />
                 </Button>
               }
               className='w-full'

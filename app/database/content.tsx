@@ -19,6 +19,12 @@ export default function DatabaseContent() {
       href: '/database/certs',
     },
     {
+      title: 'Customization',
+      desc: 'Manage site defaults and styling',
+      icon: 'palette',
+      href: '/database/customization',
+    },
+    {
       title: 'Employments',
       desc: 'Manage your employments',
       icon: 'briefcase',

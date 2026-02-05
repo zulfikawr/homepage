@@ -2,6 +2,7 @@ import { AnalyticsEvent } from '@/types/analytics-event';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
 import { Comment } from '@/types/comment';
+import { CustomizationSettings } from '@/types/customization';
 import { Employment } from '@/types/employment';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 import { Movie } from '@/types/movie';
@@ -250,6 +251,17 @@ export function mapRecordToAnalyticsEvent(
     created: row.created_at
       ? new Date((row.created_at as number) * 1000).toISOString()
       : (row.created as string),
+  };
+}
+
+export function mapRecordToCustomization(
+  row: BaseDatabaseRow,
+): CustomizationSettings {
+  return {
+    id: row.id as number,
+    default_theme: row.default_theme as string,
+    default_background: row.default_background as string,
+    updated_at: row.updated_at as number,
   };
 }
 

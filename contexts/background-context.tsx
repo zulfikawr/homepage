@@ -22,15 +22,18 @@ const subscribe = (callback: () => void) => {
 
 export const BackgroundProvider = ({
   children,
+  initialBackground = 'none',
 }: {
   children: React.ReactNode;
+  initialBackground?: string;
 }) => {
-  const [internalBackground, setInternalBackground] = useState('none');
+  const [internalBackground, setInternalBackground] =
+    useState(initialBackground);
 
   const background = useSyncExternalStore(
     subscribe,
     () => localStorage.getItem('background') || internalBackground,
-    () => 'none',
+    () => initialBackground,
   );
 
   const setBackground = (bg: string) => {

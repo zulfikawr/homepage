@@ -11,7 +11,15 @@ import { RadiusProvider } from '@/contexts/radius-context';
 import { TitleProvider } from '@/contexts/title-context';
 import { WeatherProvider } from '@/contexts/weather-context';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  defaultTheme = 'system',
+  defaultBackground = 'none',
+}: {
+  children: React.ReactNode;
+  defaultTheme?: string;
+  defaultBackground?: string;
+}) {
   useEffect(() => {
     // Clear the background style set by the anti-flash script
     // to allow CSS/next-themes to take over.
@@ -22,7 +30,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <AuthProvider>
       <ThemeProvider
         attribute='class'
-        defaultTheme='system'
+        defaultTheme={defaultTheme}
         enableSystem={true}
         themes={[
           'light',
@@ -43,7 +51,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         ]}
       >
         <ThemeSync />
-        <BackgroundProvider>
+        <BackgroundProvider initialBackground={defaultBackground}>
           <LoadingProvider>
             <TitleProvider>
               <WeatherProvider>

@@ -42,8 +42,10 @@ const DigitalRain: FC<DigitalRainProps> = ({
     let drops: number[] = [];
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
 
       columns = Math.floor(canvas.width / configRef.current.fontSize);
 

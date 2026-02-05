@@ -1,10 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import ParticleNetwork from './component';
 
-export default function ParticleNetworkBackground() {
+export default function ParticleNetworkBackground({
+  isPreview = false,
+  theme,
+}: {
+  isPreview?: boolean;
+  theme?: string;
+}) {
   const { resolvedTheme } = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [colors, setColors] = useState({
     particle: '#83a598',
@@ -12,20 +19,31 @@ export default function ParticleNetworkBackground() {
   });
 
   useEffect(() => {
-    const style = getComputedStyle(document.documentElement);
-    const particle = style.getPropertyValue('--theme-blue').trim() || '#83a598';
-    const fg = style.getPropertyValue('--foreground').trim() || '#ebdbb2';
+    const timer = setTimeout(() => {
+      const target = isPreview
+        ? containerRef.current
+        : document.documentElement;
+      if (!target) return;
 
-    requestAnimationFrame(() => {
+      const style = getComputedStyle(target);
+      const particle =
+        style.getPropertyValue('--theme-blue').trim() || '#83a598';
+      const fg = style.getPropertyValue('--foreground').trim() || '#ebdbb2';
+
       setColors({
         particle,
         line: fg.startsWith('#') ? `${fg}33` : fg, // 33 is approx 0.2 opacity in hex
       });
-    });
-  }, [resolvedTheme]);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [resolvedTheme, isPreview, theme]);
 
   return (
-    <div className='fixed inset-0 -z-10 h-screen w-screen pointer-events-none overflow-hidden'>
+    <div
+      ref={containerRef}
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 h-full w-full pointer-events-none overflow-hidden`}
+    >
       <ParticleNetwork
         particleColor={colors.particle}
         lineColor={colors.line}

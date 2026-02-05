@@ -29,11 +29,13 @@ export const PersonalInfoLayout = ({
             <span className='text-primary truncate'>{name}</span>
           )}
         </h1>
-        <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-primary/80 dark:text-primary/80 squiggly-underline lg:text-lg min-h-6'>
+        <div className='flex flex-col items-start gap-y-1.5 break-words px-1 text-sm font-light text-primary/80 dark:text-primary/80 lg:text-lg min-h-6'>
           {isLoading ? (
             <Skeleton width={200} height={20} className='max-w-full' />
           ) : (
-            <p className='text-accent text-left'>{title}</p>
+            <p className='text-accent text-left squiggly-underline w-fit'>
+              {title}
+            </p>
           )}
         </div>
       </div>

@@ -116,8 +116,10 @@ const ParticleNetwork: FC<ParticleNetworkProps> = ({
     if (!context) return;
 
     const init = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
       particlesRef.current = [];
       for (let i = 0; i < configRef.current.particleCount; i++) {
         const size = Math.random() * configRef.current.particleSize + 1;

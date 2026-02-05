@@ -42,9 +42,12 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
       >
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center'>
           {/* Desktop Logo */}
-          <div className='hidden lg:flex relative z-10 select-none'>
-            <Link href='/' prefetch={true}>
-              <Button variant='ghostLink' className='py-0 px-0 gap-2'>
+          <div className='hidden lg:flex relative z-10 select-none items-center'>
+            <Link href='/' prefetch={true} className='flex items-center'>
+              <Button
+                variant='ghostLink'
+                className='py-0 px-0 gap-2 h-fit flex items-center'
+              >
                 <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                   <ImageWithFallback
                     className='rounded-full'
@@ -57,7 +60,9 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                     sizes='24px'
                   />
                 </div>
-                <div className='text-base font-medium'>Zulfikar</div>
+                <div className='text-base font-medium leading-none'>
+                  Zulfikar
+                </div>
               </Button>
             </Link>
           </div>
@@ -132,26 +137,30 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
           <div className='ml-auto flex items-center space-x-2'>
             {!isPagesPage ? (
-              <div className='hidden lg:flex'>
-                <Link href='/pages' prefetch={true}>
+              <div className='hidden lg:flex items-center'>
+                <Link
+                  href='/pages'
+                  prefetch={true}
+                  className='flex items-center'
+                >
                   <Button
                     variant='ghostLink'
                     icon='folder'
-                    className='px-0 py-0 text-base'
+                    className='px-0 py-0 text-base h-fit flex items-center'
                   >
-                    Pages
+                    <span className='leading-none'>Pages</span>
                   </Button>
                 </Link>
               </div>
             ) : (
-              <div className='hidden lg:flex'>
-                <Link href='/' prefetch={true}>
+              <div className='hidden lg:flex items-center'>
+                <Link href='/' prefetch={true} className='flex items-center'>
                   <Button
                     variant='ghostLink'
                     icon='houseLine'
-                    className='px-0 py-0 text-base'
+                    className='px-0 py-0 text-base h-fit flex items-center'
                   >
-                    Home
+                    <span className='leading-none'>Home</span>
                   </Button>
                 </Link>
               </div>

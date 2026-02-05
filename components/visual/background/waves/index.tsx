@@ -1,12 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import Waves from './component';
 
-export default function WavesBackground() {
+export default function WavesBackground({
+  isPreview = false,
+  theme,
+}: {
+  isPreview?: boolean;
+  theme?: string;
+}) {
   const { resolvedTheme } = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Use a ref or state to get computed styles if needed,
   // but for canvas we often need hex/rgba.
@@ -17,20 +24,31 @@ export default function WavesBackground() {
   });
 
   useEffect(() => {
-    const style = getComputedStyle(document.documentElement);
-    const line = style.getPropertyValue('--theme-aqua').trim() || '#8ec07c';
-    const fg = style.getPropertyValue('--foreground').trim() || '#3c3836';
+    // Small delay to ensure the parent's theme class has been applied to the DOM
+    const timer = setTimeout(() => {
+      const target = isPreview
+        ? containerRef.current
+        : document.documentElement;
+      if (!target) return;
 
-    requestAnimationFrame(() => {
+      const style = getComputedStyle(target);
+      const line = style.getPropertyValue('--theme-aqua').trim() || '#8ec07c';
+      const fg = style.getPropertyValue('--foreground').trim() || '#3c3836';
+
       setColors({
         line,
         bg: `${fg}1a`, // Add hex opacity if it's hex, or just use a fixed opacity
       });
-    });
-  }, [resolvedTheme]);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, [resolvedTheme, isPreview, theme]);
 
   return (
-    <div className='fixed inset-0 -z-10 h-screen w-screen'>
+    <div
+      ref={containerRef}
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 h-full w-full`}
+    >
       <Waves
         lineColor={colors.line}
         backgroundColor={colors.bg}
