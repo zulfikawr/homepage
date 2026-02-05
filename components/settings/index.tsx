@@ -118,7 +118,7 @@ export default function Settings() {
         </Button>
       }
     >
-      <div className='p-3 space-y-3 max-h-[68vh] overflow-auto'>
+      <div className='p-3 space-y-3 max-h-[68vh] w-[50vw] md:w-[20vw] overflow-auto'>
         <div className={sectionTitleClass}>Background</div>
         <Dropdown
           trigger={
@@ -188,17 +188,19 @@ export default function Settings() {
           className='w-full'
           matchTriggerWidth
         >
-          {themeOptions.map((option) => (
-            <DropdownItem
-              key={option.value}
-              onClick={() => setTheme(option.value)}
-              isActive={theme === option.value}
-              className='flex items-center gap-2'
-            >
-              <Icon name={option.icon} className='size-4.5' />
-              <span>{option.label}</span>
-            </DropdownItem>
-          ))}
+          <div className='max-h-60 overflow-y-auto'>
+            {themeOptions.map((option) => (
+              <DropdownItem
+                key={option.value}
+                onClick={() => setTheme(option.value)}
+                isActive={theme === option.value}
+                className='flex items-center gap-2'
+              >
+                <Icon name={option.icon} className='size-4.5' />
+                <span>{option.label}</span>
+              </DropdownItem>
+            ))}
+          </div>
         </Dropdown>
 
         {process.env.NODE_ENV === 'development' && (

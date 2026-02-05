@@ -11,6 +11,7 @@ import PostCard from '@/components/ui/card/variants/post';
 import { useCollection } from '@/hooks';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
+import { sortByDate } from '@/utilities/sort-by-date';
 
 export default function PostDatabase() {
   const router = useRouter();
@@ -22,6 +23,8 @@ export default function PostDatabase() {
   } = useCollection<Post>('posts', mapRecordToPost);
 
   if (error) return <CardEmpty message='Failed to load posts' />;
+
+  const sortedPosts = posts ? sortByDate(posts) : [];
 
   const handleAddPost = () => {
     router.push('/database/posts/new');
@@ -50,14 +53,14 @@ export default function PostDatabase() {
                   onClick={handleAddPost}
                   className='my-8 mx-auto'
                 >
-                  {posts && posts.length > 0 ? 'Add more' : 'Add post'}
+                  {sortedPosts.length > 0 ? 'Add more' : 'Add post'}
                 </Button>
               </Card>
             </ViewTransition>
 
-            {Array.isArray(posts) && posts.length > 0 ? (
+            {sortedPosts.length > 0 ? (
               <StaggerContainer>
-                {posts.map((post) => (
+                {sortedPosts.map((post) => (
                   <ViewTransition key={post.id}>
                     <PostCard post={post} openForm />
                   </ViewTransition>

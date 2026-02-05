@@ -37,19 +37,18 @@ const Dropdown = ({
   matchTriggerWidth = false,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [calculatedMenuCoords, setCalculatedMenuCoords] = useState({
+    top: 0,
+    left: undefined,
+    right: undefined,
+    width: 0,
+  });
+  const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
+  const [, setAlign] = useState<'left' | 'right'>('left');
   const [, setBodyScrollable] = useBodyScroll();
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [menuCoords, setMenuCoords] = useState<{
-    top: number;
-    left?: number;
-    right?: number;
-    width: number;
-  }>({ top: 0, width: 0 });
-  const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
-  const [align, setAlign] = useState<'left' | 'right'>('left');
   const isIntentOpenRef = useRef(false);
 
   const { radius } = useRadius();
@@ -61,57 +60,88 @@ const Dropdown = ({
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    const menuHeight = menuRef.current?.offsetHeight || 200;
+    const numChildren = React.Children.count(children);
+    const estimatedMenuHeight = Math.min(numChildren * 40 + 20, 300);
 
+    const spaceAbove = triggerRect.top;
     const spaceBelow = viewportHeight - triggerRect.bottom;
-    const newPosition =
-      spaceBelow < menuHeight && triggerRect.top > menuHeight
-        ? 'top'
-        : 'bottom';
 
-    const alignRight = triggerRect.left > viewportWidth / 2;
-    const newAlign = alignRight ? 'right' : 'left';
+    let newPosition: 'top' | 'bottom' = 'bottom';
+    if (spaceBelow < estimatedMenuHeight && spaceAbove > estimatedMenuHeight) {
+      newPosition = 'top';
+    } else if (
+      spaceBelow < estimatedMenuHeight &&
+      spaceAbove < estimatedMenuHeight
+    ) {
+      newPosition = spaceAbove > spaceBelow ? 'top' : 'bottom';
+    }
 
-    setPosition(newPosition);
-    setAlign(newAlign);
-    setMenuCoords({
-      top:
-        newPosition === 'bottom' ? triggerRect.bottom + 8 : triggerRect.top - 8,
-      left: alignRight ? undefined : triggerRect.left,
-      right: alignRight ? viewportWidth - triggerRect.right : undefined,
-      width: triggerRect.width,
-    });
-  }, []);
+    const isAlignRight = triggerRect.left > viewportWidth / 2;
+    const newAlign: 'left' | 'right' = isAlignRight ? 'right' : 'left';
+
+    return {
+      coords: {
+        top:
+          newPosition === 'bottom'
+            ? triggerRect.bottom + 8
+            : triggerRect.top - 8,
+        left: isAlignRight ? undefined : triggerRect.left,
+        right: isAlignRight ? viewportWidth - triggerRect.right : undefined,
+        width: triggerRect.width,
+      },
+      position: newPosition,
+      align: newAlign,
+    };
+  }, [children]);
 
   const handleOpen = useCallback(() => {
     isIntentOpenRef.current = true;
-    calculatePosition();
-    setShouldRender(true);
-    requestAnimationFrame(() => {
+
+    const result = calculatePosition();
+    if (result) {
+      setCalculatedMenuCoords(result.coords);
+      setPosition(result.position);
+      setAlign(result.align);
+
+      setIsVisible(true);
+      setIsOpen(false);
+
       requestAnimationFrame(() => {
         if (isIntentOpenRef.current) {
           setIsOpen(true);
-          setIsVisible(true);
           onOpenChange?.(true);
         }
       });
-    });
+    }
   }, [calculatePosition, onOpenChange]);
 
   const handleClose = useCallback(() => {
     isIntentOpenRef.current = false;
     setIsOpen(false);
-    setIsVisible(false);
-    onOpenChange?.(false);
+    setTimeout(() => {
+      if (!isIntentOpenRef.current) {
+        setIsVisible(false);
+        onOpenChange?.(false);
+      }
+    }, 200);
   }, [onOpenChange]);
 
   useEffect(() => {
     if (isOpen) {
-      window.addEventListener('resize', calculatePosition);
-      window.addEventListener('scroll', calculatePosition, true);
+      const handleRecalculate = () => {
+        const result = calculatePosition();
+        if (result) {
+          setCalculatedMenuCoords(result.coords);
+          setPosition(result.position);
+          setAlign(result.align);
+        }
+      };
+
+      window.addEventListener('resize', handleRecalculate);
+      window.addEventListener('scroll', handleRecalculate, true);
       return () => {
-        window.removeEventListener('resize', calculatePosition);
-        window.removeEventListener('scroll', calculatePosition, true);
+        window.removeEventListener('resize', handleRecalculate);
+        window.removeEventListener('scroll', handleRecalculate, true);
       };
     }
   }, [isOpen, calculatePosition]);
@@ -121,19 +151,11 @@ const Dropdown = ({
   }, [isVisible, setBodyScrollable]);
 
   useEffect(() => {
-    if (!isOpen && shouldRender) {
-      const timeout = setTimeout(() => setShouldRender(false), 200);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen, shouldRender]);
-
-  useEffect(() => {
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
 
-      // Ignore clicks inside the menu or on the trigger
       if (
         menuRef.current?.contains(target) ||
         triggerRef.current?.contains(target)
@@ -141,7 +163,6 @@ const Dropdown = ({
         return;
       }
 
-      // Ignore clicks inside any other dropdown content (handles nested portals)
       if (target.closest('[data-dropdown-content="true"]')) {
         return;
       }
@@ -171,7 +192,6 @@ const Dropdown = ({
   return (
     <DropdownContext.Provider value={{ setIsOpen: handleClose }}>
       <div className={`relative inline-block ${className}`}>
-        {/* Trigger Element */}
         <div
           ref={triggerRef}
           onClick={toggleDropdown}
@@ -183,10 +203,8 @@ const Dropdown = ({
           {trigger}
         </div>
 
-        {/* Dropdown Menu Portal */}
-        {shouldRender && (
+        {isVisible && (
           <Portal>
-            {/* Overlay to block hover states and interactions on underlying elements */}
             {isOpen && (
               <div
                 className='fixed inset-0 z-[9998] bg-transparent cursor-default'
@@ -208,14 +226,16 @@ const Dropdown = ({
               role='menu'
               data-dropdown-content='true'
               style={{
-                top: menuCoords.top,
-                left: menuCoords.left,
-                right: menuCoords.right,
-                width: matchTriggerWidth ? `${menuCoords.width}px` : 'auto',
-                transformOrigin: `${position === 'top' ? 'bottom' : 'top'} ${
-                  align === 'right' ? 'right' : 'left'
-                }`,
-                transform: position === 'top' ? 'translateY(-100%)' : 'none',
+                top: calculatedMenuCoords.top,
+                left: calculatedMenuCoords.left,
+                right: calculatedMenuCoords.right,
+                width: matchTriggerWidth
+                  ? `${calculatedMenuCoords.width}px`
+                  : 'auto',
+                transformOrigin:
+                  position === 'top' ? 'bottom center' : 'top center',
+                transform:
+                  position === 'top' ? 'translateY(-100%)' : 'translateY(0)',
                 borderRadius: `${radius}px`,
               }}
             >
