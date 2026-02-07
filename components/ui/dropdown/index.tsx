@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 
 import { Portal } from '@/components/ui';
+import Mask from '@/components/visual/mask';
 import { useRadius } from '@/contexts/radius-context';
 import { useBodyScroll, useHotkeys } from '@/hooks';
 
@@ -27,6 +28,7 @@ interface DropdownProps {
   onOpenChange?: (isOpen: boolean) => void;
   className?: string;
   matchTriggerWidth?: boolean;
+  preferredPosition?: 'top' | 'bottom';
 }
 
 const Dropdown = ({
@@ -35,6 +37,7 @@ const Dropdown = ({
   onOpenChange,
   className = '',
   matchTriggerWidth = false,
+  preferredPosition,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -66,14 +69,20 @@ const Dropdown = ({
     const spaceAbove = triggerRect.top;
     const spaceBelow = viewportHeight - triggerRect.bottom;
 
-    let newPosition: 'top' | 'bottom' = 'bottom';
-    if (spaceBelow < estimatedMenuHeight && spaceAbove > estimatedMenuHeight) {
-      newPosition = 'top';
-    } else if (
-      spaceBelow < estimatedMenuHeight &&
-      spaceAbove < estimatedMenuHeight
-    ) {
-      newPosition = spaceAbove > spaceBelow ? 'top' : 'bottom';
+    let newPosition: 'top' | 'bottom' = preferredPosition || 'bottom';
+
+    if (!preferredPosition) {
+      if (
+        spaceBelow < estimatedMenuHeight &&
+        spaceAbove > estimatedMenuHeight
+      ) {
+        newPosition = 'top';
+      } else if (
+        spaceBelow < estimatedMenuHeight &&
+        spaceAbove < estimatedMenuHeight
+      ) {
+        newPosition = spaceAbove > spaceBelow ? 'top' : 'bottom';
+      }
     }
 
     const isAlignRight = triggerRect.left > viewportWidth / 2;
@@ -92,7 +101,7 @@ const Dropdown = ({
       position: newPosition,
       align: newAlign,
     };
-  }, [children]);
+  }, [children, preferredPosition]);
 
   const handleOpen = useCallback(() => {
     isIntentOpenRef.current = true;
@@ -216,7 +225,7 @@ const Dropdown = ({
               ref={menuRef}
               className={`fixed z-[9999] ${
                 matchTriggerWidth ? '' : 'w-max'
-              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out max-h-[70vh] overflow-y-auto ${
+              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
                 isOpen
                   ? 'opacity-100 scale-y-100'
                   : 'opacity-0 scale-y-95 pointer-events-none'
@@ -239,7 +248,12 @@ const Dropdown = ({
                 borderRadius: `${radius}px`,
               }}
             >
-              <div className='p-1 space-y-1'>{children}</div>
+              <Mask
+                direction='vertical'
+                className='p-1 space-y-1 scrollbar-hide max-h-[50vh] md:max-h-[70vh]'
+              >
+                {children}
+              </Mask>
             </div>
           </Portal>
         )}
