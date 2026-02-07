@@ -70,7 +70,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     title: post.title || 'Post Title',
     excerpt: post.excerpt || 'This is a post excerpt.',
     content: post.content || '',
-    image: post.image || post.image_url || '/images/placeholder.png',
+    image: post.image || post.image_url || '',
     audio: post.audio || post.audio_url || '',
     categories:
       post.categories && post.categories.length

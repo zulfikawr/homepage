@@ -324,15 +324,15 @@ const Editor: React.FC<EditorProps> = ({
       </div>
       <div
         className={twMerge(
-          'relative w-full h-[300px] md:h-[500px] bg-transparent overflow-y-auto',
+          'relative w-full flex-1 bg-transparent overflow-hidden',
         )}
       >
-        <div className='relative w-full min-h-full'>
+        <div className='relative w-full h-full overflow-y-auto'>
           <pre
             aria-hidden='true'
             style={sharedStyles}
             className={twMerge(
-              'relative w-full m-0 pointer-events-none hljs bg-transparent min-h-full',
+              'relative w-full min-h-full m-0 pointer-events-none hljs bg-transparent',
               textareaClassName,
             )}
             dangerouslySetInnerHTML={{
@@ -347,7 +347,7 @@ const Editor: React.FC<EditorProps> = ({
             onSelect={updateCursorStyles}
             style={sharedStyles}
             className={twMerge(
-              'absolute inset-0 w-full h-full bg-transparent !text-transparent caret-primary resize-none focus:outline-none overflow-hidden',
+              'absolute inset-0 w-full min-h-full bg-transparent !text-transparent caret-primary resize-none focus:outline-none overflow-hidden',
               textareaClassName,
             )}
             placeholder='Write your markdown here...'

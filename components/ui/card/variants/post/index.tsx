@@ -121,7 +121,9 @@ export default function PostCard({
         isPreview={isPreview}
         isActive={isActive}
       >
-        <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
+        <div
+          className={`flex p-6 gap-6 lg:p-8 lg:gap-8 ${!post.image ? 'flex-col' : ''}`}
+        >
           {renderMedia()}
 
           <div className='flex flex-col space-y-4 flex-1'>
