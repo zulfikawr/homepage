@@ -53,7 +53,7 @@ const TetrisBackground = React.memo(function TetrisBackground({
 
   return (
     <div
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 h-full w-full pointer-events-none overflow-hidden`}
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden`}
     >
       <canvas ref={canvasRef} className='absolute inset-0' />
     </div>

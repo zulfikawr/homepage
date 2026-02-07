@@ -42,7 +42,7 @@ export default function ParticleNetworkBackground({
   return (
     <div
       ref={containerRef}
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 h-full w-full pointer-events-none overflow-hidden`}
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden`}
     >
       <ParticleNetwork
         particleColor={colors.particle}

@@ -47,7 +47,7 @@ export default function WavesBackground({
   return (
     <div
       ref={containerRef}
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 h-full w-full`}
+      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full`}
     >
       <Waves
         lineColor={colors.line}

@@ -94,7 +94,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative bg-background`}
       >
         <Providers
           defaultTheme={customization.default_theme}
@@ -102,14 +102,11 @@ export default function RootLayout({
         >
           <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
 
-          {/* Base background color layer */}
-          <div className='fixed inset-0 bg-background -z-20' />
-
           {/* Background layer */}
           <DynamicBackground />
 
           {/* Content layer */}
-          <div className='relative z-20 min-h-screen flex flex-col'>
+          <div className='relative z-20 min-h-dvh flex flex-col'>
             <Suspense fallback={null}>
               <Header />
             </Suspense>
