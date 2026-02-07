@@ -148,19 +148,19 @@ const SpotifyLayout = ({
             </>
           ) : (
             <>
-              <span className='text-xs text-theme-blue truncate'>
+              <span className='text-xs text-theme-blue truncate min-w-0 flex-shrink'>
                 {currentTrack?.album.name}
               </span>
-              <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
+              <span className='text-xs text-muted-foreground dark:text-muted-foreground flex-shrink-0'>
                 |
               </span>
               {isPlaying ? (
-                <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium'>
+                <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium flex-shrink-0'>
                   <span className='relative flex h-1.5 w-1.5'>
                     <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-aqua opacity-75'></span>
                     <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-theme-aqua'></span>
                   </span>
-                  <span className='truncate'>Playing now</span>
+                  <span>Playing now</span>
                 </span>
               ) : lastPlayedAt ? (
                 <TimeAgo
