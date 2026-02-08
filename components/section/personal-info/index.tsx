@@ -14,7 +14,7 @@ export const PersonalInfoLayout = ({
 }) => {
   const name = personalInfo?.name || 'Zulfikar';
   const title = personalInfo?.title || 'I build things for the web';
-  const avatar = personalInfo?.avatar || '/avatar.jpg';
+  const avatar = personalInfo?.avatar || '/images/avatar.jpg';
 
   return (
     <section className='flex flex-row items-start justify-between gap-x-4 sm:gap-x-10'>
