@@ -12,7 +12,7 @@ import React, {
 import { Portal } from '@/components/ui';
 import Mask from '@/components/visual/mask';
 import { useRadius } from '@/contexts/radius-context';
-import { useBodyScroll, useHotkeys } from '@/hooks';
+import { useHotkeys } from '@/hooks';
 
 import { Icon, type IconName } from '../icon';
 
@@ -49,10 +49,10 @@ const Dropdown = ({
     left: undefined,
     right: undefined,
     width: 0,
+    maxHeight: 0,
   });
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
   const [, setAlign] = useState<'left' | 'right'>('left');
-  const [, setBodyScrollable] = useBodyScroll();
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const isIntentOpenRef = useRef(false);
@@ -66,27 +66,21 @@ const Dropdown = ({
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    const numChildren = React.Children.count(children);
-    const estimatedMenuHeight = Math.min(numChildren * 40 + 20, 300);
-
     const spaceAbove = triggerRect.top;
     const spaceBelow = viewportHeight - triggerRect.bottom;
+
+    const padding = 24; // 8px gap + 16px safety margin for better spacing
+    const maxHeightAbove = spaceAbove - padding;
+    const maxHeightBelow = spaceBelow - padding;
 
     let newPosition: 'top' | 'bottom' = preferredPosition || 'bottom';
 
     if (!preferredPosition) {
-      if (
-        spaceBelow < estimatedMenuHeight &&
-        spaceAbove > estimatedMenuHeight
-      ) {
-        newPosition = 'top';
-      } else if (
-        spaceBelow < estimatedMenuHeight &&
-        spaceAbove < estimatedMenuHeight
-      ) {
-        newPosition = spaceAbove > spaceBelow ? 'top' : 'bottom';
-      }
+      newPosition = spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
+
+    const maxHeight =
+      newPosition === 'bottom' ? maxHeightBelow : maxHeightAbove;
 
     const isAlignRight = triggerRect.left > viewportWidth / 2;
     const newAlign: 'left' | 'right' = isAlignRight ? 'right' : 'left';
@@ -100,11 +94,12 @@ const Dropdown = ({
         left: isAlignRight ? undefined : triggerRect.left,
         right: isAlignRight ? viewportWidth - triggerRect.right : undefined,
         width: triggerRect.width,
+        maxHeight: Math.max(200, maxHeight), // Minimum 200px
       },
       position: newPosition,
       align: newAlign,
     };
-  }, [children, preferredPosition]);
+  }, [preferredPosition]);
 
   const handleClose = useCallback(() => {
     isIntentOpenRef.current = false;
@@ -163,10 +158,6 @@ const Dropdown = ({
       };
     }
   }, [isOpen, calculatePosition]);
-
-  useEffect(() => {
-    setBodyScrollable(!isVisible);
-  }, [isVisible, setBodyScrollable]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -253,7 +244,7 @@ const Dropdown = ({
           <Portal>
             {isOpen && (
               <div
-                className='fixed inset-0 z-[9998] bg-transparent cursor-default'
+                className='fixed inset-0 z-[9998] bg-transparent'
                 aria-hidden='true'
                 onClick={handleClose}
               />
@@ -283,12 +274,10 @@ const Dropdown = ({
                 transform:
                   position === 'top' ? 'translateY(-100%)' : 'translateY(0)',
                 borderRadius: `${radius}px`,
+                height: `${calculatedMenuCoords.maxHeight}px`,
               }}
             >
-              <Mask
-                direction='vertical'
-                className='scrollbar-hide max-h-[50vh] md:max-h-[70vh]'
-              >
+              <Mask direction='vertical' className='scrollbar-hide'>
                 <div className='flex flex-col p-1 gap-1'>{children}</div>
               </Mask>
             </div>
