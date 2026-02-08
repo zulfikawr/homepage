@@ -105,7 +105,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
   },
 );
 
-import { Skeleton } from '../skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 TableCell.displayName = 'TableCell';
 

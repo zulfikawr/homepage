@@ -4,16 +4,15 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
-import { Post } from 'types/post';
-import { trimStr } from 'utilities/string';
 
 import AudioPlayer from '@/components/audio-player';
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Button, Icon, Label } from '@/components/ui';
+import { Card } from '@/components/ui/card';
+import { TimeAgo } from '@/components/ui/time-ago';
+import { Post } from '@/types/post';
 import { renderMarkdown } from '@/utilities/render-markdown';
-
-import { Button, Icon, Label } from '../../..';
-import { TimeAgo } from '../../..';
-import { Card } from '../..';
+import { trimStr } from '@/utilities/string';
 
 interface PostCardProps {
   post?: Post;

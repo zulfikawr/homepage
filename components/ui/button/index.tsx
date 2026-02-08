@@ -3,10 +3,8 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import type { IconName } from '@/components/ui/icon';
+import { Icon, type IconName } from '@/components/ui/icon';
 import { useRadius } from '@/contexts/radius-context';
-
-import { Icon } from '../icon';
 
 type ButtonVariant =
   | 'default'

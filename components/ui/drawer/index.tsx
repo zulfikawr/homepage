@@ -3,10 +3,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { Portal } from '@/components/ui/portal';
 import { useRadius } from '@/contexts/radius-context';
 import { useBodyScroll, useHotkeys } from '@/hooks';
-
-import { Portal } from '../portal';
 
 type DrawerInstance = {
   isOpen: boolean;

@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-import { Icon } from '../../..';
-import { Card } from '../..';
+import { Icon } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 
 interface GitHubCardProps {
   repoUrl: string;

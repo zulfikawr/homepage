@@ -4,12 +4,11 @@ import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { Movie } from '@/types/movie';
 import openLink from '@/utilities/external-link';
-
-import { Card } from '../..';
 
 interface MovieCardProps {
   movie: Movie;

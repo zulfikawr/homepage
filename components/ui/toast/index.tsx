@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Icon, IconName } from '../icon';
-import { Portal } from '../portal';
+import { Icon, IconName } from '@/components/ui/icon';
+import { Portal } from '@/components/ui/portal';
 
 type ToastVariant = 'default' | 'info' | 'success' | 'error';
 

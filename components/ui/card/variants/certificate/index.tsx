@@ -3,11 +3,10 @@
 import { useRouter } from 'next/navigation';
 
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Certificate } from '@/types/certificate';
 import openLink from '@/utilities/external-link';
-
-import { Card } from '../..';
 
 interface CertificateCardProps {
   certificate: Certificate;

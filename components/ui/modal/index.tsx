@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { Portal } from '@/components/ui/portal';
 import { useBodyScroll, useHotkeys } from '@/hooks';
-
-import { Portal } from '../portal';
 
 type ModalInstance = {
   isOpen: boolean;

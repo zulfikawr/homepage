@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 
+import ImageWithFallback from '@/components/image-with-fallback';
 import { Kbar } from '@/components/kbar';
 import { KbarContent } from '@/components/kbar/components';
 import {
@@ -15,8 +16,6 @@ import { drawer } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { useTitle } from '@/contexts/title-context';
 import { useRouteInfo } from '@/hooks';
-
-import ImageWithFallback from '../image-with-fallback';
 
 interface HeaderComponentProps {
   headerRef: React.RefObject<HTMLDivElement>;

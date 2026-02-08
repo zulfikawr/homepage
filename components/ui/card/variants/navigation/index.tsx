@@ -4,11 +4,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
+import { Icon } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 import { IconName } from '@/components/ui/icon';
 import openLink from '@/utilities/external-link';
-
-import { Icon } from '../../..';
-import { Card } from '../..';
 
 interface Props {
   title: string;

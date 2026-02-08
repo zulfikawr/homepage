@@ -11,11 +11,10 @@ import React, {
 import { twMerge } from 'tailwind-merge';
 
 import { Portal } from '@/components/ui';
+import { Icon, type IconName } from '@/components/ui/icon';
 import Mask from '@/components/visual/mask';
 import { useRadius } from '@/contexts/radius-context';
 import { useHotkeys } from '@/hooks';
-
-import { Icon, type IconName } from '../icon';
 
 const DropdownContext = createContext<{
   setIsOpen: (open: boolean) => void;

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { Editor } from '@/components/editor';
+import ImageWithFallback from '@/components/image-with-fallback';
 import { Card } from '@/components/ui';
 import { toast } from '@/components/ui';
 import { Button, Icon, Skeleton } from '@/components/ui';
@@ -19,8 +20,6 @@ import { useAuthActions } from '@/hooks/use-auth-actions';
 import { mapRecordToComment } from '@/lib/mappers';
 import { getFileUrl } from '@/lib/storage';
 import { Comment } from '@/types/comment';
-
-import ImageWithFallback from '../image-with-fallback';
 
 interface CommentSectionProps {
   post_id: string;

@@ -4,15 +4,14 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { createRoot, Root } from 'react-dom/client';
 
+import { Badge, BadgeProps } from '@/components/ui/badge';
+import { Button, ButtonProps } from '@/components/ui/button';
+import { drawer } from '@/components/ui/drawer';
+import { Icon, IconName } from '@/components/ui/icon';
+import { Label, LabelProps } from '@/components/ui/label';
+import { toast } from '@/components/ui/toast';
+import { Tooltip } from '@/components/ui/tooltip';
 import { renderMarkdown } from '@/utilities/render-markdown';
-
-import { Badge, BadgeProps } from '../badge';
-import { Button, ButtonProps } from '../button';
-import { drawer } from '../drawer';
-import { Icon, IconName } from '../icon';
-import { Label, LabelProps } from '../label';
-import { toast } from '../toast';
-import { Tooltip } from '../tooltip';
 
 interface MarkdownRendererProps {
   content: string;

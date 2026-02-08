@@ -11,7 +11,6 @@ import {
   Dropdown,
   DropdownItem,
   FormLabel,
-  Icon,
   Input,
 } from '@/components/ui';
 import { BookCard } from '@/components/ui/card/variants/book';

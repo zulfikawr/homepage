@@ -4,10 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Badge } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 import { Project } from '@/types/project';
-
-import { Badge } from '../../..';
-import { Card } from '../..';
 
 interface ProjectCardProps {
   project: Project;

@@ -3,7 +3,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Skeleton } from '../skeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const getHeatmapIntensityClass = (intensity: number) => {
   switch (intensity) {

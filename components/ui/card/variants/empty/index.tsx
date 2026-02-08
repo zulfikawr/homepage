@@ -1,4 +1,4 @@
-import { Icon } from '../../..';
+import { Icon } from '@/components/ui';
 
 interface CardEmptyProps {
   message?: string;

@@ -5,15 +5,14 @@ import { twMerge } from 'tailwind-merge';
 
 import { Editor } from '@/components/editor';
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Button, Icon, toast } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Comment } from '@/types/comment';
 import { escapeHtml } from '@/utilities/escape-html';
 import { getTimeAgo } from '@/utilities/time-ago';
-
-import { toast } from '../../..';
-import { Button, Icon, Skeleton } from '../../..';
-import { Card } from '../..';
 
 const MAX_CHARS = 5000;
 

@@ -3,10 +3,8 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import type { IconName } from '@/components/ui/icon';
+import { Icon, iconifyMap, iconMap, type IconName } from '@/components/ui/icon';
 import { useRadius } from '@/contexts/radius-context';
-
-import { Icon, iconifyMap, iconMap } from '../icon';
 
 type BadgeVariant =
   | 'default'

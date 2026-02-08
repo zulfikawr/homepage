@@ -2,10 +2,9 @@ import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Card } from '@/components/ui/card';
 import { Book } from '@/types/book';
 import openLink from '@/utilities/external-link';
-
-import { Card } from '../..';
 
 interface BookCardProps {
   book: Book;

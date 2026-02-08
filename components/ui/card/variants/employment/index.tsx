@@ -3,13 +3,11 @@
 import { useRouter } from 'next/navigation';
 
 import ImageWithFallback from '@/components/image-with-fallback';
+import { Badge, drawer } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 import EmploymentViewer from '@/components/viewer/employment';
 import { Employment } from '@/types/employment';
 import { trimStr } from '@/utilities/string';
-
-import { drawer } from '../../..';
-import { Badge } from '../../..';
-import { Card } from '../..';
 
 interface EmploymentCardProps {
   employment: Employment;
