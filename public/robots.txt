@@ -1,2 +1,12 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://zulfikar.site/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin/database routes
+User-agent: *
+Disallow: /api/
+Disallow: /database/

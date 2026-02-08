@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Zulfikar",
+  "url": "https://zulfikar.site",
+  "image": "https://zulfikar.site/avatar.jpg",
+  "jobTitle": "Web Developer, Journalist, IR Student",
+  "description": "International Relations student, journalist, and web developer specializing in Next.js, React, and modern web technologies",
+  "sameAs": [
+    "https://github.com/zulfikawr",
+    "https://twitter.com/zulfikar",
+    "https://linkedin.com/in/zulfikar"
+  ],
+  "knowsAbout": [
+    "Web Development",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Journalism",
+    "International Relations",
+    "Full Stack Development"
+  ],
+  "alumniOf": {
+    "@type": "EducationalOrganization",
+    "name": "International Relations Program"
+  }
+}

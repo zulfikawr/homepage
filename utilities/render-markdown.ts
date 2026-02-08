@@ -72,18 +72,14 @@ renderer.table = (token) => {
     <table>
       <thead>${token.header.map((h) => renderer.tablecell(h)).join('')}</thead>
       <tbody>${token.rows
-        .map((r) =>
-          renderer.tablerow({
-            content: r.map((c) => renderer.tablecell(c)).join(''),
-          }),
-        )
+        .map((r) => `<tr>${r.map((c) => renderer.tablecell(c)).join('')}</tr>`)
         .join('')}</tbody>
     </table>
   </div>`;
 };
 
-renderer.tablerow = ({ content }) => {
-  return `<tr>${content}</tr>`;
+renderer.tablerow = (token) => {
+  return `<tr>${token.text}</tr>`;
 };
 
 renderer.tablecell = (token) => {
