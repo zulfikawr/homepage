@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import hljs from 'highlight.js';
+import Prism from 'prismjs';
 import { twMerge } from 'tailwind-merge';
 
 import {
@@ -256,7 +256,11 @@ const Editor: React.FC<EditorProps> = ({
 
   const highlightedContent = useMemo(() => {
     try {
-      return hljs.highlight(markdown || '', { language: 'markdown' }).value;
+      return Prism.highlight(
+        markdown || '',
+        Prism.languages.markdown,
+        'markdown',
+      );
     } catch {
       return markdown || '';
     }
@@ -332,7 +336,7 @@ const Editor: React.FC<EditorProps> = ({
             aria-hidden='true'
             style={sharedStyles}
             className={twMerge(
-              'relative w-full min-h-full m-0 pointer-events-none hljs bg-transparent',
+              'relative w-full min-h-full m-0 pointer-events-none language-markdown bg-transparent',
               textareaClassName,
             )}
             dangerouslySetInnerHTML={{

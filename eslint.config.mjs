@@ -5,6 +5,9 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 /** @type {import('eslint').Linter.Config[]} */
 const config = [
+  {
+    ignores: ['next-env.d.ts'],
+  },
   ...nextConfig,
   ...coreWebVitalsConfig,
   ...typescriptConfig,

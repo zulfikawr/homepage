@@ -1,125 +1,95 @@
-import hljs from 'highlight.js/lib/core';
-import MarkdownIt from 'markdown-it';
-import anchor from 'markdown-it-anchor';
+import { marked } from 'marked';
+import Prism from 'prismjs';
 
-const md = new MarkdownIt({
-  html: true,
-  breaks: false,
-  linkify: true,
-  highlight: (code, lang) => {
-    let highlighted = '';
-    const canHighlight = lang && hljs.getLanguage(lang);
+const renderer = new marked.Renderer();
 
-    try {
-      if (canHighlight) {
-        highlighted = hljs.highlight(code, {
-          language: lang,
-          ignoreIllegals: true,
-        }).value;
-      } else {
-        highlighted = md.utils.escapeHtml(code);
-      }
-    } catch {
-      highlighted = md.utils.escapeHtml(code);
+renderer.code = ({ text, lang }) => {
+  const code = text;
+  let highlighted = '';
+
+  try {
+    if (lang && Prism.languages[lang]) {
+      highlighted = Prism.highlight(code, Prism.languages[lang], lang);
+    } else {
+      highlighted = code.replace(
+        /[&<>"']/g,
+        (m) =>
+          ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;',
+          })[m] || m,
+      );
     }
-
-    if (lang) {
-      return `<div class="code-block-wrapper">
-        <div class="code-block-header">
-          <span class="code-lang">${lang}</span>
-          <span class="code-copy-btn-wrapper" data-code="${encodeURIComponent(
-            code,
-          )}">Wait...</span>
-        </div>
-        <pre class="hljs"><code>${highlighted}</code></pre>
-      </div>`;
-    }
-
-    return `<pre class="hljs"><code>${highlighted}</code></pre>`;
-  },
-});
-
-md.use(anchor, {
-  slugify: (s: string) => s.toLowerCase().replace(/[^\w]+/g, '-'),
-});
-
-md.enable('table');
-
-// Override fence renderer to prevent double wrapping of our custom code blocks
-const defaultFence = md.renderer.rules.fence;
-md.renderer.rules.fence = (tokens, idx, options, env, self) => {
-  const token = tokens[idx];
-  const info = token.info ? md.utils.unescapeAll(token.info).trim() : '';
-  const langName = info.split(/\s+/g)[0];
-
-  const highlighted = options.highlight
-    ? options.highlight(token.content, langName, '')
-    : md.utils.escapeHtml(token.content);
-
-  if (highlighted.includes('code-block-wrapper')) {
-    return highlighted + '\n';
+  } catch {
+    highlighted = code.replace(
+      /[&<>"']/g,
+      (m) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[m] || m,
+    );
   }
 
-  return (
-    (defaultFence ? defaultFence(tokens, idx, options, env, self) : '') + '\n'
-  );
+  if (lang) {
+    return `<div class="code-block-wrapper">
+      <div class="code-block-header">
+        <span class="code-lang">${lang}</span>
+        <span class="code-copy-btn-wrapper" data-code="${encodeURIComponent(code)}">Wait...</span>
+      </div>
+      <pre class="language-${lang}"><code>${highlighted}</code></pre>
+    </div>`;
+  }
+
+  return `<pre><code>${highlighted}</code></pre>`;
 };
 
-// Custom UI element rule: !![label](type:value:extra)!!
-md.inline.ruler.push('markdownUi', (state, silent) => {
-  const marker = '!!';
-  if (!state.src.startsWith(marker, state.pos)) return false;
-
-  const match = state.src
-    .slice(state.pos)
-    .match(/^!!\[([^\]]+)\]\(([^:]+):([^:)]+)(?::([^)]+))?\)!!/);
-  if (!match) return false;
-
-  if (!silent) {
-    const token = state.push('markdownUi', '', 0);
-    token.meta = {
-      label: match[1],
-      type: match[2],
-      value: match[3],
-      extra: match[4],
-    };
-  }
-
-  state.pos += match[0].length;
-  return true;
-});
-
-md.renderer.rules.markdown_ui = (tokens, idx) => {
-  const { label, type, value, extra } = tokens[idx].meta;
-
-  switch (type) {
-    case 'toast':
-      return `<button class="markdown-ui-btn" data-ui-type="toast" data-ui-value="${value}">${label}</button>`;
-    case 'drawer':
-      return `<button class="markdown-ui-btn" data-ui-type="drawer" data-ui-value="${value}">${label}</button>`;
-    case 'tooltip':
-      return `<span class="markdown-ui-tooltip" data-ui-text="${value}">${label}</span>`;
-    case 'badge':
-      return `<span class="markdown-ui-badge" data-ui-variant="${value}" data-ui-icon="${extra || ''}">${label}</span>`;
-    case 'label':
-      return `<span class="markdown-ui-label" data-ui-variant="${value}" data-ui-icon="${extra || ''}">${label}</span>`;
-    case 'icon':
-      return `<span class="markdown-ui-icon" data-ui-name="${value}" data-ui-size="${extra || '20'}"></span>`;
-    default:
-      return `!![${label}](${type}:${value})!!`;
-  }
+renderer.heading = ({ text, depth }) => {
+  const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+  return `<h${depth} id="${slug}">${text}</h${depth}>`;
 };
 
-// Wrap tables in a scrollable container
-md.renderer.rules.table_open = () =>
-  '<div class="markdown-table-container"><table>';
-md.renderer.rules.table_close = () => '</table></div>';
+renderer.table = ({ header, rows }) => {
+  return `<div class="markdown-table-container"><table><thead>${header}</thead><tbody>${rows}</tbody></table></div>`;
+};
+
+marked.use({ renderer, gfm: true, breaks: false });
+
+const uiPattern = /!!\[([^\]]+)\]\(([^:]+):([^:)]+)(?::([^)]+))?\)!!/g;
+
+function processCustomUI(html: string): string {
+  return html.replace(uiPattern, (_, label, type, value, extra) => {
+    switch (type) {
+      case 'toast':
+        return `<button class="markdown-ui-btn" data-ui-type="toast" data-ui-value="${value}">${label}</button>`;
+      case 'drawer':
+        return `<button class="markdown-ui-btn" data-ui-type="drawer" data-ui-value="${value}">${label}</button>`;
+      case 'tooltip':
+        return `<span class="markdown-ui-tooltip" data-ui-text="${value}">${label}</span>`;
+      case 'badge':
+        return `<span class="markdown-ui-badge" data-ui-variant="${value}" data-ui-icon="${extra || ''}">${label}</span>`;
+      case 'label':
+        return `<span class="markdown-ui-label" data-ui-variant="${value}" data-ui-icon="${extra || ''}">${label}</span>`;
+      case 'icon':
+        return `<span class="markdown-ui-icon" data-ui-name="${value}" data-ui-size="${extra || '20'}"></span>`;
+      default:
+        return `!![${label}](${type}:${value})!!`;
+    }
+  });
+}
 
 export function renderMarkdown(text: unknown): string {
   try {
     const safeText = typeof text === 'string' ? text : '';
     if (!safeText) return '';
-    return md.render(safeText);
+    const html = marked.parse(safeText) as string;
+    return processCustomUI(html);
   } catch {
     return '';
   }
