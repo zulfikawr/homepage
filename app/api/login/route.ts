@@ -1,63 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateRequest,
+} from '@/lib/api';
 import { getDB } from '@/lib/cloudflare';
 import { verifyPassword } from '@/utilities/password';
 
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+interface UserRow {
+  id: string;
+  email: string;
+  password_hash: string;
+  role: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = (await request.json()) as {
-      email?: string;
-      password?: string;
-    };
+    const validation = await validateRequest(request, loginSchema);
+    if ('error' in validation) return validation.error;
 
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password required' },
-        { status: 400 },
-      );
-    }
+    const { email, password } = validation.data;
 
     const db = getDB();
-
-    if (!db) {
-      return NextResponse.json(
-        { error: 'Database not available' },
-        { status: 500 },
-      );
-    }
-
-    interface UserRow {
-      id: string;
-      email: string;
-      password_hash: string;
-      role: string;
-    }
+    if (!db) return apiError('Database not available', 500);
 
     const user = await db
       .prepare('SELECT * FROM users WHERE email = ?')
       .bind(email)
       .first<UserRow>();
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 },
-      );
-    }
+    if (!user) return apiError('Invalid credentials', 401);
 
-    // Use the secure password verification utility.
-    // This handles both new hashed passwords and legacy plain-text passwords.
     const isValid = await verifyPassword(password, user.password_hash);
+    if (!isValid) return apiError('Invalid credentials', 401);
 
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 },
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
+    return apiSuccess({
       user: {
         id: user.id,
         email: user.email,
@@ -65,10 +50,6 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }

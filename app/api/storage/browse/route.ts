@@ -1,22 +1,45 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
+
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateSearchParams,
+} from '@/lib/api';
+
+const querySchema = z.object({
+  prefix: z.string().optional().default(''),
+});
+
+interface R2Object {
+  key: string;
+  size: number;
+  uploaded: string;
+}
+
+interface R2Response {
+  result?: R2Object[];
+  result_info?: { cursor?: string };
+  success: boolean;
+}
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const prefix = searchParams.get('prefix') || '';
+    const validation = await validateSearchParams(request, querySchema);
+    if ('error' in validation) return validation.error;
+
+    const { prefix } = validation.data;
 
     const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
     const bucketName = process.env.CLOUDFLARE_BUCKET_NAME || 'zulfikar-storage';
     const apiToken = process.env.CLOUDFLARE_R2_API_TOKEN;
 
     if (!accountId || !apiToken) {
-      return NextResponse.json(
-        { error: 'Missing credentials' },
-        { status: 500 },
-      );
+      return apiError('Missing credentials', 500);
     }
 
-    let allObjects: Array<{ key: string; size: number; uploaded: string }> = [];
+    let allObjects: R2Object[] = [];
     let cursor: string | undefined = undefined;
     let truncated = true;
 
@@ -35,17 +58,10 @@ export async function GET(request: NextRequest) {
 
       if (!response.ok) {
         const text = await response.text();
-        return NextResponse.json(
-          { error: `R2 API Error: ${text}` },
-          { status: response.status },
-        );
+        return apiError(`R2 API Error: ${text}`, response.status);
       }
 
-      const data = (await response.json()) as {
-        result?: Array<{ key: string; size: number; uploaded: string }>;
-        result_info?: { cursor?: string };
-        success: boolean;
-      };
+      const data = (await response.json()) as R2Response;
 
       if (data.result) {
         allObjects = allObjects.concat(data.result);
@@ -55,12 +71,8 @@ export async function GET(request: NextRequest) {
       truncated = !!cursor;
     }
 
-    const objects = allObjects;
+    const filtered = allObjects.filter((obj) => obj.key.startsWith(prefix));
 
-    // Filter by prefix and organize into folders/files
-    const filtered = objects.filter((obj) => obj.key.startsWith(prefix));
-
-    // Group by immediate subfolder or file
     const items = new Map<
       string,
       {
@@ -76,7 +88,6 @@ export async function GET(request: NextRequest) {
       const parts = relativePath.split('/');
 
       if (parts.length > 1) {
-        // It's in a subfolder
         const folderName = parts[0];
         if (!items.has(folderName)) {
           items.set(folderName, {
@@ -85,7 +96,6 @@ export async function GET(request: NextRequest) {
           });
         }
       } else if (parts[0]) {
-        // It's a file in current directory
         items.set(parts[0], {
           type: 'file',
           key: obj.key,
@@ -95,12 +105,11 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    return apiSuccess({
       prefix,
       items: Array.from(items.values()),
     });
   } catch (error) {
-    console.error('Browse error:', error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }

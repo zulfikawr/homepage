@@ -1,34 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateRequest,
+} from '@/lib/api';
 import { saveSpotifyTokens } from '@/lib/spotify';
+
+const exchangeSchema = z.object({
+  code: z.string().min(1),
+});
+
+interface SpotifyTokenResponse {
+  access_token?: string;
+  refresh_token?: string;
+  error?: string;
+  error_description?: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const { code } = (await request.json()) as { code: string };
+    const validation = await validateRequest(request, exchangeSchema);
+    if ('error' in validation) return validation.error;
 
-    if (!code) {
-      return NextResponse.json(
-        { error: 'Missing authorization code' },
-        { status: 400 },
-      );
-    }
+    const { code } = validation.data;
 
     const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET;
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || request.nextUrl.origin;
     const redirectUri = `${baseUrl}/callback`;
 
-    console.log('Exchange token - Base URL:', baseUrl);
-    console.log('Exchange token - Redirect URI:', redirectUri);
-
     if (!clientId || !clientSecret) {
-      return NextResponse.json(
-        { error: 'Spotify credentials not configured' },
-        { status: 500 },
-      );
+      return apiError('Spotify credentials not configured', 500);
     }
 
-    // Exchange authorization code for access token
     const tokenResponse = await fetch(
       'https://accounts.spotify.com/api/token',
       {
@@ -45,35 +52,23 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    interface SpotifyTokenResponse {
-      access_token?: string;
-      refresh_token?: string;
-      error?: string;
-      error_description?: string;
-    }
-
     const tokenData = (await tokenResponse.json()) as SpotifyTokenResponse;
 
-    console.log('Spotify token response status:', tokenResponse.status);
-    console.log('Spotify token response:', tokenData);
-
     if (tokenData.error) {
-      throw new Error(tokenData.error_description || tokenData.error);
+      return apiError(
+        tokenData.error_description || tokenData.error,
+        tokenResponse.status,
+      );
     }
 
-    // Save tokens to database
     if (tokenData.access_token && tokenData.refresh_token) {
       await saveSpotifyTokens(tokenData.access_token, tokenData.refresh_token);
     } else {
-      throw new Error('Missing tokens in Spotify response');
+      return apiError('Missing tokens in Spotify response', 500);
     }
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ exchanged: true });
   } catch (error) {
-    console.error('Failed to exchange Spotify token:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }

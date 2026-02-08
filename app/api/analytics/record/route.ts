@@ -1,20 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateRequest,
+} from '@/lib/api';
 import { getDB } from '@/lib/cloudflare';
+
+const analyticsSchema = z.object({
+  path: z.string(),
+  referrer: z.string().optional(),
+  user_agent: z.string().optional(),
+  country: z.string().optional(),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const data = (await request.json()) as {
-      path: string;
-      referrer: string;
-      user_agent: string;
-      country: string;
-    };
+    const validation = await validateRequest(request, analyticsSchema);
+    if ('error' in validation) return validation.error;
+
+    const data = validation.data;
 
     const db = getDB();
-    if (!db) {
-      return NextResponse.json({ error: 'DB not available' }, { status: 500 });
-    }
+    if (!db) return apiError('Database not available', 500);
 
     const user_agent = data.user_agent || 'Unknown';
     const is_bot = /bot|crawler|spider|crawling/i.test(user_agent) ? 1 : 0;
@@ -33,12 +43,8 @@ export async function POST(request: NextRequest) {
       )
       .run();
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ recorded: true });
   } catch (error) {
-    console.error('[Analytics API] Error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }

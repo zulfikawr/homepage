@@ -1,12 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateSearchParams,
+} from '@/lib/api';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyPlaylist } from '@/types/spotify';
 
+const querySchema = z.object({
+  limit: z.string().optional().default('10'),
+});
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit') || '10';
+    const validation = await validateSearchParams(request, querySchema);
+    if ('error' in validation) return validation.error;
+
+    const { limit } = validation.data;
     const accessToken = await getAccessToken();
 
     const spotifyRes = await fetch(
@@ -18,18 +31,12 @@ export async function GET(request: NextRequest) {
     );
 
     if (!spotifyRes.ok) {
-      return NextResponse.json(
-        { error: 'Spotify error' },
-        { status: spotifyRes.status },
-      );
+      return apiError('Spotify error', spotifyRes.status);
     }
 
     const data = (await spotifyRes.json()) as { items: SpotifyPlaylist[] };
-    return NextResponse.json(data);
-  } catch (error: unknown) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 },
-    );
+    return apiSuccess(data);
+  } catch (error) {
+    return handleApiError(error);
   }
 }

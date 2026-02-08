@@ -2,18 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { getBucket } from '@/lib/cloudflare';
 
+const MIME_TYPES: Record<string, string> = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  gif: 'image/gif',
+  mp3: 'audio/mpeg',
+  pdf: 'application/pdf',
+};
+
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ key: string[] }> },
 ) {
   try {
     const { key: keyParts } = await context.params;
-    // Join the path parts to reconstruct the R2 key (e.g. ["projects", "slug", "img.png"] -> "projects/slug/img.png")
     const key = keyParts.join('/');
 
     const bucket = getBucket();
     if (!bucket) {
-      // Fallback: If no bucket binding, redirect to the public R2 domain
       const r2Domain = process.env.NEXT_PUBLIC_R2_DOMAIN || 'r2.zulfikar.site';
       const publicUrl = `https://${r2Domain}/${key}`;
       return NextResponse.redirect(publicUrl);
@@ -34,16 +42,9 @@ export async function GET(
 
     if (!headers.has('Content-Type')) {
       const ext = key.split('.').pop()?.toLowerCase();
-      const mimes: Record<string, string> = {
-        jpg: 'image/jpeg',
-        jpeg: 'image/jpeg',
-        png: 'image/png',
-        webp: 'image/webp',
-        gif: 'image/gif',
-        mp3: 'audio/mpeg',
-        pdf: 'application/pdf',
-      };
-      if (ext && mimes[ext]) headers.set('Content-Type', mimes[ext]);
+      if (ext && MIME_TYPES[ext]) {
+        headers.set('Content-Type', MIME_TYPES[ext]);
+      }
     }
 
     headers.set('etag', object.httpEtag);

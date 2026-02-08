@@ -288,14 +288,18 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
       let foundCurrentTrack = false;
 
       if (currentResponse.status === 200) {
-        const data = (await currentResponse.json()) as {
-          isPlaying: boolean;
-          item: SpotifyTrack | null;
+        const response = (await currentResponse.json()) as {
+          success: boolean;
+          data: {
+            isPlaying: boolean;
+            item: SpotifyTrack | null;
+          } | null;
         };
+        const data = response.data;
 
-        if (data.isPlaying && !data.item) {
+        if (data && data.isPlaying && !data.item) {
           // Ad playing - we'll try recently played instead
-        } else if (data.item) {
+        } else if (data && data.item) {
           // We have a currently playing track
           foundCurrentTrack = true;
 
@@ -316,9 +320,13 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
         try {
           const recentRes = await fetch('/api/spotify/recently-played?limit=1');
           if (recentRes.ok) {
-            const recentlyPlayed = (await recentRes.json()) as {
-              items: Array<{ track: SpotifyTrack; playedAt: string }>;
+            const response = (await recentRes.json()) as {
+              success: boolean;
+              data: {
+                items: Array<{ track: SpotifyTrack; playedAt: string }>;
+              };
             };
+            const recentlyPlayed = response.data;
 
             // Check if we have recent tracks
             if (

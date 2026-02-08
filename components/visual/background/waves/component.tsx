@@ -1,4 +1,5 @@
 import React, { CSSProperties, useEffect, useRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 class Grad {
   x: number;

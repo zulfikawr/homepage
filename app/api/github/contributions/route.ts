@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { apiError, apiSuccess, handleApiError } from '@/lib/api';
 
 const GITHUB_USERNAME = 'zulfikawr';
 
@@ -39,13 +39,9 @@ export async function GET() {
     const githubToken = process.env.GITHUB_TOKEN;
 
     if (!githubToken) {
-      return NextResponse.json(
-        { error: 'GITHUB_TOKEN not found in environment variables' },
-        { status: 500 },
-      );
+      return apiError('GITHUB_TOKEN not found in environment variables', 500);
     }
 
-    // GitHub GraphQL query to get contribution calendar
     const query = `
       query($username: String!) {
         user(login: $username) {
@@ -70,7 +66,7 @@ export async function GET() {
     `;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     const response = await fetch('https://api.github.com/graphql', {
       method: 'POST',
@@ -92,18 +88,20 @@ export async function GET() {
 
     if (!response.ok) {
       const errorText = await response.text();
-      return NextResponse.json(
-        { error: `GitHub API error: ${response.status}`, details: errorText },
-        { status: response.status },
+      return apiError(
+        `GitHub API error: ${response.status}`,
+        response.status,
+        errorText,
       );
     }
 
     const result = (await response.json()) as GitHubGraphQLResponse;
 
     if (result.errors) {
-      return NextResponse.json(
-        { error: 'GitHub GraphQL errors', details: result.errors },
-        { status: 400 },
+      return apiError(
+        'GitHub GraphQL errors',
+        400,
+        JSON.stringify(result.errors),
       );
     }
 
@@ -114,47 +112,29 @@ export async function GET() {
         ?.commitContributionsByRepository || [];
 
     if (!data) {
-      return NextResponse.json(
-        { error: 'No contribution data found' },
-        { status: 404 },
-      );
+      return apiError('No contribution data found', 404);
     }
 
-    // Process the contribution calendar data
     const contributionData = processContributionCalendar(
       data,
       contributedRepos.length,
     );
 
-    return NextResponse.json(contributionData, {
-      headers: {
-        'Cache-Control':
-          'public, s-maxage=86400, stale-while-revalidate=604800',
-      },
-    });
+    return apiSuccess(contributionData);
   } catch (error) {
-    console.error('Error fetching GitHub contributions:', error);
-
-    // Handle specific error types
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
-        return NextResponse.json(
-          { error: 'Request timeout - GitHub API took too long to respond' },
-          { status: 504 },
+        return apiError(
+          'Request timeout - GitHub API took too long to respond',
+          504,
         );
       }
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        return NextResponse.json(
-          { error: 'Network error - Unable to reach GitHub API' },
-          { status: 503 },
-        );
+        return apiError('Network error - Unable to reach GitHub API', 503);
       }
     }
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }
 
@@ -165,7 +145,6 @@ function processContributionCalendar(
   const weeks = data.weeks || [];
   const total_contributions = data.totalContributions || 0;
 
-  // Flatten the weeks into daily contributions
   const daily_contributions: {
     date: string;
     count: number;
@@ -180,7 +159,6 @@ function processContributionCalendar(
     });
   });
 
-  // Get the year from the first date
   const firstDate = daily_contributions[0]?.date;
   const year = firstDate
     ? new Date(firstDate).getFullYear()

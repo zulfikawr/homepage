@@ -1,23 +1,18 @@
-import { NextResponse } from 'next/server';
-
+import { apiError, apiSuccess, handleApiError } from '@/lib/api';
 import { getDB } from '@/lib/cloudflare';
 
 export async function POST() {
   try {
     const db = getDB();
-    if (!db) throw new Error('DB not available');
+    if (!db) return apiError('Database not available', 500);
 
     await db
       .prepare('DELETE FROM spotifyTokens WHERE id = ?')
       .bind('spotify')
       .run();
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ reset: true });
   } catch (error) {
-    console.error('Failed to reset Spotify tokens:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }

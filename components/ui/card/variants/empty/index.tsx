@@ -1,3 +1,5 @@
+import { twMerge } from 'tailwind-merge';
+
 import { Icon } from '@/components/ui';
 
 interface CardEmptyProps {

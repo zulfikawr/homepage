@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
 import * as booksDB from '@/database/books';
 import * as certsDB from '@/database/certificates';
@@ -13,7 +14,41 @@ import * as projectsDB from '@/database/projects';
 import * as publicationsDB from '@/database/publications';
 import * as resumeDB from '@/database/resume';
 import * as sectionsDB from '@/database/sections';
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateSearchParams,
+} from '@/lib/api';
 import { getDB } from '@/lib/cloudflare';
+
+const TABLE_MAP: Record<string, string> = {
+  profile: 'personal_info',
+  readingList: 'books',
+  interestsAndObjectives: 'interests_objectives',
+};
+
+const WHITELIST = [
+  'posts',
+  'projects',
+  'books',
+  'certificates',
+  'employments',
+  'publications',
+  'sections',
+  'personal_info',
+  'interests_objectives',
+  'feedback',
+  'comments',
+  'resume',
+  'analytics_events',
+  'movies',
+  'customization_settings',
+];
+
+const deleteSchema = z.object({
+  id: z.string().min(1),
+});
 
 export async function GET(
   request: NextRequest,
@@ -21,55 +56,22 @@ export async function GET(
 ) {
   try {
     let { name } = await context.params;
-    // Remove trailing slash if present
     name = name.replace(/\/$/, '');
 
     const db = getDB();
-    if (!db)
-      return NextResponse.json({ error: 'DB not available' }, { status: 500 });
+    if (!db) return apiError('Database not available', 500);
 
-    const tableMap: Record<string, string> = {
-      profile: 'personal_info',
-      readingList: 'books',
-      interestsAndObjectives: 'interests_objectives',
-    };
+    const table = TABLE_MAP[name] || name;
 
-    const table = tableMap[name] || name;
-
-    const whitelist = [
-      'posts',
-      'projects',
-      'books',
-      'certificates',
-      'employments',
-      'publications',
-      'sections',
-      'personal_info',
-      'interests_objectives',
-      'feedback',
-      'comments',
-      'resume',
-      'analytics_events',
-      'movies',
-      'customization_settings',
-    ];
-
-    if (!whitelist.includes(table)) {
-      return NextResponse.json(
-        { error: 'Invalid collection' },
-        { status: 400 },
-      );
+    if (!WHITELIST.includes(table)) {
+      return apiError('Invalid collection', 400);
     }
 
     const { results } = await db.prepare(`SELECT * FROM ${table}`).all();
 
-    return NextResponse.json({ results });
+    return apiSuccess({ results });
   } catch (error) {
-    console.error('Collection API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }
 
@@ -128,16 +130,12 @@ export async function POST(
         );
         break;
       default:
-        return NextResponse.json(
-          { error: 'POST not supported for this collection' },
-          { status: 405 },
-        );
+        return apiError('POST not supported for this collection', 405);
     }
 
-    return NextResponse.json(result);
+    return apiSuccess(result);
   } catch (error) {
-    console.error(`API POST error for ${name}:`, error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -226,16 +224,12 @@ export async function PUT(
         );
         break;
       default:
-        return NextResponse.json(
-          { error: 'PUT not supported for this collection' },
-          { status: 405 },
-        );
+        return apiError('PUT not supported for this collection', 405);
     }
 
-    return NextResponse.json(result);
+    return apiSuccess(result);
   } catch (error) {
-    console.error(`API PUT error for ${name}:`, error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
@@ -245,11 +239,10 @@ export async function DELETE(
 ) {
   const { name } = await context.params;
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const validation = await validateSearchParams(request, deleteSchema);
+    if ('error' in validation) return validation.error;
 
-    if (!id)
-      return NextResponse.json({ error: 'ID required' }, { status: 400 });
+    const { id } = validation.data;
 
     let result;
     switch (name) {
@@ -282,15 +275,11 @@ export async function DELETE(
         result = await feedbackDB.deleteFeedback(id);
         break;
       default:
-        return NextResponse.json(
-          { error: 'DELETE not supported for this collection' },
-          { status: 405 },
-        );
+        return apiError('DELETE not supported for this collection', 405);
     }
 
-    return NextResponse.json(result);
+    return apiSuccess(result);
   } catch (error) {
-    console.error(`API DELETE error for ${name}:`, error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }

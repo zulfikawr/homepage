@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "eslint . --fix && bunx prettier --write .",
+    "lint": "eslint . --fix --no-warn-ignored && bunx prettier --write .",
     "lint:changed": "git diff --name-only --diff-filter=ACM HEAD | grep -E '\\.(js|jsx|ts|tsx)$' | xargs -r eslint --fix && git diff --name-only --diff-filter=ACM HEAD | grep -E '\\.(js|jsx|ts|tsx|json|css|md)$' | xargs -r prettier --write",
     "analyze": "bash scripts/analyze-performance.sh",
     "clean": "rm -rf .next .open-next node_modules && bun install"
@@ -22,7 +22,8 @@
     "prismjs": "^1.30.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260131.0",

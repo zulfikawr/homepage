@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server';
-
+import { apiError, apiSuccess, handleApiError } from '@/lib/api';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyCurrentlyPlaying } from '@/types/spotify';
 
@@ -18,28 +17,19 @@ export async function GET() {
     );
 
     if (spotifyRes.status === 204) {
-      return new NextResponse(null, { status: 204 });
+      return apiSuccess(null);
     }
 
     if (!spotifyRes.ok) {
-      return NextResponse.json(
-        { error: 'Spotify API error' },
-        { status: spotifyRes.status },
-      );
+      return apiError('Spotify API error', spotifyRes.status);
     }
 
     const trackData = (await spotifyRes.json()) as SpotifyCurrentlyPlaying;
-    return NextResponse.json({
+    return apiSuccess({
       isPlaying: trackData.is_playing,
       item: trackData.item,
     });
-  } catch (error: unknown) {
-    console.error('API Spotify Error:', error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Internal Server Error',
-      },
-      { status: 500 },
-    );
+  } catch (error) {
+    return handleApiError(error);
   }
 }

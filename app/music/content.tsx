@@ -46,7 +46,10 @@ interface SpotifyMusicContentProps {
 }
 
 interface SpotifyDataResponse<T> {
-  items: T[];
+  success: boolean;
+  data: {
+    items: T[];
+  };
 }
 
 export default function SpotifyMusicContent({
@@ -55,6 +58,7 @@ export default function SpotifyMusicContent({
   initialTopArtists,
   initialPlaylists,
 }: SpotifyMusicContentProps) {
+  const [mounted, setMounted] = useState(false);
   const [recentTracks, setRecentTracks] = useState<RecentlyPlayedItem[]>(
     initialRecent || [],
   );
@@ -125,10 +129,10 @@ export default function SpotifyMusicContent({
           playlistsRes.json() as Promise<SpotifyDataResponse<SpotifyPlaylist>>,
         ]);
 
-      setRecentTracks(recentData?.items || []);
-      setTopTracks(topData?.items || []);
-      setTopArtists(artistsData?.items || []);
-      setPlaylists(playlistsData?.items || []);
+      setRecentTracks(recentData?.data?.items || []);
+      setTopTracks(topData?.data?.items || []);
+      setTopArtists(artistsData?.data?.items || []);
+      setPlaylists(playlistsData?.data?.items || []);
 
       setDataLoading({
         recentTracks: false,
@@ -163,7 +167,7 @@ export default function SpotifyMusicContent({
       }
 
       const data = (await res.json()) as SpotifyDataResponse<SpotifyTrack>;
-      setTopTracks(data?.items || []);
+      setTopTracks(data?.data?.items || []);
       setDataLoading((prev) => ({ ...prev, topTracks: false }));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -185,13 +189,17 @@ export default function SpotifyMusicContent({
       }
 
       const data = (await res.json()) as SpotifyDataResponse<SpotifyArtist>;
-      setTopArtists(data?.items || []);
+      setTopArtists(data?.data?.items || []);
       setDataLoading((prev) => ({ ...prev, topArtists: false }));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setDataLoading((prev) => ({ ...prev, topArtists: false }));
     }
   }, [artistsTimeRange]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (
@@ -365,7 +373,7 @@ export default function SpotifyMusicContent({
                         </p>
                       </div>
                       <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                        {getTimeAgo(item.playedAt)}
+                        {mounted ? getTimeAgo(item.playedAt) : ''}
                       </div>
                     </div>
                   </ViewTransition>

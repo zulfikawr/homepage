@@ -1,29 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import { apiSuccess, handleApiError, validateRequest } from '@/lib/api';
 import { saveSpotifyTokens } from '@/lib/spotify';
+
+const callbackSchema = z.object({
+  accessToken: z.string().min(1),
+  refreshToken: z.string().min(1),
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const { accessToken, refreshToken } = (await request.json()) as {
-      accessToken: string;
-      refreshToken: string;
-    };
+    const validation = await validateRequest(request, callbackSchema);
+    if ('error' in validation) return validation.error;
 
-    if (!accessToken || !refreshToken) {
-      return NextResponse.json(
-        { error: 'Missing access token or refresh token' },
-        { status: 400 },
-      );
-    }
+    const { accessToken, refreshToken } = validation.data;
 
     await saveSpotifyTokens(accessToken, refreshToken);
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ saved: true });
   } catch (error) {
-    console.error('Failed to save Spotify tokens:', error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 },
-    );
+    return handleApiError(error);
   }
 }

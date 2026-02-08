@@ -1,131 +1,108 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
+import { z } from 'zod';
 
+import {
+  apiError,
+  apiSuccess,
+  handleApiError,
+  validateRequest,
+  validateSearchParams,
+} from '@/lib/api';
 import { getBucket } from '@/lib/cloudflare';
+
+const uploadSchema = z.object({
+  file: z.instanceof(File),
+  key: z.string().min(1),
+});
+
+const deleteSchema = z.object({
+  key: z.string().min(1),
+});
+
+const renameSchema = z.object({
+  action: z.literal('rename'),
+  oldKey: z.string().min(1),
+  newKey: z.string().min(1),
+});
+
+const createFolderSchema = z.object({
+  action: z.literal('create-folder'),
+  key: z.string().min(1),
+});
+
+const putSchema = z.union([renameSchema, createFolderSchema]);
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const key = formData.get('key') as string;
+    const file = formData.get('file') as File | null;
+    const key = formData.get('key') as string | null;
 
-    if (!file || !key) {
-      return NextResponse.json(
-        { error: 'File and key are required' },
-        { status: 400 },
-      );
+    const validation = uploadSchema.safeParse({ file, key });
+    if (!validation.success) {
+      return apiError('File and key are required', 400);
     }
 
     const bucket = getBucket();
-    if (!bucket) {
-      return NextResponse.json(
-        { error: 'Storage configuration missing' },
-        { status: 500 },
-      );
-    }
+    if (!bucket) return apiError('Storage configuration missing', 500);
 
-    const arrayBuffer = await file.arrayBuffer();
-    await bucket.put(key, arrayBuffer, {
-      httpMetadata: { contentType: file.type },
+    const arrayBuffer = await validation.data.file.arrayBuffer();
+    await bucket.put(validation.data.key, arrayBuffer, {
+      httpMetadata: { contentType: validation.data.file.type },
     });
 
-    return NextResponse.json({ success: true, key });
+    return apiSuccess({ key: validation.data.key });
   } catch (error) {
-    console.error('Upload error:', error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const key = searchParams.get('key');
+    const validation = await validateSearchParams(request, deleteSchema);
+    if ('error' in validation) return validation.error;
 
-    if (!key) {
-      return NextResponse.json({ error: 'Key is required' }, { status: 400 });
-    }
+    const { key } = validation.data;
 
     const bucket = getBucket();
-    if (!bucket) {
-      return NextResponse.json(
-        { error: 'Storage configuration missing' },
-        { status: 500 },
-      );
-    }
+    if (!bucket) return apiError('Storage configuration missing', 500);
 
-    // Check if it's a folder (ends with /)
-    // If it's a folder, we technically should delete all contents?
-    // For safety, let's just delete the specific key for now.
-    // The UI should handle recursive delete if needed or we can enhance this later.
-    // Actually, for R2, if it's a "folder" it might just be a prefix.
-    // If the user wants to delete a folder, they probably want to delete all files with that prefix.
-
-    // For now, simple delete of single object.
     await bucket.delete(key);
 
-    return NextResponse.json({ success: true });
+    return apiSuccess({ deleted: true });
   } catch (error) {
-    console.error('Delete error:', error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
-}
-
-interface PutRequestBody {
-  action: 'rename' | 'create-folder';
-  oldKey?: string;
-  newKey?: string;
-  key?: string;
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const data = (await request.json()) as PutRequestBody;
-    const { action, oldKey, newKey } = data;
+    const validation = await validateRequest(request, putSchema);
+    if ('error' in validation) return validation.error;
+
+    const data = validation.data;
 
     const bucket = getBucket();
-    if (!bucket) {
-      return NextResponse.json(
-        { error: 'Storage configuration missing' },
-        { status: 500 },
-      );
-    }
+    if (!bucket) return apiError('Storage configuration missing', 500);
 
-    if (action === 'rename') {
-      if (!oldKey || !newKey) {
-        return NextResponse.json(
-          { error: 'oldKey and newKey are required' },
-          { status: 400 },
-        );
-      }
+    if (data.action === 'rename') {
+      const object = await bucket.get(data.oldKey);
+      if (!object) return apiError('Source file not found', 404);
 
-      const object = await bucket.get(oldKey);
-      if (!object) {
-        return NextResponse.json(
-          { error: 'Source file not found' },
-          { status: 404 },
-        );
-      }
-
-      await bucket.put(newKey, object.body, {
+      await bucket.put(data.newKey, object.body, {
         httpMetadata: object.httpMetadata,
         customMetadata: object.customMetadata,
       });
 
-      await bucket.delete(oldKey);
+      await bucket.delete(data.oldKey);
 
-      return NextResponse.json({ success: true });
-    } else if (action === 'create-folder') {
-      const { key } = data;
-      if (!key) {
-        return NextResponse.json({ error: 'Key is required' }, { status: 400 });
-      }
-      // Create 0-byte object with trailing slash
-      await bucket.put(key.endsWith('/') ? key : `${key}/`, new Uint8Array(0));
-      return NextResponse.json({ success: true });
+      return apiSuccess({ renamed: true });
+    } else {
+      const key = data.key.endsWith('/') ? data.key : `${data.key}/`;
+      await bucket.put(key, new Uint8Array(0));
+      return apiSuccess({ created: true });
     }
-
-    return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   } catch (error) {
-    console.error('Operation error:', error);
-    return NextResponse.json({ error: String(error) }, { status: 500 });
+    return handleApiError(error);
   }
 }
