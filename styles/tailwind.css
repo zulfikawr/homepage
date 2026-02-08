@@ -124,5 +124,6 @@
 @import './themes.css';
 @import './globals.css';
 @import './prose.css';
+@import './prism.css';
 @import './components.css';
 @import './utilities.css';

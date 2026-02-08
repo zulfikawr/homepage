@@ -20,6 +20,13 @@ import { IconName } from '@/components/ui/icon';
 import Mask from '@/components/visual/mask';
 import { useRadius } from '@/contexts/radius-context';
 
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-json';
+
 interface EditorProps {
   content: string;
   onUpdate: (content: string) => void;
@@ -52,9 +59,9 @@ const Editor: React.FC<EditorProps> = ({
 
   const handlePreview = useCallback(() => {
     drawer.open(
-      <div className='flex-1 overflow-y-auto p-6 lg:p-10'>
+      <Mask direction='vertical' className='flex-1 scrollbar-hide p-6 lg:p-10'>
         <MarkdownRenderer content={markdown} />
-      </div>,
+      </Mask>,
     );
   }, [markdown]);
 

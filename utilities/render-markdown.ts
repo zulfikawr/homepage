@@ -1,6 +1,13 @@
 import { marked } from 'marked';
 import Prism from 'prismjs';
 
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-json';
+
 const renderer = new marked.Renderer();
 
 renderer.code = ({ text, lang }) => {
@@ -51,12 +58,38 @@ renderer.code = ({ text, lang }) => {
 };
 
 renderer.heading = ({ text, depth }) => {
-  const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+  const slug = text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
   return `<h${depth} id="${slug}">${text}</h${depth}>`;
 };
 
-renderer.table = ({ header, rows }) => {
-  return `<div class="markdown-table-container"><table><thead>${header}</thead><tbody>${rows}</tbody></table></div>`;
+renderer.table = (token) => {
+  return `<div class="markdown-table-container">
+    <table>
+      <thead>${token.header.map((h) => renderer.tablecell(h)).join('')}</thead>
+      <tbody>${token.rows
+        .map((r) =>
+          renderer.tablerow({
+            content: r.map((c) => renderer.tablecell(c)).join(''),
+          }),
+        )
+        .join('')}</tbody>
+    </table>
+  </div>`;
+};
+
+renderer.tablerow = ({ content }) => {
+  return `<tr>${content}</tr>`;
+};
+
+renderer.tablecell = (token) => {
+  const tag = token.header ? 'th' : 'td';
+  const style = token.align ? ` style="text-align: ${token.align}"` : '';
+  return `<${tag}${style}>${token.tokens.map((t) => marked.parseInline(t.raw)).join('')}</${tag}>`;
 };
 
 marked.use({ renderer, gfm: true, breaks: false });

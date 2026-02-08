@@ -88,6 +88,11 @@ const Tooltip: React.FC<TooltipProps> = ({
     setIsVisible(false);
   };
 
+  const handleClick = () => {
+    setIsVisible(false);
+    setShouldRender(false);
+  };
+
   const getTransform = () => {
     const baseTransform = (() => {
       switch (position) {
@@ -114,6 +119,7 @@ const Tooltip: React.FC<TooltipProps> = ({
       className='relative inline-flex items-center justify-center'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick}
     >
       {/* Trigger Element */}
       {children}
