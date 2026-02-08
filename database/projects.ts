@@ -81,7 +81,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
 /**
  * Adds a new project to the database.
  */
-export async function addProject(
+export async function createProject(
   data: Omit<Project, 'id'> | FormData,
 ): Promise<{ success: boolean; project?: Project; error?: string }> {
   try {

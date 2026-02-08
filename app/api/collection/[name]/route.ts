@@ -89,44 +89,44 @@ export async function POST(
     let result;
     switch (name) {
       case 'posts':
-        result = await postsDB.addPost(
-          data as Parameters<typeof postsDB.addPost>[0],
+        result = await postsDB.createPost(
+          data as Parameters<typeof postsDB.createPost>[0],
         );
         break;
       case 'projects':
-        result = await projectsDB.addProject(
-          data as Parameters<typeof projectsDB.addProject>[0],
+        result = await projectsDB.createProject(
+          data as Parameters<typeof projectsDB.createProject>[0],
         );
         break;
       case 'readingList':
       case 'books':
-        result = await booksDB.addBook(
-          data as Parameters<typeof booksDB.addBook>[0],
+        result = await booksDB.createBook(
+          data as Parameters<typeof booksDB.createBook>[0],
         );
         break;
       case 'certificates':
-        result = await certsDB.addCertificate(
-          data as Parameters<typeof certsDB.addCertificate>[0],
+        result = await certsDB.createCertificate(
+          data as Parameters<typeof certsDB.createCertificate>[0],
         );
         break;
       case 'employments':
-        result = await employmentsDB.addEmployment(
-          data as Parameters<typeof employmentsDB.addEmployment>[0],
+        result = await employmentsDB.createEmployment(
+          data as Parameters<typeof employmentsDB.createEmployment>[0],
         );
         break;
       case 'publications':
-        result = await publicationsDB.addPublication(
-          data as Parameters<typeof publicationsDB.addPublication>[0],
+        result = await publicationsDB.createPublication(
+          data as Parameters<typeof publicationsDB.createPublication>[0],
         );
         break;
       case 'sections':
-        result = await sectionsDB.addSection(
-          data as Parameters<typeof sectionsDB.addSection>[0],
+        result = await sectionsDB.createSection(
+          data as Parameters<typeof sectionsDB.createSection>[0],
         );
         break;
       case 'movies':
-        result = await moviesDB.addMovie(
-          data as Parameters<typeof moviesDB.addMovie>[0],
+        result = await moviesDB.createMovie(
+          data as Parameters<typeof moviesDB.createMovie>[0],
         );
         break;
       default:

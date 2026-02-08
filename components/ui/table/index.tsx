@@ -32,12 +32,12 @@ const Table = React.forwardRef<HTMLTableElement, TableProps>(
 
     return (
       <div
-        className='overflow-x-auto mt-4 border-2 border-border shadow-brutalist transition-all duration-150 hover:shadow-brutalist-xl'
+        className='overflow-x-auto mt-4 border-2 border-border shadow-brutalist transition-all duration-150 hover:shadow-brutalist-xl bg-card'
         style={{ borderRadius: `${radius}px` }}
       >
         <table
           ref={ref}
-          className={twMerge('w-full border-collapse bg-card', className)}
+          className={twMerge('w-full border-collapse', className)}
           {...props}
         />
       </div>
@@ -75,7 +75,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
       <tr
         ref={ref}
         className={twMerge(
-          'border-b border-border last:border-b-0 hover:bg-muted/50 hover:shadow-brutalist transition-shadow',
+          'border-b border-border last:border-b-0 hover:bg-muted/50 transition-colors bg-card',
           className,
         )}
         {...props}
@@ -95,8 +95,8 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
         ref={ref}
         className={twMerge(
           isHeader
-            ? 'py-4 px-6 font-medium text-left border-b border-r border-border last:border-r-0'
-            : 'py-4 px-6 border-b border-r border-border last:border-r-0 [tr:last-child&]:border-b-0',
+            ? 'py-4 px-6 font-medium text-left border-b-2 border-border'
+            : 'py-4 px-6',
           className,
         )}
         {...props}

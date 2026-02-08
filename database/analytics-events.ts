@@ -1,7 +1,8 @@
 'use server';
 
-import { getDB } from '@/lib/cloudflare';
 import { AnalyticsEvent } from '@/types/analytics-event';
+
+import { executeQuery, handleDatabaseError } from './base';
 
 interface AnalyticsRow {
   id: string;
@@ -15,11 +16,9 @@ interface AnalyticsRow {
 
 export async function getAnalyticsEvents(): Promise<AnalyticsEvent[]> {
   try {
-    const db = getDB();
-    if (!db) return [];
-    const { results } = await db
-      .prepare('SELECT * FROM analyticsEvents ORDER BY created_at DESC')
-      .all<AnalyticsRow>();
+    const results = await executeQuery<AnalyticsRow>(
+      'SELECT * FROM analyticsEvents ORDER BY created_at DESC',
+    );
     return results.map((row) => ({
       id: row.id,
       path: row.path,
@@ -29,7 +28,7 @@ export async function getAnalyticsEvents(): Promise<AnalyticsEvent[]> {
       is_bot: !!row.is_bot,
       created: new Date(row.created_at * 1000).toISOString(),
     }));
-  } catch {
-    return [];
+  } catch (error) {
+    handleDatabaseError(error, 'get analytics events');
   }
 }

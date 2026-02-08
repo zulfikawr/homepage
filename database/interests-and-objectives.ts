@@ -2,8 +2,9 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 
-import { getDB } from '@/lib/cloudflare';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
+
+import { executeQueryFirst, executeUpdate } from './base';
 
 const defaultInterestsData: InterestsAndObjectives = {
   description:
@@ -32,18 +33,11 @@ function mapRowToInterests(row: InterestsRow): InterestsAndObjectives {
   };
 }
 
-/**
- * Fetches interests and objectives from the database and picks a random one.
- */
 export async function getInterestsAndObjectives(): Promise<InterestsAndObjectives> {
   try {
-    const db = getDB();
-    if (!db) return defaultInterestsData;
-
-    // Pick a random row
-    const row = await db
-      .prepare('SELECT * FROM interests_objectives ORDER BY RANDOM() LIMIT 1')
-      .first<InterestsRow>();
+    const row = await executeQueryFirst<InterestsRow>(
+      'SELECT * FROM interests_objectives ORDER BY RANDOM() LIMIT 1',
+    );
 
     if (row) {
       return mapRowToInterests(row);
@@ -54,9 +48,6 @@ export async function getInterestsAndObjectives(): Promise<InterestsAndObjective
   }
 }
 
-/**
- * Updates an interests and objectives record.
- */
 export async function updateInterestsAndObjectives(
   data: (InterestsAndObjectives & { id?: string }) | FormData,
 ): Promise<{
@@ -65,9 +56,6 @@ export async function updateInterestsAndObjectives(
   error?: string;
 }> {
   try {
-    const db = getDB();
-    if (!db) throw new Error('DB not available');
-
     let id: string;
     let description: string;
     let objectivesJson: string;
@@ -79,7 +67,6 @@ export async function updateInterestsAndObjectives(
       objectivesJson = data.get('objectives') as string;
       conclusion = data.get('conclusion') as string;
 
-      // Validation: ensure objectives is valid JSON
       try {
         JSON.parse(objectivesJson);
       } catch {
@@ -92,18 +79,16 @@ export async function updateInterestsAndObjectives(
       conclusion = data.conclusion;
     }
 
-    await db
-      .prepare(
-        `INSERT INTO interests_objectives (id, description, objectives, conclusion)
+    await executeUpdate(
+      `INSERT INTO interests_objectives (id, description, objectives, conclusion)
        VALUES (?, ?, ?, ?)
        ON CONFLICT(id) DO UPDATE SET
          description = excluded.description,
          objectives = excluded.objectives,
          conclusion = excluded.conclusion,
          updated_at = unixepoch()`,
-      )
-      .bind(id, description, objectivesJson, conclusion)
-      .run();
+      [id, description, objectivesJson, conclusion],
+    );
 
     revalidatePath('/');
     revalidatePath('/database/interests-and-objectives');

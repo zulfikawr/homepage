@@ -5,6 +5,7 @@ import * as PhosphorIcons from '@phosphor-icons/react';
 
 export const iconMap = {
   addressBook: PhosphorIcons.AddressBookIcon,
+  arrowClockwise: PhosphorIcons.ArrowClockwiseIcon,
   arrowLeft: PhosphorIcons.ArrowLeftIcon,
   arrowRight: PhosphorIcons.ArrowRightIcon,
   arrowSquareOut: PhosphorIcons.ArrowSquareOutIcon,
@@ -53,6 +54,7 @@ export const iconMap = {
   filePdf: PhosphorIcons.FilePdfIcon,
   floppyDisk: PhosphorIcons.FloppyDiskIcon,
   folder: PhosphorIcons.FolderIcon,
+  folderPlus: PhosphorIcons.FolderPlusIcon,
   gear: PhosphorIcons.GearIcon,
   ghost: PhosphorIcons.GhostIcon,
   githubLogo: PhosphorIcons.GithubLogoIcon,
@@ -120,6 +122,7 @@ export const iconMap = {
   textUnderline: PhosphorIcons.TextUnderlineIcon,
   trash: PhosphorIcons.TrashIcon,
   trashSimple: PhosphorIcons.TrashSimpleIcon,
+  uploadSimple: PhosphorIcons.UploadSimpleIcon,
   userCircle: PhosphorIcons.UserCircleIcon,
   users: PhosphorIcons.UsersIcon,
   wall: PhosphorIcons.WallIcon,

@@ -31,14 +31,17 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
       const response = await fetch(
         `/api/storage/browse?prefix=${encodeURIComponent(prefix)}`,
       );
-      const data = (await response.json()) as {
-        items?: FileItem[];
-        prefix?: string;
+      const result = (await response.json()) as {
+        success: boolean;
+        data: {
+          items?: FileItem[];
+          prefix?: string;
+        };
       };
 
-      if (data.items) {
+      if (result.data.items) {
         // Sort items: folders first, then files
-        const sorted = data.items.sort((a, b) => {
+        const sorted = result.data.items.sort((a, b) => {
           if (a.type === b.type) return a.key.localeCompare(b.key);
           return a.type === 'folder' ? -1 : 1;
         });

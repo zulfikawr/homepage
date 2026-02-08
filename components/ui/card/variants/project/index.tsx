@@ -94,7 +94,7 @@ export default function ProjectCard({
 
           {/* Tools at the bottom */}
           <div className='flex flex-wrap gap-2 border-t-2 border-border pt-2.5 '>
-            {project.tools.map((tool, index) => {
+            {project.tools?.map((tool, index) => {
               const colors: (
                 | 'aqua'
                 | 'green'

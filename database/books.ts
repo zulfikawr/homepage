@@ -5,6 +5,8 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import { getBucket, getDB } from '@/lib/cloudflare';
 import { Book } from '@/types/book';
 
+import { executeQuery, executeQueryFirst, executeUpdate } from './base';
+
 interface BookRow {
   [key: string]: unknown;
   id: string;
@@ -47,20 +49,13 @@ async function uploadFile(file: File, slug: string): Promise<string> {
 }
 
 export async function getBooks(): Promise<Book[]> {
-  try {
-    const db = getDB();
-    if (!db) return [];
-    const { results } = await db
-      .prepare('SELECT * FROM books ORDER BY created_at DESC')
-      .all<BookRow>();
-    return results.map(mapRowToBook).filter((b): b is Book => b !== null);
-  } catch (error) {
-    console.error('[Database] Failed to fetch books:', error);
-    return [];
-  }
+  const results = await executeQuery<BookRow>(
+    'SELECT * FROM books ORDER BY created_at DESC',
+  );
+  return results.map(mapRowToBook).filter((b): b is Book => b !== null);
 }
 
-export async function addBook(
+export async function createBook(
   data: Omit<Book, 'id'> | FormData,
 ): Promise<{ success: boolean; book?: Book; error?: string }> {
   try {
@@ -101,11 +96,9 @@ export async function addBook(
         payload.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-') || id;
     }
 
-    await db
-      .prepare(
-        `INSERT INTO books (id, slug, type, title, author, image_url, link, date_added) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      )
-      .bind(
+    await executeUpdate(
+      `INSERT INTO books (id, slug, type, title, author, image_url, link, date_added) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
         id,
         payload.slug,
         payload.type,
@@ -114,8 +107,8 @@ export async function addBook(
         payload.image_url || '',
         payload.link || '',
         payload.date_added || '',
-      )
-      .run();
+      ],
+    );
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
@@ -205,10 +198,10 @@ export async function updateBook(
 
     if (fields.length > 0) {
       values.push(recordId);
-      await db
-        .prepare(`UPDATE books SET ${fields.join(', ')} WHERE id = ?`)
-        .bind(...values)
-        .run();
+      await executeUpdate(
+        `UPDATE books SET ${fields.join(', ')} WHERE id = ?`,
+        values,
+      );
     }
 
     revalidatePath('/reading-list');
@@ -236,7 +229,7 @@ export async function deleteBook(
     const existing = await getBookById(id);
     if (!existing) return { success: false, error: 'Book not found' };
 
-    await db.prepare('DELETE FROM books WHERE id = ?').bind(existing.id).run();
+    await executeUpdate('DELETE FROM books WHERE id = ?', [existing.id]);
 
     revalidatePath('/reading-list');
     revalidatePath('/database/reading-list');
@@ -253,16 +246,9 @@ export async function deleteBook(
 }
 
 export async function getBookById(id: string): Promise<Book | null> {
-  try {
-    const db = getDB();
-    if (!db) return null;
-    const row = await db
-      .prepare('SELECT * FROM books WHERE id = ? OR slug = ?')
-      .bind(id, id)
-      .first<BookRow>();
-    return mapRowToBook(row);
-  } catch (error) {
-    console.error('[Database] Failed to get book by ID:', error);
-    return null;
-  }
+  const row = await executeQueryFirst<BookRow>(
+    'SELECT * FROM books WHERE id = ? OR slug = ?',
+    [id, id],
+  );
+  return mapRowToBook(row);
 }

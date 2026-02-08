@@ -64,7 +64,7 @@ export async function getCertificates(): Promise<Certificate[]> {
   }
 }
 
-export async function addCertificate(
+export async function createCertificate(
   data: Omit<Certificate, 'id'> | FormData,
 ): Promise<{ success: boolean; certificate?: Certificate; error?: string }> {
   try {

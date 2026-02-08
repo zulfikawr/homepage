@@ -7,11 +7,10 @@ import PageTitle from '@/components/page-title';
 import {
   Button,
   Checkbox,
-  Dropdown,
-  DropdownItem,
   Icon,
   Input,
   modal,
+  Popover,
   Skeleton,
   Table,
   TableBody,
@@ -42,14 +41,17 @@ const StorageContent = () => {
       const response = await fetch(
         `/api/storage/browse?prefix=${encodeURIComponent(prefix)}`,
       );
-      const data = (await response.json()) as {
-        items?: FileItem[];
-        prefix?: string;
+      const result = (await response.json()) as {
+        success: boolean;
+        data: {
+          items?: FileItem[];
+          prefix?: string;
+        };
       };
 
-      if (data.items) {
+      if (result.data.items) {
         // Sort items: folders first, then files
-        const sorted = data.items.sort((a, b) => {
+        const sorted = result.data.items.sort((a, b) => {
           if (a.type === b.type) return a.key.localeCompare(b.key);
           return a.type === 'folder' ? -1 : 1;
         });
@@ -488,14 +490,14 @@ const StorageContent = () => {
                   </div>
                 </TableCell>
                 <TableCell
-                  className='py-3 font-medium cursor-pointer'
+                  className='py-3 font-medium cursor-pointer max-w-md'
                   onClick={() =>
                     item.type === 'folder'
                       ? handleFolderClick(item.key)
                       : handleSelectItem(item.key, !selectedItems.has(item.key))
                   }
                 >
-                  <div className='flex items-center gap-3'>
+                  <div className='flex items-center gap-3 min-w-0'>
                     <Icon
                       name={item.type === 'folder' ? 'folder' : 'file'}
                       className={twMerge(
@@ -505,7 +507,7 @@ const StorageContent = () => {
                           : 'text-muted-foreground',
                       )}
                     />
-                    {getFileName(item.key)}
+                    <span className='truncate'>{getFileName(item.key)}</span>
                   </div>
                 </TableCell>
                 <TableCell className='py-3 text-muted-foreground text-sm'>
@@ -519,7 +521,7 @@ const StorageContent = () => {
                     onClick={(e) => e.stopPropagation()}
                     className='flex justify-center'
                   >
-                    <Dropdown
+                    <Popover
                       trigger={
                         <Button
                           variant='ghost'
@@ -529,36 +531,45 @@ const StorageContent = () => {
                         </Button>
                       }
                     >
-                      <DropdownItem
-                        icon='pencilSimple'
-                        onClick={() => openRenameModal(item.key)}
-                      >
-                        Rename
-                      </DropdownItem>
-                      {item.type === 'file' && (
-                        <>
-                          <DropdownItem
-                            icon='downloadSimple'
-                            onClick={() => downloadFile(item.key)}
-                          >
-                            Download
-                          </DropdownItem>
-                          <DropdownItem
-                            icon='link'
-                            onClick={() => copyUrl(item.key)}
-                          >
-                            Copy Link
-                          </DropdownItem>
-                        </>
-                      )}
-                      <DropdownItem
-                        icon='trash'
-                        onClick={() => handleDelete(item.key)}
-                        className='text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
-                      >
-                        Delete
-                      </DropdownItem>
-                    </Dropdown>
+                      <div className='flex flex-col gap-1 p-1 min-w-40'>
+                        <Button
+                          variant='ghost'
+                          icon='pencilSimple'
+                          onClick={() => openRenameModal(item.key)}
+                          className='justify-start'
+                        >
+                          Rename
+                        </Button>
+                        {item.type === 'file' && (
+                          <>
+                            <Button
+                              variant='ghost'
+                              icon='downloadSimple'
+                              onClick={() => downloadFile(item.key)}
+                              className='justify-start'
+                            >
+                              Download
+                            </Button>
+                            <Button
+                              variant='ghost'
+                              icon='link'
+                              onClick={() => copyUrl(item.key)}
+                              className='justify-start'
+                            >
+                              Copy Link
+                            </Button>
+                          </>
+                        )}
+                        <Button
+                          variant='ghost'
+                          icon='trash'
+                          onClick={() => handleDelete(item.key)}
+                          className='justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </Popover>
                   </div>
                 </TableCell>
               </TableRow>

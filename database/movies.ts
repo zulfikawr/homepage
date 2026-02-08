@@ -60,7 +60,7 @@ export async function getMovies(): Promise<Movie[]> {
   }
 }
 
-export async function addMovie(
+export async function createMovie(
   data: Omit<Movie, 'id'> | FormData,
 ): Promise<{ success: boolean; movie?: Movie; error?: string }> {
   try {

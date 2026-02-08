@@ -49,7 +49,7 @@ export async function getPublications(): Promise<Publication[]> {
   }
 }
 
-export async function addPublication(
+export async function createPublication(
   data: Omit<Publication, 'id'> | FormData,
 ): Promise<{ success: boolean; publication?: Publication; error?: string }> {
   try {

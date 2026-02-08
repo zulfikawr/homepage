@@ -10,7 +10,7 @@ import { Button, Icon, Skeleton } from '@/components/ui';
 import CommentCard from '@/components/ui/card/variants/comment';
 import { useAuth } from '@/contexts/auth-context';
 import {
-  addComment,
+  createComment,
   deleteComment,
   likeComment,
   updateComment,
@@ -80,7 +80,7 @@ export default function CommentSection({
 
     setIsSubmitting(true);
     try {
-      await addComment(
+      await createComment(
         post_id,
         githubUsername || author || ((user?.name as string) ?? 'Anonymous'),
         content,
@@ -101,7 +101,7 @@ export default function CommentSection({
     replyContent: string,
   ) => {
     try {
-      await addComment(
+      await createComment(
         post_id,
         replyAuthor,
         replyContent,

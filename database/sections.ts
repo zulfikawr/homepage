@@ -2,8 +2,9 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 
-import { getDB } from '@/lib/cloudflare';
 import { Section } from '@/types/section';
+
+import { executeQuery, executeUpdate } from './base';
 
 interface SectionRow {
   id: string;
@@ -23,17 +24,11 @@ function mapRowToSection(row: SectionRow): Section {
   };
 }
 
-/**
- * Fetches all sections from the database.
- */
 export async function getSections(): Promise<Section[]> {
   try {
-    const db = getDB();
-    if (!db) return [];
-
-    const { results } = await db
-      .prepare('SELECT * FROM sections ORDER BY sort_order ASC')
-      .all<SectionRow>();
+    const results = await executeQuery<SectionRow>(
+      'SELECT * FROM sections ORDER BY sort_order ASC',
+    );
     return results.map(mapRowToSection);
   } catch (e) {
     console.error('Error fetching sections:', e);
@@ -41,23 +36,17 @@ export async function getSections(): Promise<Section[]> {
   }
 }
 
-/**
- * Adds a new section to the database.
- */
-export async function addSection(
+export async function createSection(
   data: Omit<Section, 'id'>,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
   try {
-    const db = getDB();
     const id = crypto.randomUUID();
 
-    await db
-      .prepare(
-        `INSERT INTO sections (id, name, title, enabled, sort_order)
+    await executeUpdate(
+      `INSERT INTO sections (id, name, title, enabled, sort_order)
        VALUES (?, ?, ?, ?, ?)`,
-      )
-      .bind(id, data.name, data.title, data.enabled ? 1 : 0, data.order)
-      .run();
+      [id, data.name, data.title, data.enabled ? 1 : 0, data.order],
+    );
 
     revalidatePath('/');
     revalidatePath('/database/sections');
@@ -72,14 +61,10 @@ export async function addSection(
   }
 }
 
-/**
- * Updates an existing section in the database.
- */
 export async function updateSection(
   data: (Partial<Section> & { id: string }) | FormData,
 ): Promise<{ success: boolean; section?: Section; error?: string }> {
   try {
-    const db = getDB();
     let recordId: string;
     let payload: Partial<Section> = {};
 
@@ -123,10 +108,10 @@ export async function updateSection(
 
     if (fields.length > 0) {
       values.push(recordId);
-      await db
-        .prepare(`UPDATE sections SET ${fields.join(', ')} WHERE id = ?`)
-        .bind(...values)
-        .run();
+      await executeUpdate(
+        `UPDATE sections SET ${fields.join(', ')} WHERE id = ?`,
+        values,
+      );
     }
 
     revalidatePath('/');
@@ -145,15 +130,11 @@ export async function updateSection(
   }
 }
 
-/**
- * Deletes a section from the database.
- */
 export async function deleteSection(
   id: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const db = getDB();
-    await db.prepare('DELETE FROM sections WHERE id = ?').bind(id).run();
+    await executeUpdate('DELETE FROM sections WHERE id = ?', [id]);
 
     revalidatePath('/');
     revalidatePath('/database/sections');

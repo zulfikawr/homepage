@@ -178,6 +178,7 @@ export function mapRecordToProject(row: BaseDatabaseRow): Project {
     image_url: imageKey,
     description: row.description as string,
     tools: (() => {
+      if (!row.tools) return [];
       if (typeof row.tools !== 'string') return (row.tools as string[]) || [];
       try {
         return JSON.parse(row.tools);

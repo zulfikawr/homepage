@@ -79,7 +79,7 @@ export async function getEmployments(): Promise<Employment[]> {
 /**
  * Adds a new employment record.
  */
-export async function addEmployment(
+export async function createEmployment(
   data: Omit<Employment, 'id'> | FormData,
 ): Promise<{ success: boolean; employment?: Employment; error?: string }> {
   try {

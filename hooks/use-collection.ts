@@ -22,9 +22,12 @@ export function useCollection<T>(
       const res = await fetch(`/api/collection/${collectionName}`);
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const result = (await res.json()) as {
-        results: Record<string, unknown>[];
+        success: boolean;
+        data: {
+          results: Record<string, unknown>[];
+        };
       };
-      setData(result.results.map(mapper));
+      setData(result.data.results.map(mapper));
       setError(null);
       setDataLoading(false);
     } catch (err: unknown) {

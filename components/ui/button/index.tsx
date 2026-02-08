@@ -83,7 +83,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         style={{ borderRadius: `${radius}px` }}
         {...rest}
       >
-        {icon && <Icon name={icon} size={20} className={iconClassName} />}
+        {icon && (
+          <Icon
+            name={icon}
+            size={18}
+            className={twMerge('flex-shrink-0', iconClassName)}
+          />
+        )}
         {children}
       </button>
     );

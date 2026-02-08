@@ -26,10 +26,13 @@ function CallbackContent() {
             body: JSON.stringify({ code }),
           });
 
-          const data = (await response.json()) as { error?: string };
+          const result = (await response.json()) as {
+            success: boolean;
+            error?: string;
+          };
 
           if (!response.ok) {
-            throw new Error(data.error || 'Failed to exchange token');
+            throw new Error(result.error || 'Failed to exchange token');
           }
 
           toast.success('Spotify connected successfully!');

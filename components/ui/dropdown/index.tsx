@@ -255,7 +255,7 @@ const Dropdown = ({
             <div
               ref={menuRef}
               className={twMerge(
-                'fixed z-[9999] shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out',
+                'fixed z-[9999] shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out flex flex-col',
                 matchTriggerWidth ? '' : 'w-max',
                 isOpen
                   ? 'opacity-100 scale-y-100'
@@ -276,7 +276,7 @@ const Dropdown = ({
                 transform:
                   position === 'top' ? 'translateY(-100%)' : 'translateY(0)',
                 borderRadius: `${radius}px`,
-                height: `${calculatedMenuCoords.maxHeight}px`,
+                maxHeight: `${calculatedMenuCoords.maxHeight}px`,
               }}
             >
               <Mask direction='vertical' className='scrollbar-hide'>

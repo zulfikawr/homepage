@@ -81,7 +81,7 @@ export async function getPostById(id: string): Promise<Post | null> {
 /**
  * Adds a new post to the database.
  */
-export async function addPost(
+export async function createPost(
   data: Omit<Post, 'id'> | FormData,
 ): Promise<{ success: boolean; data?: Post; error?: string }> {
   try {
