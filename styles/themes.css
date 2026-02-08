@@ -474,9 +474,9 @@
     --theme-aqua: #83c092;
     --theme-purple: #d699b6;
 
-    --heatmap-0: #343f44;
-    --heatmap-1: #3d484d;
-    --heatmap-2: #475258;
+    --heatmap-0: #475258;
+    --heatmap-1: #5a6872;
+    --heatmap-2: #7fbbb3;
     --heatmap-3: #a7c080;
     --heatmap-4: #dbbc7f;
     --heatmap-5: #e69875;
@@ -518,9 +518,9 @@
     --theme-aqua: #9ccfd8;
     --theme-purple: #c4a7e7;
 
-    --heatmap-0: #1f1d2e;
-    --heatmap-1: #26233a;
-    --heatmap-2: #403d52;
+    --heatmap-0: #403d52;
+    --heatmap-1: #56526e;
+    --heatmap-2: #908caa;
     --heatmap-3: #31748f;
     --heatmap-4: #ebbcba;
     --heatmap-5: #f6c177;
@@ -650,9 +650,9 @@
     --theme-aqua: #7fdbca;
     --theme-purple: #c792ea;
 
-    --heatmap-0: #01111d;
-    --heatmap-1: #0b2942;
-    --heatmap-2: #1d3b53;
+    --heatmap-0: #1d3b53;
+    --heatmap-1: #2e5266;
+    --heatmap-2: #4b6479;
     --heatmap-3: #21c7a8;
     --heatmap-4: #ecc48d;
     --heatmap-5: #f78c6c;
