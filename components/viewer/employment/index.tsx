@@ -1,6 +1,7 @@
 import ImageWithFallback from '@/components/image-with-fallback';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
+import Mask from '@/components/visual/mask';
 import { Employment } from '@/types/employment';
 
 const EmploymentViewer = ({ employment }: { employment: Employment }) => {
@@ -33,7 +34,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
       <Separator margin='0' />
 
       {/* Scrollable Content */}
-      <div className='flex-1 overflow-y-auto'>
+      <Mask direction='vertical' className='flex-1 scrollbar-hide'>
         <div className='p-4 sm:px-8 sm:py-8 space-y-8'>
           {/* Employment Details */}
           <section>
@@ -105,7 +106,7 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
             </ul>
           </section>
         </div>
-      </div>
+      </Mask>
     </div>
   );
 };

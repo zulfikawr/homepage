@@ -10,6 +10,7 @@ import {
   MarkdownRenderer,
   Separator,
 } from '@/components/ui';
+import Mask from '@/components/visual/mask';
 import { useCollection } from '@/hooks';
 import {
   mapRecordToBook,
@@ -402,9 +403,10 @@ Instructions:
       </div>
 
       {/* Messages */}
-      <div
+      <Mask
         ref={scrollRef}
-        className='flex-1 overflow-y-auto p-4 sm:p-6 space-y-4'
+        direction='vertical'
+        className='flex-1 scrollbar-hide p-4 sm:p-6 space-y-4'
       >
         {messages.length === 0 && (
           <div className='h-full flex flex-col items-center justify-center text-center space-y-4 opacity-60'>
@@ -465,7 +467,7 @@ Instructions:
             </div>
           </div>
         ))}
-      </div>
+      </Mask>
 
       <Separator margin='0' />
 
