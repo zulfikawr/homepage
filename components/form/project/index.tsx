@@ -463,21 +463,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             <FormLabel htmlFor='image' required>
               Project Image
             </FormLabel>
-            <Input
-              type='text'
-              value={project.image || ''}
-              onChange={(e) => handleChange('image', e.target.value)}
-              placeholder='Image URL or select file below'
-              className='mb-2'
-            />
-            <FileUpload
-              collectionName='projects'
-              fieldName='image'
-              existingValue={project.image}
-              onFileSelect={setImageFile}
-              onUploadSuccess={(url) => handleChange('image', url)}
-              accept='image/*'
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={project.image || ''}
+                onChange={(e) => handleChange('image', e.target.value)}
+                placeholder='Image URL'
+              />
+              <FileUpload
+                collectionName='projects'
+                fieldName='image'
+                existingValue={project.image}
+                onFileSelect={setImageFile}
+                onUploadSuccess={(url) => handleChange('image', url)}
+                accept='image/*'
+              />
+            </div>
           </div>
           <div>
             <FormLabel htmlFor='description' required>
