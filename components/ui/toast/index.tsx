@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Icon, IconName } from '../icon';
 import { Portal } from '../portal';
@@ -227,13 +228,17 @@ const ToastItem = ({
 
   return (
     <div
-      className={`fixed top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out pointer-events-auto ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
-      }`}
+      className={twMerge(
+        'fixed top-8 lg:top-16 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out pointer-events-auto',
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8',
+      )}
       style={{ marginTop: `${index * 60}px` }}
     >
       <div
-        className={`${variantProps.bgClass} ${variantProps.textClass} border-2 ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-brutalist-lg flex items-center justify-center cursor-pointer text-sm lg:text-lg whitespace-nowrap transition-all duration-150 hover:shadow-brutalist-xl hover:-translate-y-1`}
+        className={twMerge(
+          variantProps.bgClass,
+          '${variantProps.textClass} border-2 ${variantProps.borderClass} px-4 py-2 rounded-lg shadow-brutalist-lg flex items-center justify-center cursor-pointer text-sm md:text-md lg:text-lg whitespace-nowrap transition-all duration-150 hover:shadow-brutalist-xl hover:-translate-y-1',
+        )}
       >
         {variantProps.icon && (
           <span className='mr-2 size-5'>

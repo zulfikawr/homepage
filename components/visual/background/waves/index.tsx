@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { twMerge } from 'tailwind-merge';
 
 import Waves from './component';
 
@@ -47,7 +48,10 @@ export default function WavesBackground({
   return (
     <div
       ref={containerRef}
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full`}
+      className={twMerge(
+        isPreview ? 'absolute' : 'fixed',
+        'inset-0 -z-10 min-h-dvh w-full',
+      )}
     >
       <Waves
         lineColor={colors.line}

@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Portal } from '@/components/ui';
 import Mask from '@/components/visual/mask';
@@ -206,11 +207,9 @@ const Popover = ({
     }
   };
 
-  const effectStyles = 'bg-popover border border-border backdrop-blur-none';
-
   return (
     <PopoverContext.Provider value={{ setIsOpen: handleClose }}>
-      <div className={`relative inline-block ${className}`}>
+      <div className={twMerge('relative inline-block', className)}>
         <div
           ref={triggerRef}
           onClick={togglePopover}
@@ -233,13 +232,12 @@ const Popover = ({
             )}
             <div
               ref={menuRef}
-              className={`fixed z-[9999] w-max shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
+              className={twMerge(
+                'fixed z-[9999] w-max shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out bg-popover border-border backdrop-blur-none',
                 isOpen
                   ? 'opacity-100 scale-y-100'
-                  : 'opacity-0 scale-y-95 pointer-events-none'
-              }
-                ${effectStyles}
-              `}
+                  : 'opacity-0 scale-y-95 pointer-events-none',
+              )}
               role='menu'
               data-popover-content='true'
               style={{

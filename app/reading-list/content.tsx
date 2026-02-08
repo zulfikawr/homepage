@@ -1,5 +1,7 @@
 'use client';
 
+import { twMerge } from 'tailwind-merge';
+
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
 import SectionTitle from '@/components/section-title';
@@ -56,7 +58,14 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'currently_reading').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={twMerge(
+              'grid',
+              booksArray.filter((book) => book.type === 'currently_reading')
+                .length === 0
+                ? 'grid-cols-1'
+                : 'grid-cols-2',
+              'gap-4',
+            )}
           >
             {booksArray.filter((book) => book.type === 'currently_reading')
               .length > 0 ? (
@@ -87,7 +96,13 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={twMerge(
+              'grid',
+              booksArray.filter((book) => book.type === 'read').length === 0
+                ? 'grid-cols-1'
+                : 'grid-cols-2',
+              'gap-4',
+            )}
           >
             {booksArray.filter((book) => book.type === 'read').length > 0 ? (
               <StaggerContainer>
@@ -117,7 +132,13 @@ export default function ReadingListContent({ books }: { books: Book[] }) {
         />
         <div className='mt-4'>
           <div
-            className={`grid ${booksArray.filter((book) => book.type === 'to_read').length === 0 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
+            className={twMerge(
+              'grid',
+              booksArray.filter((book) => book.type === 'to_read').length === 0
+                ? 'grid-cols-1'
+                : 'grid-cols-2',
+              'gap-4',
+            )}
           >
             {booksArray.filter((book) => book.type === 'to_read').length > 0 ? (
               <StaggerContainer>

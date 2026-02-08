@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Card } from '@/components/ui';
 import { Icon, Skeleton } from '@/components/ui';
@@ -122,7 +123,7 @@ const WeatherStyles = () => (
 );
 
 const Sun = ({ className = '' }: { className?: string }) => (
-  <div className={`absolute ${className}`}>
+  <div className={twMerge('absolute', className)}>
     <div
       className='relative w-14 h-14 rounded-full z-10
       bg-gradient-to-br from-[#fabd2f] to-[#d79921]
@@ -139,7 +140,7 @@ const Sun = ({ className = '' }: { className?: string }) => (
 );
 
 const Moon = ({ className = '' }: { className?: string }) => (
-  <div className={`absolute ${className}`}>
+  <div className={twMerge('absolute', className)}>
     <div
       className='relative w-14 h-14 rounded-full overflow-hidden
       bg-gradient-to-br from-[#ebdbb2] to-[#928374]
@@ -176,9 +177,11 @@ const Cloud = ({
   zIndex?: number;
 }) => (
   <div
-    className={`absolute flex items-end ${
-      isFront ? 'animate-cloud-fast' : 'animate-cloud-slow'
-    } ${isDaytime ? 'text-white/90' : 'text-[#a89984]'}`}
+    className={twMerge(
+      'absolute flex items-end',
+      isFront ? 'animate-cloud-fast' : 'animate-cloud-slow',
+      isDaytime ? 'text-white/90' : 'text-[#a89984]',
+    )}
     style={{
       top: `${top}%`,
       zIndex: zIndex,
@@ -259,7 +262,11 @@ const RainDrops = ({
       {drops.map((drop, i) => (
         <div
           key={i}
-          className={`absolute ${type === 'rain' ? 'w-[1px] h-6' : 'w-1 h-1 rounded-full'} ${type === 'rain' ? 'animate-rain' : 'animate-snow'}`}
+          className={twMerge(
+            'absolute',
+            type === 'rain' ? 'w-[1px] h-6' : 'w-1 h-1 rounded-full',
+            type === 'rain' ? 'animate-rain' : 'animate-snow',
+          )}
           style={{
             left: `${drop.left}%`,
             backgroundColor: color,
@@ -346,7 +353,10 @@ const WeatherVisuals = ({
 
       {type === 'fog' && (
         <div
-          className={`absolute inset-0 z-40 ${isDaytime ? 'bg-white/40' : 'bg-[#928374]/30'}`}
+          className={twMerge(
+            'absolute inset-0 z-40',
+            isDaytime ? 'bg-white/40' : 'bg-[#928374]/30',
+          )}
         >
           <Cloud
             top={20}
@@ -378,7 +388,10 @@ const WeatherVisuals = ({
       {type === 'rain' && (
         <>
           <div
-            className={`absolute inset-0 z-10 ${isDaytime ? 'bg-[#458588]/20' : 'bg-black/30'}`}
+            className={twMerge(
+              'absolute inset-0 z-10',
+              isDaytime ? 'bg-[#458588]/20' : 'bg-black/30',
+            )}
           />
           <Cloud
             top={-5}
@@ -408,7 +421,10 @@ const WeatherVisuals = ({
         <>
           <div className='absolute inset-0 bg-white mix-blend-overlay animate-lightning z-50 pointer-events-none' />
           <div
-            className={`absolute inset-0 z-10 ${isDaytime ? 'bg-[#928374]/60' : 'bg-black/50'}`}
+            className={twMerge(
+              'absolute inset-0 z-10',
+              isDaytime ? 'bg-[#928374]/60' : 'bg-black/50',
+            )}
           />
           <Cloud
             top={-5}
@@ -437,7 +453,10 @@ const WeatherVisuals = ({
       {type === 'snow' && (
         <>
           <div
-            className={`absolute inset-0 z-10 ${isDaytime ? 'bg-white/20' : 'bg-white/5'}`}
+            className={twMerge(
+              'absolute inset-0 z-10',
+              isDaytime ? 'bg-white/20' : 'bg-white/5',
+            )}
           />
           <div className='z-40 absolute inset-0'>
             <RainDrops count={50} color='#fbf1c7' type='snow' />
@@ -463,7 +482,12 @@ const FlipNumber = ({
 
   return (
     <div
-      className={`relative w-8 h-12 overflow-hidden mx-0.5 z-30 ${isDaytime ? 'bg-[#fbf1c7]/40 border border-[#282828]/10' : 'bg-[#282828]/80 border border-[#ebdbb2]/10'}`}
+      className={twMerge(
+        'relative w-8 h-12 overflow-hidden mx-0.5 z-30',
+        isDaytime
+          ? 'bg-[#fbf1c7]/40 border border-[#282828]/10'
+          : 'bg-[#282828]/80 border border-[#ebdbb2]/10',
+      )}
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
@@ -471,7 +495,10 @@ const FlipNumber = ({
           <Skeleton width='100%' height='100%' />
         ) : (
           <span
-            className={`text-xl font-mono font-bold ${isDaytime ? 'text-[#282828]' : 'text-[#ebdbb2]'}`}
+            className={twMerge(
+              'text-xl font-mono font-bold',
+              isDaytime ? 'text-[#282828]' : 'text-[#ebdbb2]',
+            )}
           >
             {number}
           </span>
@@ -489,7 +516,10 @@ const WeatherSeparator = ({
   isLoading?: boolean;
 }) => (
   <div
-    className={`mx-1 text-xl font-bold z-30 drop-shadow-sm ${isDaytime ? 'text-[#282828]/90' : 'text-[#ebdbb2]/90'}`}
+    className={twMerge(
+      'mx-1 text-xl font-bold z-30 drop-shadow-sm',
+      isDaytime ? 'text-[#282828]/90' : 'text-[#ebdbb2]/90',
+    )}
   >
     {isLoading ? (
       <div className='animate-pulse text-muted opacity-50'>:</div>
@@ -531,7 +561,11 @@ const WeatherLayout = ({
 
   return (
     <Card
-      className={`bg-gradient-to-br ${getBgGradient()} min-h-[120px] h-full`}
+      className={twMerge(
+        'bg-gradient-to-br',
+        getBgGradient(),
+        'min-h-[120px] h-full',
+      )}
       isPreview
     >
       {!isLoading && (
@@ -542,11 +576,12 @@ const WeatherLayout = ({
         {/* Header */}
         <div className='flex w-full items-center justify-between pointer-events-none'>
           <div
-            className={`flex items-center gap-x-2 px-3 py-1.5 rounded-full shadow-sm border border-white/10 transition-colors ${
+            className={twMerge(
+              'flex items-center gap-x-2 px-3 py-1.5 rounded-full shadow-sm border border-white/10 transition-colors',
               isDaytime
                 ? 'bg-[#fbf1c7]/40 text-[#282828]'
-                : 'bg-[#282828]/80 text-[#ebdbb2]'
-            }`}
+                : 'bg-[#282828]/80 text-[#ebdbb2]',
+            )}
           >
             {isLoading ? (
               <>
@@ -562,11 +597,12 @@ const WeatherLayout = ({
           </div>
 
           <div
-            className={`flex items-center px-3 py-1.5 rounded-full shadow-sm border border-white/10 text-xs font-bold transition-colors ${
+            className={twMerge(
+              'flex items-center px-3 py-1.5 rounded-full shadow-sm border border-white/10 text-xs font-bold transition-colors',
               isDaytime
                 ? 'bg-[#fbf1c7]/40 text-[#282828]'
-                : 'bg-[#282828]/80 text-[#ebdbb2]'
-            }`}
+                : 'bg-[#282828]/80 text-[#ebdbb2]',
+            )}
           >
             {isLoading ? <Skeleton width={70} height={14} /> : timeData.date}
           </div>
@@ -598,7 +634,12 @@ const WeatherLayout = ({
         {/* Footer: Weather Info */}
         <div className='flex justify-center pointer-events-none h-6 leading-6'>
           <div
-            className={`text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/10 flex items-center gap-2 ${isDaytime ? 'bg-[#fbf1c7]/40 text-[#282828]' : 'bg-[#282828]/80 text-[#ebdbb2]'}`}
+            className={twMerge(
+              'text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/10 flex items-center gap-2',
+              isDaytime
+                ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                : 'bg-[#282828]/80 text-[#ebdbb2]',
+            )}
           >
             {isLoading ? (
               <>

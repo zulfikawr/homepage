@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import PageTitle from '@/components/page-title';
 import {
@@ -497,7 +498,12 @@ const StorageContent = () => {
                   <div className='flex items-center gap-3'>
                     <Icon
                       name={item.type === 'folder' ? 'folder' : 'file'}
-                      className={`size-5 flex-shrink-0 ${item.type === 'folder' ? 'text-primary' : 'text-muted-foreground'}`}
+                      className={twMerge(
+                        'size-5 flex-shrink-0',
+                        item.type === 'folder'
+                          ? 'text-primary'
+                          : 'text-muted-foreground',
+                      )}
                     />
                     {getFileName(item.key)}
                   </div>

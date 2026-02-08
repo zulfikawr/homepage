@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 import { Card } from '@/components/ui';
 import {
@@ -152,7 +153,12 @@ export const GitHubContributionsLayout = ({
                         text={`${day.date}: ${day.count} contributions`}
                       >
                         <div
-                          className={`w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-theme-orange/50 ${getHeatmapIntensityClass(getIntensityLevel(day.count))}`}
+                          className={twMerge(
+                            'w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-theme-orange/50',
+                            getHeatmapIntensityClass(
+                              getIntensityLevel(day.count),
+                            ),
+                          )}
                         />
                       </Tooltip>
                     ))}

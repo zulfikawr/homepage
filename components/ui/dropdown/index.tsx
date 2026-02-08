@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Portal } from '@/components/ui';
 import Mask from '@/components/visual/mask';
@@ -208,7 +209,7 @@ const Dropdown = ({
 
   return (
     <DropdownContext.Provider value={{ setIsOpen: handleClose }}>
-      <div className={`relative inline-block ${className}`}>
+      <div className={twMerge('relative inline-block', className)}>
         <div
           ref={triggerRef}
           onClick={toggleDropdown}
@@ -232,7 +233,10 @@ const Dropdown = ({
                     }
                     <Icon
                       name='caretDown'
-                      className={`size-4 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+                      className={twMerge(
+                        'size-4 transition-transform duration-200 flex-shrink-0',
+                        isOpen ? 'rotate-180' : '',
+                      )}
                     />
                   </div>
                 ),
@@ -251,15 +255,14 @@ const Dropdown = ({
             )}
             <div
               ref={menuRef}
-              className={`fixed z-[9999] ${
-                matchTriggerWidth ? '' : 'w-max'
-              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
+              className={twMerge(
+                'fixed z-[9999] shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out',
+                matchTriggerWidth ? '' : 'w-max',
                 isOpen
                   ? 'opacity-100 scale-y-100'
-                  : 'opacity-0 scale-y-95 pointer-events-none'
-              }
-                ${effectStyles}
-              `}
+                  : 'opacity-0 scale-y-95 pointer-events-none',
+                effectStyles,
+              )}
               role='menu'
               data-dropdown-content='true'
               style={{
@@ -323,9 +326,11 @@ const DropdownItem = ({
     <button
       type='button'
       onClick={handleClick}
-      className={`w-full text-left text-sm md:text-md px-4 py-2 transition-colors duration-150 flex items-center gap-2 cursor-pointer ${
-        isActive ? activeStyles : inactiveStyles
-      } ${className}`}
+      className={twMerge(
+        'w-full text-left text-sm md:text-md px-4 py-2 transition-colors duration-150 flex items-center gap-2 cursor-pointer',
+        isActive ? activeStyles : inactiveStyles,
+        className,
+      )}
       style={{ borderRadius: `${radius}px` }}
     >
       {icon && (

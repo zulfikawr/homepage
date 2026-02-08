@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 import SectionTitle from '@/components/section-title';
 import { drawer } from '@/components/ui';
@@ -473,7 +474,10 @@ export function KbarContent() {
         <div className='relative'>
           <Icon
             name={isSearching ? 'circleNotch' : 'magnifyingGlass'}
-            className={`absolute left-4 top-1/2 -translate-y-1/2 size-5 z-10 ${isSearching ? 'animate-spin' : ''}`}
+            className={twMerge(
+              'absolute left-4 top-1/2 -translate-y-1/2 size-5 z-10',
+              isSearching ? 'animate-spin' : '',
+            )}
           />
           <Input
             ref={inputRef}
@@ -511,7 +515,10 @@ export function KbarContent() {
               <div key={section.label} className='mb-8'>
                 <SectionTitle icon={section.icon} title={section.label} />
                 <div
-                  className={`grid gap-3 ${section.isDb ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'}`}
+                  className={twMerge(
+                    'grid gap-3',
+                    section.isDb ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2',
+                  )}
                 >
                   {section.items.map((item, index) => {
                     const isSelected = itemOffset + index === selectedIndex;

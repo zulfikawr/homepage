@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 import ImageWithFallback from '@/components/image-with-fallback';
 import { Icon } from '@/components/ui/icon';
@@ -38,7 +39,12 @@ export default function MovieCard({
     const filled = index <= rating;
     return (
       <div
-        className={`p-0.5 ${filled ? 'text-theme-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
+        className={twMerge(
+          'p-0.5',
+          filled
+            ? 'text-theme-yellow'
+            : 'text-muted-foreground dark:text-muted-foreground',
+        )}
         aria-hidden
       >
         <Icon name='star' className='size-[12px] md:size-4.5' />
@@ -52,7 +58,7 @@ export default function MovieCard({
         onClick={handleCardClick}
         openForm={openForm}
         isPreview={isPreview}
-        className={`${openForm || isPreview ? 'w-full' : ''}`}
+        className={twMerge(openForm || isPreview ? 'w-full' : '')}
       >
         {isPreview ? (
           <>

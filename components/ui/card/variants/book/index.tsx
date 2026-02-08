@@ -1,4 +1,5 @@
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 import ImageWithFallback from '@/components/image-with-fallback';
 import { Book } from '@/types/book';
@@ -38,7 +39,7 @@ export default function BookCard({
         openForm={openForm}
         isPreview={isPreview}
         isActive={isActive}
-        className={`${openForm || isPreview ? 'w-full' : ''}`}
+        className={twMerge(openForm || isPreview ? 'w-full' : '')}
       >
         <div className='flex flex-1 items-center'>
           <div className='flex-shrink-0 px-4.5 py-4'>

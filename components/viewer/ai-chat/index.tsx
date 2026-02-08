@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import {
   Button,
@@ -433,14 +434,18 @@ Instructions:
         {messages.map((m) => (
           <div
             key={m.id}
-            className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={twMerge(
+              'flex',
+              m.role === 'user' ? 'justify-end' : 'justify-start',
+            )}
           >
             <div
-              className={`max-w-[85%] rounded-2xl px-4 ${
+              className={twMerge(
+                'max-w-[85%] rounded-2xl px-4',
                 m.role === 'user'
                   ? 'bg-primary text-primary-foreground rounded-tr-none'
-                  : 'bg-muted rounded-tl-none'
-              }`}
+                  : 'bg-muted rounded-tl-none',
+              )}
             >
               {m.role === 'assistant' && !m.content ? (
                 <div className='flex gap-1 py-4'>
@@ -451,7 +456,10 @@ Instructions:
               ) : (
                 <MarkdownRenderer
                   content={m.content}
-                  className={`py-2 ${m.role === 'user' ? 'prose-chat' : 'prose-chat-assistant'}`}
+                  className={twMerge(
+                    'py-2',
+                    m.role === 'user' ? 'prose-chat' : 'prose-chat-assistant',
+                  )}
                 />
               )}
             </div>

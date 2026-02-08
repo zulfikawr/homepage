@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Button, Icon, Skeleton } from '@/components/ui';
 
@@ -186,9 +187,10 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
                     ? handleFolderClick(item.key)
                     : handleFileClick(item.key)
                 }
-                className={`w-full text-left px-3 py-2 rounded hover:bg-muted/50 flex items-center gap-3 cursor-pointer ${
-                  selectedKey === item.key ? 'bg-primary/10' : ''
-                }`}
+                className={twMerge(
+                  'w-full text-left px-3 py-2 rounded hover:bg-muted/50 flex items-center gap-3 cursor-pointer',
+                  selectedKey === item.key ? 'bg-primary/10' : '',
+                )}
               >
                 <Icon
                   name={item.type === 'folder' ? 'folder' : 'file'}

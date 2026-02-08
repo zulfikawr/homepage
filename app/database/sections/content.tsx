@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
@@ -199,11 +200,13 @@ export default function SectionDatabase() {
                   onDragStart={(e) => onDragStart(e, section)}
                   onDragOver={(e) => onDragOver(e, index)}
                   onDragEnd={onDragEnd}
-                  className={`flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card ${
+                  className={twMerge(
+                    'flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card',
                     draggedItem?.id === section.id
                       ? 'opacity-50 scale-95 border-theme-blue'
-                      : 'opacity-100'
-                  } cursor-grab active:cursor-grabbing`}
+                      : 'opacity-100',
+                    'cursor-grab active:cursor-grabbing',
+                  )}
                 >
                   <div className='text-muted-foreground size-5 flex-shrink-0'>
                     <Icon name='dotsSixVertical' />

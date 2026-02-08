@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Button, Icon } from '@/components/ui';
 
@@ -82,7 +83,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={twMerge('flex flex-col gap-2', className)}>
       <audio ref={audioRef} src={src} preload='none' />
 
       {/* Controls */}

@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 import { Button, Icon, Skeleton } from '@/components/ui';
 import type { IconName } from '@/components/ui/icon';
@@ -23,7 +24,6 @@ const SectionTitle = ({
   title,
   link,
   loading = false,
-  iconClassName = '',
 }: SectionTitleProps) => {
   const { radius } = useRadius();
 
@@ -45,7 +45,10 @@ const SectionTitle = ({
 
   return (
     <div
-      className={`flex items-center relative z-10 mb-5 select-none ${link && !loading ? 'justify-between' : 'justify-start'}`}
+      className={twMerge(
+        'flex items-center relative z-10 mb-5 select-none',
+        link && !loading ? 'justify-between' : 'justify-start',
+      )}
     >
       <div
         className='inline-flex items-center bg-card border-2 shadow-brutalist px-4 py-[4px] font-medium tracking-wider brutalist-interactive-lg'
@@ -63,7 +66,11 @@ const SectionTitle = ({
         ) : (
           <>
             <span
-              className={`mr-1.5 flex h-5 w-5 items-center justify-center ${iconColor} ${iconClassName}`}
+              className={twMerge(
+                'mr-1.5 flex h-5 w-5 items-center justify-center',
+                iconColor,
+                '${iconClassName}',
+              )}
             >
               {icon && <Icon name={icon} />}
             </span>

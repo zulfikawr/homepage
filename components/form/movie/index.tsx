@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 import DateSelect from '@/components/date-select';
 import ImageWithFallback from '@/components/image-with-fallback';
@@ -427,7 +428,12 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
                     type='button'
                     onClick={() => handleChange('rating', i)}
                     onMouseDown={(e) => e?.preventDefault()}
-                    className={`p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform ${filled ? 'text-theme-yellow' : 'text-muted-foreground dark:text-muted-foreground'}`}
+                    className={twMerge(
+                      'p-0.5 focus:outline-none cursor-pointer hover:scale-110 transition-transform',
+                      filled
+                        ? 'text-theme-yellow'
+                        : 'text-muted-foreground dark:text-muted-foreground',
+                    )}
                     aria-label={`${i} star`}
                   >
                     <div className='w-4 h-4'>

@@ -9,6 +9,7 @@ import {
   MultiPolygon,
   Polygon,
 } from 'geojson';
+import { twMerge } from 'tailwind-merge';
 
 import { HeatmapLegend, Portal } from '@/components/ui';
 import { useRadius } from '@/contexts/radius-context';
@@ -462,7 +463,7 @@ export default function WorldMap({ data, className }: WorldMapProps) {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full min-h-[200px] ${className}`}
+      className={twMerge('relative w-full h-full min-h-[200px]', className)}
     >
       <svg ref={svgRef} className='w-full h-full' />
 

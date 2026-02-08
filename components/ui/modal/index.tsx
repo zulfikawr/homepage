@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { useBodyScroll, useHotkeys } from '@/hooks';
 
@@ -107,21 +108,27 @@ const Modal = () => {
   return (
     <Portal>
       <div
-        className={`fixed inset-0 z-[9999] ${isVisible ? 'block' : 'hidden'}`}
+        className={twMerge(
+          'fixed inset-0 z-[9999]',
+          isVisible ? 'block' : 'hidden',
+        )}
       >
         <div
-          className={`absolute inset-0 bg-card/60 backdrop-blur-xs transition-opacity duration-500 ${
-            animation === 'in' ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={twMerge(
+            'absolute inset-0 bg-card/60 backdrop-blur-xs transition-opacity duration-500',
+            animation === 'in' ? 'opacity-100' : 'opacity-0',
+          )}
           onClick={handleClose}
         />
 
         <div className='fixed inset-0 flex items-center justify-center p-4'>
           <div
-            className={`w-full max-w-xl bg-card rounded-xl border-2 shadow-brutalist-xl flex flex-col transition-all duration-400 ease-in-out
-          ${animation === 'in' ? 'scale-100' : 'scale-95'} ${
-            animation === 'in' ? 'opacity-100' : 'opacity-0'
-          }`}
+            className={twMerge(
+              'w-full max-w-xl bg-card rounded-xl border-2 shadow-brutalist-xl flex flex-col transition-all duration-400 ease-in-out',
+              animation === 'in'
+                ? 'scale-100 opacity-100'
+                : 'scale-95 opacity-0',
+            )}
           >
             {currentContent}
           </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
+import { twMerge } from 'tailwind-merge';
 
 import ParticleNetwork from './component';
 
@@ -42,7 +43,10 @@ export default function ParticleNetworkBackground({
   return (
     <div
       ref={containerRef}
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden`}
+      className={twMerge(
+        isPreview ? 'absolute' : 'fixed',
+        'inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden',
+      )}
     >
       <ParticleNetwork
         particleColor={colors.particle}

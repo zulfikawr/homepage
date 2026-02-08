@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { cookies } from 'next/headers';
 import Script from 'next/script';
+import { twMerge } from 'tailwind-merge';
 
 import Footer from '@/components/footer';
 import Header from '@/components/header';
@@ -15,7 +16,6 @@ import { getCustomizationSettings } from '@/database/customization';
 import Providers from './providers';
 
 import '@/styles/tailwind.css';
-import '@/styles/atom-one-dark.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -94,7 +94,12 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} ${spaceGrotesk.className} relative bg-background`}
+        className={twMerge(
+          spaceGrotesk.variable,
+          jetbrainsMono.variable,
+          spaceGrotesk.className,
+          'relative bg-background',
+        )}
       >
         <Providers
           defaultTheme={customization.default_theme}

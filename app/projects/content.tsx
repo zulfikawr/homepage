@@ -195,7 +195,7 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
 
       <div className='space-y-10 min-h-[50vh]'>
         {!hasResults && (
-          <div className='animate-fade-in flex flex-col items-center justify-center py-12 text-center'>
+          <div className='flex flex-col items-center justify-center py-12 text-center'>
             <Icon
               name='ghost'
               className='size-12 text-muted-foreground/50 mb-4'

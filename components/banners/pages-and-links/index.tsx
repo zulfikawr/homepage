@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 import { Card, Skeleton } from '@/components/ui';
 import { Button, Icon, Separator, Tooltip } from '@/components/ui';
@@ -124,7 +125,10 @@ const PagesAndLinksBanner = ({
                 >
                   <Button className='group/btn !px-4 dark:bg-muted tracking-normal gap-2'>
                     <span
-                      className={`${link.color} group-hover/btn:text-accent-foreground`}
+                      className={twMerge(
+                        link.color,
+                        'group-hover/btn:text-accent-foreground',
+                      )}
                     >
                       <Icon name={link.icon as IconName} />
                     </span>

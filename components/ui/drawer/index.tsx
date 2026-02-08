@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { useRadius } from '@/contexts/radius-context';
 import { useBodyScroll, useHotkeys } from '@/hooks';
@@ -186,22 +187,27 @@ const Drawer = () => {
   return (
     <Portal>
       <div
-        className={`fixed inset-0 z-[9998] ${isVisible ? 'block' : 'hidden'}`}
+        className={twMerge(
+          'fixed inset-0 z-[9998]',
+          isVisible ? 'block' : 'hidden',
+        )}
       >
         {/* Overlay */}
         <div
-          className={`absolute inset-0 bg-card/60 backdrop-blur-xs transition-opacity duration-500 ${
-            animation === 'in' ? 'opacity-100' : 'opacity-0'
-          }`}
+          className={twMerge(
+            'absolute inset-0 bg-card/60 backdrop-blur-xs transition-opacity duration-500',
+            animation === 'in' ? 'opacity-100' : 'opacity-0',
+          )}
           onClick={handleClose}
         />
 
         {/* Drawer Panel */}
         <div
           ref={drawerRef}
-          className={`absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto
-          border-2 flex flex-col overflow-hidden bg-background shadow-brutalist-xl
-          ${!isDragging ? 'transition-transform duration-500 ease-out' : ''}`}
+          className={twMerge(
+            'absolute bottom-0 left-0 right-0 h-[80vh] lg:h-[90vh] lg:w-page lg:mx-auto border-2 flex flex-col overflow-hidden bg-background shadow-brutalist-xl',
+            !isDragging ? 'transition-transform duration-500 ease-out' : '',
+          )}
           style={{
             borderRadius: `${radius}px ${radius}px 0 0`,
             transform: isDragging

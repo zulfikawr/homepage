@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Editor } from '@/components/editor';
 import ImageWithFallback from '@/components/image-with-fallback';
@@ -120,7 +121,10 @@ export default function CommentCard({
 
   return (
     <div
-      className={`space-y-4 ${level > 0 ? 'ml-6 sm:ml-12 border-l-2 border pl-4 sm:pl-6' : ''}`}
+      className={twMerge(
+        'space-y-4',
+        level > 0 ? 'ml-6 sm:ml-12 border-l-2 border pl-4 sm:pl-6' : '',
+      )}
     >
       <Card className='p-4'>
         <div className='flex items-start justify-between'>
@@ -238,11 +242,12 @@ export default function CommentCard({
               <button
                 onClick={handleLike}
                 disabled={isLiking}
-                className={`flex items-center gap-x-1 text-sm font-medium transition-colors ${
+                className={twMerge(
+                  'flex items-center gap-x-1 text-sm font-medium transition-colors',
                   isLiking
                     ? 'text-primary'
-                    : 'text-muted-foreground hover:text-primary'
-                }`}
+                    : 'text-muted-foreground hover:text-primary',
+                )}
               >
                 <Icon
                   name={comment?.likes && comment.likes > 0 ? 'heart' : 'heart'}

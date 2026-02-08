@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
@@ -87,7 +88,12 @@ export default function FeedbackContent() {
                   Comments/Feedback
                 </FormLabel>
                 <span
-                  className={`text-xs ${feedback.length === MAX_CHARS ? 'text-destructive font-bold' : 'text-muted-foreground'}`}
+                  className={twMerge(
+                    'text-xs',
+                    feedback.length === MAX_CHARS
+                      ? 'text-destructive font-bold'
+                      : 'text-muted-foreground',
+                  )}
                 >
                   {feedback.length}/{MAX_CHARS}
                 </span>

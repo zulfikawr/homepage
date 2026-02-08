@@ -168,7 +168,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
             <Button
               variant='ghost'
               icon='list'
-              className='flex lg:hidden'
+              className='flex lg:hidden px-0'
               onClick={() => drawer.open(<KbarContent />)}
             />
           </div>

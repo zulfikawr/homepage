@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 import { Post } from 'types/post';
 import { trimStr } from 'utilities/string';
 
@@ -122,7 +123,10 @@ export default function PostCard({
         isActive={isActive}
       >
         <div
-          className={`flex p-6 gap-6 lg:p-8 lg:gap-8 ${!post.image ? 'flex-col' : ''}`}
+          className={twMerge(
+            'flex p-6 gap-6 lg:p-8 lg:gap-8',
+            !post.image ? 'flex-col' : '',
+          )}
         >
           {renderMedia()}
 

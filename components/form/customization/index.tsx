@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import { twMerge } from 'tailwind-merge';
 
 import { toast } from '@/components/ui';
 import { Button, FormLabel, Icon } from '@/components/ui';
@@ -76,7 +77,10 @@ const ThemePreview = ({ theme }: { theme: string }) => {
   return (
     <div
       ref={ref}
-      className={`w-full h-32 rounded-lg border border-border overflow-hidden shadow-brutalist-sm flex ${theme}`}
+      className={twMerge(
+        'w-full h-32 rounded-lg border border-border overflow-hidden shadow-brutalist-sm flex',
+        theme,
+      )}
     >
       <div
         style={{ backgroundColor: colors.bg }}
@@ -145,7 +149,10 @@ const BackgroundPreview = ({
 }) => {
   return (
     <div
-      className={`relative w-full h-32 rounded-lg border border-border overflow-hidden shadow-brutalist-sm ${theme}`}
+      className={twMerge(
+        'relative w-full h-32 rounded-lg border border-border overflow-hidden shadow-brutalist-sm',
+        theme,
+      )}
     >
       <div className='absolute inset-0 bg-background' />
       <div className='absolute inset-0 opacity-60'>

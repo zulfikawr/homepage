@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 import { IconName } from '@/components/ui/icon';
 import openLink from '@/utilities/external-link';
@@ -53,9 +54,10 @@ export default function NavigationCard({
       <div className='relative z-10 flex items-center overflow-hidden'>
         {icon && (
           <div
-            className={`mr-3 flex h-auto w-20 items-center justify-center border-r-2 border-border pr-1 md:pr-3 ${
-              className ? className : ''
-            }`}
+            className={twMerge(
+              'mr-3 flex h-auto w-20 items-center justify-center border-r-2 border-border pr-1 md:pr-3',
+              className ? className : '',
+            )}
           >
             <Icon name={icon} className='size-[28px] md:size-[32px]' />
           </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useSyncExternalStore } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { Button, Dropdown, DropdownItem } from '@/components/ui';
 
@@ -33,7 +34,6 @@ const DateSelect: React.FC<DateSelectProps> = ({
   value,
   onChange,
   mode = 'day-month-year',
-  className = '',
   disabled = false,
 }) => {
   const currentYear = useSyncExternalStore(
@@ -73,7 +73,11 @@ const DateSelect: React.FC<DateSelectProps> = ({
 
   return (
     <div
-      className={`grid ${mode === 'day-month-year' ? 'grid-cols-3' : 'grid-cols-2'} w-full gap-2 ${className}`}
+      className={twMerge(
+        'grid',
+        mode === 'day-month-year' ? 'grid-cols-3' : 'grid-cols-2',
+        'w-full gap-2 ${className}',
+      )}
     >
       {mode === 'day-month-year' && (
         <Dropdown

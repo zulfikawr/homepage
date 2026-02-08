@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
 
 import SpotifyBanner from '@/components/banners/spotify';
 import ImageWithFallback from '@/components/image-with-fallback';
@@ -268,44 +269,48 @@ export default function SpotifyMusicContent({
         <nav className='flex space-x-8 min-w-max'>
           <button
             onClick={() => setActiveTab('recent')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
+            className={twMerge(
+              'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer',
               activeTab === 'recent'
                 ? 'border-theme-green text-theme-green dark:text-theme-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
-            }`}
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground',
+            )}
           >
             <Icon name='playCircle' className='size-5' />
             Recently Played
           </button>
           <button
             onClick={() => setActiveTab('top')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
+            className={twMerge(
+              'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer',
               activeTab === 'top'
                 ? 'border-theme-green text-theme-green dark:text-theme-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
-            }`}
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground',
+            )}
           >
             <Icon name='musicNotes' className='size-5' />
             Top Tracks
           </button>
           <button
             onClick={() => setActiveTab('artists')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
+            className={twMerge(
+              'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer',
               activeTab === 'artists'
                 ? 'border-theme-green text-theme-green dark:text-theme-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
-            }`}
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground',
+            )}
           >
             <Icon name='userCircle' className='size-5' />
             Top Artists
           </button>
           <button
             onClick={() => setActiveTab('playlists')}
-            className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer ${
+            className={twMerge(
+              'flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-all cursor-pointer',
               activeTab === 'playlists'
                 ? 'border-theme-green text-theme-green dark:text-theme-green'
-                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground'
-            }`}
+                : 'border-transparent text-muted-foreground hover:text-muted-foreground hover:border-muted dark:hover:border-muted-foreground',
+            )}
           >
             <Icon name='playlist' className='size-5' />
             Playlists

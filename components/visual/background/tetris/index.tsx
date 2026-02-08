@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 import { TetrisGame } from './component';
 
@@ -53,7 +54,10 @@ const TetrisBackground = React.memo(function TetrisBackground({
 
   return (
     <div
-      className={`${isPreview ? 'absolute' : 'fixed'} inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden`}
+      className={twMerge(
+        isPreview ? 'absolute' : 'fixed',
+        'inset-0 -z-10 min-h-dvh w-full pointer-events-none overflow-hidden',
+      )}
     >
       <canvas ref={canvasRef} className='absolute inset-0' />
     </div>
