@@ -240,11 +240,7 @@ export default function UIContent() {
                   <div className='flex items-center gap-4'>
                     <span className='font-medium'>Dropdown:</span>
                     <Dropdown
-                      trigger={
-                        <Button className='flex justify-between gap-4'>
-                          Options <Icon name='caretDown' size={16} />
-                        </Button>
-                      }
+                      trigger={<Button className=''>Options</Button>}
                       matchTriggerWidth
                     >
                       <DropdownItem icon='pencilSimple'>Edit</DropdownItem>

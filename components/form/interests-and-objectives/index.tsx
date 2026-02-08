@@ -135,7 +135,6 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                   <Button
                     variant='destructive'
                     icon='trashSimple'
-                    className='h-9'
                     onClick={() => handleRemoveObjective(index)}
                   />
                 </div>
@@ -150,7 +149,6 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
                 <Button
                   variant='primary'
                   icon='plus'
-                  className='h-9'
                   onClick={handleAddObjective}
                 />
               </div>

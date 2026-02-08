@@ -14,12 +14,10 @@ import {
   DropdownItem,
   FileUpload,
   FormLabel,
-  Icon,
   Input,
   Textarea,
 } from '@/components/ui';
 import { ProjectCard } from '@/components/ui/card/variants/project';
-import { IconName } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { Project } from '@/types/project';
 import { formatDateRange } from '@/utilities/format-date';
@@ -397,10 +395,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     );
   };
 
-  const statusOptions: { key: string; label: string; icon: IconName }[] = [
-    { key: 'in_progress', label: 'Work in Progress', icon: 'gear' },
-    { key: 'completed', label: 'Completed', icon: 'checkCircle' },
-    { key: 'upcoming', label: 'Upcoming', icon: 'clock' },
+  const statusOptions: { key: string; label: string }[] = [
+    { key: 'in_progress', label: 'Work in Progress' },
+    { key: 'completed', label: 'Completed' },
+    { key: 'upcoming', label: 'Upcoming' },
   ];
 
   const currentStatus = statusOptions.find((opt) => opt.key === project.status);
@@ -565,31 +563,22 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='w-full flex items-center justify-between gap-2 text-sm md:text-md text-foreground px-2'>
-                  <div className='flex items-center gap-2'>
-                    {currentStatus?.icon && (
-                      <Icon name={currentStatus.icon} className='size-4.5' />
-                    )}
-                    <span>{currentStatus?.label}</span>
-                  </div>
-                  <Icon name='caretDown' className='size-3 opacity-50' />
+                <Button className='w-full text-foreground px-4'>
+                  <span>{currentStatus?.label}</span>
                 </Button>
               }
-              className='w-full'
+              className='w-1/2'
               matchTriggerWidth
             >
-              <div className='flex flex-col p-1 space-y-1 w-full'>
-                {statusOptions.map((option) => (
-                  <DropdownItem
-                    key={option.key}
-                    onClick={() => handleChange('status', option.key)}
-                    isActive={option.key === project.status}
-                    icon={option.icon}
-                  >
-                    {option.label}
-                  </DropdownItem>
-                ))}
-              </div>
+              {statusOptions.map((option) => (
+                <DropdownItem
+                  key={option.key}
+                  onClick={() => handleChange('status', option.key)}
+                  isActive={option.key === project.status}
+                >
+                  {option.label}
+                </DropdownItem>
+              ))}
             </Dropdown>
           </div>
           <div>
@@ -614,24 +603,25 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
           </div>
           <div>
             <FormLabel htmlFor='favicon_url'>Favicon</FormLabel>
-            <Input
-              type='text'
-              value={project.favicon || ''}
-              onChange={(e) => handleChange('favicon', e.target.value)}
-              placeholder='Favicon URL or select file below'
-              className='mb-2'
-            />
-            <FileUpload
-              collectionName='projects'
-              fieldName='favicon'
-              existingValue={project.favicon}
-              onFileSelect={setFaviconFile}
-              onUploadSuccess={(url) => handleChange('favicon', url)}
-              accept='image/*'
-            />
+            <div className='flex gap-2'>
+              <Input
+                type='text'
+                value={project.favicon || ''}
+                onChange={(e) => handleChange('favicon', e.target.value)}
+                placeholder='Favicon URL'
+              />
+              <FileUpload
+                collectionName='projects'
+                fieldName='favicon'
+                existingValue={project.favicon}
+                onFileSelect={setFaviconFile}
+                onUploadSuccess={(url) => handleChange('favicon', url)}
+                accept='image/*'
+              />
+            </div>
           </div>
           <div>
-            <FormLabel htmlFor='readme'>Readme (optional)</FormLabel>
+            <FormLabel htmlFor='readme'>README</FormLabel>
             <Editor
               content={project.readme || ''}
               onUpdate={(content) => handleChange('readme', content)}

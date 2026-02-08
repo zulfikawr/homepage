@@ -229,29 +229,23 @@ export default function SpotifyMusicContent({
         trigger={
           <Button
             variant='ghost'
-            className='w-fit flex items-center gap-2 text-sm px-0 hover:bg-transparent group/time'
+            className='w-fit text-sm px-0 hover:bg-transparent group/time'
           >
             <span className='group-hover/time:text-primary transition-colors'>
               {timeRangeOptions.find((opt) => opt.value === value)?.label}
             </span>
-            <Icon
-              name='caretDown'
-              className='size-4 group-hover/time:text-primary transition-colors'
-            />
           </Button>
         }
       >
-        <div className='flex flex-col space-y-1 whitespace-nowrap min-w-max'>
-          {timeRangeOptions.map((option) => (
-            <DropdownItem
-              key={option.value}
-              onClick={() => onChange(option.value as TimeRange)}
-              isActive={value === option.value}
-            >
-              {option.label}
-            </DropdownItem>
-          ))}
-        </div>
+        {timeRangeOptions.map((option) => (
+          <DropdownItem
+            key={option.value}
+            onClick={() => onChange(option.value as TimeRange)}
+            isActive={value === option.value}
+          >
+            {option.label}
+          </DropdownItem>
+        ))}
       </Dropdown>
     );
   };

@@ -479,20 +479,11 @@ Instructions:
             disabled={isLoading}
           />
           {isLoading ? (
-            <Button
-              nativeType='button'
-              onClick={handleCancel}
-              className='px-3 h-9'
-              title='Cancel'
-            >
+            <Button nativeType='button' onClick={handleCancel} title='Cancel'>
               <Icon name='x' />
             </Button>
           ) : (
-            <Button
-              nativeType='submit'
-              disabled={!input.trim()}
-              className='px-3 h-9'
-            >
+            <Button nativeType='submit' disabled={!input.trim()}>
               <Icon name='arrowRight' />
             </Button>
           )}

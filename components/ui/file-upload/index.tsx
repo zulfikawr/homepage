@@ -138,7 +138,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         icon={
           isUploading ? 'circleNotch' : hasValue ? 'pencilSimpleLine' : 'plus'
         }
-        className={twMerge('h-9', isUploading && 'opacity-70')}
+        className={twMerge(isUploading && 'opacity-70')}
         iconClassName={twMerge(isUploading && 'animate-spin')}
       >
         <span className='hidden sm:inline'>
@@ -151,7 +151,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onClick={openFileBrowser}
         disabled={isUploading}
         icon='folder'
-        className='h-9'
       >
         <span className='hidden sm:inline'>Select</span>
       </Button>
@@ -162,7 +161,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           onClick={handleRemove}
           disabled={isUploading}
           icon='trashSimple'
-          className='h-9'
           title='Remove file'
         >
           <span className='hidden sm:inline'>Remove</span>

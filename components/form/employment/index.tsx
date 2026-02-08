@@ -11,7 +11,6 @@ import {
   DropdownItem,
   FileUpload,
   FormLabel,
-  Icon,
   Input,
 } from '@/components/ui';
 import { EmploymentCard } from '@/components/ui/card/variants/employment';
@@ -334,25 +333,22 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='flex items-center justify-between w-full text-base px-2'>
+                <Button className='w-full text-base px-2'>
                   {currentJobType?.label}
-                  <Icon name='caretDown' className='size-4 opacity-50' />
                 </Button>
               }
               className='w-full'
               matchTriggerWidth
             >
-              <div className='flex flex-col p-1 space-y-1 w-full'>
-                {jobTypeOptions.map((option) => (
-                  <DropdownItem
-                    key={option.key}
-                    onClick={() => handleChange('job_type', option.key)}
-                    isActive={option.key === employment.job_type}
-                  >
-                    {option.label}
-                  </DropdownItem>
-                ))}
-              </div>
+              {jobTypeOptions.map((option) => (
+                <DropdownItem
+                  key={option.key}
+                  onClick={() => handleChange('job_type', option.key)}
+                  isActive={option.key === employment.job_type}
+                >
+                  {option.label}
+                </DropdownItem>
+              ))}
             </Dropdown>
           </div>
           <div>
@@ -376,7 +372,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                   <Button
                     variant='destructive'
                     icon='trashSimple'
-                    className='h-9'
                     onClick={() => handleRemoveResponsibility(index)}
                   />
                 </div>
@@ -391,7 +386,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 <Button
                   variant='primary'
                   icon='plus'
-                  className='h-9'
                   onClick={handleAddResponsibility}
                 />
               </div>

@@ -327,7 +327,7 @@ const Editor: React.FC<EditorProps> = ({
           'relative w-full flex-1 bg-transparent overflow-hidden',
         )}
       >
-        <div className='relative w-full h-full overflow-y-auto'>
+        <div className='relative w-full h-full min-h-[200px] overflow-y-auto'>
           <pre
             aria-hidden='true'
             style={sharedStyles}
@@ -347,7 +347,7 @@ const Editor: React.FC<EditorProps> = ({
             onSelect={updateCursorStyles}
             style={sharedStyles}
             className={twMerge(
-              'absolute inset-0 w-full min-h-full bg-transparent !text-transparent caret-primary resize-none focus:outline-none overflow-hidden',
+              'absolute inset-0 w-full min-h-[200px] bg-transparent !text-transparent caret-primary resize-none focus:outline-none overflow-hidden',
               textareaClassName,
             )}
             placeholder='Write your markdown here...'

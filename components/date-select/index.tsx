@@ -2,7 +2,7 @@
 
 import React, { useMemo, useSyncExternalStore } from 'react';
 
-import { Button, Dropdown, DropdownItem, Icon } from '@/components/ui';
+import { Button, Dropdown, DropdownItem } from '@/components/ui';
 
 interface DateSelectProps {
   value: Date;
@@ -79,80 +79,71 @@ const DateSelect: React.FC<DateSelectProps> = ({
         <Dropdown
           trigger={
             <Button
-              className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+              className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
               disabled={disabled}
             >
               {value.getDate()}
-              <Icon name='caretDown' className='size-4' />
             </Button>
           }
           matchTriggerWidth
         >
-          <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
-            {days.map((day) => (
-              <DropdownItem
-                key={day}
-                isActive={day === value.getDate()}
-                className='justify-left text-left'
-                onClick={() => handleDayChange(day)}
-              >
-                {day}
-              </DropdownItem>
-            ))}
-          </div>
+          {days.map((day) => (
+            <DropdownItem
+              key={day}
+              isActive={day === value.getDate()}
+              className='justify-left text-left'
+              onClick={() => handleDayChange(day)}
+            >
+              {day}
+            </DropdownItem>
+          ))}
         </Dropdown>
       )}
 
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+            className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {formatMonth(value.getMonth())}
-            <Icon name='caretDown' className='size-4' />
           </Button>
         }
         matchTriggerWidth
       >
-        <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
-          {months.map((month) => (
-            <DropdownItem
-              key={month}
-              isActive={month === value.getMonth()}
-              className='justify-left text-left'
-              onClick={() => handleMonthChange(month)}
-            >
-              {formatMonth(month)}
-            </DropdownItem>
-          ))}
-        </div>
+        {months.map((month) => (
+          <DropdownItem
+            key={month}
+            isActive={month === value.getMonth()}
+            className='justify-left text-left'
+            onClick={() => handleMonthChange(month)}
+          >
+            {formatMonth(month)}
+          </DropdownItem>
+        ))}
       </Dropdown>
 
       <Dropdown
         trigger={
           <Button
-            className='flex items-center justify-between w-full px-2 disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
+            className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
             {value.getFullYear()}
-            <Icon name='caretDown' className='size-4' />
           </Button>
         }
         matchTriggerWidth
       >
-        <div className='p-1 space-y-1 max-h-60 overflow-y-auto'>
-          {years.map((year) => (
-            <DropdownItem
-              key={year}
-              isActive={year === value.getFullYear()}
-              className='justify-left text-left'
-              onClick={() => handleYearChange(year)}
-            >
-              {year}
-            </DropdownItem>
-          ))}
-        </div>
+        {years.map((year) => (
+          <DropdownItem
+            key={year}
+            isActive={year === value.getFullYear()}
+            className='justify-left text-left'
+            onClick={() => handleYearChange(year)}
+          >
+            {year}
+          </DropdownItem>
+        ))}
       </Dropdown>
     </div>
   );

@@ -12,6 +12,7 @@ export { Input } from './input';
 export { Label } from './label';
 export { MarkdownRenderer } from './markdown-renderer';
 export { default as Modal, modal, useModal } from './modal';
+export { Popover } from './popover';
 export { Portal } from './portal';
 export { Separator } from './separator';
 export { Skeleton } from './skeleton';

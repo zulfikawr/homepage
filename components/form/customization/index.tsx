@@ -231,7 +231,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
           <FormLabel>Default Theme</FormLabel>
           <Dropdown
             trigger={
-              <Button variant='default' className='w-full justify-between px-4'>
+              <Button variant='default' className='w-full px-4'>
                 <div className='flex items-center gap-2'>
                   <Icon
                     name={selectedTheme?.icon || 'palette'}
@@ -239,29 +239,26 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
                   />
                   <span>{selectedTheme?.label || 'Select Theme'}</span>
                 </div>
-                <Icon name='caretDown' className='size-4.5 opacity-50' />
               </Button>
             }
             className='w-full'
             matchTriggerWidth
           >
-            <div className='flex flex-col gap-1 p-1 max-h-[40vh] overflow-y-auto scrollbar-hide'>
-              {themeOptions.map((option) => (
-                <DropdownItem
-                  key={option.value}
-                  onClick={() =>
-                    setSettings((prev) => ({
-                      ...prev,
-                      default_theme: option.value,
-                    }))
-                  }
-                  isActive={settings.default_theme === option.value}
-                >
-                  <Icon name={option.icon} className='size-4.5' />
-                  <span>{option.label}</span>
-                </DropdownItem>
-              ))}
-            </div>
+            {themeOptions.map((option) => (
+              <DropdownItem
+                key={option.value}
+                onClick={() =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    default_theme: option.value,
+                  }))
+                }
+                isActive={settings.default_theme === option.value}
+              >
+                <Icon name={option.icon} className='size-4.5' />
+                <span>{option.label}</span>
+              </DropdownItem>
+            ))}
           </Dropdown>
         </div>
 
@@ -269,7 +266,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
           <FormLabel>Default Background</FormLabel>
           <Dropdown
             trigger={
-              <Button variant='default' className='w-full justify-between px-4'>
+              <Button variant='default' className='w-full px-4'>
                 <div className='flex items-center gap-2'>
                   <Icon
                     name={selectedBackground?.icon || 'prohibit'}
@@ -279,29 +276,26 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
                     {selectedBackground?.label || 'Select Background'}
                   </span>
                 </div>
-                <Icon name='caretDown' className='size-4.5 opacity-50' />
               </Button>
             }
             className='w-full'
             matchTriggerWidth
           >
-            <div className='flex flex-col gap-1 p-1'>
-              {backgroundOptions.map((option) => (
-                <DropdownItem
-                  key={option.value}
-                  onClick={() =>
-                    setSettings((prev) => ({
-                      ...prev,
-                      default_background: option.value,
-                    }))
-                  }
-                  isActive={settings.default_background === option.value}
-                >
-                  <Icon name={option.icon} className='size-4.5' />
-                  <span>{option.label}</span>
-                </DropdownItem>
-              ))}
-            </div>
+            {backgroundOptions.map((option) => (
+              <DropdownItem
+                key={option.value}
+                onClick={() =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    default_background: option.value,
+                  }))
+                }
+                isActive={settings.default_background === option.value}
+              >
+                <Icon name={option.icon} className='size-4.5' />
+                <span>{option.label}</span>
+              </DropdownItem>
+            ))}
           </Dropdown>
         </div>
       </div>

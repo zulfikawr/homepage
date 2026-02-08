@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       };
 
       return twMerge(
-        'h-8 px-4',
+        'h-9 px-4',
         (variant === 'link' || variant === 'ghostLink') && 'h-fit',
         variant !== 'primary' && 'w-max',
         !['ghost', 'link', 'ghostLink'].includes(variant) &&

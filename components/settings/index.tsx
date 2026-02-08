@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { useTheme } from 'next-themes';
 
 import { toast } from '@/components/ui';
-import { Button, Icon, Slider, Switch, ToggleGroup } from '@/components/ui';
+import {
+  Button,
+  Icon,
+  Popover,
+  Slider,
+  Switch,
+  ToggleGroup,
+} from '@/components/ui';
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import type { IconName } from '@/components/ui/icon';
 import { useAuth } from '@/contexts/auth-context';
@@ -103,7 +110,7 @@ export default function Settings() {
   );
 
   return (
-    <Dropdown
+    <Popover
       trigger={
         <Button
           variant='default'
@@ -125,7 +132,7 @@ export default function Settings() {
             <Button
               variant='default'
               aria-label='Select background'
-              className='w-full flex items-center justify-between gap-2 px-4'
+              className='w-full px-4'
             >
               <div className='flex items-center gap-2'>
                 {selectedBackground && (
@@ -133,7 +140,6 @@ export default function Settings() {
                 )}
                 <span>{selectedBackground?.label}</span>
               </div>
-              <Icon name='caretDown' className='size-4.5' />
             </Button>
           }
           className='w-full'
@@ -168,7 +174,7 @@ export default function Settings() {
             <Button
               variant='default'
               aria-label='Select theme'
-              className='w-full flex items-center justify-between gap-2 px-4'
+              className='w-full px-4'
             >
               <div className='flex items-center gap-2'>
                 {themeOptions.find((o) => o.value === theme) && (
@@ -182,7 +188,6 @@ export default function Settings() {
                     'Select Theme'}
                 </span>
               </div>
-              <Icon name='caretDown' className='size-4.5' />
             </Button>
           }
           className='w-full'
@@ -235,7 +240,7 @@ export default function Settings() {
                 <Button
                   variant='default'
                   aria-label='Select weather'
-                  className='w-full flex items-center justify-between gap-2 px-4'
+                  className='w-full px-4'
                 >
                   <div className='flex items-center gap-2'>
                     {selectedWeather && (
@@ -243,7 +248,6 @@ export default function Settings() {
                     )}
                     <span>{selectedWeather?.label}</span>
                   </div>
-                  <Icon name='caretDown' className='size-4.5' />
                 </Button>
               }
               className='w-full'
@@ -290,6 +294,6 @@ export default function Settings() {
           </>
         )}
       </div>
-    </Dropdown>
+    </Popover>
   );
 }

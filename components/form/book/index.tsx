@@ -268,27 +268,24 @@ const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
             </FormLabel>
             <Dropdown
               trigger={
-                <Button className='flex items-center justify-between w-full px-2 text-sm md:text-md text-foreground'>
+                <Button className='w-full px-2 text-sm md:text-md text-foreground'>
                   {currentType?.label}
-                  <Icon name='caretDown' className='size-3 opacity-50' />
                 </Button>
               }
               className='w-full'
               matchTriggerWidth
             >
-              <div className='flex flex-col p-1 space-y-1 w-full'>
-                {typeOptions.map((option) => (
-                  <DropdownItem
-                    key={option.key}
-                    onClick={() =>
-                      handleChange('type', option.key as Book['type'])
-                    }
-                    isActive={option.key === book.type}
-                  >
-                    {option.label}
-                  </DropdownItem>
-                ))}
-              </div>
+              {typeOptions.map((option) => (
+                <DropdownItem
+                  key={option.key}
+                  onClick={() =>
+                    handleChange('type', option.key as Book['type'])
+                  }
+                  isActive={option.key === book.type}
+                >
+                  {option.label}
+                </DropdownItem>
+              ))}
             </Dropdown>
           </div>
           <div>

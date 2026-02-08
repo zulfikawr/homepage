@@ -3,7 +3,6 @@
 import React, {
   createContext,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -14,41 +13,36 @@ import Mask from '@/components/visual/mask';
 import { useRadius } from '@/contexts/radius-context';
 import { useBodyScroll, useHotkeys } from '@/hooks';
 
-import { Icon, type IconName } from '../icon';
-
-const DropdownContext = createContext<{
+const PopoverContext = createContext<{
   setIsOpen: (open: boolean) => void;
 }>({
   setIsOpen: () => {},
 });
 
-// Global state to track open dropdowns
-let globalDropdownCloser: (() => void) | null = null;
+// Global state to track open popovers
+let globalPopoverCloser: (() => void) | null = null;
 
-interface DropdownProps {
+interface PopoverProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
   onOpenChange?: (isOpen: boolean) => void;
   className?: string;
-  matchTriggerWidth?: boolean;
   preferredPosition?: 'top' | 'bottom';
 }
 
-const Dropdown = ({
+const Popover = ({
   trigger,
   children,
   onOpenChange,
   className = '',
-  matchTriggerWidth = false,
   preferredPosition,
-}: DropdownProps) => {
+}: PopoverProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [calculatedMenuCoords, setCalculatedMenuCoords] = useState({
     top: 0,
     left: undefined,
     right: undefined,
-    width: 0,
   });
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom');
   const [, setAlign] = useState<'left' | 'right'>('left');
@@ -99,7 +93,6 @@ const Dropdown = ({
             : triggerRect.top - 8,
         left: isAlignRight ? undefined : triggerRect.left,
         right: isAlignRight ? viewportWidth - triggerRect.right : undefined,
-        width: triggerRect.width,
       },
       position: newPosition,
       align: newAlign,
@@ -118,13 +111,13 @@ const Dropdown = ({
   }, [onOpenChange]);
 
   const handleOpen = useCallback(() => {
-    // Close any other open dropdown
-    if (globalDropdownCloser) {
-      globalDropdownCloser();
+    // Close any other open popover
+    if (globalPopoverCloser) {
+      globalPopoverCloser();
     }
 
     isIntentOpenRef.current = true;
-    globalDropdownCloser = handleClose;
+    globalPopoverCloser = handleClose;
 
     const result = calculatePosition();
     if (result) {
@@ -181,7 +174,7 @@ const Dropdown = ({
         return;
       }
 
-      if (target.closest('[data-dropdown-content="true"]')) {
+      if (target.closest('[data-popover-content="true"]')) {
         return;
       }
 
@@ -197,15 +190,15 @@ const Dropdown = ({
 
   useEffect(() => {
     return () => {
-      if (globalDropdownCloser === handleClose) {
-        globalDropdownCloser = null;
+      if (globalPopoverCloser === handleClose) {
+        globalPopoverCloser = null;
       }
     };
   }, [handleClose]);
 
   useHotkeys('esc', handleClose, { enabled: isOpen });
 
-  const toggleDropdown = () => {
+  const togglePopover = () => {
     if (isOpen) {
       handleClose();
     } else {
@@ -216,37 +209,17 @@ const Dropdown = ({
   const effectStyles = 'bg-popover border border-border backdrop-blur-none';
 
   return (
-    <DropdownContext.Provider value={{ setIsOpen: handleClose }}>
+    <PopoverContext.Provider value={{ setIsOpen: handleClose }}>
       <div className={`relative inline-block ${className}`}>
         <div
           ref={triggerRef}
-          onClick={toggleDropdown}
+          onClick={togglePopover}
           aria-expanded={isOpen}
           role='button'
           className='group inline-flex w-full items-center relative'
-          data-dropdown-content='true'
+          data-popover-content='true'
         >
-          {React.isValidElement(trigger) &&
-            React.cloneElement(
-              trigger as React.ReactElement<{ children?: React.ReactNode }>,
-              {
-                children: (
-                  <div className='flex items-center justify-between w-full gap-6'>
-                    {
-                      (
-                        trigger as React.ReactElement<{
-                          children?: React.ReactNode;
-                        }>
-                      ).props.children
-                    }
-                    <Icon
-                      name='caretDown'
-                      className={`size-4 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
-                    />
-                  </div>
-                ),
-              },
-            )}
+          {trigger}
         </div>
 
         {isVisible && (
@@ -260,9 +233,7 @@ const Dropdown = ({
             )}
             <div
               ref={menuRef}
-              className={`fixed z-[9999] ${
-                matchTriggerWidth ? '' : 'w-max'
-              } shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
+              className={`fixed z-[9999] w-max shadow-brutalist-lg border-2 transition-all duration-200 ease-in-out ${
                 isOpen
                   ? 'opacity-100 scale-y-100'
                   : 'opacity-0 scale-y-95 pointer-events-none'
@@ -270,14 +241,11 @@ const Dropdown = ({
                 ${effectStyles}
               `}
               role='menu'
-              data-dropdown-content='true'
+              data-popover-content='true'
               style={{
                 top: calculatedMenuCoords.top,
                 left: calculatedMenuCoords.left,
                 right: calculatedMenuCoords.right,
-                width: matchTriggerWidth
-                  ? `${calculatedMenuCoords.width}px`
-                  : 'auto',
                 transformOrigin:
                   position === 'top' ? 'bottom center' : 'top center',
                 transform:
@@ -287,67 +255,18 @@ const Dropdown = ({
             >
               <Mask
                 direction='vertical'
-                className='scrollbar-hide max-h-[50vh] md:max-h-[70vh]'
+                className='p-1 space-y-1 scrollbar-hide max-h-[50vh] md:max-h-[70vh]'
               >
-                <div className='flex flex-col p-1 gap-1'>{children}</div>
+                {children}
               </Mask>
             </div>
           </Portal>
         )}
       </div>
-    </DropdownContext.Provider>
+    </PopoverContext.Provider>
   );
 };
 
-interface DropdownItemProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
-  isActive?: boolean;
-  icon?: IconName | string;
-}
+Popover.displayName = 'Popover';
 
-const DropdownItem = ({
-  children,
-  onClick,
-  className = '',
-  isActive = false,
-  icon,
-}: DropdownItemProps) => {
-  const { setIsOpen } = useContext(DropdownContext);
-  const { radius } = useRadius();
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onClick?.();
-
-    requestAnimationFrame(() => {
-      setIsOpen(false);
-    });
-  };
-
-  const activeStyles = 'bg-accent text-accent-foreground';
-  const inactiveStyles = 'hover:bg-accent hover:text-accent-foreground';
-
-  return (
-    <button
-      type='button'
-      onClick={handleClick}
-      className={`w-full text-left text-sm md:text-md px-4 py-2 transition-colors duration-150 flex items-center gap-2 cursor-pointer ${
-        isActive ? activeStyles : inactiveStyles
-      } ${className}`}
-      style={{ borderRadius: `${radius}px` }}
-    >
-      {icon && (
-        <Icon name={icon as IconName} className='size-4.5 flex-shrink-0' />
-      )}
-      {children}
-    </button>
-  );
-};
-
-Dropdown.displayName = 'Dropdown';
-DropdownItem.displayName = 'DropdownItem';
-
-export { Dropdown, DropdownItem };
+export { Popover };
