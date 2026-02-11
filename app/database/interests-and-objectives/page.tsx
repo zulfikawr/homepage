@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import InterestsAndObjectivesContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Interests & Objectives - Zulfikar',
+  title: 'Interests & Objectives',
   description: 'Define your goals and personal focus',
 };
 

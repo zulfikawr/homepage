@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import PostDatabase from './content';
 
 export const metadata: Metadata = {
-  title: 'Post - Zulfikar',
+  title: 'Post',
   description: 'Browse all posts on Zulfikar',
 };
 

@@ -6,7 +6,7 @@ import { getCertificates } from '@/lib/data';
 import CertificatesContent, { CertificatesSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Certificates - Zulfikar',
+  title: 'Certificates',
   description: 'My certifications and achievements',
 };
 

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import ProjectsContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Projects - Zulfikar',
+  title: 'Projects',
   description: 'A collection of my projects',
 };
 

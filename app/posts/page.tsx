@@ -6,7 +6,7 @@ import { getPosts } from '@/lib/data';
 import PostsContent, { PostsSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Posts - Zulfikar',
+  title: 'Posts',
   description: 'Browse all posts on Zulfikar',
 };
 

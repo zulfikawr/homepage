@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import CertificateDatabase from './content';
 
 export const metadata: Metadata = {
-  title: 'Certificates - Zulfikar',
+  title: 'Certificates',
   description: 'My licenses and certifications',
 };
 

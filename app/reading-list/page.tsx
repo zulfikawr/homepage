@@ -6,7 +6,7 @@ import { getBooks } from '@/lib/data';
 import ReadingListContent, { ReadingListSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Reading List - Zulfikar',
+  title: 'Reading List',
   description: 'Books and articles I am currently reading or have read',
 };
 

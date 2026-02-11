@@ -6,7 +6,7 @@ import { FormSkeleton } from '@/components/form/loading';
 import NewEmploymentContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Add Employment - Zulfikar',
+  title: 'Add Employment',
   description: 'Add a new employment',
 };
 

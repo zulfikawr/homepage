@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import SectionDatabase from './content';
 
 export const metadata: Metadata = {
-  title: 'Sections - Zulfikar',
+  title: 'Sections',
   description: 'Manage homepage sections order and visibility',
 };
 

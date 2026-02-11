@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import EmploymentsContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Employments - Zulfikar',
+  title: 'Employments',
   description: 'My professional experiences',
 };
 

@@ -6,7 +6,7 @@ import { FormSkeleton } from '@/components/form/loading';
 import NewMovieContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Add Movie - Zulfikar',
+  title: 'Add Movie',
   description: 'Add a new movie to your list',
 };
 

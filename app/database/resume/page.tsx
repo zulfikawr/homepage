@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import ResumeContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Resume - Zulfikar',
+  title: 'Resume',
   description: 'Update your resume',
 };
 

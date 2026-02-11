@@ -6,7 +6,7 @@ import { getResume } from '@/lib/data';
 import PagesContent, { PagesSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Pages - Zulfikar',
+  title: 'Pages',
 };
 
 async function Pages() {

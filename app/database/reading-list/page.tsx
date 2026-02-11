@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import ReadingListContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Reading List - Zulfikar',
+  title: 'Reading List',
   description: 'A collection of my books',
 };
 

@@ -6,7 +6,7 @@ import { getPublications } from '@/lib/data';
 import PublicationsContent, { PublicationsSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Publications - Zulfikar',
+  title: 'Publications',
   description: 'My academic and professional publications',
 };
 

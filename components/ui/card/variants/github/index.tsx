@@ -43,15 +43,15 @@ export default function GitHubCard({
         );
         if (res.ok) {
           interface GitHubRepoApiData {
-            stargazersCount: number;
-            forksCount: number;
+            stargazers_count: number;
+            forks_count: number;
             language: string | null;
             description: string | null;
           }
           const apiData = (await res.json()) as GitHubRepoApiData;
           setData({
-            stars: apiData.stargazersCount || 0,
-            forks: apiData.forksCount || 0,
+            stars: apiData.stargazers_count || 0,
+            forks: apiData.forks_count || 0,
             language: apiData.language || undefined,
             description: apiData.description || undefined,
           });

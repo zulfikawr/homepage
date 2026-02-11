@@ -11,7 +11,7 @@ import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 import SpotifyMusicContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Music - Zulfikar',
+  title: 'Music',
   description: 'My Spotify listening statistics and music preferences',
 };
 

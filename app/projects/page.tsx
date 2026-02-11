@@ -6,7 +6,7 @@ import { getProjects } from '@/lib/data';
 import ProjectsContent, { ProjectsSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Projects - Zulfikar',
+  title: 'Projects',
   description: 'A collection of my projects, categorized by their status',
 };
 

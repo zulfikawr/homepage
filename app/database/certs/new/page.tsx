@@ -6,7 +6,7 @@ import { FormSkeleton } from '@/components/form/loading';
 import NewCertificateContent from './content';
 
 export const metadata: Metadata = {
-  title: 'Add Certificate - Zulfikar',
+  title: 'Add Certificate',
   description: 'Add a new license or certification',
 };
 

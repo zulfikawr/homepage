@@ -6,7 +6,7 @@ import { getAnalyticsSummary } from '@/lib/data';
 import AnalyticsContent, { AnalyticsSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Analytics - Zulfikar',
+  title: 'Analytics',
   description: 'Website traffic and visitor statistics.',
 };
 

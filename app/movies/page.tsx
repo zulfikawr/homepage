@@ -6,7 +6,7 @@ import { getMovies } from '@/lib/data';
 import MoviesContent, { MoviesSkeleton } from './content';
 
 export const metadata: Metadata = {
-  title: 'Movies - Zulfikar',
+  title: 'Movies',
   description: 'A list of movies I have watched and recommend',
 };
 
