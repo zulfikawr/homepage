@@ -39,7 +39,7 @@ const PagesAndLinksBanner = ({
     },
     {
       label: 'Résumé',
-      href: resume?.file_url || '#',
+      href: resume?.file || resume?.file_url || '#',
       icon: 'filePdf',
       color: 'text-theme-red',
       target: '_blank',
