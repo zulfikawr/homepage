@@ -28,16 +28,16 @@ export async function fetchGitHubRepo(
     }
 
     interface GitHubRepoResponse {
-      stargazersCount: number;
-      forksCount: number;
+      stargazers_count: number;
+      forks_count: number;
       language: string | null;
       description: string | null;
     }
     const data = (await res.json()) as GitHubRepoResponse;
 
     return {
-      stars: data.stargazersCount || 0,
-      forks: data.forksCount || 0,
+      stars: data.stargazers_count || 0,
+      forks: data.forks_count || 0,
       language: data.language || undefined,
       description: data.description || undefined,
     };
