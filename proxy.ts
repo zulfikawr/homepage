@@ -22,12 +22,18 @@ export default async function proxy(request: NextRequest) {
     req.nextUrl.pathname.includes('.');
 
   // Log analytics for public, non-static GET requests
+  const referrer = req.headers.get('referer') || 'Direct';
+  const isDevOrVercel = /dev|vercel/i.test(referrer);
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   if (
     req.method === 'GET' &&
     !isDatabaseRoute &&
     !isLoginRoute &&
     !isApiRoute &&
-    !isStaticRoute
+    !isStaticRoute &&
+    !isDevelopment &&
+    !isDevOrVercel
   ) {
     const country =
       req.headers.get('cf-ipcountry') || req.geo?.country || 'Unknown';
@@ -35,18 +41,12 @@ export default async function proxy(request: NextRequest) {
     // Fire-and-forget call to our internal analytics API
     const analyticsData = {
       path: req.nextUrl.pathname,
-      referrer: req.headers.get('referer') || 'Direct',
+      referrer: referrer,
       user_agent: req.headers.get('user-agent') || 'Unknown',
       country: country,
     };
 
-    // Use localhost directly if in development to avoid SSL/DNS issues
-    const origin =
-      process.env.NODE_ENV === 'development'
-        ? `http://localhost:${process.env.PORT || 3000}`
-        : req.nextUrl.origin;
-
-    fetch(`${origin}/api/analytics/record`, {
+    fetch(`${req.nextUrl.origin}/api/analytics/record`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(analyticsData),
