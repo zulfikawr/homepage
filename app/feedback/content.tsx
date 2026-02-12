@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { Editor } from '@/components/editor';
 import { ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
 import { Card } from '@/components/ui';
 import { toast } from '@/components/ui';
-import { Button, FormLabel, Input, Textarea } from '@/components/ui';
+import { Button, FormLabel, Input } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
 import { createFeedback } from '@/database/feedback';
 import { escapeHtml } from '@/utilities/escape-html';
@@ -19,10 +20,9 @@ export default function FeedbackContent() {
   const [contact, setContact] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleFeedbackChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
-    if (text.length <= MAX_CHARS) {
-      setFeedback(text);
+  const handleFeedbackChange = (content: string) => {
+    if (content.length <= MAX_CHARS) {
+      setFeedback(content);
     }
   };
 
@@ -72,7 +72,7 @@ export default function FeedbackContent() {
       />
 
       <ViewTransition>
-        <Card isPreview className='p-6'>
+        <Card isPreview className='p-6' overflowVisible>
           <p className='text-sm text-foreground dark:text-muted-foreground'>
             Please use this form to share whatever you&apos;d like with me. This
             form is anonymous (really). If you&apos;d like me to respond, please
@@ -99,14 +99,10 @@ export default function FeedbackContent() {
                 </span>
               </div>
 
-              <Textarea
-                id='feedback'
-                rows={5}
-                value={feedback}
-                onChange={handleFeedbackChange}
-                required
-                placeholder="What's on your mind?"
-                maxLength={MAX_CHARS}
+              <Editor
+                content={feedback}
+                onUpdate={handleFeedbackChange}
+                className='min-h-[200px]'
               />
             </div>
 

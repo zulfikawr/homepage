@@ -11,6 +11,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   openForm?: boolean;
   isPreview?: boolean;
   isActive?: boolean;
+  overflowVisible?: boolean;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -24,6 +25,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       className,
       children,
       onClick,
+      overflowVisible,
       ...props
     },
     ref,
@@ -55,7 +57,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         {...props}
       >
         <div
-          className='flex-1 flex flex-col overflow-hidden h-full w-full'
+          className={`flex-1 flex flex-col ${overflowVisible ? 'overflow-visible' : 'overflow-hidden'} h-full w-full`}
           style={{ borderRadius: radius > 0 ? `${radius - 2}px` : undefined }}
         >
           {children}
