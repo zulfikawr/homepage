@@ -36,7 +36,7 @@ export default function GitHubProfileExportPage() {
   return (
     <div
       id='github-profile-export'
-      className='flex flex-col gap-6 p-6 max-w-3xl mx-auto w-full bg-background relative z-50'
+      className='flex flex-col gap-6 max-w-3xl mx-auto w-full bg-background relative z-50'
     >
       {/* 
         This page is specifically for the automated Puppeteer/Playwright script 
