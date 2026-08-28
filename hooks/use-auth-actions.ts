@@ -25,21 +25,24 @@ export function useAuthActions() {
 
       interface LoginResponse {
         success: boolean;
-        user?: {
-          id: string;
-          email: string;
-          role: string;
+        data?: {
+          user?: {
+            id: string;
+            email: string;
+            role: string;
+          };
         };
         error?: string;
       }
 
       const result = (await res.json()) as LoginResponse;
+      const user = result.data?.user;
 
-      if (!res.ok || !result.success || !result.user) {
+      if (!res.ok || !result.success || !user) {
         throw new Error(result.error || 'Invalid credentials');
       }
 
-      setAuth(result.user);
+      setAuth(user);
       router.push('/database');
       router.refresh();
       toast.show('You are now logged in!');
