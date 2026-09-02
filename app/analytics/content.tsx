@@ -119,7 +119,7 @@ export default function AnalyticsContent({
         <PageTitle
           emoji='📊'
           title='Analytics'
-          subtitle='Real-time insights into website traffic and visitor behavior.'
+          subtitle='Website traffic and visitor behavior, refreshed every five minutes.'
         />
 
         <div className='mt-10'>
@@ -134,7 +134,7 @@ export default function AnalyticsContent({
       <PageTitle
         emoji='📊'
         title='Analytics'
-        subtitle='Real-time insights into website traffic and visitor behavior.'
+        subtitle='Website traffic and visitor behavior, refreshed every five minutes.'
       />
 
       {/* Summary Cards */}
@@ -154,8 +154,8 @@ export default function AnalyticsContent({
               color: 'text-theme-green',
             },
             {
-              label: 'Real-time',
-              value: 'Active Now',
+              label: 'Refresh cadence',
+              value: '5 minutes',
               icon: 'clock' as const,
               color: 'text-theme-yellow',
             },

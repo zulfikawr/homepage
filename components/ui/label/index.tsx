@@ -7,13 +7,7 @@ import { Icon, iconifyMap, iconMap, IconName } from '@/components/ui/icon';
 import { useRadius } from '@/contexts/radius-context';
 
 type LabelVariant =
-  | 'primary'
-  | 'secondary'
-  | 'aqua'
-  | 'green'
-  | 'yellow'
-  | 'blue'
-  | 'red';
+  'primary' | 'secondary' | 'aqua' | 'green' | 'yellow' | 'blue' | 'red';
 
 interface Props {
   variant: LabelVariant;

@@ -96,12 +96,7 @@ export default function ProjectCard({
           <div className='flex flex-wrap gap-2 border-t-2 border-border pt-2.5 '>
             {project.tools?.map((tool, index) => {
               const colors: (
-                | 'aqua'
-                | 'green'
-                | 'yellow'
-                | 'blue'
-                | 'red'
-                | 'default'
+                'aqua' | 'green' | 'yellow' | 'blue' | 'red' | 'default'
               )[] = ['aqua', 'green', 'yellow', 'blue', 'red'];
               const badgeType = colors[index % colors.length];
               return (

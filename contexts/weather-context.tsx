@@ -3,14 +3,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export type WeatherType =
-  | 'auto'
-  | 'clear'
-  | 'clouds'
-  | 'rain'
-  | 'drizzle'
-  | 'storm'
-  | 'snow'
-  | 'fog';
+  'auto' | 'clear' | 'clouds' | 'rain' | 'drizzle' | 'storm' | 'snow' | 'fog';
 
 interface WeatherContextType {
   weatherOverride: WeatherType;

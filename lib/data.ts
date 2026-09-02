@@ -1,4 +1,5 @@
 import { getDB } from '@/lib/cloudflare';
+import { unstable_cache } from 'next/cache';
 import {
   mapRecordToAnalyticsEvent,
   mapRecordToBook,
@@ -74,7 +75,7 @@ export const getResume = () =>
 export const getAnalyticsEvents = () =>
   getCollection<AnalyticsEvent>('analytics_events', mapRecordToAnalyticsEvent);
 
-export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
+async function getAnalyticsSummaryUncached(): Promise<AnalyticsSummary> {
   const db = getDB();
   if (!db) {
     return {
@@ -180,6 +181,17 @@ export async function getAnalyticsSummary(): Promise<AnalyticsSummary> {
     };
   }
 }
+
+// This summary is rendered on both the homepage and /analytics. Cache it so a
+// page view does not trigger five aggregate scans over the event table.
+export const getAnalyticsSummary = unstable_cache(
+  getAnalyticsSummaryUncached,
+  ['analytics-summary-v1'],
+  {
+    revalidate: 300,
+    tags: ['analytics-summary'],
+  },
+);
 
 // GitHub Server Actions / Data Fetchers
 const GITHUB_USERNAME = 'zulfikawr';

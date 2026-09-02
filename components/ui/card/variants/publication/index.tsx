@@ -48,12 +48,7 @@ export default function PublicationCard({
           <div className='flex flex-wrap gap-2 pt-2'>
             {publication.keywords.map((keyword, index) => {
               const colors: (
-                | 'aqua'
-                | 'green'
-                | 'yellow'
-                | 'blue'
-                | 'red'
-                | 'default'
+                'aqua' | 'green' | 'yellow' | 'blue' | 'red' | 'default'
               )[] = ['blue', 'aqua', 'green', 'yellow', 'red'];
               const badgeType = colors[index % colors.length];
               return (
