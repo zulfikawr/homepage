@@ -22,6 +22,37 @@ interface ProjectAnalyticsProps {
   loading?: boolean;
 }
 
+function ProjectAnalyticsHeader({
+  loading,
+  totalProjects,
+}: {
+  loading: boolean;
+  totalProjects?: number;
+}) {
+  return (
+    <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
+      <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
+        {loading ? (
+          <>
+            <Skeleton width={28} height={28} className='rounded-md' />
+            <Skeleton width={150} height={20} />
+          </>
+        ) : (
+          <>
+            <Icon name='chartBar' className='size-7 text-theme-aqua' />
+            <span>Tech Stack Radar</span>
+          </>
+        )}
+      </div>
+      {!loading && totalProjects !== undefined && (
+        <div className='text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md border'>
+          {totalProjects} Projects Tracked
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProjectAnalytics({
   projects,
   loading: initialLoading,
@@ -72,33 +103,13 @@ export default function ProjectAnalytics({
     return lowerName;
   };
 
-  const Header = () => (
-    <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
-      <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-        {loading ? (
-          <>
-            <Skeleton width={28} height={28} className='rounded-md' />
-            <Skeleton width={150} height={20} />
-          </>
-        ) : (
-          <>
-            <Icon name='chartBar' className='size-7 text-theme-aqua' />
-            <span>Tech Stack Radar</span>
-          </>
-        )}
-      </div>
-      {!loading && stats && (
-        <div className='text-xs font-medium text-muted-foreground bg-muted/50 px-2 py-1 rounded-md border'>
-          {stats.totalProjects} Projects Tracked
-        </div>
-      )}
-    </div>
-  );
-
   return (
     <div className='w-full'>
       <Card isPreview>
-        <Header />
+        <ProjectAnalyticsHeader
+          loading={loading}
+          totalProjects={stats?.totalProjects}
+        />
         <Separator margin='0' />
 
         <div className='p-4'>

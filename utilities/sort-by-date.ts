@@ -30,7 +30,7 @@ export const parseDate = (date_string: string): Date => {
   }
 };
 
-export const sortByDate = <T extends { date_string?: string }>(
+export const sortByDate = <T extends { date_string?: string; id?: string }>(
   data: T[],
 ): T[] => {
   return [...data].sort((a, b) => {
@@ -40,6 +40,9 @@ export const sortByDate = <T extends { date_string?: string }>(
 
     const dateA = parseDate(a.date_string);
     const dateB = parseDate(b.date_string);
-    return dateB.getTime() - dateA.getTime();
+    const dateDifference = dateB.getTime() - dateA.getTime();
+    if (dateDifference !== 0) return dateDifference;
+
+    return (a.id || '').localeCompare(b.id || '');
   });
 };

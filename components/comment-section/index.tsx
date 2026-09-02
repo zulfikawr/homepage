@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { Editor } from '@/components/editor';
 import ImageWithFallback from '@/components/image-with-fallback';
@@ -30,7 +30,6 @@ export default function CommentSection({
   post_id,
   isLoading: externalLoading = false,
 }: CommentSectionProps) {
-  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -42,6 +41,7 @@ export default function CommentSection({
       (user.email as string) ||
       ''
     : '';
+  const author = (user?.name as string | undefined) || '';
 
   // Use the new generic collection hook
   const { data: allComments, loading: dataLoading } = useCollection<Comment>(
@@ -58,17 +58,9 @@ export default function CommentSection({
 
   const isLoading = dataLoading || externalLoading;
 
-  // Set author from user profile
-  useEffect(() => {
-    if (user && user.name) {
-      setAuthor(user.name as string);
-    }
-  }, [user]);
-
   const handleLogout = async () => {
     try {
       authLogout();
-      setAuthor('');
       setContent('');
     } catch {
       toast.show('Failed to logout', 'error');

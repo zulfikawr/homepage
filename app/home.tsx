@@ -39,9 +39,7 @@ async function PersonalInfoData() {
 
 async function InterestsData() {
   const data = await getInterestsAndObjectives();
-  const selected =
-    data.length > 0 ? data[Math.floor(Math.random() * data.length)] : undefined;
-  return <InterestsAndObjectivesSection data={selected} />;
+  return <InterestsAndObjectivesSection data={data[0]} />;
 }
 
 async function ProjectsData() {

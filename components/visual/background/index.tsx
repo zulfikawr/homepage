@@ -15,6 +15,17 @@ const ParticleNetworkBackground = dynamic(() => import('./particle-network'), {
 
 const emptySubscribe = () => () => {};
 
+const subscribeToVisibility = (callback: () => void) => {
+  document.addEventListener('visibilitychange', callback);
+  return () => document.removeEventListener('visibilitychange', callback);
+};
+
+const subscribeToMotionPreference = (callback: () => void) => {
+  const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+  media.addEventListener('change', callback);
+  return () => media.removeEventListener('change', callback);
+};
+
 export default function DynamicBackground({
   isPreview = false,
   background: backgroundProp,
@@ -32,8 +43,18 @@ export default function DynamicBackground({
     () => true,
     () => false,
   );
+  const pageIsVisible = useSyncExternalStore(
+    subscribeToVisibility,
+    () => document.visibilityState === 'visible',
+    () => false,
+  );
+  const reduceMotion = useSyncExternalStore(
+    subscribeToMotionPreference,
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    () => true,
+  );
 
-  if (!mounted) return null;
+  if (!mounted || !pageIsVisible || reduceMotion) return null;
 
   if (background === 'waves')
     return <WavesBackground isPreview={isPreview} theme={theme} />;

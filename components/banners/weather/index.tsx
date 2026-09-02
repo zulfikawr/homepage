@@ -197,23 +197,24 @@ const Cloud = ({
   </div>
 );
 
+const seededValue = (index: number, seed: number) => {
+  const value = Math.sin((index + 1) * (seed * 12.9898)) * 43758.5453;
+  return value - Math.floor(value);
+};
+
 const Stars = () => {
-  const stars = useMemo(() => {
-    const isClient = typeof window !== 'undefined';
-    return Array.from({ length: 50 }).map(() => ({
-      top: isClient ? Math.random() * 80 : 0,
-      left: isClient ? Math.random() * 100 : 0,
-      size: isClient
-        ? Math.random() > 0.8
-          ? 3
-          : Math.random() > 0.5
-            ? 2
-            : 1
-        : 1,
-      delay: isClient ? Math.random() * 5 : 0,
-      duration: isClient ? 2 + Math.random() * 3 : 2,
-    }));
-  }, []);
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 50 }, (_, index) => ({
+        top: seededValue(index, 1) * 80,
+        left: seededValue(index, 2) * 100,
+        size:
+          seededValue(index, 3) > 0.8 ? 3 : seededValue(index, 4) > 0.5 ? 2 : 1,
+        delay: seededValue(index, 5) * 5,
+        duration: 2 + seededValue(index, 6) * 3,
+      })),
+    [],
+  );
 
   return (
     <>
@@ -245,15 +246,13 @@ const RainDrops = ({
   type?: 'rain' | 'snow';
 }) => {
   const drops = useMemo(() => {
-    const isClient = typeof window !== 'undefined';
-    return Array.from({ length: count }).map(() => ({
-      left: isClient ? Math.random() * 100 : 0,
-      delay: isClient ? Math.random() * 2 : 0,
-      duration: isClient
-        ? type === 'snow'
-          ? 2 + Math.random() * 3
-          : 0.5 + Math.random() * 0.5
-        : 2,
+    return Array.from({ length: count }, (_, index) => ({
+      left: seededValue(index, 7) * 100,
+      delay: seededValue(index, 8) * 2,
+      duration:
+        type === 'snow'
+          ? 2 + seededValue(index, 9) * 3
+          : 0.5 + seededValue(index, 10) * 0.5,
     }));
   }, [count, type]);
 

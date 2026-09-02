@@ -17,6 +17,8 @@ import { Button } from '@/components/ui';
 import { useTitle } from '@/contexts/title-context';
 import { useRouteInfo } from '@/hooks';
 
+const emptySubscribe = () => () => {};
+
 interface HeaderComponentProps {
   headerRef: React.RefObject<HTMLDivElement>;
 }
@@ -179,11 +181,11 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
 
 const HeaderTitle = () => {
   const { headerTitle } = useTitle();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   if (!mounted || !headerTitle) return null;
 
@@ -197,11 +199,11 @@ const HeaderTitle = () => {
 const MobileHeaderTitle = () => {
   const { headerTitle } = useTitle();
   const { isHomePage } = useRouteInfo();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   if (!mounted) return null;
 

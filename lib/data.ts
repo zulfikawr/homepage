@@ -46,7 +46,12 @@ const getCachedCollection = unstable_cache(
     }
 
     try {
-      const { results } = await db.prepare(`SELECT * FROM ${table}`).all();
+      // D1 does not guarantee an order unless one is requested. A stable order is
+      // required because this result is sent through the RSC payload and hydrated
+      // by keyed client lists.
+      const { results } = await db
+        .prepare(`SELECT * FROM ${table} ORDER BY id ASC`)
+        .all();
       return results as Record<string, unknown>[];
     } catch (error) {
       console.error(`Error fetching collection ${table}:`, error);

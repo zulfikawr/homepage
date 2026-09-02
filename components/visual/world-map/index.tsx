@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 import {
   Feature,
   FeatureCollection,
@@ -40,6 +41,23 @@ interface WorldMapProps {
 }
 
 type WorldFeature = Feature<Geometry, GeoJsonProperties>;
+
+let worldDataRequest: Promise<
+  FeatureCollection<Geometry, GeoJsonProperties>
+> | null = null;
+
+const getWorldData = () => {
+  worldDataRequest ??= fetch(
+    'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
+  ).then(
+    (response) =>
+      response.json() as Promise<
+        FeatureCollection<Geometry, GeoJsonProperties>
+      >,
+  );
+
+  return worldDataRequest;
+};
 
 // Map of Alpha-2 to Alpha-3 codes
 const alpha2To3: Record<string, string> = {
@@ -348,8 +366,6 @@ function geometryToPath(
 }
 
 export default function WorldMap({ data, className }: WorldMapProps) {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [worldData, setWorldData] = useState<FeatureCollection<
     Geometry,
     GeoJsonProperties
@@ -362,49 +378,29 @@ export default function WorldMap({ data, className }: WorldMapProps) {
   const { radius } = useRadius();
 
   useEffect(() => {
-    fetch(
-      'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
-    )
-      .then(
-        (response) =>
-          response.json() as Promise<
-            FeatureCollection<Geometry, GeoJsonProperties>
-          >,
-      )
-      .then((geojson) => setWorldData(geojson));
+    let cancelled = false;
+
+    getWorldData().then((geojson) => {
+      if (!cancelled) setWorldData(geojson);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const memoizedData = useMemo(() => data, [data]);
+  const countries = useMemo(() => {
+    if (!worldData) return [];
 
-  useEffect(() => {
-    if (!worldData || !svgRef.current || !containerRef.current) return;
-
-    const svg = svgRef.current;
-    const container = containerRef.current;
-    const width = container.clientWidth;
-    const height =
-      container.clientHeight || Math.max(400, Math.round(width / 2));
-
-    // Clear previous content
-    while (svg.firstChild) {
-      svg.removeChild(svg.firstChild);
-    }
-
-    // Setup projection parameters
+    const width = 1000;
+    const height = 500;
     const scale = width / 2 / Math.PI;
-    const translateX = width / 2;
-    const translateY = height / 1.5;
-
     const project = (lon: number, lat: number) =>
-      mercatorProjection(lon, lat, scale, translateX, translateY);
-
-    // Create counts map
+      mercatorProjection(lon, lat, scale, width / 2, height / 1.5);
     const counts = new Map(
-      memoizedData.map((d) => [alpha2To3[d.code] || d.code, d.count]),
+      data.map((item) => [alpha2To3[item.code] || item.code, item.count]),
     );
-    const maxCount = Math.max(...memoizedData.map((d) => d.count), 1);
-
-    // Helper to get discrete intensity level
+    const maxCount = Math.max(...data.map((item) => item.count), 1);
     const getIntensity = (count: number) => {
       if (count === 0) return 0;
       if (count <= maxCount * 0.1) return 1;
@@ -415,57 +411,54 @@ export default function WorldMap({ data, className }: WorldMapProps) {
       return 6;
     };
 
-    // Create group element
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    svg.appendChild(g);
-
-    // Render paths
-    worldData.features.forEach((feature: WorldFeature) => {
-      if (!feature.geometry) return;
-
-      const path = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'path',
-      );
+    return worldData.features.flatMap((feature: WorldFeature) => {
+      if (!feature.geometry) return [];
       const count = counts.get(feature.id as string) || 0;
       const intensity = getIntensity(count);
-      const pathData = geometryToPath(feature.geometry, project);
-
-      path.setAttribute('d', pathData);
-      path.setAttribute('fill', getHeatmapIntensityValue(intensity));
-      path.setAttribute('stroke', 'var(--border)');
-      path.setAttribute('stroke-width', '0.5');
-      path.setAttribute(
-        'class',
-        'transition-colors hover:opacity-80 cursor-pointer',
-      );
-
-      // Event listeners
-      path.addEventListener('mouseover', (event: MouseEvent) => {
-        setHoveredCountry({
-          name: feature.properties?.name || 'Unknown',
+      return [
+        {
           count,
-        });
-        setTooltipPos({
-          top: (event as MouseEvent).clientY - 10,
-          left: (event as MouseEvent).clientX,
-        });
-      });
-
-      path.addEventListener('mouseout', () => {
-        setHoveredCountry(null);
-      });
-
-      g.appendChild(path);
+          fill: getHeatmapIntensityValue(intensity),
+          id: feature.id as string,
+          name: feature.properties?.name || 'Unknown',
+          path: geometryToPath(feature.geometry, project),
+        },
+      ];
     });
-  }, [worldData, memoizedData]);
+  }, [data, worldData]);
+
+  const handlePointerOver = (event: ReactPointerEvent<SVGSVGElement>) => {
+    const path = event.target as SVGPathElement;
+    const name = path.dataset.country;
+    const count = path.dataset.count;
+    if (!name || count === undefined) return;
+
+    setHoveredCountry({ name, count: Number(count) });
+    setTooltipPos({ top: event.clientY - 10, left: event.clientX });
+  };
 
   return (
-    <div
-      ref={containerRef}
-      className={twMerge('relative w-full h-full min-h-[200px]', className)}
-    >
-      <svg ref={svgRef} className='w-full h-full' />
+    <div className={twMerge('relative w-full h-full min-h-[200px]', className)}>
+      <svg
+        className='w-full h-full'
+        viewBox='0 0 1000 500'
+        preserveAspectRatio='xMidYMid meet'
+        onPointerOver={handlePointerOver}
+        onPointerLeave={() => setHoveredCountry(null)}
+      >
+        {countries.map((country) => (
+          <path
+            key={country.id}
+            d={country.path}
+            fill={country.fill}
+            stroke='var(--border)'
+            strokeWidth='0.5'
+            className='transition-opacity hover:opacity-80 cursor-pointer'
+            data-country={country.name}
+            data-count={country.count}
+          />
+        ))}
+      </svg>
 
       {hoveredCountry && (
         <Portal>

@@ -20,10 +20,12 @@ export const ProjectLayout = ({
     const pinnedProjects = projects.filter((p) => p.pinned);
 
     const sortedPinnedProjects = pinnedProjects
-      .sort(
-        (a, b) =>
-          parseDate(b.date_string).getTime() -
-          parseDate(a.date_string).getTime(),
+      .sort((a, b) =>
+        parseDate(b.date_string).getTime() ===
+        parseDate(a.date_string).getTime()
+          ? a.id.localeCompare(b.id)
+          : parseDate(b.date_string).getTime() -
+            parseDate(a.date_string).getTime(),
       )
       .slice(0, 5);
     return [...sortedPinnedProjects];
