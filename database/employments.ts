@@ -151,6 +151,7 @@ export async function createEmployment(
     revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
+    revalidateTag('content-collections', 'max');
 
     const newEmp = await getEmploymentById(id);
     if (!newEmp)
@@ -276,6 +277,7 @@ export async function updateEmployment(
     revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
+    revalidateTag('content-collections', 'max');
 
     const updated = await getEmploymentById(recordId);
     if (!updated) throw new Error('Failed to retrieve employment after update');
@@ -311,6 +313,7 @@ export async function deleteEmployment(
     revalidatePath('/');
     revalidatePath('/database/employments');
     revalidateTag('employments', 'max');
+    revalidateTag('content-collections', 'max');
 
     return { success: true };
   } catch (error: unknown) {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/date-select';
@@ -33,10 +33,6 @@ const initialCertificateState: Certificate = {
 const CertificateForm: React.FC<CertificateFormProps> = ({
   certificateToEdit,
 }) => {
-  const [certificate, setCertificate] = useState<Certificate>(
-    certificateToEdit || initialCertificateState,
-  );
-
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
 
@@ -44,23 +40,15 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     if (certificateToEdit?.date_issued) {
       return new Date(certificateToEdit.date_issued);
     }
-    return new Date('2025-01-01');
+    return new Date();
   });
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      if (certificateToEdit?.date_issued) {
-        setSelectedDate(new Date(certificateToEdit.date_issued));
-      } else {
-        const now = new Date();
-        setSelectedDate(now);
-        if (!certificate.date_issued) {
-          handleChange('date_issued', formatDate(now));
-        }
-      }
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [certificateToEdit, certificate.date_issued]);
+  const [certificate, setCertificate] = useState<Certificate>(
+    () =>
+      certificateToEdit || {
+        ...initialCertificateState,
+        date_issued: formatDate(selectedDate),
+      },
+  );
 
   const currentPreviewCertificate: Certificate = {
     id: certificate.id || 'preview',

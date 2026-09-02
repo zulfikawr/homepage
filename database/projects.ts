@@ -161,9 +161,11 @@ export async function createProject(
       )
       .run();
 
+    revalidatePath('/');
     revalidatePath('/projects');
     revalidatePath('/database/projects');
     revalidateTag('projects', 'max');
+    revalidateTag('content-collections', 'max');
 
     const newProject = await getProjectById(id);
     return { success: true, project: newProject! };
@@ -302,10 +304,12 @@ export async function updateProject(
         .run();
     }
 
+    revalidatePath('/');
     revalidatePath('/projects');
     revalidatePath(`/projects/${payload.slug || existing.slug}`);
     revalidatePath('/database/projects');
     revalidateTag('projects', 'max');
+    revalidateTag('content-collections', 'max');
 
     const updated = await getProjectById(resolvedId);
     return { success: true, project: updated! };
@@ -335,9 +339,11 @@ export async function deleteProject(
       .bind(existing.id)
       .run();
 
+    revalidatePath('/');
     revalidatePath('/projects');
     revalidatePath('/database/projects');
     revalidateTag('projects', 'max');
+    revalidateTag('content-collections', 'max');
 
     return { success: true };
   } catch (error: unknown) {

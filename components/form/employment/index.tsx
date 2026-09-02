@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/date-select';
@@ -40,15 +40,6 @@ const initialEmploymentState: Employment = {
 const EmploymentForm: React.FC<EmploymentFormProps> = ({
   employmentToEdit,
 }) => {
-  const [employment, setEmployment] = useState<Employment>(
-    employmentToEdit || initialEmploymentState,
-  );
-  const [isPresent, setIsPresent] = useState(
-    employmentToEdit?.date_string?.includes('Present') || false,
-  );
-  const [newResponsibility, setNewResponsibility] = useState('');
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-
   const [startDate, setStartDate] = useState<Date>(() => {
     if (employmentToEdit?.date_string) {
       const [startStr] = employmentToEdit.date_string.split(' - ');
@@ -63,21 +54,18 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     }
     return new Date();
   });
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      if (employmentToEdit?.date_string) {
-        const [startStr, endStr] = employmentToEdit.date_string.split(' - ');
-        setStartDate(new Date(startStr));
-        setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
-      } else {
-        const now = new Date();
-        setStartDate(now);
-        setEndDate(now);
-      }
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [employmentToEdit]);
+  const [employment, setEmployment] = useState<Employment>(
+    () =>
+      employmentToEdit || {
+        ...initialEmploymentState,
+        date_string: formatDateRange(startDate, endDate),
+      },
+  );
+  const [isPresent, setIsPresent] = useState(
+    employmentToEdit?.date_string?.includes('Present') || false,
+  );
+  const [newResponsibility, setNewResponsibility] = useState('');
+  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const currentPreviewEmployment: Employment = {
     id: employment.id || 'preview',
@@ -401,6 +389,14 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                   if (isPresent) {
                     setEndDate(newDate);
                   }
+                  handleChange(
+                    'date_string',
+                    formatDateRange(
+                      newDate,
+                      isPresent ? newDate : endDate,
+                      isPresent,
+                    ),
+                  );
                 }}
                 mode='day-month-year'
               />
@@ -409,7 +405,13 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
               <FormLabel>End Date</FormLabel>
               <DateSelect
                 value={endDate}
-                onChange={setEndDate}
+                onChange={(newDate) => {
+                  setEndDate(newDate);
+                  handleChange(
+                    'date_string',
+                    formatDateRange(startDate, newDate, isPresent),
+                  );
+                }}
                 mode='day-month-year'
                 className={isPresent ? 'opacity-50' : ''}
                 disabled={isPresent}
@@ -424,6 +426,14 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                 if (checked) {
                   setEndDate(new Date());
                 }
+                handleChange(
+                  'date_string',
+                  formatDateRange(
+                    startDate,
+                    checked ? new Date() : endDate,
+                    checked,
+                  ),
+                );
               }}
               label='I currently working on this organization'
             />

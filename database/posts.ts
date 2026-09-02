@@ -171,9 +171,11 @@ export async function createPost(
       )
       .run();
 
+    revalidatePath('/');
     revalidatePath('/posts');
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
+    revalidateTag('content-collections', 'max');
 
     const newPost = await getPostById(id);
     return { success: true, data: newPost || undefined };
@@ -292,10 +294,12 @@ export async function updatePost(
         .run();
     }
 
+    revalidatePath('/');
     revalidatePath('/posts');
     revalidatePath(`/posts/${payload.slug || existing.slug}`);
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
+    revalidateTag('content-collections', 'max');
 
     const updated = await getPostById(recordId);
     return { success: true, data: updated || undefined };
@@ -324,9 +328,11 @@ export async function deletePost(
 
     await db.prepare('DELETE FROM posts WHERE id = ?').bind(existing.id).run();
 
+    revalidatePath('/');
     revalidatePath('/posts');
     revalidatePath('/database/posts');
     revalidateTag('posts', 'max');
+    revalidateTag('content-collections', 'max');
 
     return { success: true };
   } catch (error: unknown) {

@@ -44,8 +44,25 @@ const initialProjectState: Project = {
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
+  const [startDate, setStartDate] = useState<Date>(() => {
+    if (projectToEdit?.date_string) {
+      return new Date(projectToEdit.date_string.split(' - ')[0]);
+    }
+    return new Date();
+  });
+  const [endDate, setEndDate] = useState<Date>(() => {
+    if (projectToEdit?.date_string) {
+      const [, end] = projectToEdit.date_string.split(' - ');
+      return end === 'Present' ? new Date() : new Date(end);
+    }
+    return new Date();
+  });
   const [project, setProject] = useState<Project>(
-    projectToEdit || initialProjectState,
+    () =>
+      projectToEdit || {
+        ...initialProjectState,
+        date_string: formatDateRange(startDate, endDate),
+      },
   );
   const [isPresent, setIsPresent] = useState(
     projectToEdit?.date_string?.includes('Present') || false,
@@ -55,35 +72,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
 
-  // Use a stable mounted state to handle hydration safely
-  const [mounted, setMounted] = useState(false);
-
   // Debounced image for preview
   const [displayImage, setDisplayImage] = useState(project.image);
   useEffect(() => {
-    setMounted(true);
     const timer = setTimeout(() => {
       setDisplayImage(project.image);
     }, 2000); // 2 second debounce for better UX
     return () => clearTimeout(timer);
   }, [project.image]);
-
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
-
-  useEffect(() => {
-    if (!mounted) return;
-
-    if (projectToEdit?.date_string) {
-      const [startStr, endStr] = projectToEdit.date_string.split(' - ');
-      setStartDate(new Date(startStr));
-      setEndDate(endStr === 'Present' ? new Date() : new Date(endStr));
-    } else {
-      const now = new Date();
-      setStartDate(now);
-      setEndDate(now);
-    }
-  }, [projectToEdit, mounted]);
 
   // GitHub fetch states
   const [githubUrl, setGithubUrl] = useState('');
@@ -532,6 +528,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                   if (isPresent) {
                     setEndDate(newDate);
                   }
+                  handleChange(
+                    'date_string',
+                    formatDateRange(
+                      newDate,
+                      isPresent ? newDate : endDate,
+                      isPresent,
+                    ),
+                  );
                 }}
                 mode='month-year'
               />
@@ -540,7 +544,13 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
               <FormLabel>End Date</FormLabel>
               <DateSelect
                 value={endDate}
-                onChange={setEndDate}
+                onChange={(newDate) => {
+                  setEndDate(newDate);
+                  handleChange(
+                    'date_string',
+                    formatDateRange(startDate, newDate, isPresent),
+                  );
+                }}
                 mode='month-year'
                 disabled={isPresent}
               />
@@ -554,6 +564,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
                 if (checked) {
                   setEndDate(new Date());
                 }
+                handleChange(
+                  'date_string',
+                  formatDateRange(
+                    startDate,
+                    checked ? new Date() : endDate,
+                    checked,
+                  ),
+                );
               }}
               label='I currently working on this project'
             />

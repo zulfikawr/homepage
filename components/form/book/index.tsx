@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/date-select';
@@ -36,27 +36,19 @@ const initialBookState: Book = {
 };
 
 const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
-  const [book, setBook] = useState<Book>(bookToEdit || initialBookState);
-
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
     if (bookToEdit?.date_added) {
       return new Date(bookToEdit.date_added);
     }
-    return new Date('2025-01-01');
+    return new Date();
   });
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      if (!bookToEdit?.date_added) {
-        const now = new Date();
-        setSelectedDate(now);
-        if (!book.date_added) {
-          handleChange('date_added', formatDate(now));
-        }
-      }
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [bookToEdit?.date_added, book.date_added]);
+  const [book, setBook] = useState<Book>(
+    () =>
+      bookToEdit || {
+        ...initialBookState,
+        date_added: formatDate(selectedDate),
+      },
+  );
 
   const currentPreviewBook: Book = {
     id: book.id || 'preview',

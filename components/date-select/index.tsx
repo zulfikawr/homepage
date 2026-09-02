@@ -34,6 +34,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
   value,
   onChange,
   mode = 'day-month-year',
+  className,
   disabled = false,
 }) => {
   const currentYear = useSyncExternalStore(
@@ -76,7 +77,8 @@ const DateSelect: React.FC<DateSelectProps> = ({
       className={twMerge(
         'grid',
         mode === 'day-month-year' ? 'grid-cols-3' : 'grid-cols-2',
-        'w-full gap-2 ${className}',
+        'w-full gap-2',
+        className,
       )}
     >
       {mode === 'day-month-year' && (

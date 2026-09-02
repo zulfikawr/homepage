@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/date-select';
@@ -38,8 +38,6 @@ const initialPostState: Post = {
 };
 
 const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
-  const [post, setPost] = useState<Post>(postToEdit || initialPostState);
-
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
 
@@ -47,23 +45,15 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
     if (postToEdit?.date_string) {
       return new Date(postToEdit.date_string);
     }
-    return new Date('2025-01-01');
+    return new Date();
   });
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      if (postToEdit?.date_string) {
-        setSelectedDate(new Date(postToEdit.date_string));
-      } else {
-        const now = new Date();
-        setSelectedDate(now);
-        if (!post.date_string) {
-          handleChange('date_string', formatDate(now));
-        }
-      }
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [postToEdit, post.date_string]);
+  const [post, setPost] = useState<Post>(
+    () =>
+      postToEdit || {
+        ...initialPostState,
+        date_string: formatDate(selectedDate),
+      },
+  );
 
   const currentPreviewPost: Post = {
     id: post.id || 'preview',

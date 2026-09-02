@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
@@ -34,29 +34,16 @@ const initialMovieState: Movie = {
 };
 
 const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
-  const [movie, setMovie] = useState<Movie>(movieToEdit || initialMovieState);
-
-  // Use a stable initial date to avoid infinite loops with useSyncExternalStore
-  const [now] = useState(() => new Date());
-
-  const initialDate = useMemo(() => {
-    const date = movieToEdit?.release_date
-      ? new Date(movieToEdit.release_date)
-      : now;
-    return date;
-  }, [movieToEdit, now]);
-
-  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
-
-  // Sync state if initialDate change
-  useEffect(() => {
-    setSelectedDate(initialDate);
-    if (movieToEdit) {
-      setMovie(movieToEdit);
-    } else if (!movie.release_date) {
-      handleChange('release_date', formatDate(initialDate));
-    }
-  }, [initialDate, movieToEdit, movie.release_date]);
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    movieToEdit?.release_date ? new Date(movieToEdit.release_date) : new Date(),
+  );
+  const [movie, setMovie] = useState<Movie>(
+    () =>
+      movieToEdit || {
+        ...initialMovieState,
+        release_date: formatDate(selectedDate),
+      },
+  );
 
   const currentPreview: Movie = {
     id: movie.id || 'preview',

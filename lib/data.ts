@@ -33,31 +33,37 @@ export async function getCollection<T>(
   table: string,
   mapper: (record: Record<string, unknown>) => T,
 ): Promise<T[]> {
-  const records = await getCachedCollection(table);
+  const records = await (process.env.NODE_ENV === 'development'
+    ? getCollectionRecords(table)
+    : getCachedCollection(table));
   return records.map(mapper);
 }
 
-const getCachedCollection = unstable_cache(
-  async (table: string): Promise<Record<string, unknown>[]> => {
-    const db = getDB();
-    if (!db) {
-      console.error('Database not available in getCollection');
-      return [];
-    }
+const getCollectionRecords = async (
+  table: string,
+): Promise<Record<string, unknown>[]> => {
+  const db = getDB();
+  if (!db) {
+    console.error('Database not available in getCollection');
+    return [];
+  }
 
-    try {
-      // D1 does not guarantee an order unless one is requested. A stable order is
-      // required because this result is sent through the RSC payload and hydrated
-      // by keyed client lists.
-      const { results } = await db
-        .prepare(`SELECT * FROM ${table} ORDER BY id ASC`)
-        .all();
-      return results as Record<string, unknown>[];
-    } catch (error) {
-      console.error(`Error fetching collection ${table}:`, error);
-      return [];
-    }
-  },
+  try {
+    // D1 does not guarantee an order unless one is requested. A stable order is
+    // required because this result is sent through the RSC payload and hydrated
+    // by keyed client lists.
+    const { results } = await db
+      .prepare(`SELECT * FROM ${table} ORDER BY id ASC`)
+      .all();
+    return results as Record<string, unknown>[];
+  } catch (error) {
+    console.error(`Error fetching collection ${table}:`, error);
+    return [];
+  }
+};
+
+const getCachedCollection = unstable_cache(
+  getCollectionRecords,
   ['content-collections-v1'],
   { revalidate: 300, tags: ['content-collections'] },
 );
