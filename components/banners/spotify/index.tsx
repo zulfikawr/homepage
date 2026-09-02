@@ -51,7 +51,7 @@ const BannerHeader = ({
   showMoreButton?: boolean;
 }) => {
   const GoToMusicButton = (
-    <Link href='/music' prefetch={true}>
+    <Link href='/music' prefetch={false}>
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} className='rounded-sm' />

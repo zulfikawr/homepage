@@ -116,7 +116,7 @@ export default function ProjectCard({
   }
 
   return (
-    <Link href={href} prefetch={true} className='block w-full'>
+    <Link href={href} prefetch={false} className='block w-full'>
       {cardContent}
     </Link>
   );

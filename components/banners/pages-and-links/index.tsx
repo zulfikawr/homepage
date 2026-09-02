@@ -19,7 +19,7 @@ const PagesAndLinksBanner = ({
   showMoreButton?: boolean;
 }) => {
   const viewAllButton = (
-    <Link href='/pages' prefetch={true}>
+    <Link href='/pages' prefetch={false}>
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
@@ -117,7 +117,7 @@ const PagesAndLinksBanner = ({
                 <Link
                   key={link.label}
                   href={link.href}
-                  prefetch={!link.target}
+                  prefetch={false}
                   target={link.target}
                   rel={
                     link.target === '_blank' ? 'noopener noreferrer' : undefined

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
@@ -39,33 +39,6 @@ export default function PostCard({
     if (isPreview) return;
     router.push(href);
   };
-
-  // Prefetch the post page when card is in viewport
-  useEffect(() => {
-    if (isPreview || !post) return;
-
-    const currentRef = cardRef.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            router.prefetch(href);
-          }
-        });
-      },
-      { rootMargin: '50px' },
-    );
-
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [router, href, isPreview, post]);
 
   if (!post) return null;
 
@@ -147,7 +120,7 @@ export default function PostCard({
                         <Link
                           key={category}
                           href={`/posts/cate/${category}`}
-                          prefetch={true}
+                          prefetch={false}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Label variant='aqua' icon='tag'>

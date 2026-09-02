@@ -38,16 +38,13 @@ export default function ImageWithFallback({
     currentSrc = src;
   }
 
-  // Storage URLs and local public images should probably be unoptimized if they fail the URL check
-  const isStorageUrl = currentSrc.startsWith('/api/storage/');
-
   return (
     <Image
       {...props}
       key={currentSrc}
       alt={alt}
       src={currentSrc}
-      unoptimized={isStorageUrl || props.unoptimized}
+      unoptimized={props.unoptimized}
       onError={() => {
         if (!hasError) {
           console.error('ImageWithFallback: error loading', src);

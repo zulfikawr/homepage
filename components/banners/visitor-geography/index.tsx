@@ -1,13 +1,18 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
 import { Button, Icon, Separator, Skeleton, Tooltip } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import WorldMapVisualization from '@/components/visual/world-map';
 import { useLoadingToggle } from '@/contexts/loading-context';
+
+const WorldMapVisualization = dynamic(
+  () => import('@/components/visual/world-map'),
+  { ssr: false },
+);
 
 const BannerHeader = ({
   isLoading = false,
@@ -17,7 +22,7 @@ const BannerHeader = ({
   showMoreButton?: boolean;
 }) => {
   const ViewAnalyticsButton = (
-    <Link href='/analytics' prefetch={true}>
+    <Link href='/analytics' prefetch={false}>
       <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
         {isLoading ? (
           <Skeleton width={20} height={20} />
@@ -62,11 +67,13 @@ export const VisitorGeographyLayout = ({
   data,
   error,
   showMoreButton = true,
+  shouldRenderMap = false,
 }: {
   isLoading: boolean;
   data: { code: string; name: string; count: number }[] | null;
   error: string | null;
   showMoreButton?: boolean;
+  shouldRenderMap?: boolean;
 }) => {
   return (
     <Card isPreview className='h-full'>
@@ -83,7 +90,7 @@ export const VisitorGeographyLayout = ({
       ) : data && data.length > 0 ? (
         <div className='h-full w-full min-h-[250px] md:min-h-[350px] relative bg-card/50'>
           <div className='absolute inset-0'>
-            <WorldMapVisualization data={data} />
+            {shouldRenderMap && <WorldMapVisualization data={data} />}
           </div>
         </div>
       ) : (
@@ -104,6 +111,8 @@ export default function VisitorGeographyBanner({
   isLoading?: boolean;
   showMoreButton?: boolean;
 }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [shouldRenderMap, setShouldRenderMap] = useState(false);
   const mounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
@@ -111,6 +120,23 @@ export default function VisitorGeographyBanner({
   );
   const { forceLoading } = useLoadingToggle();
   const loading = isLoading || forceLoading;
+
+  useEffect(() => {
+    const element = mapRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldRenderMap(true);
+        observer.disconnect();
+      },
+      { rootMargin: '200px' },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [mounted]);
 
   if (!mounted) {
     return (
@@ -120,18 +146,20 @@ export default function VisitorGeographyBanner({
           data={null}
           error={null}
           showMoreButton={showMoreButton}
+          shouldRenderMap={false}
         />
       </div>
     );
   }
 
   return (
-    <div>
+    <div ref={mapRef}>
       <VisitorGeographyLayout
         isLoading={loading}
         data={data}
         error={null}
         showMoreButton={showMoreButton}
+        shouldRenderMap={shouldRenderMap}
       />
     </div>
   );

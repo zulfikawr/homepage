@@ -48,7 +48,7 @@ export async function GET(
     }
 
     headers.set('etag', object.httpEtag);
-    headers.set('Cache-Control', 'public, max-age=31536000');
+    headers.set('Cache-Control', 'public, max-age=31536000, immutable');
 
     return new Response(object.body, {
       status: 200,

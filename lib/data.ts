@@ -33,20 +33,29 @@ export async function getCollection<T>(
   table: string,
   mapper: (record: Record<string, unknown>) => T,
 ): Promise<T[]> {
-  const db = getDB();
-  if (!db) {
-    console.error('Database not available in getCollection');
-    return [];
-  }
-
-  try {
-    const { results } = await db.prepare(`SELECT * FROM ${table}`).all();
-    return (results as Record<string, unknown>[]).map(mapper);
-  } catch (error) {
-    console.error(`Error fetching collection ${table}:`, error);
-    return [];
-  }
+  const records = await getCachedCollection(table);
+  return records.map(mapper);
 }
+
+const getCachedCollection = unstable_cache(
+  async (table: string): Promise<Record<string, unknown>[]> => {
+    const db = getDB();
+    if (!db) {
+      console.error('Database not available in getCollection');
+      return [];
+    }
+
+    try {
+      const { results } = await db.prepare(`SELECT * FROM ${table}`).all();
+      return results as Record<string, unknown>[];
+    } catch (error) {
+      console.error(`Error fetching collection ${table}:`, error);
+      return [];
+    }
+  },
+  ['content-collections-v1'],
+  { revalidate: 300, tags: ['content-collections'] },
+);
 
 export const getProfile = () =>
   getCollection<PersonalInfo>('personal_info', mapRecordToPersonalInfo);

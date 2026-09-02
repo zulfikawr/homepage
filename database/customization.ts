@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 
 import { mapRecordToCustomization } from '@/lib/mappers';
 import { CustomizationSettings } from '@/types/customization';
@@ -14,7 +14,7 @@ const defaultSettings: CustomizationSettings = {
   updated_at: Math.floor(Date.now() / 1000),
 };
 
-export async function getCustomizationSettings(): Promise<CustomizationSettings> {
+async function getCustomizationSettingsUncached(): Promise<CustomizationSettings> {
   try {
     const row = await executeQueryFirst(
       'SELECT * FROM customization_settings WHERE id = 1',
@@ -27,6 +27,16 @@ export async function getCustomizationSettings(): Promise<CustomizationSettings>
     console.error('Error fetching customization settings:', error);
     return defaultSettings;
   }
+}
+
+const getCachedCustomizationSettings = unstable_cache(
+  getCustomizationSettingsUncached,
+  ['customization-settings-v1'],
+  { revalidate: 300, tags: ['customization-settings'] },
+);
+
+export async function getCustomizationSettings(): Promise<CustomizationSettings> {
+  return getCachedCustomizationSettings();
 }
 
 export async function updateCustomizationSettings(
@@ -50,6 +60,7 @@ export async function updateCustomizationSettings(
 
     revalidatePath('/');
     revalidatePath('/database/customization');
+    revalidateTag('customization-settings', 'max');
 
     const updated = await getCustomizationSettings();
     return { success: true, data: updated };

@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag, unstable_cache } from 'next/cache';
 
 import { getBucket } from '@/lib/cloudflare';
 import { mapRecordToPersonalInfo } from '@/lib/mappers';
@@ -30,7 +30,7 @@ async function uploadFile(file: File): Promise<string> {
   return key;
 }
 
-export async function getPersonalInfo(): Promise<PersonalInfo> {
+async function getPersonalInfoUncached(): Promise<PersonalInfo> {
   try {
     const row = await executeQueryFirst(
       'SELECT * FROM personal_info WHERE id = 1',
@@ -43,6 +43,16 @@ export async function getPersonalInfo(): Promise<PersonalInfo> {
     console.error('Error fetching personal info:', error);
     return defaultData;
   }
+}
+
+const getCachedPersonalInfo = unstable_cache(
+  getPersonalInfoUncached,
+  ['personal-info-v1'],
+  { revalidate: 300, tags: ['profile'] },
+);
+
+export async function getPersonalInfo(): Promise<PersonalInfo> {
+  return getCachedPersonalInfo();
 }
 
 export async function updatePersonalInfo(

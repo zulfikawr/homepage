@@ -42,7 +42,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
         <div className='relative mx-auto flex w-full max-w-screen-lg items-center'>
           {/* Desktop Logo */}
           <div className='hidden lg:flex relative z-10 select-none items-center'>
-            <Link href='/' prefetch={true} className='flex items-center'>
+            <Link href='/' prefetch={false} className='flex items-center'>
               <Button
                 variant='ghostLink'
                 className='py-0 px-0 gap-2 h-fit flex items-center'
@@ -69,7 +69,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
           {/* Mobile Logo/Title - cycles with logo */}
           <div className='lg:hidden relative z-10 flex-shrink-0'>
             <CyclingHideTransition>
-              <Link href='/' prefetch={true} className='select-none'>
+              <Link href='/' prefetch={false} className='select-none'>
                 <div className='group flex items-center gap-2 flex-shrink-0'>
                   <div className='flex size-[24px] items-center rounded-full'>
                     <ImageWithFallback
@@ -139,7 +139,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               <div className='hidden lg:flex items-center'>
                 <Link
                   href='/pages'
-                  prefetch={true}
+                  prefetch={false}
                   className='flex items-center'
                 >
                   <Button
@@ -153,7 +153,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               </div>
             ) : (
               <div className='hidden lg:flex items-center'>
-                <Link href='/' prefetch={true} className='flex items-center'>
+                <Link href='/' prefetch={false} className='flex items-center'>
                   <Button
                     variant='ghostLink'
                     icon='houseLine'

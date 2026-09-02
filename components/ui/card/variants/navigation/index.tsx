@@ -77,7 +77,7 @@ export default function NavigationCard({
 
   if (isInternalLink) {
     return (
-      <Link href={href} prefetch={true} className='block'>
+      <Link href={href} prefetch={false} className='block'>
         {cardContent}
       </Link>
     );

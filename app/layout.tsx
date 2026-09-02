@@ -2,7 +2,6 @@ import { Suspense, use } from 'react';
 import type { Metadata } from 'next';
 import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import { cookies } from 'next/headers';
-import Script from 'next/script';
 import { twMerge } from 'tailwind-merge';
 
 import Footer from '@/components/footer';
@@ -206,8 +205,6 @@ export default function RootLayout({
           defaultTheme={customization.default_theme}
           defaultBackground={customization.default_background}
         >
-          <Script src='https://js.puter.com/v2/' strategy='afterInteractive' />
-
           {/* Background layer */}
           <DynamicBackground />
 
