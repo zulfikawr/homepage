@@ -20,21 +20,36 @@ import {
   Tooltip,
 } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { useAuth } from '@/contexts/auth-context';
 import { useLoadingToggle } from '@/contexts/loading-context';
-import { getSpotifyAuthUrl } from '@/lib/spotify-client';
 import { SpotifyTrack } from '@/types/spotify';
+
+const FALLBACK_TRACK: SpotifyTrack = {
+  id: 'fallback-demolition-lovers',
+  name: 'Demolition Lovers',
+  artists: [{ name: 'My Chemical Romance' }],
+  album: {
+    name: 'I Brought You My Bullets, You Brought Me Your Love',
+    images: [
+      {
+        url: 'https://i.scdn.co/image/ab67616d0000b27397a8abd489a8247f5aa2da67',
+      },
+    ],
+  },
+  external_urls: {
+    spotify:
+      'https://open.spotify.com/search/My%20Chemical%20Romance%20Demolition%20Lovers',
+  },
+  duration_ms: 0,
+};
 
 const apiCache: {
   currentTrack: SpotifyTrack | null;
   isPlaying: boolean;
   lastPlayedAt: string | null;
-  isAuthorized: boolean;
 } = {
   currentTrack: null,
   isPlaying: false,
   lastPlayedAt: null,
-  isAuthorized: true,
 };
 
 interface SpotifyBannerProps {
@@ -43,10 +58,12 @@ interface SpotifyBannerProps {
 
 const BannerHeader = ({
   isPlaying,
+  isFallback = false,
   isLoading = false,
   showMoreButton = true,
 }: {
   isPlaying?: boolean;
+  isFallback?: boolean;
   isLoading?: boolean;
   showMoreButton?: boolean;
 }) => {
@@ -73,7 +90,13 @@ const BannerHeader = ({
         ) : (
           <>
             <Icon name='musicNotes' className='size-7 text-theme-green' />
-            <span>{isPlaying ? 'Currently Listening' : 'Recently Played'}</span>
+            <span>
+              {isFallback
+                ? 'On Repeat'
+                : isPlaying
+                  ? 'Currently Listening'
+                  : 'Recently Played'}
+            </span>
           </>
         )}
       </div>
@@ -93,12 +116,14 @@ const BannerHeader = ({
 
 const SpotifyLayout = ({
   isPlaying,
+  isFallback = false,
   isLoading,
   currentTrack,
   lastPlayedAt,
   showMoreButton = true,
 }: {
   isPlaying?: boolean;
+  isFallback?: boolean;
   isLoading?: boolean;
   currentTrack?: SpotifyTrack | null;
   lastPlayedAt?: string | null;
@@ -154,7 +179,11 @@ const SpotifyLayout = ({
               <span className='text-xs text-muted-foreground dark:text-muted-foreground flex-shrink-0'>
                 |
               </span>
-              {isPlaying ? (
+              {isFallback ? (
+                <span className='text-xs text-theme-green font-medium flex-shrink-0'>
+                  On repeat
+                </span>
+              ) : isPlaying ? (
                 <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium flex-shrink-0'>
                   <span className='relative flex h-1.5 w-1.5'>
                     <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-aqua opacity-75'></span>
@@ -184,6 +213,7 @@ const SpotifyLayout = ({
     <Card isPreview className='h-full'>
       <BannerHeader
         isPlaying={isPlaying}
+        isFallback={isFallback}
         isLoading={isLoading}
         showMoreButton={showMoreButton}
       />
@@ -221,12 +251,10 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(
     apiCache.lastPlayedAt,
   );
-  const [isAuthorized, setIsAuthorized] = useState(apiCache.isAuthorized);
   const [dataLoading, setDataLoading] = useState(!apiCache.currentTrack);
   const { forceLoading, forceEmpty } = useLoadingToggle();
   const isLoading = dataLoading || forceLoading;
 
-  const { isAdmin, loading: authLoading } = useAuth();
   const prevTrackId = useRef<string | null>(apiCache.currentTrack?.id || null);
   const retryDelay = useRef(1000);
   const isMounted = useRef(false);
@@ -244,8 +272,7 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
     apiCache.currentTrack = currentTrack;
     apiCache.isPlaying = isPlaying;
     apiCache.lastPlayedAt = lastPlayedAt;
-    apiCache.isAuthorized = isAuthorized;
-  }, [currentTrack, isPlaying, lastPlayedAt, isAuthorized]);
+  }, [currentTrack, isPlaying, lastPlayedAt]);
 
   const fetchTracksRef = useRef<() => Promise<void>>(null);
 
@@ -257,20 +284,8 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
       const currentResponse = await fetch('/api/spotify/current-track');
 
       if (currentResponse.status === 401 || currentResponse.status === 404) {
-        // Token issues
-        if (!apiCache.currentTrack) {
-          setIsAuthorized(false);
-        }
         setDataLoading(false);
         return;
-      }
-
-      // Only mark as authorized if we got a successful response
-      if (currentResponse.ok) {
-        setIsAuthorized(true);
-      } else {
-        // Mark as not authorized for any other error responses
-        setIsAuthorized(false);
       }
 
       if (currentResponse.status === 429) {
@@ -391,7 +406,7 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
 
   if (error || forceEmpty) return <CardEmpty message='No data' />;
 
-  if (!mounted || isLoading || authLoading) {
+  if (!mounted || isLoading) {
     return (
       <SpotifyLayout
         isLoading={true}
@@ -400,48 +415,16 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
       />
     );
   }
-  if (!isAuthorized) {
-    return (
-      <Card isPreview>
-        <div className='flex w-full items-center justify-between px-4 py-3'>
-          <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-            <Icon name='musicNotes' className='size-7 text-theme-green' />
-            <span>Spotify Integration</span>
-          </div>
-        </div>
-
-        <Separator margin='0' />
-
-        <div className='flex items-center justify-center min-h-[100px] p-4'>
-          {isAdmin ? (
-            <Button
-              icon='spotifyLogo'
-              className='bg-[#1DB954] text-theme-bg font-bold hover:bg-[#1ed760]'
-              onClick={() => {
-                const url = getSpotifyAuthUrl();
-                window.location.href = url;
-              }}
-            >
-              Connect with Spotify
-            </Button>
-          ) : (
-            <div className='text-sm text-muted-foreground text-center'>
-              Spotify integration is private.
-            </div>
-          )}
-        </div>
-      </Card>
-    );
-  }
-
-  if (!currentTrack) return <CardEmpty message='No data' />;
+  const displayTrack = currentTrack || FALLBACK_TRACK;
+  const isFallback = !currentTrack;
 
   return (
     <SpotifyLayout
       isPlaying={isPlaying}
+      isFallback={isFallback}
       isLoading={false}
-      currentTrack={currentTrack}
-      lastPlayedAt={lastPlayedAt}
+      currentTrack={displayTrack}
+      lastPlayedAt={isFallback ? null : lastPlayedAt}
       showMoreButton={showMoreButton}
     />
   );
