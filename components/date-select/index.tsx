@@ -43,6 +43,11 @@ const DateSelect: React.FC<DateSelectProps> = ({
     () => 2025, // Fixed year for SSR/Prerender
   );
 
+  const safeValue = useMemo(
+    () => (Number.isNaN(value.getTime()) ? new Date() : value),
+    [value],
+  );
+
   const days = useMemo(() => Array.from({ length: 31 }, (_, i) => i + 1), []);
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
   const years = useMemo(
@@ -55,19 +60,19 @@ const DateSelect: React.FC<DateSelectProps> = ({
   };
 
   const handleDayChange = (day: number) => {
-    const newDate = new Date(value);
+    const newDate = new Date(safeValue);
     newDate.setDate(day);
     onChange(newDate);
   };
 
   const handleMonthChange = (month: number) => {
-    const newDate = new Date(value);
+    const newDate = new Date(safeValue);
     newDate.setMonth(month);
     onChange(newDate);
   };
 
   const handleYearChange = (year: number) => {
-    const newDate = new Date(value);
+    const newDate = new Date(safeValue);
     newDate.setFullYear(year);
     onChange(newDate);
   };
@@ -88,7 +93,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
               className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
               disabled={disabled}
             >
-              {value.getDate()}
+              {safeValue.getDate()}
             </Button>
           }
           matchTriggerWidth
@@ -96,7 +101,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
           {days.map((day) => (
             <DropdownItem
               key={day}
-              isActive={day === value.getDate()}
+              isActive={day === safeValue.getDate()}
               className='justify-left text-left'
               onClick={() => handleDayChange(day)}
             >
@@ -112,7 +117,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
-            {formatMonth(value.getMonth())}
+            {formatMonth(safeValue.getMonth())}
           </Button>
         }
         matchTriggerWidth
@@ -120,7 +125,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
         {months.map((month) => (
           <DropdownItem
             key={month}
-            isActive={month === value.getMonth()}
+            isActive={month === safeValue.getMonth()}
             className='justify-left text-left'
             onClick={() => handleMonthChange(month)}
           >
@@ -135,7 +140,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
             className='w-full disabled:opacity-50 disabled:hover:bg-muted/50 dark:disabled:hover:bg-muted disabled:cursor-not-allowed'
             disabled={disabled}
           >
-            {value.getFullYear()}
+            {safeValue.getFullYear()}
           </Button>
         }
         matchTriggerWidth
@@ -143,7 +148,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
         {years.map((year) => (
           <DropdownItem
             key={year}
-            isActive={year === value.getFullYear()}
+            isActive={year === safeValue.getFullYear()}
             className='justify-left text-left'
             onClick={() => handleYearChange(year)}
           >

@@ -17,7 +17,7 @@ interface AnalyticsRow {
 export async function getAnalyticsEvents(): Promise<AnalyticsEvent[]> {
   try {
     const results = await executeQuery<AnalyticsRow>(
-      'SELECT * FROM analyticsEvents ORDER BY created_at DESC',
+      'SELECT * FROM analytics_events ORDER BY created_at DESC',
     );
     return results.map((row) => ({
       id: row.id,

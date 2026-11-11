@@ -16,7 +16,7 @@ import {
 import { EmploymentCard } from '@/components/ui/card/variants/employment';
 import { Separator } from '@/components/ui/separator';
 import { Employment } from '@/types/employment';
-import { formatDateRange } from '@/utilities/format-date';
+import { formatDateRange, parseDateRangeString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface EmploymentFormProps {
@@ -40,20 +40,12 @@ const initialEmploymentState: Employment = {
 const EmploymentForm: React.FC<EmploymentFormProps> = ({
   employmentToEdit,
 }) => {
-  const [startDate, setStartDate] = useState<Date>(() => {
-    if (employmentToEdit?.date_string) {
-      const [startStr] = employmentToEdit.date_string.split(' - ');
-      return new Date(startStr);
-    }
-    return new Date();
-  });
-  const [endDate, setEndDate] = useState<Date>(() => {
-    if (employmentToEdit?.date_string) {
-      const [, endStr] = employmentToEdit.date_string.split(' - ');
-      return endStr === 'Present' ? new Date() : new Date(endStr);
-    }
-    return new Date();
-  });
+  const [startDate, setStartDate] = useState<Date>(
+    () => parseDateRangeString(employmentToEdit?.date_string).start,
+  );
+  const [endDate, setEndDate] = useState<Date>(
+    () => parseDateRangeString(employmentToEdit?.date_string).end,
+  );
   const [employment, setEmployment] = useState<Employment>(
     () =>
       employmentToEdit || {
@@ -62,7 +54,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       },
   );
   const [isPresent, setIsPresent] = useState(
-    employmentToEdit?.date_string?.includes('Present') || false,
+    parseDateRangeString(employmentToEdit?.date_string).isPresent,
   );
   const [newResponsibility, setNewResponsibility] = useState('');
   const [logoFile, setLogoFile] = useState<File | null>(null);

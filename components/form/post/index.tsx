@@ -17,7 +17,7 @@ import {
 import PostCard from '@/components/ui/card/variants/post';
 import { Separator } from '@/components/ui/separator';
 import { Post } from '@/types/post';
-import { formatDate } from '@/utilities/format-date';
+import { formatDate, parseDateString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface PostFormProps {
@@ -41,12 +41,9 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (postToEdit?.date_string) {
-      return new Date(postToEdit.date_string);
-    }
-    return new Date();
-  });
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    parseDateString(postToEdit?.date_string),
+  );
   const [post, setPost] = useState<Post>(
     () =>
       postToEdit || {
@@ -132,8 +129,10 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
       const formData = new FormData();
       if (recordId) formData.append('id', recordId);
 
-      // Append all post fields
-      Object.entries(postData).forEach(([key, value]) => {
+      // `image`/`audio` are display aliases; the API stores `_url` values and
+      // reads uploads from separate File entries.
+      const { image: _image, audio: _audio, ...rest } = postData;
+      Object.entries(rest).forEach(([key, value]) => {
         if (key === 'categories' && Array.isArray(value)) {
           formData.append(key, JSON.stringify(value));
         } else if (value !== undefined && value !== null) {
@@ -141,7 +140,7 @@ const PostForm: React.FC<PostFormProps> = ({ postToEdit }) => {
         }
       });
 
-      // Append files
+      // Append files under the same keys the API reads.
       if (imageFile) formData.append('image', imageFile);
       if (audioFile) formData.append('audio', audioFile);
 

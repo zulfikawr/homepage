@@ -69,6 +69,18 @@ bun run dev
 
 The site will be available at `http://localhost:3000`
 
+## 🧪 Testing
+
+The database CRUD tests run against a throwaway copy of
+`local/data/homepage.db` and a temporary storage directory, so your real data
+is never modified:
+
+```sh
+bun test
+# or only the database suite
+bun run test:crud
+```
+
 ## 📌 Acknowledgments
 
 - **Template & Design:** [Tony (Lipeng) He](https://www.ouorz.com/)

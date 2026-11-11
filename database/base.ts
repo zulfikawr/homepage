@@ -13,6 +13,20 @@ export class DatabaseError extends Error {
   }
 }
 
+/**
+ * FormData can contain both an existing string value and a newly selected File
+ * under the same key. Always prefer the File so uploads replace old values.
+ */
+export function getFormFile(data: FormData, key: string): File | null {
+  if (typeof File === 'undefined') return null;
+  return (
+    data
+      .getAll(key)
+      .find((value): value is File => value instanceof File && value.size > 0) ??
+    null
+  );
+}
+
 export function handleDatabaseError(error: unknown, operation: string): never {
   console.error(`Database ${operation} error:`, error);
 

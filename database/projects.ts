@@ -3,6 +3,8 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { getBucket, getDB } from '@/lib/cloudflare';
+
+import { getFormFile } from './base';
 import { mapRecordToProject } from '@/lib/mappers';
 import { Project } from '@/types/project';
 
@@ -113,7 +115,7 @@ export async function createProject(
         payload.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-') ||
         id;
 
-      const imageFile = data.get('image') as File;
+      const imageFile = getFormFile(data, 'image');
       const imageUrlInput = data.get('image_url') as string;
       if (imageFile && imageFile.size > 0) {
         payload.image_url = await uploadFile(imageFile, projectSlug);
@@ -121,7 +123,7 @@ export async function createProject(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const faviconFile = data.get('favicon') as File;
+      const faviconFile = getFormFile(data, 'favicon');
       const faviconUrlInput = data.get('favicon_url') as string;
       if (faviconFile && faviconFile.size > 0) {
         payload.favicon_url = await uploadFile(faviconFile, projectSlug);
@@ -226,7 +228,7 @@ export async function updateProject(
     if (data instanceof FormData) {
       const projectSlug = payload.slug || existing.slug;
 
-      const imageFile = data.get('image') as File;
+      const imageFile = getFormFile(data, 'image');
       const imageUrlInput = data.get('image_url') as string;
       if (imageFile && imageFile.size > 0) {
         payload.image_url = await uploadFile(imageFile, projectSlug);
@@ -234,7 +236,7 @@ export async function updateProject(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const faviconFile = data.get('favicon') as File;
+      const faviconFile = getFormFile(data, 'favicon');
       const faviconUrlInput = data.get('favicon_url') as string;
       if (faviconFile && faviconFile.size > 0) {
         payload.favicon_url = await uploadFile(faviconFile, projectSlug);

@@ -16,7 +16,7 @@ import {
 import { BookCard } from '@/components/ui/card/variants/book';
 import { Separator } from '@/components/ui/separator';
 import { Book } from '@/types/book';
-import { formatDate } from '@/utilities/format-date';
+import { formatDate, parseDateString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface BookFormProps {
@@ -36,12 +36,9 @@ const initialBookState: Book = {
 };
 
 const BookForm: React.FC<BookFormProps> = ({ bookToEdit }) => {
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (bookToEdit?.date_added) {
-      return new Date(bookToEdit.date_added);
-    }
-    return new Date();
-  });
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    parseDateString(bookToEdit?.date_added),
+  );
   const [book, setBook] = useState<Book>(
     () =>
       bookToEdit || {

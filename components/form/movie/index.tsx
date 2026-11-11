@@ -15,7 +15,7 @@ import { MovieCard } from '@/components/ui/card/variants/movie';
 import { Icon } from '@/components/ui/icon';
 import { Separator } from '@/components/ui/separator';
 import { Movie } from '@/types/movie';
-import { formatDate } from '@/utilities/format-date';
+import { formatDate, parseDateString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface MovieFormProps {
@@ -35,7 +35,7 @@ const initialMovieState: Movie = {
 
 const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(() =>
-    movieToEdit?.release_date ? new Date(movieToEdit.release_date) : new Date(),
+    parseDateString(movieToEdit?.release_date),
   );
   const [movie, setMovie] = useState<Movie>(
     () =>
@@ -112,7 +112,7 @@ const MovieForm: React.FC<MovieFormProps> = ({ movieToEdit }) => {
 
     // Set selected date from year if available
     if (yearStr) {
-      const date = new Date(`${yearStr}-01-01`);
+      const date = parseDateString(`${yearStr}-01-01`);
       setSelectedDate(date);
       handleChange('release_date', formatDate(date));
     }

@@ -5,7 +5,7 @@ import CardEmpty from '@/components/ui/card/variants/empty';
 import { CardLoading } from '@/components/ui/card/variants/loading';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { Project } from '@/types/project';
-import { parseDate } from '@/utilities/sort-by-date';
+import { compareDates, compareIds } from '@/utilities/sort-by-date';
 
 import ProjectClient from './project-client';
 
@@ -20,12 +20,9 @@ export const ProjectLayout = ({
     const pinnedProjects = projects.filter((p) => p.pinned);
 
     const sortedPinnedProjects = pinnedProjects
-      .sort((a, b) =>
-        parseDate(b.date_string).getTime() ===
-        parseDate(a.date_string).getTime()
-          ? a.id.localeCompare(b.id)
-          : parseDate(b.date_string).getTime() -
-            parseDate(a.date_string).getTime(),
+      .sort(
+        (a, b) =>
+          compareDates(a.date_string, b.date_string) || compareIds(a, b),
       )
       .slice(0, 5);
     return [...sortedPinnedProjects];

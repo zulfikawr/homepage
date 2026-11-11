@@ -3,6 +3,8 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { getBucket, getDB } from '@/lib/cloudflare';
+
+import { getFormFile } from './base';
 import { mapRecordToPost } from '@/lib/mappers';
 import { Post } from '@/types/post';
 
@@ -121,19 +123,19 @@ export async function createPost(
 
       if (!payload.slug) payload.slug = id;
 
-      const imageFile = data.get('image') as File;
+      const imageFile = getFormFile(data, 'image');
       const imageUrlInput = data.get('image_url') as string;
-      if (imageFile && imageFile.size > 0) {
+      if (imageFile) {
         console.log('addPost: uploading image...', imageFile.name);
         payload.image_url = await uploadFile(imageFile, payload.slug, 'image');
       } else if (imageUrlInput) {
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const audioFile = data.get('audio') as File;
+      const audioFile = getFormFile(data, 'audio');
       const audioUrlInput = (data.get('audio_url') ||
         data.get('audioUrl')) as string;
-      if (audioFile && audioFile.size > 0) {
+      if (audioFile) {
         console.log('addPost: uploading audio...', audioFile.name);
         payload.audio_url = await uploadFile(audioFile, payload.slug, 'audio');
       } else if (audioUrlInput) {
@@ -227,19 +229,19 @@ export async function updatePost(
       // Use existing slug or generate new one
       const slug = payload.slug || existing.slug;
 
-      const imageFile = data.get('image') as File;
+      const imageFile = getFormFile(data, 'image');
       const imageUrlInput = data.get('image_url') as string;
 
-      if (imageFile && imageFile.size > 0) {
+      if (imageFile) {
         payload.image_url = await uploadFile(imageFile, slug, 'image');
       } else if (imageUrlInput !== undefined && imageUrlInput !== null) {
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const audioFile = data.get('audio') as File;
+      const audioFile = getFormFile(data, 'audio');
       const audioUrlInput = (data.get('audio_url') ||
         data.get('audioUrl')) as string;
-      if (audioFile && audioFile.size > 0) {
+      if (audioFile) {
         payload.audio_url = await uploadFile(audioFile, slug, 'audio');
       } else if (audioUrlInput !== undefined && audioUrlInput !== null) {
         payload.audio_url = audioUrlInput.replace('/api/storage/', '');

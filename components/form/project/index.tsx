@@ -20,7 +20,7 @@ import {
 import { ProjectCard } from '@/components/ui/card/variants/project';
 import { Separator } from '@/components/ui/separator';
 import { Project } from '@/types/project';
-import { formatDateRange } from '@/utilities/format-date';
+import { formatDateRange, parseDateRangeString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface ProjectFormProps {
@@ -44,19 +44,12 @@ const initialProjectState: Project = {
 };
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
-  const [startDate, setStartDate] = useState<Date>(() => {
-    if (projectToEdit?.date_string) {
-      return new Date(projectToEdit.date_string.split(' - ')[0]);
-    }
-    return new Date();
-  });
-  const [endDate, setEndDate] = useState<Date>(() => {
-    if (projectToEdit?.date_string) {
-      const [, end] = projectToEdit.date_string.split(' - ');
-      return end === 'Present' ? new Date() : new Date(end);
-    }
-    return new Date();
-  });
+  const [startDate, setStartDate] = useState<Date>(
+    () => parseDateRangeString(projectToEdit?.date_string).start,
+  );
+  const [endDate, setEndDate] = useState<Date>(
+    () => parseDateRangeString(projectToEdit?.date_string).end,
+  );
   const [project, setProject] = useState<Project>(
     () =>
       projectToEdit || {
@@ -65,7 +58,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
       },
   );
   const [isPresent, setIsPresent] = useState(
-    projectToEdit?.date_string?.includes('Present') || false,
+    parseDateRangeString(projectToEdit?.date_string).isPresent,
   );
 
   const [newTool, setNewTool] = useState('');
@@ -243,11 +236,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     for (const field of requiredProjectFields) {
       const value =
         field.key === 'dateRange' ? null : project[field.key as keyof Project];
-      const isEmpty = field.check
-        ? !field.check(value)
-        : typeof value === 'string'
-          ? !value.trim()
-          : !value;
+      const isEmpty =
+        field.key === 'image' && imageFile
+          ? false
+          : field.check
+            ? !field.check(value)
+            : typeof value === 'string'
+              ? !value.trim()
+              : !value;
 
       if (isEmpty) {
         toast.error(`${field.label} is required.`);
@@ -274,8 +270,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
     try {
       const formData = new FormData();
 
-      // Append all project fields
-      Object.entries(projectData).forEach(([key, value]) => {
+      // The project form edits `image`/`favicon`, but the API expects the
+      // `_url` fields for existing values and separate File entries for uploads.
+      const { image, favicon, ...rest } = projectData;
+      Object.entries({
+        ...rest,
+        image_url: image,
+        favicon_url: favicon,
+      }).forEach(([key, value]) => {
         if (key === 'tools' && Array.isArray(value)) {
           formData.append(key, JSON.stringify(value));
         } else if (value !== undefined && value !== null) {
@@ -283,7 +285,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ projectToEdit }) => {
         }
       });
 
-      // Append files
+      // Append files under the same keys the API reads.
       if (imageFile) formData.append('image', imageFile);
       if (faviconFile) formData.append('favicon', faviconFile);
 

@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "oxlint . --fix --type-aware --type-check && bunx prettier --write .",
+    "test": "bun test",
+    "test:crud": "bun test tests/database-crud.test.ts",
     "lint:changed": "git diff --name-only --diff-filter=ACM HEAD | grep -E '\\.(js|jsx|ts|tsx)$' | xargs -r oxlint --fix --type-aware --type-check && git diff --name-only --diff-filter=ACM HEAD | grep -E '\\.(js|jsx|ts|tsx|json|css|md)$' | xargs -r prettier --write",
     "analyze": "bash scripts/analyze-performance.sh",
     "clean": "rm -rf .next .open-next node_modules && bun install"

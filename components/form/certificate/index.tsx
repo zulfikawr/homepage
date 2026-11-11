@@ -11,7 +11,7 @@ import CertificateCard from '@/components/ui/card/variants/certificate';
 import { Separator } from '@/components/ui/separator';
 import { getFileUrl } from '@/lib/storage';
 import { Certificate } from '@/types/certificate';
-import { formatDate } from '@/utilities/format-date';
+import { formatDate, parseDateString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
 
 interface CertificateFormProps {
@@ -36,12 +36,9 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
 
-  const [selectedDate, setSelectedDate] = useState<Date>(() => {
-    if (certificateToEdit?.date_issued) {
-      return new Date(certificateToEdit.date_issued);
-    }
-    return new Date();
-  });
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    parseDateString(certificateToEdit?.date_issued),
+  );
   const [certificate, setCertificate] = useState<Certificate>(
     () =>
       certificateToEdit || {
