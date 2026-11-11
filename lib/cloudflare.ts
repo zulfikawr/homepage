@@ -1,5 +1,8 @@
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 
+import { getLocalDB, isLocalDataMode } from '@/lib/local-db';
+import { getLocalBucket } from '@/lib/local-storage';
+
 interface D1HttpMeta {
   [key: string]: unknown;
   duration: number;
@@ -356,7 +359,11 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
 }
 
 export function getDB(): D1Database {
-  // In development, always use HTTP API to connect to remote D1
+  // DATA_MODE=local (or any dev run) uses the exported SQLite file.
+  // Set DATA_MODE=cloudflare to go back to remote D1 over HTTP in dev.
+  if (isLocalDataMode()) return getLocalDB();
+
+  // In development against Cloudflare, use the HTTP API for remote D1
   if (process.env.NODE_ENV === 'development') {
     const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
     const databaseId = process.env.CLOUDFLARE_DATABASE_ID;
@@ -394,7 +401,11 @@ export function getDB(): D1Database {
 }
 
 export function getBucket(): R2Bucket {
-  // In development, always use HTTP API to connect to remote R2
+  // DATA_MODE=local (or any dev run) uses the exported local object store.
+  // Set DATA_MODE=cloudflare to go back to remote R2 over HTTP in dev.
+  if (isLocalDataMode()) return getLocalBucket();
+
+  // In development against Cloudflare, use the HTTP API for remote R2
   if (process.env.NODE_ENV === 'development') {
     const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
     const bucketName = process.env.CLOUDFLARE_BUCKET_NAME || 'homepage';

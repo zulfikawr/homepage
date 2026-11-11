@@ -48,7 +48,20 @@ NEXT_PUBLIC_SPOTIFY_CLIENT_SECRET=
 GITHUB_TOKEN=
 ```
 
-### 4️⃣ Run the project:
+### 4️⃣ Local data (SQLite + filesystem)
+
+Development uses the exported local copies of Cloudflare D1 and R2 by default:
+
+```sh
+DATA_MODE=local
+LOCAL_DB_PATH=./local/data/homepage.db
+LOCAL_STORAGE_DIR=./local/storage
+```
+
+To switch back to remote Cloudflare D1/R2 in development, set
+`DATA_MODE=cloudflare` (requires the `CLOUDFLARE_*` variables above).
+
+### 5️⃣ Run the project:
 
 ```sh
 bun run dev
