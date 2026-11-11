@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+import Banners from '@/components/section/banners';
+
 import SectionDatabase from './content';
 
 export const metadata: Metadata = {
@@ -8,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default async function SectionPage() {
-  return <SectionDatabase />;
+  return <SectionDatabase banners={<Banners />} />;
 }

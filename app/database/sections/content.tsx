@@ -5,7 +5,6 @@ import { twMerge } from 'tailwind-merge';
 
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
-import Banners from '@/components/section/banners';
 // Preview Components
 import EmploymentSection from '@/components/section/employment';
 import InterestsAndObjectivesSection from '@/components/section/interests-and-objectives';
@@ -27,7 +26,13 @@ import {
 } from '@/lib/mappers';
 import { Section } from '@/types/section';
 
-const SectionPreview = ({ sections }: { sections: Section[] }) => {
+const SectionPreview = ({
+  sections,
+  banners,
+}: {
+  sections: Section[];
+  banners: React.ReactNode;
+}) => {
   const { data: profile } = useCollection('profile', mapRecordToPersonalInfo);
   const { data: posts } = useCollection('posts', mapRecordToPost);
   const { data: projects } = useCollection('projects', mapRecordToProject);
@@ -42,7 +47,7 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
 
   const sectionMap: Record<string, React.ReactNode> = {
     'personal-info': <PersonalInfoSection data={profile?.[0]} />,
-    banners: <Banners />,
+    banners,
     interests: <InterestsAndObjectivesSection data={interests?.[0]} />,
     projects: <ProjectSection data={projects} />,
     employment: <EmploymentSection data={employments} />,
@@ -66,7 +71,11 @@ const SectionPreview = ({ sections }: { sections: Section[] }) => {
   );
 };
 
-export default function SectionDatabase() {
+export default function SectionDatabase({
+  banners,
+}: {
+  banners: React.ReactNode;
+}) {
   const {
     data: sections,
     loading,
@@ -163,7 +172,7 @@ export default function SectionDatabase() {
   };
 
   const openPreview = () => {
-    drawer.open(<SectionPreview sections={localSections} />);
+    drawer.open(<SectionPreview sections={localSections} banners={banners} />);
   };
 
   return (
