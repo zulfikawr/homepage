@@ -44,6 +44,7 @@ let interests: typeof import('../database/interests-and-objectives');
 let customization: typeof import('../database/customization');
 let resume: typeof import('../database/resume');
 let analytics: typeof import('../database/analytics-events');
+let banners: typeof import('../database/banners');
 
 const formData = (values: Record<string, string | File>) => {
   const data = new FormData();
@@ -92,6 +93,7 @@ beforeAll(async () => {
   customization = await import('../database/customization');
   resume = await import('../database/resume');
   analytics = await import('../database/analytics-events');
+  banners = await import('../database/banners');
 });
 
 afterAll(async () => {
@@ -569,6 +571,68 @@ describe('database CRUD on a temporary copy', () => {
     const deleteJson = (await deleteResponse.json()) as { success: boolean };
     expect(deleteJson.success).toBe(true);
     expect(await projects.getProjectById(id)).toBeNull();
+  });
+
+  it('loads and updates banner settings', async () => {
+    const initial = await banners.getBannerSettings();
+    expect(initial.length).toBeGreaterThan(0);
+    expect(initial.find((banner) => banner.id === 'spotify')?.width).toBe(
+      'half',
+    );
+
+    const updated = await banners.updateBannerSetting({
+      id: 'spotify',
+      width: 'wide',
+    });
+    expectSuccess(updated);
+    expect(
+      updated.settings?.find((banner) => banner.id === 'spotify')?.width,
+    ).toBe('wide');
+
+    const reordered = await banners.updateBannerSetting({
+      id: 'spotify',
+      order: 100,
+    });
+    expectSuccess(reordered);
+    const settings = await banners.getBannerSettings();
+    expect(settings[settings.length - 1].id).toBe('spotify');
+
+    const invalid = await banners.updateBannerSetting({
+      id: 'does-not-exist',
+      width: 'half',
+    });
+    expect(invalid.success).toBe(false);
+  });
+
+  it('updates banner settings through the collection API route', async () => {
+    const { GET, PUT } = await import('../app/api/collection/[name]/route');
+
+    const getResponse = await GET(
+      new Request('http://localhost/api/collection/banners') as never,
+      { params: Promise.resolve({ name: 'banners' }) },
+    );
+    const getJson = (await getResponse.json()) as {
+      success: boolean;
+      data: { results: { id: string; width: string }[] };
+    };
+    expect(getJson.success).toBe(true);
+    expect(getJson.data.results.length).toBeGreaterThan(0);
+
+    const putResponse = await PUT(
+      new Request('http://localhost/api/collection/banners', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: 'weather', width: 'disabled' }),
+      }) as never,
+      { params: Promise.resolve({ name: 'banners' }) },
+    );
+    const putJson = (await putResponse.json()) as { success: boolean };
+    expect(putJson.success).toBe(true);
+
+    const settings = await banners.getBannerSettings();
+    expect(settings.find((banner) => banner.id === 'weather')?.width).toBe(
+      'disabled',
+    );
   });
 
   it('reads analytics without errors', async () => {

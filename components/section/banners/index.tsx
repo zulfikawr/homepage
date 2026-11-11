@@ -7,7 +7,7 @@ import SpotifyBanner from '@/components/banners/spotify';
 import TopLanguagesBanner from '@/components/banners/top-languages';
 import VisitorGeographyBanner from '@/components/banners/visitor-geography';
 import WeatherBanner from '@/components/banners/weather';
-import { StaggerContainer, ViewTransition } from '@/components/motion';
+import { getBannerSettings } from '@/database/banners';
 import {
   getAnalyticsSummary,
   getGitHubContributionsServer,
@@ -15,7 +15,8 @@ import {
   getResume,
 } from '@/lib/data';
 
-// Server-side data fetchers that return the component with data
+import BannerGrid from './grid';
+
 async function GitHubContributionsData() {
   const data = await getGitHubContributionsServer();
   return <GitHubContributionsBanner data={data} />;
@@ -36,61 +37,38 @@ async function VisitorGeographyData() {
   return <VisitorGeographyBanner data={stats.countries} />;
 }
 
-const Banners = () => {
-  return (
-    <div className='space-y-6'>
-      <StaggerContainer>
-        <ViewTransition key='pages'>
-          <Suspense
-            fallback={<PagesAndLinksBanner resume={null} isLoading={true} />}
-          >
-            <PagesAndLinksData />
-          </Suspense>
-        </ViewTransition>
+export const getBannerNodes = (): Record<string, React.ReactNode> => ({
+  'pages-and-links': (
+    <Suspense fallback={<PagesAndLinksBanner resume={null} isLoading={true} />}>
+      <PagesAndLinksData />
+    </Suspense>
+  ),
+  'github-contributions': (
+    <Suspense
+      fallback={<GitHubContributionsBanner data={null} isLoading={true} />}
+    >
+      <GitHubContributionsData />
+    </Suspense>
+  ),
+  'visitor-geography': (
+    <Suspense fallback={<VisitorGeographyBanner data={[]} isLoading={true} />}>
+      <VisitorGeographyData />
+    </Suspense>
+  ),
+  'top-languages': (
+    <Suspense fallback={<TopLanguagesBanner data={null} isLoading={true} />}>
+      <TopLanguagesData />
+    </Suspense>
+  ),
+  spotify: <SpotifyBanner />,
+  weather: <WeatherBanner />,
+  'ai-knowledge-assistant': <AIKnowledgeAssistantBanner />,
+});
 
-        <ViewTransition key='contributions'>
-          <Suspense
-            fallback={
-              <GitHubContributionsBanner data={null} isLoading={true} />
-            }
-          >
-            <GitHubContributionsData />
-          </Suspense>
-        </ViewTransition>
+const Banners = async () => {
+  const settings = await getBannerSettings();
 
-        <ViewTransition key='geography'>
-          <Suspense
-            fallback={<VisitorGeographyBanner data={[]} isLoading={true} />}
-          >
-            <VisitorGeographyData />
-          </Suspense>
-        </ViewTransition>
-
-        <ViewTransition key='languages'>
-          <Suspense
-            fallback={<TopLanguagesBanner data={null} isLoading={true} />}
-          >
-            <TopLanguagesData />
-          </Suspense>
-        </ViewTransition>
-
-        <div className='flex flex-col sm:grid sm:grid-cols-2 gap-6'>
-          <StaggerContainer initialDelay={0.2}>
-            <ViewTransition key='spotify' className='h-full'>
-              <SpotifyBanner />
-            </ViewTransition>
-            <ViewTransition key='weather' className='h-full'>
-              <WeatherBanner />
-            </ViewTransition>
-          </StaggerContainer>
-        </div>
-
-        <ViewTransition key='ai-assistant'>
-          <AIKnowledgeAssistantBanner />
-        </ViewTransition>
-      </StaggerContainer>
-    </div>
-  );
+  return <BannerGrid settings={settings} nodes={getBannerNodes()} />;
 };
 
 export default Banners;
