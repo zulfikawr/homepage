@@ -42,12 +42,7 @@ export default function Providers({
           'nord',
           'catppuccin',
           'tokyo-night',
-          'solarized',
           'everforest',
-          'rose-pine',
-          'one-dark',
-          'kanagawa',
-          'nightfly',
         ]}
       >
         <ThemeSync />

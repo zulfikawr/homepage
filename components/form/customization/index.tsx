@@ -22,12 +22,7 @@ const themeOptions: { label: string; value: string; icon: IconName }[] = [
   { label: 'Nord', value: 'nord', icon: 'palette' },
   { label: 'Catppuccin', value: 'catppuccin', icon: 'palette' },
   { label: 'Tokyo Night', value: 'tokyo-night', icon: 'palette' },
-  { label: 'Solarized', value: 'solarized', icon: 'palette' },
   { label: 'Everforest', value: 'everforest', icon: 'palette' },
-  { label: 'Rose Pine', value: 'rose-pine', icon: 'palette' },
-  { label: 'One Dark', value: 'one-dark', icon: 'palette' },
-  { label: 'Kanagawa', value: 'kanagawa', icon: 'palette' },
-  { label: 'Nightfly', value: 'nightfly', icon: 'palette' },
 ];
 
 const backgroundOptions: { label: string; value: string; icon: IconName }[] = [

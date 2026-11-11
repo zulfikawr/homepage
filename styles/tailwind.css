@@ -2,18 +2,13 @@
 
 @plugin "@tailwindcss/typography";
 
-@variant dark (&:where(.dark, .dark *, .monokai, .monokai *, .dracula, .dracula *, .nord, .nord *, .catppuccin, .catppuccin *, .tokyo-night, .tokyo-night *, .solarized, .solarized *, .everforest, .everforest *, .rose-pine, .rose-pine *, .one-dark, .one-dark *, .kanagawa, .kanagawa *, .nightfly, .nightfly *, .gruvbox-dark, .gruvbox-dark *));
+@variant dark (&:where(.dark, .dark *, .monokai, .monokai *, .dracula, .dracula *, .nord, .nord *, .catppuccin, .catppuccin *, .tokyo-night, .tokyo-night *, .everforest, .everforest *, .gruvbox-dark, .gruvbox-dark *));
 @variant monokai (&:where(.monokai, .monokai *));
 @variant dracula (&:where(.dracula, .dracula *));
 @variant nord (&:where(.nord, .nord *));
 @variant catppuccin (&:where(.catppuccin, .catppuccin *));
 @variant tokyo-night (&:where(.tokyo-night, .tokyo-night *));
-@variant solarized (&:where(.solarized, .solarized *));
 @variant everforest (&:where(.everforest, .everforest *));
-@variant rose-pine (&:where(.rose-pine, .rose-pine *));
-@variant one-dark (&:where(.one-dark, .one-dark *));
-@variant kanagawa (&:where(.kanagawa, .kanagawa *));
-@variant nightfly (&:where(.nightfly, .nightfly *));
 @variant gruvbox-light (&:where(.gruvbox-light, .gruvbox-light *));
 @variant gruvbox-dark (&:where(.gruvbox-dark, .gruvbox-dark *));
 
