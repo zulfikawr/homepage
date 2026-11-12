@@ -114,7 +114,6 @@ export const siteConfig = {
       name: 'Cloudflare D1 & R2',
       description: 'SQL database and object storage',
     },
-    { name: 'Puter.js', description: 'AI capabilities provider' },
     { name: 'Bun', description: 'JavaScript runtime and package manager' },
   ],
   dataSchema: {

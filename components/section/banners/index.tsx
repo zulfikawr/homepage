@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 
-import AIKnowledgeAssistantBanner from '@/components/banners/ai-knowledge-assistant';
 import GitHubContributionsBanner from '@/components/banners/github-contributions';
 import PagesAndLinksBanner from '@/components/banners/pages-and-links';
 import SpotifyBanner from '@/components/banners/spotify';
@@ -62,7 +61,6 @@ export const getBannerNodes = (): Record<string, React.ReactNode> => ({
   ),
   spotify: <SpotifyBanner />,
   weather: <WeatherBanner />,
-  'ai-knowledge-assistant': <AIKnowledgeAssistantBanner />,
 });
 
 const Banners = async () => {

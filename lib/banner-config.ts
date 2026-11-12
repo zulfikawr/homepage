@@ -28,11 +28,6 @@ export const BANNER_DEFINITIONS: BannerDefinition[] = [
   { id: 'top-languages', title: 'Top Languages', defaultWidth: 'wide' },
   { id: 'spotify', title: 'Spotify', defaultWidth: 'half' },
   { id: 'weather', title: 'Weather', defaultWidth: 'half' },
-  {
-    id: 'ai-knowledge-assistant',
-    title: 'AI Knowledge Assistant',
-    defaultWidth: 'wide',
-  },
 ];
 
 export const DEFAULT_BANNER_SETTINGS: BannerSetting[] = BANNER_DEFINITIONS.map(
