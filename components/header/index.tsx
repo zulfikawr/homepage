@@ -50,7 +50,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                 <div className='flex size-[24px] flex-shrink-0 items-center rounded-full'>
                   <ImageWithFallback
                     className='rounded-full'
-                    src='/favicon/favicon-32x32.png'
+                    src='/favicon/android-chrome-192x192.png'
                     alt='Zulfikar'
                     height={24}
                     width={24}
@@ -74,7 +74,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
                   <div className='flex size-[24px] items-center rounded-full'>
                     <ImageWithFallback
                       className='rounded-full'
-                      src='/favicon/favicon-32x32.png'
+                      src='/favicon/android-chrome-192x192.png'
                       alt='Zulfikar'
                       height={24}
                       width={24}
@@ -169,6 +169,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               icon='list'
               className='flex lg:hidden px-0'
               onClick={openKbar}
+              aria-label='Open command palette'
             />
           </div>
         </div>

@@ -68,8 +68,11 @@ const BannerHeader = ({
   showMoreButton?: boolean;
 }) => {
   const GoToMusicButton = (
-    <Link href='/music' prefetch={false}>
-      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
+    <Link aria-label='View music' href='/music' prefetch={false}>
+      <Button
+        aria-label='View music'
+        className='h-7 !p-1 dark:bg-muted tracking-normal'
+      >
         {isLoading ? (
           <Skeleton width={20} height={20} className='rounded-sm' />
         ) : (
@@ -149,13 +152,13 @@ const SpotifyLayout = ({
       </div>
 
       <div className='flex-col min-w-0 space-y-1 flex-1'>
-        <h3 className='font-bold text-md text-theme-aqua truncate leading-6 h-6 flex items-center'>
+        <h2 className='font-bold text-md text-theme-aqua truncate leading-6 h-6 flex items-center'>
           {isLoading ? (
             <Skeleton width={160} height={18} as='span' />
           ) : (
             currentTrack?.name
           )}
-        </h3>
+        </h2>
         <p className='text-sm text-theme-yellow font-medium truncate leading-5 h-5 flex items-center'>
           {isLoading ? (
             <Skeleton width={120} height={14} as='span' />

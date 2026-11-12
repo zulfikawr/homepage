@@ -54,11 +54,15 @@ const BannerHeader = ({
 }) => {
   const GoToGithubButton = (
     <Link
+      aria-label='View GitHub repositories'
       href='https://github.com/zulfikawr?tab=repositories'
       target='_blank'
       rel='noopener noreferrer'
     >
-      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
+      <Button
+        aria-label='View GitHub repositories'
+        className='h-7 !p-1 dark:bg-muted tracking-normal'
+      >
         {isLoading ? (
           <Skeleton width={20} height={20} className='rounded-sm' />
         ) : (
@@ -134,18 +138,18 @@ export const TopLanguagesLayout = ({
           <div className='flex-1 space-y-1'>
             {isLoading ? (
               <>
-                <h3 className='text-xl font-bold h-7 flex items-center'>
+                <h2 className='text-xl font-bold h-7 flex items-center'>
                   <Skeleton width={120} height={24} as='span' />
-                </h3>
+                </h2>
                 <p className='text-sm h-5 flex items-center'>
                   <Skeleton width={80} height={16} as='span' />
                 </p>
               </>
             ) : topLanguage ? (
               <>
-                <h3 className='text-xl font-bold text-foreground'>
+                <h2 className='text-xl font-bold text-foreground'>
                   {topLanguage.name}
-                </h3>
+                </h2>
                 <p className='text-sm text-muted-foreground'>
                   {topLanguage.percentage}% of code
                 </p>

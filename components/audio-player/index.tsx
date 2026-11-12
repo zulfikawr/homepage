@@ -111,6 +111,7 @@ export default function AudioPlayer({ src, className = '' }: AudioPlayerProps) {
         {/* Progress Slider */}
         <input
           type='range'
+          aria-label='Audio progress'
           min='0'
           max={duration || 0}
           value={currentTime}

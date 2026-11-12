@@ -22,8 +22,11 @@ const BannerHeader = ({
   showMoreButton?: boolean;
 }) => {
   const ViewAnalyticsButton = (
-    <Link href='/analytics' prefetch={false}>
-      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
+    <Link aria-label='View analytics' href='/analytics' prefetch={false}>
+      <Button
+        aria-label='View analytics'
+        className='h-7 !p-1 dark:bg-muted tracking-normal'
+      >
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (

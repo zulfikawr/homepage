@@ -1,12 +1,7 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import {
-  apiError,
-  apiSuccess,
-  handleApiError,
-  validateSearchParams,
-} from '@/lib/api';
+import { apiError, apiSuccess, validateSearchParams } from '@/lib/api';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyRecentlyPlayed } from '@/types/spotify';
 
@@ -31,6 +26,9 @@ export async function GET(request: NextRequest) {
     );
 
     if (!spotifyRes.ok) {
+      if (spotifyRes.status === 401 || spotifyRes.status === 403) {
+        return apiSuccess({ items: [] });
+      }
       return apiError('Spotify error', spotifyRes.status);
     }
 
@@ -41,7 +39,7 @@ export async function GET(request: NextRequest) {
     }));
 
     return apiSuccess({ items });
-  } catch (error) {
-    return handleApiError(error);
+  } catch {
+    return apiSuccess({ items: [] });
   }
 }

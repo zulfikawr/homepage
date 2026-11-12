@@ -53,6 +53,7 @@ export const PersonalInfoLayout = ({
             width={105}
             alt={name}
             preload
+            fetchPriority='high'
             className='bg-muted aspect-square object-cover border-2 border-border shadow-brutalist rounded-xl'
             type='square'
             sizes='105px'

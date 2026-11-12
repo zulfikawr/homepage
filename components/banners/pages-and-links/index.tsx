@@ -19,8 +19,11 @@ const PagesAndLinksBanner = ({
   showMoreButton?: boolean;
 }) => {
   const viewAllButton = (
-    <Link href='/pages' prefetch={false}>
-      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
+    <Link aria-label='View all pages' href='/pages' prefetch={false}>
+      <Button
+        aria-label='View all pages'
+        className='h-7 !p-1 dark:bg-muted tracking-normal'
+      >
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (

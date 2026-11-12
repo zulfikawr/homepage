@@ -40,6 +40,7 @@ const Slider = ({
       <input
         id={id}
         type='range'
+        aria-label={label || id}
         min={min}
         max={max}
         step={step}

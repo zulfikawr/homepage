@@ -150,9 +150,9 @@ export default function ProjectAnalytics({
                 </div>
                 <div>
                   <div className='flex items-center gap-2'>
-                    <h3 className='text-lg font-bold text-foreground'>
+                    <h2 className='text-lg font-bold text-foreground'>
                       {stats.mostUsed.name}
-                    </h3>
+                    </h2>
                     <span className='text-[10px] uppercase tracking-wider font-bold text-theme-bg bg-theme-green px-1.5 py-0.5 rounded-sm'>
                       Top Pick
                     </span>

@@ -1,4 +1,4 @@
-import { apiError, apiSuccess, handleApiError } from '@/lib/api';
+import { apiError, apiSuccess } from '@/lib/api';
 import { getAccessToken } from '@/lib/spotify';
 import { SpotifyCurrentlyPlaying } from '@/types/spotify';
 
@@ -21,6 +21,9 @@ export async function GET() {
     }
 
     if (!spotifyRes.ok) {
+      if (spotifyRes.status === 401 || spotifyRes.status === 403) {
+        return apiSuccess(null);
+      }
       return apiError('Spotify API error', spotifyRes.status);
     }
 
@@ -29,7 +32,8 @@ export async function GET() {
       isPlaying: trackData.is_playing,
       item: trackData.item,
     });
-  } catch (error) {
-    return handleApiError(error);
+  } catch {
+    // No token / expired token: the banner falls back to its static track.
+    return apiSuccess(null);
   }
 }

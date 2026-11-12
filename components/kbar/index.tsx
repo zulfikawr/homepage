@@ -20,7 +20,7 @@ export function Kbar() {
         aria-label='Command + K to open the command palette'
         role='button'
         onClick={openKbar}
-        className='absolute left-3 top-[7px] z-10 rounded-md border bg-primary/10 px-1.5 py-0.5 text-xs text-primary dark:bg-primary/20 dark:text-primary font-bold cursor-pointer hover:bg-primary/20'
+        className='absolute left-3 top-[7px] z-10 rounded-md border bg-primary/20 px-1.5 py-0.5 text-xs text-foreground dark:bg-primary/30 dark:text-foreground font-bold cursor-pointer hover:bg-primary/20'
       >
         ⌘+K
       </div>

@@ -38,11 +38,15 @@ const BannerHeader = ({
 }) => {
   const GoToGithubButton = (
     <Link
+      aria-label='View GitHub profile'
       href='https://github.com/zulfikawr'
       target='_blank'
       rel='noopener noreferrer'
     >
-      <Button className='h-7 !p-1 dark:bg-muted tracking-normal'>
+      <Button
+        aria-label='View GitHub profile'
+        className='h-7 !p-1 dark:bg-muted tracking-normal'
+      >
         {isLoading ? (
           <Skeleton width={20} height={20} />
         ) : (

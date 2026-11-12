@@ -77,9 +77,9 @@ export default function GitHubCard({
           <div className='flex flex-col h-full p-4 sm:p-5 gap-3'>
             {/* Header with icon and name */}
             <div className='flex items-start justify-between gap-3'>
-              <h3 className='text-base font-semibold text-foreground truncate dark:text-theme-fg'>
+              <h2 className='text-base font-semibold text-foreground truncate dark:text-theme-fg'>
                 {repoName}
-              </h3>
+              </h2>
               <Icon
                 name='arrowSquareOut'
                 className='h-4 w-4 text-muted-foreground flex-shrink-0 dark:text-theme-fg-dim'
