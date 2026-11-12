@@ -109,85 +109,56 @@ async function getAnalyticsSummaryUncached(): Promise<AnalyticsSummary> {
   }
 
   try {
-    // 1. Total Views and Unique Visitors
-    const stats = await db
-      .prepare(
-        'SELECT COUNT(*) as total, COUNT(DISTINCT user_agent || country) as unique_v FROM analytics_events WHERE is_bot = 0',
-      )
-      .first<{ total: number; unique_v: number }>();
+    const [totals, unique, topRoutes, countries, referrers, devices] =
+      await Promise.all([
+        db
+          .prepare(
+            'SELECT COALESCE(SUM(views), 0) AS total FROM analytics_daily',
+          )
+          .first<{ total: number }>(),
+        db
+          .prepare('SELECT COUNT(*) AS unique_v FROM analytics_visitors')
+          .first<{ unique_v: number }>(),
+        db
+          .prepare(
+            'SELECT path, SUM(views) AS views FROM analytics_daily GROUP BY path ORDER BY views DESC LIMIT 5',
+          )
+          .all<{ path: string; views: number }>(),
+        db
+          .prepare(
+            'SELECT country AS code, SUM(views) AS count FROM analytics_daily GROUP BY country ORDER BY count DESC',
+          )
+          .all<{ code: string; count: number }>(),
+        db
+          .prepare(
+            'SELECT referrer AS name, SUM(views) AS count FROM analytics_daily GROUP BY referrer ORDER BY count DESC LIMIT 5',
+          )
+          .all<{ name: string; count: number }>(),
+        db
+          .prepare(
+            'SELECT device AS type, SUM(views) AS count FROM analytics_daily GROUP BY device',
+          )
+          .all<{ type: string; count: number }>(),
+      ]);
 
-    // 2. Top Routes
-    const topRoutes = await db
-      .prepare(
-        'SELECT path, COUNT(*) as views FROM analytics_events WHERE is_bot = 0 GROUP BY path ORDER BY views DESC LIMIT 5',
-      )
-      .all<{ path: string; views: number }>();
-
-    // 3. Countries
-    const countries = await db
-      .prepare(
-        "SELECT COALESCE(country, 'Unknown') as code, COUNT(*) as count FROM analytics_events WHERE is_bot = 0 GROUP BY code ORDER BY count DESC",
-      )
-      .all<{ code: string; count: number }>();
-
-    // 4. Referrers - Fetch all and aggregate by hostname in JS for 100% accuracy
-    const referrersRaw = await db
-      .prepare('SELECT referrer FROM analytics_events WHERE is_bot = 0')
-      .all<{ referrer: string }>();
-
-    const referrerMap = new Map<string, number>();
-    (referrersRaw.results || []).forEach((r) => {
-      let name = r.referrer || 'Direct';
-      if (name !== 'Direct') {
-        try {
-          if (name.startsWith('http')) {
-            name = new URL(name).hostname;
-          }
-        } catch {
-          // Keep as is if URL parsing fails
-        }
-      }
-      referrerMap.set(name, (referrerMap.get(name) || 0) + 1);
-    });
-
-    const referrers = Array.from(referrerMap.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-
-    // 5. Devices (Approximated via User-Agent)
-    const devicesRaw = await db
-      .prepare(
-        `SELECT 
-          CASE 
-            WHEN user_agent LIKE '%mobile%' OR user_agent LIKE '%android%' OR user_agent LIKE '%iphone%' OR user_agent LIKE '%ipad%' THEN 'Mobile'
-            ELSE 'Desktop'
-          END as type,
-          COUNT(*) as count
-        FROM analytics_events 
-        WHERE is_bot = 0
-        GROUP BY type`,
-      )
-      .all<{ type: string; count: number }>();
-
-    const totalViews = stats?.total || 0;
+    const totalViews = totals?.total || 0;
 
     return {
       totalViews,
-      uniqueVisitors: stats?.unique_v || 0,
+      uniqueVisitors: unique?.unique_v || 0,
       topRoutes: topRoutes.results || [],
       countries: (countries.results || []).map((c) => ({
         code: c.code,
-        name: c.code, // Ideally we'd map code to name, but we'll keep it simple for now
+        name: c.code,
         count: c.count,
       })),
-      devices: (devicesRaw.results || []).map((d) => ({
+      devices: (devices.results || []).map((d) => ({
         type: d.type,
         count: d.count,
         icon: d.type === 'Mobile' ? 'deviceMobile' : 'desktop',
         percentage: Math.round((d.count / (totalViews || 1)) * 100),
       })),
-      referrers,
+      referrers: referrers.results || [],
     };
   } catch (error) {
     console.error('Error fetching analytics summary:', error);
@@ -208,7 +179,7 @@ export const getAnalyticsSummary = unstable_cache(
   getAnalyticsSummaryUncached,
   ['analytics-summary-v1'],
   {
-    revalidate: 300,
+    revalidate: 3600,
     tags: ['analytics-summary'],
   },
 );

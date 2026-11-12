@@ -609,6 +609,71 @@ describe('database CRUD on a temporary copy', () => {
     );
   });
 
+  it('records analytics into pre-aggregated tables and skips bots', async () => {
+    const { POST } = await import('../app/api/analytics/record/route');
+    const { getDB } = await import('../lib/cloudflare');
+    const db = getDB();
+
+    const before = await db
+      .prepare('SELECT COALESCE(SUM(views), 0) AS total FROM analytics_daily')
+      .first<{ total: number }>();
+
+    const response = await POST(
+      new Request('http://localhost/api/analytics/record', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: '/crud-analytics',
+          country: 'ID',
+          referrer: 'https://example.com/some/page',
+          user_agent:
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15',
+        }),
+      }) as never,
+    );
+    const json = (await response.json()) as { success: boolean };
+    expect(json.success).toBe(true);
+
+    const after = await db
+      .prepare('SELECT COALESCE(SUM(views), 0) AS total FROM analytics_daily')
+      .first<{ total: number }>();
+    expect(after!.total).toBe((before?.total || 0) + 1);
+
+    const daily = await db
+      .prepare(
+        "SELECT referrer, device FROM analytics_daily WHERE path = '/crud-analytics'",
+      )
+      .first<{ referrer: string; device: string }>();
+    expect(daily?.referrer).toBe('example.com');
+    expect(daily?.device).toBe('Mobile');
+
+    const botResponse = await POST(
+      new Request('http://localhost/api/analytics/record', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: '/crud-bot',
+          country: 'US',
+          referrer: 'Direct',
+          user_agent: 'Googlebot/2.1',
+        }),
+      }) as never,
+    );
+    const botJson = (await botResponse.json()) as {
+      success: boolean;
+      data?: { bot?: boolean };
+    };
+    expect(botJson.success).toBe(true);
+    expect(botJson.data?.bot).toBe(true);
+
+    const botRow = await db
+      .prepare(
+        "SELECT COUNT(*) AS count FROM analytics_daily WHERE path = '/crud-bot'",
+      )
+      .first<{ count: number }>();
+    expect(botRow?.count).toBe(0);
+  });
+
   it('reads analytics without errors', async () => {
     const rows = await analytics.getAnalyticsEvents();
     expect(Array.isArray(rows)).toBe(true);

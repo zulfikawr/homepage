@@ -40,6 +40,23 @@ CREATE INDEX IF NOT EXISTS idx_analytics_path ON analytics_events(path);
 CREATE INDEX IF NOT EXISTS idx_analytics_is_bot ON analytics_events(is_bot);
 CREATE INDEX IF NOT EXISTS idx_analytics_created_at ON analytics_events(created_at);
 
+-- Pre-aggregated analytics for fast summaries
+CREATE TABLE IF NOT EXISTS analytics_daily (
+  day TEXT NOT NULL,                                -- YYYY-MM-DD (UTC)
+  path TEXT NOT NULL,                               -- Page path
+  country TEXT NOT NULL,                            -- Visitor country
+  referrer TEXT NOT NULL,                           -- Normalized referrer hostname or Direct
+  device TEXT NOT NULL,                             -- Mobile | Desktop
+  views INTEGER NOT NULL DEFAULT 0,                 -- View count
+  PRIMARY KEY (day, path, country, referrer, device)
+);
+CREATE INDEX IF NOT EXISTS idx_analytics_daily_day ON analytics_daily(day);
+
+-- Distinct non-bot visitors for unique visitor counts
+CREATE TABLE IF NOT EXISTS analytics_visitors (
+  visitor TEXT PRIMARY KEY                          -- user_agent || country
+);
+
 -- -----------------------------------------------------------------------------
 -- CONTENT - BOOKS
 -- -----------------------------------------------------------------------------
