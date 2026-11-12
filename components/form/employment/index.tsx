@@ -479,7 +479,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
                   width={36}
                   height={36}
                   type='square'
-                  className='h-9 w-9 object-contain'
+                  className='h-full w-full object-contain'
                 />
               </div>
               <div className='min-w-0 flex-1'>
