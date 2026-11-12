@@ -124,17 +124,7 @@ export function mapRecordToInterests(
 ): InterestsAndObjectives & { id: string } {
   return {
     id: row.id as string,
-    description: row.description as string,
-    conclusion: row.conclusion as string,
-    objectives: (() => {
-      if (typeof row.objectives !== 'string')
-        return (row.objectives as string[]) || [];
-      try {
-        return JSON.parse(row.objectives);
-      } catch {
-        return [];
-      }
-    })(),
+    content: (row.content || '') as string,
   };
 }
 

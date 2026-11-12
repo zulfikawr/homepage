@@ -200,8 +200,7 @@ Detailed Experience:
 ${safeJoin(employment, (e) => `- ${e.job_title} at ${e.organization} (${e.date_string}, Type: ${e.job_type})${e.responsibilities?.length ? `\n  Responsibilities: ${e.responsibilities.slice(0, 3).join('; ')}` : ''}`)}
 
 Interests & Professional Philosophy:
-${interests?.[0]?.description || 'Not specified'}
-${interests?.[0]?.conclusion || ''}
+${interests?.[0]?.content || 'Not specified'}
 
 === ALL PROJECTS (Complete Database) ===
 ${safeJoin(

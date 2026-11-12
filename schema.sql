@@ -118,9 +118,7 @@ CREATE TABLE IF NOT EXISTS feedback (
 -- Personal interests and career objectives
 CREATE TABLE IF NOT EXISTS interests_objectives (
   id INTEGER PRIMARY KEY DEFAULT 1,                 -- Singleton ID
-  description TEXT,                                 -- Interest description
-  objectives TEXT,                                  -- JSON array of objectives
-  conclusion TEXT,                                  -- Concluding statement
+  content TEXT,                                     -- Markdown content
   updated_at INTEGER DEFAULT (unixepoch())          -- Last update timestamp
 );
 

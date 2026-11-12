@@ -445,13 +445,10 @@ describe('database CRUD on a temporary copy', () => {
 
   it('updates interests and objectives', async () => {
     const updated = await interests.updateInterestsAndObjectives({
-      description: 'CRUD description',
-      objectives: ['CRUD objective'],
-      conclusion: 'CRUD conclusion',
+      content: '# CRUD interests\n\n- CRUD objective',
     });
     expectSuccess(updated);
-    expect(updated.data?.description).toBe('CRUD description');
-    expect(updated.data?.objectives).toEqual(['CRUD objective']);
+    expect(updated.data?.content).toBe('# CRUD interests\n\n- CRUD objective');
   });
 
   it('updates customization settings', async () => {

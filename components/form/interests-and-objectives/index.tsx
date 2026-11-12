@@ -1,44 +1,25 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 
+import { Editor } from '@/components/editor';
 import { toast } from '@/components/ui';
-import { Button, FormLabel, Input, Textarea } from '@/components/ui';
+import { Button, FormLabel } from '@/components/ui';
 import { Separator } from '@/components/ui/separator';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 
 interface InterestsAndObjectivesFormProps {
-  data?: InterestsAndObjectives;
+  data?: InterestsAndObjectives & { id?: string };
 }
-
-const initialInterestsAndObjectivesState: InterestsAndObjectives = {
-  description: '',
-  objectives: [],
-  conclusion: '',
-};
 
 const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
   data,
 }) => {
-  const [interestsAndObjectives, setInterestsAndObjectives] = useState<
-    InterestsAndObjectives & { id?: string }
-  >(data || initialInterestsAndObjectivesState);
-
-  const [newObjective, setNewObjective] = useState<string>('');
+  const [content, setContent] = useState(data?.content || '');
 
   useEffect(() => {
-    if (data) {
-      const timer = setTimeout(() => {
-        setInterestsAndObjectives(data);
-      }, 0);
-      return () => clearTimeout(timer);
-    }
+    setContent(data?.content || '');
   }, [data]);
-
-  const handleChange = (
-    field: keyof InterestsAndObjectives,
-    value: string | string[],
-  ) => {
-    setInterestsAndObjectives((prev) => ({ ...prev, [field]: value }));
-  };
 
   const handleSubmit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();
@@ -47,7 +28,7 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
       const response = await fetch('/api/collection/interestsAndObjectives', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(interestsAndObjectives),
+        body: JSON.stringify({ id: data?.id, content }),
       });
 
       if (!response.ok) {
@@ -78,95 +59,16 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
     }
   };
 
-  const handleAddObjective = () => {
-    if (newObjective.trim()) {
-      const updatedObjectives = [
-        ...(interestsAndObjectives.objectives || []),
-        newObjective.trim(),
-      ];
-      handleChange('objectives', updatedObjectives);
-      setNewObjective('');
-    }
-  };
-
-  const handleRemoveObjective = (index: number) => {
-    const updatedObjectives = interestsAndObjectives.objectives.filter(
-      (_, i) => i !== index,
-    );
-    handleChange('objectives', updatedObjectives);
-  };
-
-  const handleObjectiveChange = (index: number, value: string) => {
-    const updatedObjectives = [...interestsAndObjectives.objectives];
-    updatedObjectives[index] = value;
-    handleChange('objectives', updatedObjectives);
-  };
-
   return (
     <>
-      <div className='space-y-6'>
-        {/* Form */}
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          <div>
-            <FormLabel htmlFor='description' required>
-              Description
-            </FormLabel>
-            <Textarea
-              value={interestsAndObjectives.description || ''}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={4}
-              required
-            />
-          </div>
-          <div>
-            <FormLabel htmlFor='objectives' required>
-              Objectives
-            </FormLabel>
-            <div className='space-y-2'>
-              {interestsAndObjectives.objectives.map((objective, index) => (
-                <div key={index} className='flex items-center gap-2'>
-                  <Input
-                    type='text'
-                    value={objective || ''}
-                    onChange={(e) =>
-                      handleObjectiveChange(index, e.target.value)
-                    }
-                  />
-                  <Button
-                    variant='destructive'
-                    icon='trashSimple'
-                    onClick={() => handleRemoveObjective(index)}
-                  />
-                </div>
-              ))}
-              <div className='flex items-center gap-2'>
-                <Input
-                  type='text'
-                  value={newObjective || ''}
-                  onChange={(e) => setNewObjective(e.target.value)}
-                  placeholder='Add an objective'
-                />
-                <Button
-                  variant='primary'
-                  icon='plus'
-                  onClick={handleAddObjective}
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <FormLabel htmlFor='conclusion' required>
-              Conclusion
-            </FormLabel>
-            <Textarea
-              value={interestsAndObjectives.conclusion || ''}
-              onChange={(e) => handleChange('conclusion', e.target.value)}
-              rows={3}
-              required
-            />
-          </div>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit} className='space-y-4'>
+        <div>
+          <FormLabel htmlFor='content' required>
+            Content
+          </FormLabel>
+          <Editor content={content} onUpdate={setContent} />
+        </div>
+      </form>
 
       <Separator margin='5' />
 

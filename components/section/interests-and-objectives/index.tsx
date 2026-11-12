@@ -3,7 +3,7 @@
 import SectionTitle from '@/components/section-title';
 import { Skeleton } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { Separator } from '@/components/ui/separator';
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
 
@@ -22,7 +22,7 @@ export const InterestsAndObjectivesLayout = ({
         loading={isLoading}
       />
 
-      <div className='-mt-2 flex flex-col font-light text-muted-foreground dark:text-muted-foreground'>
+      <div className='-mt-2'>
         {isLoading ? (
           <div className='space-y-3'>
             <Skeleton width='100%' height={16} />
@@ -30,45 +30,8 @@ export const InterestsAndObjectivesLayout = ({
             <Skeleton width='16.6%' height={16} />
           </div>
         ) : (
-          <p>{data?.description}</p>
+          <MarkdownRenderer content={data?.content || ''} />
         )}
-
-        <Separator margin='4' />
-
-        <div className='h-6 flex items-center'>
-          {isLoading ? (
-            <Skeleton width={192} height={16} />
-          ) : (
-            <p>My general objectives are to:</p>
-          )}
-        </div>
-
-        <ul className='mt-2 list-disc pl-5 space-y-2'>
-          {isLoading
-            ? [1, 2, 3].map((i) => (
-                <li key={i} className='pl-3'>
-                  <Skeleton width='80%' height={16} />
-                </li>
-              ))
-            : data?.objectives.map((objective, index) => (
-                <li key={index} className='pl-3 text-theme-aqua'>
-                  <span className='text-muted-foreground font-light'>
-                    {objective}
-                  </span>
-                </li>
-              ))}
-        </ul>
-
-        <div className='mt-5 space-y-3'>
-          {isLoading ? (
-            <>
-              <Skeleton width='100%' height={16} />
-              <Skeleton width='80%' height={16} />
-            </>
-          ) : (
-            <p>{data?.conclusion}</p>
-          )}
-        </div>
       </div>
     </section>
   );
