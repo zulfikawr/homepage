@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import CommentSection from '@/components/comment-section';
 import { ViewTransition } from '@/components/motion';
 import PostContent from '@/components/post-content';
 import { Separator } from '@/components/ui';
@@ -51,12 +50,6 @@ export default function BlogPostContent({
 
       <ViewTransition>
         <PostContent content={post?.content || ''} isLoading={isLoading} />
-      </ViewTransition>
-
-      <Separator margin='6' />
-
-      <ViewTransition>
-        <CommentSection post_id={post?.id || ''} isLoading={isLoading} />
       </ViewTransition>
     </div>
   );

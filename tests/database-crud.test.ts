@@ -38,7 +38,6 @@ let movies: typeof import('../database/movies');
 let publications: typeof import('../database/publications');
 let sections: typeof import('../database/sections');
 let feedback: typeof import('../database/feedback');
-let comments: typeof import('../database/comments');
 let personalInfo: typeof import('../database/personal-info');
 let interests: typeof import('../database/interests-and-objectives');
 let customization: typeof import('../database/customization');
@@ -87,7 +86,6 @@ beforeAll(async () => {
   publications = await import('../database/publications');
   sections = await import('../database/sections');
   feedback = await import('../database/feedback');
-  comments = await import('../database/comments');
   personalInfo = await import('../database/personal-info');
   interests = await import('../database/interests-and-objectives');
   customization = await import('../database/customization');
@@ -427,27 +425,6 @@ describe('database CRUD on a temporary copy', () => {
     expectSuccess(await feedback.deleteFeedback(row!.id));
     const after = await feedback.getFeedbacks();
     expect(after.some((r) => r.id === row!.id)).toBe(false);
-  });
-
-  it('creates, updates, likes and deletes a comment', async () => {
-    const postId = 'crud-post-comment';
-    const id = await comments.createComment(
-      postId,
-      'CRUD Tester',
-      'original comment',
-    );
-    expect(id).not.toBe('');
-
-    await comments.updateComment(id, 'updated comment');
-    await comments.likeComment(id);
-
-    const rows = await comments.getComments(postId);
-    expect(rows).toHaveLength(1);
-    expect(rows[0].content).toBe('updated comment');
-    expect(rows[0].likes).toBe(1);
-
-    await comments.deleteComment(id);
-    expect(await comments.getComments(postId)).toHaveLength(0);
   });
 
   it('updates personal info', async () => {

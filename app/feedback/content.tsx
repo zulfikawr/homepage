@@ -85,7 +85,7 @@ export default function FeedbackContent() {
             <div>
               <div className='flex justify-between items-center'>
                 <FormLabel htmlFor='feedback' required>
-                  Comments/Feedback
+                  Feedback
                 </FormLabel>
                 <span
                   className={twMerge(

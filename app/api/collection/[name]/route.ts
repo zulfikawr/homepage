@@ -40,7 +40,6 @@ const WHITELIST = [
   'personal_info',
   'interests_objectives',
   'feedback',
-  'comments',
   'resume',
   'analytics_events',
   'movies',

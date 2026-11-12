@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/auth-context';
 import { useAuthActions } from '@/hooks/use-auth-actions';
 
 export default function LoginContent() {
-  const { handleGithubLogin, handleLogin, loading } = useAuthActions();
+  const { handleLogin, loading } = useAuthActions();
   const { user } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -41,22 +41,16 @@ export default function LoginContent() {
             <Skeleton width={150} height={32} />
             <Skeleton width='100%' height={20} />
           </div>
-          <div className='py-8 space-y-6'>
-            <Skeleton width='100%' height={44} />
-            <div className='relative'>
-              <Skeleton width='100%' height={1} />
+          <div className='py-8 space-y-4'>
+            <div className='space-y-2'>
+              <Skeleton width={80} height={20} />
+              <Skeleton width='100%' height={40} />
             </div>
-            <div className='space-y-4'>
-              <div className='space-y-2'>
-                <Skeleton width={80} height={20} />
-                <Skeleton width='100%' height={40} />
-              </div>
-              <div className='space-y-2'>
-                <Skeleton width={80} height={20} />
-                <Skeleton width='100%' height={40} />
-              </div>
-              <Skeleton width='100%' height={44} className='mt-6' />
+            <div className='space-y-2'>
+              <Skeleton width={80} height={20} />
+              <Skeleton width='100%' height={40} />
             </div>
+            <Skeleton width='100%' height={44} className='mt-6' />
           </div>
         </div>
       </div>
@@ -69,26 +63,6 @@ export default function LoginContent() {
 
       <ViewTransition>
         <div className='max-w-md mx-auto mt-12 flex flex-col space-y-8'>
-          <Button
-            onClick={handleGithubLogin}
-            variant='outline'
-            icon='githubLogo'
-            className='w-full h-12'
-          >
-            Continue with GitHub
-          </Button>
-
-          <div className='relative'>
-            <div className='absolute inset-0 flex items-center'>
-              <span className='w-full border-t border-border' />
-            </div>
-            <div className='relative flex justify-center text-xs uppercase'>
-              <span className='bg-background px-4 text-theme-fg-dim tracking-widest'>
-                Or continue with email
-              </span>
-            </div>
-          </div>
-
           <form onSubmit={onPasswordLogin} className='space-y-6'>
             <div className='space-y-5'>
               <div className='space-y-2'>

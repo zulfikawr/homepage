@@ -78,24 +78,6 @@ CREATE TABLE IF NOT EXISTS certificates (
 );
 
 -- -----------------------------------------------------------------------------
--- CONTENT - COMMENTS
--- -----------------------------------------------------------------------------
-
--- Comments
--- User comments on posts with nested reply support
-CREATE TABLE IF NOT EXISTS comments (
-  id TEXT PRIMARY KEY,                              -- UUID
-  post_id TEXT,                                     -- Associated post ID
-  author TEXT,                                      -- Comment author name
-  content TEXT,                                     -- Comment content
-  likes INTEGER DEFAULT 0,                          -- Number of likes
-  avatar_url TEXT,                                  -- Author avatar URL
-  parent_id TEXT,                                   -- Parent comment ID (for nested comments)
-  path TEXT,                                        -- Hierarchy helper
-  created_at INTEGER DEFAULT (unixepoch())          -- Comment timestamp
-);
-
--- -----------------------------------------------------------------------------
 -- CONTENT - EMPLOYMENTS
 -- -----------------------------------------------------------------------------
 

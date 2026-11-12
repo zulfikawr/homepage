@@ -56,10 +56,6 @@ export function useAuthActions() {
     }
   };
 
-  const handleGithubLogin = async () => {
-    toast.show('GitHub login not yet implemented for D1.', 'error');
-  };
-
   const handleLogout = () => {
     clearAuth();
     router.push('/');
@@ -82,7 +78,6 @@ export function useAuthActions() {
 
   return {
     handleLogin,
-    handleGithubLogin,
     handleLogout,
     confirmLogout,
     error,

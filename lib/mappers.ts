@@ -1,7 +1,6 @@
 import { AnalyticsEvent } from '@/types/analytics-event';
 import { Book } from '@/types/book';
 import { Certificate } from '@/types/certificate';
-import { Comment } from '@/types/comment';
 import { CustomizationSettings } from '@/types/customization';
 import { Employment } from '@/types/employment';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
@@ -247,24 +246,6 @@ export function mapRecordToResume(row: BaseDatabaseRow): Resume {
   return {
     file: getFileUrl({}, fileKey),
     file_url: fileKey,
-  };
-}
-
-export function mapRecordToComment(row: BaseDatabaseRow): Comment {
-  const avatarKey = (row.avatar_url || row.avatar_url) as string;
-
-  return {
-    id: row.id as string,
-    post_id: (row.post_id || row.post_id) as string,
-    author: row.author as string,
-    content: row.content as string,
-    avatar: getFileUrl({}, avatarKey),
-    avatar_url: avatarKey,
-    parent_id: (row.parent_id || row.parent_id) as string,
-    created_at: row.created_at
-      ? (row.created_at as number) * 1000
-      : new Date((row.created as string) || Date.now()).getTime(),
-    likes: (row.likes as number) || 0,
   };
 }
 
