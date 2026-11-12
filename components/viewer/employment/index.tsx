@@ -12,14 +12,14 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
         <div className='flex flex-row justify-between items-center gap-4'>
           <div className='flex-1 items-center'>
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
-              <span className='mr-3 inline-block'>
-                {employment.organization_logo && (
+              <span className='mr-3 inline-block size-[30px] flex-shrink-0 overflow-hidden rounded-md border bg-white'>
+                {employment.logo && (
                   <ImageWithFallback
-                    src={employment.organization_logo}
+                    src={employment.logo}
                     alt={employment.organization}
                     width={30}
                     height={30}
-                    className='rounded-full border bg-white '
+                    className='h-full w-full object-contain'
                     type='square'
                     sizes='30px'
                   />
@@ -47,16 +47,18 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                   </TableCell>
                   <TableCell>
                     <div className='flex items-center gap-3'>
-                      {employment.organization_logo && (
-                        <ImageWithFallback
-                          src={employment.organization_logo}
-                          alt={employment.organization}
-                          width={24}
-                          height={24}
-                          className='rounded-full border bg-white '
-                          type='square'
-                          sizes='24px'
-                        />
+                      {employment.logo && (
+                        <span className='relative block size-6 flex-shrink-0 overflow-hidden rounded-md border bg-white'>
+                          <ImageWithFallback
+                            src={employment.logo}
+                            alt={employment.organization}
+                            width={24}
+                            height={24}
+                            className='h-full w-full object-contain'
+                            type='square'
+                            sizes='24px'
+                          />
+                        </span>
                       )}
                       {employment.organization}
                     </div>

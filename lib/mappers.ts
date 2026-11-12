@@ -69,8 +69,7 @@ export function mapRecordToBook(row: BaseDatabaseRow): Book {
 
 export function mapRecordToCertificate(row: BaseDatabaseRow): Certificate {
   const imageKey = (row.image_url || row.image_url) as string;
-  const logoKey = (row.organization_logo_url ||
-    row.organization_logo_url) as string;
+  const logoKey = (row.logo_url || '') as string;
 
   return {
     id: row.id as string,
@@ -81,16 +80,14 @@ export function mapRecordToCertificate(row: BaseDatabaseRow): Certificate {
     credential_id: (row.credential_id || row.credential_id) as string,
     image: getFileUrl({}, imageKey),
     image_url: imageKey,
-    organization_logo: getFileUrl({}, logoKey),
-    organization_logo_url: logoKey,
+    logo: getFileUrl({}, logoKey),
+    logo_url: logoKey,
     link: row.link as string,
   };
 }
 
 export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
-  const logoKey = (row.organization_logo_url ||
-    row.org_logo_url ||
-    row.orgLogoUrl) as string;
+  const logoKey = (row.logo_url || '') as string;
 
   return {
     id: row.id as string,
@@ -101,8 +98,8 @@ export function mapRecordToEmployment(row: BaseDatabaseRow): Employment {
     job_type: (row.job_type as string)
       ?.replace(/([A-Z])/g, '_$1')
       .toLowerCase() as Employment['job_type'],
-    organization_logo: getFileUrl({}, logoKey),
-    organization_logo_url: logoKey,
+    logo: getFileUrl({}, logoKey),
+    logo_url: logoKey,
     organization_industry: (row.organization_industry ||
       row.organization_industry) as string,
     organization_location: (row.organization_location ||

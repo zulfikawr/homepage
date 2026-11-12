@@ -56,11 +56,11 @@ export default function CertificateCard({
             </div>
             <div className='p-4 space-y-1'>
               <div className='flex items-center space-x-2'>
-                {certificate.organization_logo && (
+                {certificate.logo && (
                   <ImageWithFallback
                     width={14}
                     height={14}
-                    src={certificate.organization_logo}
+                    src={certificate.logo}
                     alt={certificate.title}
                     loading='lazy'
                     type='square'
@@ -100,11 +100,11 @@ export default function CertificateCard({
             </p>
             <Separator margin='2' />
             <div className='flex items-center space-x-2'>
-              {certificate.organization_logo && (
+              {certificate.logo && (
                 <ImageWithFallback
                   width={14}
                   height={14}
-                  src={certificate.organization_logo}
+                  src={certificate.logo}
                   alt={certificate.title}
                   loading='lazy'
                   type='square'

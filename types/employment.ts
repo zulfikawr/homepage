@@ -7,7 +7,7 @@ export interface Employment {
   job_type: 'full_time' | 'part_time' | 'contract' | 'freelance' | 'internship';
   responsibilities: string[];
   date_string: string;
-  organization_logo?: string;
-  organization_logo_url?: string;
+  logo?: string;
+  logo_url?: string;
   organization_location?: string;
 }

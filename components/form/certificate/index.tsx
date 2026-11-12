@@ -26,7 +26,7 @@ const initialCertificateState: Certificate = {
   date_issued: '',
   credential_id: '',
   image_url: '',
-  organization_logo_url: '',
+  logo_url: '',
   link: '',
 };
 
@@ -55,8 +55,8 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
     date_issued: certificate.date_issued || formatDate(selectedDate),
     credential_id: certificate.credential_id || 'Credential ID',
     image: getFileUrl({}, certificate.image_url),
-    organization_logo: getFileUrl({}, certificate.organization_logo_url || ''),
-    organization_logo_url: certificate.organization_logo_url || '',
+    logo: getFileUrl({}, certificate.logo_url || ''),
+    logo_url: certificate.logo_url || '',
     image_url: certificate.image_url,
     link: certificate.link || '#',
   };
@@ -121,7 +121,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
 
       // Append files
       if (imageFile) formData.append('image', imageFile);
-      if (logoFile) formData.append('organizationLogo', logoFile);
+      if (logoFile) formData.append('logo', logoFile);
 
       const response = await fetch('/api/collection/certificates', {
         method: certificateToEdit ? 'PUT' : 'POST',
@@ -336,26 +336,20 @@ const CertificateForm: React.FC<CertificateFormProps> = ({
             />
           </div>
           <div>
-            <FormLabel htmlFor='organization_logo_url'>
-              Organization Logo URL
-            </FormLabel>
+            <FormLabel htmlFor='logo_url'>Logo URL</FormLabel>
             <div className='flex gap-2'>
               <Input
                 type='text'
-                value={certificate.organization_logo_url || ''}
-                onChange={(e) =>
-                  handleChange('organization_logo_url', e.target.value)
-                }
+                value={certificate.logo_url || ''}
+                onChange={(e) => handleChange('logo_url', e.target.value)}
                 placeholder='https://example.com/logo.png'
               />
               <FileUpload
                 collectionName='certificates'
                 recordId={certificateToEdit?.id}
-                fieldName='organizationLogo'
-                existingValue={certificate.organization_logo_url}
-                onUploadSuccess={(url) =>
-                  handleChange('organization_logo_url', url)
-                }
+                fieldName='logo'
+                existingValue={certificate.logo_url}
+                onUploadSuccess={(url) => handleChange('logo_url', url)}
                 onFileSelect={setLogoFile}
               />
             </div>

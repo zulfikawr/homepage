@@ -34,8 +34,8 @@ const initialEmploymentState: Employment = {
   job_type: 'full_time',
   responsibilities: [],
   date_string: '',
-  organization_logo: '',
-  organization_logo_url: '',
+  logo: '',
+  logo_url: '',
   organization_location: '',
 };
 
@@ -73,7 +73,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       'Responsibility 2',
     ],
     date_string: employment.date_string || formatDateRange(startDate, endDate),
-    organization_logo: getFileUrl({}, employment.organization_logo_url || ''),
+    logo: getFileUrl({}, employment.logo_url || ''),
     organization_location:
       employment.organization_location || 'Organization Location',
   };
@@ -281,7 +281,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
   const openLogoBrowser = () => {
     modal.open(
       <FileBrowser
-        onSelect={(key) => handleChange('organization_logo_url', key)}
+        onSelect={(key) => handleChange('logo_url', key)}
         onClose={() => modal.close()}
       />,
     );
@@ -470,33 +470,31 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             />
           </div>
           <div>
-            <FormLabel htmlFor='organization_logo_url'>
-              Organization Logo
-            </FormLabel>
+            <FormLabel htmlFor='logo_url'>Logo</FormLabel>
             <div className='flex items-center gap-3'>
-              <div className='relative size-12 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted'>
+              <div className='relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted'>
                 <ImageWithFallback
-                  src={getFileUrl({}, employment.organization_logo_url || '')}
+                  src={getFileUrl({}, employment.logo_url || '')}
                   alt={`${employment.organization || 'Organization'} logo`}
-                  width={48}
-                  height={48}
+                  width={36}
+                  height={36}
                   type='square'
-                  className='size-12 object-cover'
+                  className='h-9 w-9 object-contain'
                 />
               </div>
               <div className='min-w-0 flex-1'>
                 <p className='truncate font-mono text-[11px] text-muted-foreground'>
-                  {employment.organization_logo_url || 'No logo selected'}
+                  {employment.logo_url || 'No logo selected'}
                 </p>
               </div>
               <Button variant='default' icon='folder' onClick={openLogoBrowser}>
                 Select
               </Button>
-              {employment.organization_logo_url && (
+              {employment.logo_url && (
                 <Button
                   variant='destructive'
                   icon='x'
-                  onClick={() => handleChange('organization_logo_url', '')}
+                  onClick={() => handleChange('logo_url', '')}
                   title='Remove logo'
                 />
               )}

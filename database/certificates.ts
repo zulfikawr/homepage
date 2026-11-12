@@ -14,14 +14,14 @@ interface CertificateRow {
   date_issued: string;
   credential_id: string;
   image_url: string;
-  organization_logo_url: string;
+  logo_url: string;
   link: string;
 }
 
 function mapRowToCertificate(row: CertificateRow | null): Certificate | null {
   if (!row) return null;
   const imageKey = row.image_url;
-  const logoKey = row.organization_logo_url;
+  const logoKey = row.logo_url;
   return {
     id: row.id,
     slug: row.slug,
@@ -31,8 +31,8 @@ function mapRowToCertificate(row: CertificateRow | null): Certificate | null {
     credential_id: row.credential_id,
     image: imageKey ? `/api/storage/${imageKey}` : '',
     image_url: imageKey || '',
-    organization_logo: logoKey ? `/api/storage/${logoKey}` : '',
-    organization_logo_url: logoKey || '',
+    logo: logoKey ? `/api/storage/${logoKey}` : '',
+    logo_url: logoKey || '',
     link: row.link,
   };
 }
@@ -45,7 +45,7 @@ async function uploadFile(file: File, prefix: string): Promise<string> {
   await bucket.put(key, arrayBuffer, {
     httpMetadata: { contentType: file.type },
   });
-  return `/api/storage/${key}`;
+  return key;
 }
 
 export async function getCertificates(): Promise<Certificate[]> {
@@ -90,15 +90,12 @@ export async function createCertificate(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
-      const logoUrlInput = data.get('organization_logo_url') as string | null;
+      const logoFile = data.get('logo') as File | null;
+      const logoUrlInput = data.get('logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.organization_logo_url = await uploadFile(logoFile, 'logo');
+        payload.logo_url = await uploadFile(logoFile, 'logo');
       } else if (logoUrlInput) {
-        payload.organization_logo_url = logoUrlInput.replace(
-          '/api/storage/',
-          '',
-        );
+        payload.logo_url = logoUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -111,7 +108,7 @@ export async function createCertificate(
 
     await db
       .prepare(
-        `INSERT INTO certificates (id, slug, title, issued_by, date_issued, credential_id, image_url, organization_logo_url, link)
+        `INSERT INTO certificates (id, slug, title, issued_by, date_issued, credential_id, image_url, logo_url, link)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
@@ -122,7 +119,7 @@ export async function createCertificate(
         payload.date_issued,
         payload.credential_id,
         payload.image_url || '',
-        payload.organization_logo_url || '',
+        payload.logo_url || '',
         payload.link || '',
       )
       .run();
@@ -174,15 +171,12 @@ export async function updateCertificate(
         payload.image_url = imageUrlInput.replace('/api/storage/', '');
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
-      const logoUrlInput = data.get('organization_logo_url') as string | null;
+      const logoFile = data.get('logo') as File | null;
+      const logoUrlInput = data.get('logo_url') as string | null;
       if (logoFile && logoFile.size > 0) {
-        payload.organization_logo_url = await uploadFile(logoFile, 'logo');
+        payload.logo_url = await uploadFile(logoFile, 'logo');
       } else if (logoUrlInput) {
-        payload.organization_logo_url = logoUrlInput.replace(
-          '/api/storage/',
-          '',
-        );
+        payload.logo_url = logoUrlInput.replace('/api/storage/', '');
       }
     } else {
       payload = { ...data };
@@ -218,9 +212,9 @@ export async function updateCertificate(
       fields.push('image_url = ?');
       values.push(payload.image_url);
     }
-    if (payload.organization_logo_url !== undefined) {
-      fields.push('organization_logo_url = ?');
-      values.push(payload.organization_logo_url);
+    if (payload.logo_url !== undefined) {
+      fields.push('logo_url = ?');
+      values.push(payload.logo_url);
     }
 
     if (fields.length > 0) {

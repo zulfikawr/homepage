@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS certificates (
   date_issued TEXT,                                 -- Issue date
   credential_id TEXT,                               -- Credential ID
   image_url TEXT,                                   -- Certificate image
-  organization_logo_url TEXT,                       -- Organization logo
+  logo_url TEXT,                                    -- Logo
   link TEXT,                                        -- Verification link
   created_at INTEGER DEFAULT (unixepoch())          -- Record creation timestamp
 );
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS employments (
   job_type TEXT,                                    -- 'full_time' | 'part_time' | 'contract' | 'freelance' | 'internship'
   responsibilities TEXT,                            -- JSON array of responsibilities
   date_string TEXT,                                 -- Employment period
-  organization_logo_url TEXT,                       -- Organization logo
+  logo_url TEXT,                                    -- Logo
   organization_location TEXT,                       -- Work location
   created_at INTEGER DEFAULT (unixepoch())          -- Record creation timestamp
 );

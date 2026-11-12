@@ -16,13 +16,13 @@ interface EmploymentRow {
   job_type: string;
   responsibilities: string;
   date_string: string;
-  organization_logo_url: string;
+  logo_url: string;
   organization_location: string;
 }
 
 function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
   if (!row) return null;
-  const logoKey = row.organization_logo_url;
+  const logoKey = row.logo_url;
   return {
     id: row.id,
     slug: row.slug,
@@ -30,8 +30,8 @@ function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
     job_title: row.job_title,
     date_string: row.date_string,
     job_type: row.job_type as Employment['job_type'],
-    organization_logo: getFileUrl({}, logoKey || ''),
-    organization_logo_url: logoKey || '',
+    logo: getFileUrl({}, logoKey || ''),
+    logo_url: logoKey || '',
     organization_industry: row.organization_industry,
     organization_location: row.organization_location,
     responsibilities: row.responsibilities
@@ -93,12 +93,9 @@ export async function createEmployment(
         payload.responsibilities = [];
       }
 
-      const logoUrlInput = data.get('organization_logo_url') as string | null;
+      const logoUrlInput = data.get('logo_url') as string | null;
       if (logoUrlInput !== null) {
-        payload.organization_logo_url = logoUrlInput.replace(
-          /^\/api\/storage\//,
-          '',
-        );
+        payload.logo_url = logoUrlInput.replace(/^\/api\/storage\//, '');
       }
     } else {
       payload = { ...data };
@@ -112,7 +109,7 @@ export async function createEmployment(
 
     await db
       .prepare(
-        `INSERT INTO employments (id, slug, organization, organization_industry, job_title, job_type, responsibilities, date_string, organization_logo_url, organization_location)
+        `INSERT INTO employments (id, slug, organization, organization_industry, job_title, job_type, responsibilities, date_string, logo_url, organization_location)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .bind(
@@ -124,7 +121,7 @@ export async function createEmployment(
         payload.job_type,
         respJson,
         payload.date_string,
-        payload.organization_logo_url || '',
+        payload.logo_url || '',
         payload.organization_location || '',
       )
       .run();
@@ -193,12 +190,9 @@ export async function updateEmployment(
         }
       }
 
-      const logoUrlInput = data.get('organization_logo_url') as string | null;
+      const logoUrlInput = data.get('logo_url') as string | null;
       if (logoUrlInput !== null) {
-        payload.organization_logo_url = logoUrlInput.replace(
-          /^\/api\/storage\//,
-          '',
-        );
+        payload.logo_url = logoUrlInput.replace(/^\/api\/storage\//, '');
       }
     } else {
       payload = { ...data };
@@ -231,9 +225,9 @@ export async function updateEmployment(
       fields.push('date_string = ?');
       values.push(payload.date_string);
     }
-    if (payload.organization_logo_url !== undefined) {
-      fields.push('organization_logo_url = ?');
-      values.push(payload.organization_logo_url);
+    if (payload.logo_url !== undefined) {
+      fields.push('logo_url = ?');
+      values.push(payload.logo_url);
     }
     if (payload.organization_location !== undefined) {
       fields.push('organization_location = ?');

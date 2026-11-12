@@ -7,7 +7,7 @@ export interface Certificate {
   credential_id: string;
   image?: string;
   image_url: string;
-  organization_logo?: string;
-  organization_logo_url?: string;
+  logo?: string;
+  logo_url?: string;
   link: string;
 }

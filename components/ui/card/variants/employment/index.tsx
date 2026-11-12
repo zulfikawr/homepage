@@ -55,16 +55,18 @@ export default function EmploymentCard({
       <Card onClick={handleCardClick} openForm={openForm} isPreview={isPreview}>
         <div className='text-normal flex w-full min-w-[22rem] md:min-w-[24rem] items-center justify-between gap-x-2.5 overflow-hidden overflow-x-auto whitespace-nowrap border-b border-border px-4.5 py-2.5 font-medium tracking-wide text-foreground'>
           <div className='flex items-center gap-x-2'>
-            {employment.organization_logo && (
-              <ImageWithFallback
-                src={employment.organization_logo}
-                height={24}
-                width={24}
-                alt={`${employment.organization} logo`}
-                className='rounded-full border bg-muted '
-                type='square'
-                sizes='24px'
-              />
+            {employment.logo && (
+              <span className='relative block size-6 flex-shrink-0 overflow-hidden rounded-md border bg-muted'>
+                <ImageWithFallback
+                  src={employment.logo}
+                  height={24}
+                  width={24}
+                  alt={`${employment.organization} logo`}
+                  className='h-full w-full object-contain'
+                  type='square'
+                  sizes='24px'
+                />
+              </span>
             )}
             <p>{employment.organization}</p>
           </div>
