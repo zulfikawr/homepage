@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import DateSelect from '@/components/date-select';
+import ImageWithFallback from '@/components/image-with-fallback';
+import { FileBrowser } from '@/components/ui/file-browser';
 import { modal } from '@/components/ui';
 import { toast } from '@/components/ui';
 import {
@@ -9,12 +11,12 @@ import {
   Checkbox,
   Dropdown,
   DropdownItem,
-  FileUpload,
   FormLabel,
   Input,
 } from '@/components/ui';
 import { EmploymentCard } from '@/components/ui/card/variants/employment';
 import { Separator } from '@/components/ui/separator';
+import { getFileUrl } from '@/lib/storage';
 import { Employment } from '@/types/employment';
 import { formatDateRange, parseDateRangeString } from '@/utilities/format-date';
 import { generateSlug } from '@/utilities/generate-slug';
@@ -57,7 +59,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
     parseDateRangeString(employmentToEdit?.date_string).isPresent,
   );
   const [newResponsibility, setNewResponsibility] = useState('');
-  const [logoFile, setLogoFile] = useState<File | null>(null);
 
   const currentPreviewEmployment: Employment = {
     id: employment.id || 'preview',
@@ -72,8 +73,7 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
       'Responsibility 2',
     ],
     date_string: employment.date_string || formatDateRange(startDate, endDate),
-    organization_logo:
-      employment.organization_logo_url || '/images/placeholder-square.png',
+    organization_logo: getFileUrl({}, employment.organization_logo_url || ''),
     organization_location:
       employment.organization_location || 'Organization Location',
   };
@@ -145,10 +145,6 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
           formData.append(key, value.toString());
         }
       });
-
-      if (logoFile) {
-        formData.append('organizationLogo', logoFile);
-      }
 
       const response = await fetch('/api/collection/employments', {
         method: employmentToEdit ? 'PUT' : 'POST',
@@ -281,6 +277,15 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
   const currentJobType = jobTypeOptions.find(
     (opt) => opt.key === employment.job_type,
   );
+
+  const openLogoBrowser = () => {
+    modal.open(
+      <FileBrowser
+        onSelect={(key) => handleChange('organization_logo_url', key)}
+        onClose={() => modal.close()}
+      />,
+    );
+  };
 
   return (
     <>
@@ -465,28 +470,36 @@ const EmploymentForm: React.FC<EmploymentFormProps> = ({
             />
           </div>
           <div>
-            <FormLabel htmlFor='organization_logo_url' required>
+            <FormLabel htmlFor='organization_logo_url'>
               Organization Logo
             </FormLabel>
-            <div className='flex gap-2'>
-              <Input
-                type='text'
-                value={employment.organization_logo_url || ''}
-                onChange={(e) =>
-                  handleChange('organization_logo_url', e.target.value)
-                }
-                placeholder='https://organization-logo.com'
-              />
-              <FileUpload
-                collectionName='employments'
-                recordId={employmentToEdit?.id}
-                fieldName='organizationLogo'
-                existingValue={employment.organization_logo_url}
-                onUploadSuccess={(url) =>
-                  handleChange('organization_logo_url', url)
-                }
-                onFileSelect={setLogoFile}
-              />
+            <div className='flex items-center gap-3'>
+              <div className='relative size-12 flex-shrink-0 overflow-hidden rounded-md border border-border bg-muted'>
+                <ImageWithFallback
+                  src={getFileUrl({}, employment.organization_logo_url || '')}
+                  alt={`${employment.organization || 'Organization'} logo`}
+                  width={48}
+                  height={48}
+                  type='square'
+                  className='size-12 object-cover'
+                />
+              </div>
+              <div className='min-w-0 flex-1'>
+                <p className='truncate font-mono text-[11px] text-muted-foreground'>
+                  {employment.organization_logo_url || 'No logo selected'}
+                </p>
+              </div>
+              <Button variant='default' icon='folder' onClick={openLogoBrowser}>
+                Select
+              </Button>
+              {employment.organization_logo_url && (
+                <Button
+                  variant='destructive'
+                  icon='x'
+                  onClick={() => handleChange('organization_logo_url', '')}
+                  title='Remove logo'
+                />
+              )}
             </div>
           </div>
           <div>

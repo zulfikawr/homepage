@@ -13,9 +13,9 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
           <div className='flex-1 items-center'>
             <h1 className='flex items-center text-xl sm:text-2xl font-medium tracking-wide'>
               <span className='mr-3 inline-block'>
-                {employment.organization_logo_url && (
+                {employment.organization_logo && (
                   <ImageWithFallback
-                    src={employment.organization_logo_url}
+                    src={employment.organization_logo}
                     alt={employment.organization}
                     width={30}
                     height={30}
@@ -47,9 +47,9 @@ const EmploymentViewer = ({ employment }: { employment: Employment }) => {
                   </TableCell>
                   <TableCell>
                     <div className='flex items-center gap-3'>
-                      {employment.organization_logo_url && (
+                      {employment.organization_logo && (
                         <ImageWithFallback
-                          src={employment.organization_logo_url}
+                          src={employment.organization_logo}
                           alt={employment.organization}
                           width={24}
                           height={24}

@@ -2,7 +2,8 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 
-import { getBucket, getDB } from '@/lib/cloudflare';
+import { getDB } from '@/lib/cloudflare';
+import { getFileUrl } from '@/lib/storage';
 import { Employment } from '@/types/employment';
 
 interface EmploymentRow {
@@ -29,7 +30,7 @@ function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
     job_title: row.job_title,
     date_string: row.date_string,
     job_type: row.job_type as Employment['job_type'],
-    organization_logo: logoKey ? `/api/storage/${logoKey}` : '',
+    organization_logo: getFileUrl({}, logoKey || ''),
     organization_logo_url: logoKey || '',
     organization_industry: row.organization_industry,
     organization_location: row.organization_location,
@@ -37,23 +38,6 @@ function mapRowToEmployment(row: EmploymentRow | null): Employment | null {
       ? JSON.parse(row.responsibilities)
       : [],
   };
-}
-
-/**
- * Uploads a file to R2 and returns the public path.
- */
-async function uploadFile(file: File): Promise<string> {
-  const bucket = getBucket();
-  if (!bucket) throw new Error('Storage binding (BUCKET) not found');
-
-  const key = `org-${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
-  const arrayBuffer = await file.arrayBuffer();
-
-  await bucket.put(key, arrayBuffer, {
-    httpMetadata: { contentType: file.type },
-  });
-
-  return `/api/storage/${key}`;
 }
 
 /**
@@ -109,13 +93,10 @@ export async function createEmployment(
         payload.responsibilities = [];
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
-      if (logoFile && logoFile.size > 0) {
-        payload.organization_logo_url = await uploadFile(logoFile);
-      } else if (logoUrlInput) {
+      if (logoUrlInput !== null) {
         payload.organization_logo_url = logoUrlInput.replace(
-          '/api/storage/',
+          /^\/api\/storage\//,
           '',
         );
       }
@@ -212,13 +193,10 @@ export async function updateEmployment(
         }
       }
 
-      const logoFile = data.get('organizationLogo') as File | null;
       const logoUrlInput = data.get('organization_logo_url') as string | null;
-      if (logoFile && logoFile.size > 0) {
-        payload.organization_logo_url = await uploadFile(logoFile);
-      } else if (logoUrlInput) {
+      if (logoUrlInput !== null) {
         payload.organization_logo_url = logoUrlInput.replace(
-          '/api/storage/',
+          /^\/api\/storage\//,
           '',
         );
       }

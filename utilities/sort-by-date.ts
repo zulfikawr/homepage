@@ -76,8 +76,14 @@ export const sortByDate = <T extends { date_string?: string; id?: string }>(
     if (!a.date_string) return 1;
     if (!b.date_string) return -1;
 
-    const dateDifference = compareDates(a.date_string, b.date_string);
-    if (dateDifference !== 0) return dateDifference;
+    const endDifference = compareDates(a.date_string, b.date_string);
+    if (endDifference !== 0) return endDifference;
+
+    // For ongoing/equal-end entries, newer start dates come first.
+    const startDifference =
+      parseDateTimestamp(b.date_string, 'start') -
+      parseDateTimestamp(a.date_string, 'start');
+    if (startDifference !== 0) return startDifference;
 
     return compareIds(a, b);
   });

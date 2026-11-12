@@ -11,6 +11,7 @@ import { CardLoading } from '@/components/ui/card/variants/loading';
 import { useCollection } from '@/hooks';
 import { mapRecordToEmployment } from '@/lib/mappers';
 import { Employment } from '@/types/employment';
+import { sortByDate } from '@/utilities/sort-by-date';
 
 export default function EmploymentDatabase() {
   const router = useRouter();
@@ -20,6 +21,8 @@ export default function EmploymentDatabase() {
     loading,
     error,
   } = useCollection<Employment>('employments', mapRecordToEmployment);
+
+  const sortedEmployments = employments ? sortByDate(employments) : [];
 
   if (error) return <CardEmpty message='Failed to load employments' />;
 
@@ -50,16 +53,14 @@ export default function EmploymentDatabase() {
                   onClick={handleAddEmployment}
                   className='my-8 mx-auto'
                 >
-                  {employments && employments.length > 0
-                    ? 'Add more'
-                    : 'Add employment'}
+                  {sortedEmployments.length > 0 ? 'Add more' : 'Add employment'}
                 </Button>
               </Card>
             </ViewTransition>
 
-            {Array.isArray(employments) && employments.length > 0 ? (
+            {sortedEmployments.length > 0 ? (
               <StaggerContainer>
-                {employments.map((employment) => (
+                {sortedEmployments.map((employment) => (
                   <ViewTransition key={employment.id}>
                     <EmploymentCard employment={employment} openForm />
                   </ViewTransition>
