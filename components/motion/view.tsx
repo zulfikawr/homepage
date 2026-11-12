@@ -48,15 +48,6 @@ const ViewTransition = ({
     const currentRef = ref.current;
     if (currentRef) {
       observer.observe(currentRef);
-
-      // Fallback: if element is already in viewport
-      const rect = currentRef.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        // Use requestAnimationFrame to defer setState call outside effect
-        requestAnimationFrame(() => {
-          setIsVisible(true);
-        });
-      }
     }
 
     return () => {

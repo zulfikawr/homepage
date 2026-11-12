@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type TechIconData = { viewBox: string; body: string };
 type TechIconMap = Record<string, TechIconData>;
@@ -31,9 +31,30 @@ export default function TechIcon({
   style?: React.CSSProperties;
 }) {
   const [icon, setIcon] = useState<TechIconData | null>(cache?.[name] || null);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (icon) return;
+    const element = ref.current;
+    if (!element) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setVisible(true);
+        observer.disconnect();
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible || icon) return;
     let active = true;
     void loadIcons().then((icons) => {
       if (active) setIcon(icons[name] || null);
@@ -41,11 +62,12 @@ export default function TechIcon({
     return () => {
       active = false;
     };
-  }, [icon, name]);
+  }, [icon, name, visible]);
 
   if (!icon) {
     return (
       <span
+        ref={ref}
         className={className}
         style={{ display: 'inline-block', width: size, height: size, ...style }}
       />
