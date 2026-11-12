@@ -4,15 +4,13 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 
 import ImageWithFallback from '@/components/image-with-fallback';
-import { Kbar } from '@/components/kbar';
-import { KbarContent } from '@/components/kbar/components';
+import { Kbar, openKbar } from '@/components/kbar';
 import {
   CyclingHideTransition,
   CyclingShowTransition,
   HeaderTransition,
 } from '@/components/motion';
 import ScrollWrapper from '@/components/motion/scroll';
-import { drawer } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { useTitle } from '@/contexts/title-context';
 import { useRouteInfo } from '@/hooks';
@@ -170,7 +168,7 @@ const HeaderComponent = ({ headerRef }: HeaderComponentProps) => {
               variant='ghost'
               icon='list'
               className='flex lg:hidden px-0'
-              onClick={() => drawer.open(<KbarContent />)}
+              onClick={openKbar}
             />
           </div>
         </div>

@@ -13,6 +13,7 @@ interface ProjectCardProps {
   openForm?: boolean;
   isActive?: boolean;
   isPreview?: boolean;
+  priority?: boolean;
 }
 
 export default function ProjectCard({
@@ -20,6 +21,7 @@ export default function ProjectCard({
   openForm,
   isActive,
   isPreview,
+  priority = false,
 }: ProjectCardProps) {
   const router = useRouter();
 
@@ -44,7 +46,8 @@ export default function ProjectCard({
           src={project.image}
           alt={project.name}
           className='object-cover dark:brightness-[95%]'
-          loading='lazy'
+          loading={priority ? 'eager' : 'lazy'}
+          priority={priority}
           height={480}
           width={640}
           sizes='100vw'
@@ -61,7 +64,8 @@ export default function ProjectCard({
             height={480}
             width={640}
             className='rounded-md object-cover dark:brightness-[95%]'
-            loading='lazy'
+            loading={priority ? 'eager' : 'lazy'}
+            priority={priority}
             sizes='(max-width: 768px) 100vw, 224px'
           />
         </div>

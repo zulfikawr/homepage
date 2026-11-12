@@ -166,9 +166,13 @@ export default function ProjectsDatabase() {
 
             {filteredProjects.length > 0 ? (
               <StaggerContainer>
-                {filteredProjects.map((project) => (
+                {filteredProjects.map((project, index) => (
                   <ViewTransition key={project.id}>
-                    <ProjectCard project={project} openForm />
+                    <ProjectCard
+                      project={project}
+                      openForm
+                      priority={index === 0}
+                    />
                   </ViewTransition>
                 ))}
               </StaggerContainer>

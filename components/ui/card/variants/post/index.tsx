@@ -11,7 +11,6 @@ import { Button, Icon, Label } from '@/components/ui';
 import { Card } from '@/components/ui/card';
 import { TimeAgo } from '@/components/ui/time-ago';
 import { Post } from '@/types/post';
-import { renderMarkdown } from '@/utilities/render-markdown';
 import { trimStr } from '@/utilities/string';
 
 interface PostCardProps {
@@ -19,6 +18,7 @@ interface PostCardProps {
   openForm?: boolean;
   isActive?: boolean;
   isPreview?: boolean;
+  priority?: boolean;
 }
 
 export default function PostCard({
@@ -26,6 +26,7 @@ export default function PostCard({
   openForm,
   isActive,
   isPreview,
+  priority = false,
 }: PostCardProps) {
   const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -65,7 +66,8 @@ export default function PostCard({
             alt={`featured-image-${post.title}`}
             fill
             className='rounded-md object-cover'
-            loading='lazy'
+            loading={priority ? undefined : 'lazy'}
+            priority={priority}
             type='portrait'
             sizes='(max-width: 640px) 120px, 150px'
           />
@@ -137,12 +139,9 @@ export default function PostCard({
               {post.title}
             </h1>
 
-            <div
-              className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-muted-foreground line-clamp-3'
-              dangerouslySetInnerHTML={{
-                __html: trimStr(renderMarkdown(post.excerpt || ''), 150),
-              }}
-            />
+            <p className='overflow-hidden text-ellipsis text-sm lg:text-md tracking-wide text-muted-foreground line-clamp-3'>
+              {trimStr(post.excerpt || '', 150)}
+            </p>
           </div>
         </div>
         {renderAudio()}

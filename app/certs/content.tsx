@@ -42,9 +42,12 @@ export default function CertificatesContent({
       <div className='grid grid-cols-1 gap-4'>
         {certificates.length > 0 ? (
           <StaggerContainer>
-            {certificates.map((certificate) => (
+            {certificates.map((certificate, index) => (
               <ViewTransition key={certificate.id}>
-                <CertificateCard certificate={certificate} />
+                <CertificateCard
+                  certificate={certificate}
+                  priority={index === 0}
+                />
               </ViewTransition>
             ))}
           </StaggerContainer>

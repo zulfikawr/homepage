@@ -2,12 +2,16 @@ import { drawer } from '@/components/ui';
 import { Input } from '@/components/ui';
 import { useHotkeys } from '@/hooks';
 
-import { KbarContent } from './components';
+export const openKbar = () => {
+  void import('./components').then(({ KbarContent }) => {
+    drawer.open(<KbarContent />);
+  });
+};
 
 export function Kbar() {
   useHotkeys('ctrl+k, command+k', (e) => {
     e.preventDefault();
-    drawer.open(<KbarContent />);
+    openKbar();
   });
 
   return (
@@ -15,7 +19,7 @@ export function Kbar() {
       <div
         aria-label='Command + K to open the command palette'
         role='button'
-        onClick={() => drawer.open(<KbarContent />)}
+        onClick={openKbar}
         className='absolute left-3 top-[7px] z-10 rounded-md border bg-primary/10 px-1.5 py-0.5 text-xs text-primary dark:bg-primary/20 dark:text-primary font-bold cursor-pointer hover:bg-primary/20'
       >
         ⌘+K
@@ -23,7 +27,7 @@ export function Kbar() {
       <Input
         className='w-full bg-muted/50 dark:bg-card hover:bg-muted dark:hover:bg-muted rounded-md cursor-pointer px-3 py-2 pl-14 text-sm text-muted-foreground outline-none transition-all duration-200'
         placeholder='Type your command or search...'
-        onFocus={() => drawer.open(<KbarContent />)}
+        onFocus={openKbar}
       />
     </div>
   );

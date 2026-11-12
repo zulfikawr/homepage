@@ -1,11 +1,29 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import SectionTitle from '@/components/section-title';
 import { Skeleton } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { InterestsAndObjectives } from '@/types/interests-and-objectives';
+
+const MarkdownRenderer = dynamic(
+  () =>
+    import('@/components/ui/markdown-renderer').then(
+      (module) => module.MarkdownRenderer,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className='space-y-3'>
+        <Skeleton width='100%' height={16} />
+        <Skeleton width='100%' height={16} />
+        <Skeleton width='16.6%' height={16} />
+      </div>
+    ),
+  },
+);
 
 export const InterestsAndObjectivesLayout = ({
   data,

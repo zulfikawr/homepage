@@ -14,12 +14,14 @@ interface MovieCardProps {
   movie: Movie;
   openForm?: boolean;
   isPreview?: boolean;
+  priority?: boolean;
 }
 
 export default function MovieCard({
   movie,
   openForm,
   isPreview,
+  priority = false,
 }: MovieCardProps) {
   const router = useRouter();
   const rating = movie.rating || 0;
@@ -73,6 +75,7 @@ export default function MovieCard({
                     loading='lazy'
                     type='portrait'
                     sizes='35px'
+                    priority={priority}
                   />
                 </div>
               </div>
@@ -110,6 +113,7 @@ export default function MovieCard({
                   fill
                   type='portrait'
                   sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw'
+                  priority={priority}
                 />
               </div>
 

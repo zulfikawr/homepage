@@ -31,7 +31,7 @@ const FALLBACK_TRACK: SpotifyTrack = {
     name: 'I Brought You My Bullets, You Brought Me Your Love',
     images: [
       {
-        url: 'https://i.scdn.co/image/ab67616d0000b27397a8abd489a8247f5aa2da67',
+        url: '/images/demolition-lovers.jpg',
       },
     ],
   },
@@ -143,6 +143,7 @@ const SpotifyLayout = ({
             sizes='(max-width: 768px) 64px, 64px'
             className='object-cover'
             type='square'
+            priority
           />
         )}
       </div>
@@ -251,7 +252,7 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
   const [lastPlayedAt, setLastPlayedAt] = useState<string | null>(
     apiCache.lastPlayedAt,
   );
-  const [dataLoading, setDataLoading] = useState(!apiCache.currentTrack);
+  const [dataLoading, setDataLoading] = useState(false);
   const { forceLoading, forceEmpty } = useLoadingToggle();
   const isLoading = dataLoading || forceLoading;
 

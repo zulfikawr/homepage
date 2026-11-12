@@ -1,48 +1,23 @@
 import { marked } from 'marked';
-import Prism from 'prismjs';
-
-import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-go';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-json';
 
 const renderer = new marked.Renderer();
 
+const escapeHtml = (value: string) =>
+  value.replace(
+    /[&<>"']/g,
+    (m) =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[m] || m,
+  );
+
 renderer.code = ({ text, lang }) => {
   const code = text;
-  let highlighted = '';
-
-  try {
-    if (lang && Prism.languages[lang]) {
-      highlighted = Prism.highlight(code, Prism.languages[lang], lang);
-    } else {
-      highlighted = code.replace(
-        /[&<>"']/g,
-        (m) =>
-          ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-          })[m] || m,
-      );
-    }
-  } catch {
-    highlighted = code.replace(
-      /[&<>"']/g,
-      (m) =>
-        ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#39;',
-        })[m] || m,
-    );
-  }
+  const escaped = escapeHtml(code);
 
   if (lang) {
     return `<div class="code-block-wrapper">
@@ -50,11 +25,11 @@ renderer.code = ({ text, lang }) => {
         <span class="code-lang">${lang}</span>
         <span class="code-copy-btn-wrapper" data-code="${encodeURIComponent(code)}">Wait...</span>
       </div>
-      <pre class="language-${lang}"><code>${highlighted}</code></pre>
+      <pre class="language-${lang}"><code>${escaped}</code></pre>
     </div>`;
   }
 
-  return `<pre><code>${highlighted}</code></pre>`;
+  return `<pre><code>${escaped}</code></pre>`;
 };
 
 renderer.heading = ({ text, depth }) => {

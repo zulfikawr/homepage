@@ -699,22 +699,14 @@ const WeatherBanner = () => {
 
     const fetchWeather = async () => {
       try {
-        const res = await fetch(
-          'https://api.open-meteo.com/v1/forecast?latitude=-6.2088&longitude=106.8456&current=temperature_2m,weather_code,is_day&timezone=Asia/Jakarta',
-        );
-        interface WeatherApiResponse {
-          current: {
-            temperature_2m: number;
-            weather_code: number;
-            is_day: number;
-          };
-        }
-        const data = (await res.json()) as WeatherApiResponse;
-        setWeatherData({
-          temp: data.current.temperature_2m,
-          code: data.current.weather_code,
-          isDay: data.current.is_day === 1,
-        });
+        const res = await fetch('/api/weather');
+        if (!res.ok) throw new Error('Weather service unavailable');
+        const data = (await res.json()) as {
+          temp: number;
+          code: number;
+          isDay: boolean;
+        };
+        setWeatherData(data);
       } catch (err) {
         console.error('Failed to fetch weather:', err);
       }

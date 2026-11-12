@@ -8,9 +8,9 @@ export default function ProjectClient({ projects }: { projects: Project[] }) {
   return (
     <div className='flex flex-col gap-y-4'>
       <StaggerContainer>
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <ViewTransition key={project.id}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} priority={index === 0} />
           </ViewTransition>
         ))}
       </StaggerContainer>

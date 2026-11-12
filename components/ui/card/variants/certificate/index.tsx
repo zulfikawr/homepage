@@ -12,12 +12,14 @@ interface CertificateCardProps {
   certificate: Certificate;
   openForm?: boolean;
   isPreview?: boolean;
+  priority?: boolean;
 }
 
 export default function CertificateCard({
   certificate,
   openForm,
   isPreview,
+  priority = false,
 }: CertificateCardProps) {
   const router = useRouter();
 
@@ -45,7 +47,8 @@ export default function CertificateCard({
                 src={certificate.image}
                 alt={certificate.title}
                 className='w-full h-full rounded-t-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
-                loading='lazy'
+                loading={priority ? undefined : 'lazy'}
+                priority={priority}
                 sizes='100vw'
               />
             </div>
@@ -90,7 +93,8 @@ export default function CertificateCard({
               src={certificate.image}
               alt={certificate.title}
               className='rounded-md border border shadow-sm shadow-muted dark:shadow-none object-cover'
-              loading='lazy'
+              loading={priority ? undefined : 'lazy'}
+              priority={priority}
               sizes='(max-width: 768px) 100vw, 200px'
             />
           </div>

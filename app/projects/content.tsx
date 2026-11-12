@@ -231,9 +231,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             />
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {pinnedProjects.map((project) => (
+                {pinnedProjects.map((project, index) => (
                   <ViewTransition key={project.id}>
-                    <ProjectCard project={project} />
+                    <ProjectCard project={project} priority={index === 0} />
                   </ViewTransition>
                 ))}
               </StaggerContainer>
@@ -255,9 +255,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {wipProjects.map((project) => (
+                {wipProjects.map((project, index) => (
                   <ViewTransition key={project.id}>
-                    <ProjectCard project={project} />
+                    <ProjectCard project={project} priority={index === 0} />
                   </ViewTransition>
                 ))}
               </StaggerContainer>
@@ -279,9 +279,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {doneProjects.map((project) => (
+                {doneProjects.map((project, index) => (
                   <ViewTransition key={project.id}>
-                    <ProjectCard project={project} />
+                    <ProjectCard project={project} priority={index === 0} />
                   </ViewTransition>
                 ))}
               </StaggerContainer>
@@ -303,9 +303,9 @@ export default function ProjectsContent({ projects }: { projects: Project[] }) {
             )}
             <div className='flex flex-col gap-6 w-full mt-4'>
               <StaggerContainer>
-                {upcomingProjects.map((project) => (
+                {upcomingProjects.map((project, index) => (
                   <ViewTransition key={project.id}>
-                    <ProjectCard project={project} />
+                    <ProjectCard project={project} priority={index === 0} />
                   </ViewTransition>
                 ))}
               </StaggerContainer>

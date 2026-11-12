@@ -32,7 +32,7 @@ let localBucket: LocalR2Bucket | null = null;
 export function getLocalStoragePath(): string {
   const configured = process.env.LOCAL_STORAGE_DIR;
   return configured
-    ? path.resolve(process.cwd(), configured)
+    ? path.resolve(/* turbopackIgnore: true */ process.cwd(), configured)
     : DEFAULT_STORAGE_DIR;
 }
 
@@ -47,7 +47,7 @@ function resolveKey(root: string, key: string): string {
   if (segments.some((segment) => segment === '..')) {
     throw new Error(`Invalid storage key: ${key}`);
   }
-  const fullPath = path.resolve(root, cleaned);
+  const fullPath = path.resolve(/* turbopackIgnore: true */ root, cleaned);
   if (fullPath !== root && !fullPath.startsWith(`${root}${path.sep}`)) {
     throw new Error(`Invalid storage key: ${key}`);
   }
@@ -115,12 +115,7 @@ export class LocalR2Bucket implements R2Bucket {
   async put(
     key: string,
     value:
-      | ReadableStream
-      | ArrayBuffer
-      | ArrayBufferView
-      | string
-      | null
-      | Blob,
+      ReadableStream | ArrayBuffer | ArrayBufferView | string | null | Blob,
     options?: R2PutOptions,
   ): Promise<R2Object> {
     const target = resolveKey(this.root, key);
@@ -213,7 +208,9 @@ export class LocalR2Bucket implements R2Bucket {
       }
       for (const entry of entries) {
         if (entry.name.startsWith('.')) continue;
-        const childRelative = relative ? `${relative}/${entry.name}` : entry.name;
+        const childRelative = relative
+          ? `${relative}/${entry.name}`
+          : entry.name;
         const child = path.join(dir, entry.name);
         if (entry.isDirectory()) {
           await walk(child, childRelative);

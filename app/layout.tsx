@@ -160,7 +160,6 @@ export default function RootLayout({
             }),
           }}
         />
-        <link rel='preconnect' href='https://api.iconify.design' />
         <link
           rel='apple-touch-icon'
           sizes='180x180'

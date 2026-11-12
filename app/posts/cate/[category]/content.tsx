@@ -51,9 +51,9 @@ export default function CategoryContent({ category }: { category: string }) {
       ) : (
         <div className='mt-6 space-y-6'>
           <StaggerContainer>
-            {posts.map((post) => (
+            {posts.map((post, index) => (
               <ViewTransition key={post.id}>
-                <PostCard post={post} />
+                <PostCard post={post} priority={index === 0} />
               </ViewTransition>
             ))}
           </StaggerContainer>

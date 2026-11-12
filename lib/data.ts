@@ -281,7 +281,7 @@ export async function getGitHubContributionsServer(): Promise<GitHubContribution
         query,
         variables: { username: GITHUB_USERNAME },
       }),
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) return null;
@@ -384,7 +384,7 @@ export async function getGitHubLanguagesServer() {
         query,
         variables: { username: GITHUB_USERNAME },
       }),
-      cache: 'no-store',
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) return null;

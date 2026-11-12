@@ -48,7 +48,7 @@ let worldDataRequest: Promise<
 
 const getWorldData = () => {
   worldDataRequest ??= fetch(
-    'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson',
+    '/data/world.geojson',
   ).then(
     (response) =>
       response.json() as Promise<

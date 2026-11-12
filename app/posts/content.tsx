@@ -95,9 +95,9 @@ export default function PostsContent({ posts }: { posts: Post[] }) {
       ) : (
         <div className='grid grid-cols-1 gap-6'>
           <StaggerContainer>
-            {filteredPosts.map((post) => (
+            {filteredPosts.map((post, index) => (
               <ViewTransition key={post.id}>
-                <PostCard post={post} />
+                <PostCard post={post} priority={index === 0} />
               </ViewTransition>
             ))}
           </StaggerContainer>

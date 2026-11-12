@@ -19,7 +19,7 @@ const ViewTransition = ({
   duration = 0.3,
   className = '',
 }: Props) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [verticalOrigin, setVerticalOrigin] = useState<'top' | 'bottom'>(
     'bottom',
   );

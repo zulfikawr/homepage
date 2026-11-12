@@ -30,7 +30,7 @@ function mapRowToInterests(row: InterestsRow): InterestsAndObjectives {
 export async function getInterestsAndObjectives(): Promise<InterestsAndObjectives> {
   try {
     const row = await executeQueryFirst<InterestsRow>(
-      'SELECT * FROM interests_objectives ORDER BY RANDOM() LIMIT 1',
+      'SELECT * FROM interests_objectives WHERE id = 1',
     );
 
     if (row) return mapRowToInterests(row);

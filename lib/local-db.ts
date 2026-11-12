@@ -6,7 +6,12 @@ type SqliteDatabase = InstanceType<Sqlite['DatabaseSync']>;
 type SqliteStatement = ReturnType<SqliteDatabase['prepare']>;
 type SqlValue = string | number | bigint | null | Uint8Array;
 
-const DEFAULT_DB_PATH = path.join(process.cwd(), 'local', 'data', 'homepage.db');
+const DEFAULT_DB_PATH = path.join(
+  process.cwd(),
+  'local',
+  'data',
+  'homepage.db',
+);
 
 let sqlite: Sqlite | null = null;
 let localDb: LocalD1Database | null = null;
@@ -34,7 +39,7 @@ export function isLocalDataMode(): boolean {
 export function getLocalDatabasePath(): string {
   const configured = process.env.LOCAL_DB_PATH;
   return configured
-    ? path.resolve(process.cwd(), configured)
+    ? path.resolve(/* turbopackIgnore: true */ process.cwd(), configured)
     : DEFAULT_DB_PATH;
 }
 
@@ -87,8 +92,7 @@ export class LocalD1Database implements D1Database {
     this.database.exec(query);
     const changes = (
       this.database.prepare('SELECT changes() AS changes').get() as
-        | { changes: number }
-        | undefined
+        { changes: number } | undefined
     )?.changes;
     return {
       count: Number(changes ?? 0),
@@ -149,9 +153,8 @@ class LocalD1PreparedStatement {
   }
 
   async first<T = unknown>(column?: string): Promise<T | null> {
-    const row = this.statement().get(
-      ...this.values.map(toSqlValue),
-    ) as Record<string, unknown> | undefined;
+    const row = this.statement().get(...this.values.map(toSqlValue)) as
+      Record<string, unknown> | undefined;
 
     if (!row) return null;
     if (column) return (row[column] as T) ?? null;
@@ -164,7 +167,11 @@ class LocalD1PreparedStatement {
     const changes = Number(result.changes);
     return {
       success: true,
-      meta: this.meta(changes, Number(result.lastInsertRowid), Date.now() - startedAt),
+      meta: this.meta(
+        changes,
+        Number(result.lastInsertRowid),
+        Date.now() - startedAt,
+      ),
     };
   }
 
@@ -181,9 +188,10 @@ class LocalD1PreparedStatement {
 
   executeAll<T = unknown>(): D1Result<T> {
     const startedAt = Date.now();
-    const rows = this.statement().all(
-      ...this.values.map(toSqlValue),
-    ) as Record<string, unknown>[];
+    const rows = this.statement().all(...this.values.map(toSqlValue)) as Record<
+      string,
+      unknown
+    >[];
     const result = this.database
       .prepare('SELECT changes() AS changes, last_insert_rowid() AS lastId')
       .get() as { changes: number; lastId: number } | undefined;

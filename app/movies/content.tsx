@@ -30,9 +30,9 @@ export default function MoviesContent({ movies }: { movies: Movie[] }) {
       <div className='grid grid-cols-4 md:grid-cols-5 gap-4'>
         {movies && movies.length > 0 ? (
           <StaggerContainer>
-            {movies.map((movie) => (
+            {movies.map((movie, index) => (
               <ViewTransition key={movie.id}>
-                <MovieCard movie={movie} />
+                <MovieCard movie={movie} priority={index === 0} />
               </ViewTransition>
             ))}
           </StaggerContainer>
