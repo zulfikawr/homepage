@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
+import { Shimmer } from '@/components/ui/shimmer';
+
 import PageTitle from '@/components/page-title';
 import {
   Button,
@@ -11,7 +13,6 @@ import {
   Input,
   modal,
   Popover,
-  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -26,6 +27,19 @@ interface FileItem {
   size?: number;
   uploaded?: string;
 }
+
+const TEMPLATE_FILES: FileItem[] = [
+  { type: 'folder', key: 'images/' },
+  { type: 'folder', key: 'documents/' },
+  {
+    type: 'file',
+    key: 'cover-image.png',
+    size: 240000,
+    uploaded: '2025-01-01',
+  },
+  { type: 'file', key: 'resume.pdf', size: 1200000, uploaded: '2025-01-01' },
+  { type: 'file', key: 'archive.zip', size: 5400000, uploaded: '2025-01-01' },
+];
 
 const StorageContent = () => {
   const [currentPrefix, setCurrentPrefix] = useState('');
@@ -399,184 +413,166 @@ const StorageContent = () => {
         )}
       </div>
 
-      <Table className='mt-0'>
-        <TableHeader>
-          <TableRow>
-            <TableCell isHeader className='w-12 text-center'>
-              <div className='flex justify-center'>
-                <Checkbox
-                  id='select-all-files'
-                  label=''
-                  checked={
-                    items.length > 0 && selectedItems.size === items.length
-                  }
-                  onChange={handleSelectAll}
-                  className='justify-center'
-                />
-              </div>
-            </TableCell>
-            <TableCell isHeader>Name</TableCell>
-            <TableCell isHeader className='w-32'>
-              Size
-            </TableCell>
-            <TableCell isHeader className='w-40'>
-              Date
-            </TableCell>
-            <TableCell isHeader className='w-20 text-center'>
-              Actions
-            </TableCell>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentPrefix && (
-            <TableRow className='cursor-pointer' onClick={handleGoUp}>
-              <TableCell></TableCell>
-              <TableCell className='font-medium text-muted-foreground flex items-center gap-3'>
-                <Icon
-                  name='arrowBendUpLeft'
-                  className='size-5 text-muted-foreground flex-shrink-0'
-                />
-                ..
-              </TableCell>
-              <TableCell>-</TableCell>
-              <TableCell>-</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          )}
-
-          {loading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell className='text-center'>
-                  <Skeleton className='size-5 rounded mx-auto' />
-                </TableCell>
-                <TableCell>
-                  <div className='flex items-center gap-3'>
-                    <Skeleton className='size-5 rounded' />
-                    <Skeleton className='h-5 w-48' />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-5 w-16' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-5 w-24' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-8 w-8 rounded mx-auto' />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : items.length === 0 ? (
+      <Shimmer loading={loading}>
+        <Table className='mt-0'>
+          <TableHeader>
             <TableRow>
-              <TableCell className='text-center py-8 text-muted-foreground'>
-                No files found in this folder
+              <TableCell isHeader className='w-12 text-center'>
+                <div className='flex justify-center'>
+                  <Checkbox
+                    id='select-all-files'
+                    label=''
+                    checked={
+                      items.length > 0 && selectedItems.size === items.length
+                    }
+                    onChange={handleSelectAll}
+                    className='justify-center'
+                  />
+                </div>
+              </TableCell>
+              <TableCell isHeader>Name</TableCell>
+              <TableCell isHeader className='w-32'>
+                Size
+              </TableCell>
+              <TableCell isHeader className='w-40'>
+                Date
+              </TableCell>
+              <TableCell isHeader className='w-20 text-center'>
+                Actions
               </TableCell>
             </TableRow>
-          ) : (
-            items.map((item) => (
-              <TableRow key={item.key} className='group'>
-                <TableCell className='py-3 text-center relative'>
-                  <div className='flex justify-center'>
-                    <Checkbox
-                      id={`select-${item.key}`}
-                      label=''
-                      checked={selectedItems.has(item.key)}
-                      onChange={(checked) =>
-                        handleSelectItem(item.key, checked)
-                      }
-                      className='justify-center'
-                    />
-                  </div>
+          </TableHeader>
+          <TableBody>
+            {currentPrefix && (
+              <TableRow className='cursor-pointer' onClick={handleGoUp}>
+                <TableCell></TableCell>
+                <TableCell className='font-medium text-muted-foreground flex items-center gap-3'>
+                  <Icon
+                    name='arrowBendUpLeft'
+                    className='size-5 text-muted-foreground flex-shrink-0'
+                  />
+                  ..
                 </TableCell>
-                <TableCell
-                  className='py-3 font-medium cursor-pointer max-w-md'
-                  onClick={() =>
-                    item.type === 'folder'
-                      ? handleFolderClick(item.key)
-                      : handleSelectItem(item.key, !selectedItems.has(item.key))
-                  }
-                >
-                  <div className='flex items-center gap-3 min-w-0'>
-                    <Icon
-                      name={item.type === 'folder' ? 'folder' : 'file'}
-                      className={twMerge(
-                        'size-5 flex-shrink-0',
-                        item.type === 'folder'
-                          ? 'text-primary'
-                          : 'text-muted-foreground',
-                      )}
-                    />
-                    <span className='truncate'>{getFileName(item.key)}</span>
-                  </div>
-                </TableCell>
-                <TableCell className='py-3 text-muted-foreground text-sm'>
-                  {formatSize(item.size)}
-                </TableCell>
-                <TableCell className='py-3 text-muted-foreground text-sm'>
-                  {formatDate(item.uploaded)}
-                </TableCell>
-                <TableCell className='py-3'>
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className='flex justify-center'
-                  >
-                    <Popover
-                      trigger={
-                        <Button
-                          variant='ghost'
-                          className='h-8 w-8 p-0 text-primary'
-                        >
-                          <Icon name='dotsThreeVertical' className='size-5' />
-                        </Button>
-                      }
-                    >
-                      <div className='flex flex-col gap-1 p-1 min-w-40'>
-                        <Button
-                          variant='ghost'
-                          icon='pencilSimple'
-                          onClick={() => openRenameModal(item.key)}
-                          className='justify-start'
-                        >
-                          Rename
-                        </Button>
-                        {item.type === 'file' && (
-                          <>
-                            <Button
-                              variant='ghost'
-                              icon='downloadSimple'
-                              onClick={() => downloadFile(item.key)}
-                              className='justify-start'
-                            >
-                              Download
-                            </Button>
-                            <Button
-                              variant='ghost'
-                              icon='link'
-                              onClick={() => copyUrl(item.key)}
-                              className='justify-start'
-                            >
-                              Copy Link
-                            </Button>
-                          </>
-                        )}
-                        <Button
-                          variant='ghost'
-                          icon='trash'
-                          onClick={() => handleDelete(item.key)}
-                          className='justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </Popover>
-                  </div>
+                <TableCell>-</TableCell>
+                <TableCell>-</TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            )}
+
+            {!loading && items.length === 0 ? (
+              <TableRow>
+                <TableCell className='text-center py-8 text-muted-foreground'>
+                  No files found in this folder
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : (
+              (loading ? TEMPLATE_FILES : items).map((item) => (
+                <TableRow key={item.key} className='group'>
+                  <TableCell className='py-3 text-center relative'>
+                    <div className='flex justify-center'>
+                      <Checkbox
+                        id={`select-${item.key}`}
+                        label=''
+                        checked={selectedItems.has(item.key)}
+                        onChange={(checked) =>
+                          handleSelectItem(item.key, checked)
+                        }
+                        className='justify-center'
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell
+                    className='py-3 font-medium cursor-pointer max-w-md'
+                    onClick={() =>
+                      item.type === 'folder'
+                        ? handleFolderClick(item.key)
+                        : handleSelectItem(
+                            item.key,
+                            !selectedItems.has(item.key),
+                          )
+                    }
+                  >
+                    <div className='flex items-center gap-3 min-w-0'>
+                      <Icon
+                        name={item.type === 'folder' ? 'folder' : 'file'}
+                        className={twMerge(
+                          'size-5 flex-shrink-0',
+                          item.type === 'folder'
+                            ? 'text-primary'
+                            : 'text-muted-foreground',
+                        )}
+                      />
+                      <span className='truncate'>{getFileName(item.key)}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className='py-3 text-muted-foreground text-sm'>
+                    {formatSize(item.size)}
+                  </TableCell>
+                  <TableCell className='py-3 text-muted-foreground text-sm'>
+                    {formatDate(item.uploaded)}
+                  </TableCell>
+                  <TableCell className='py-3'>
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className='flex justify-center'
+                    >
+                      <Popover
+                        trigger={
+                          <Button
+                            variant='ghost'
+                            className='h-8 w-8 p-0 text-primary'
+                          >
+                            <Icon name='dotsThreeVertical' className='size-5' />
+                          </Button>
+                        }
+                      >
+                        <div className='flex flex-col gap-1 p-1 min-w-40'>
+                          <Button
+                            variant='ghost'
+                            icon='pencilSimple'
+                            onClick={() => openRenameModal(item.key)}
+                            className='justify-start'
+                          >
+                            Rename
+                          </Button>
+                          {item.type === 'file' && (
+                            <>
+                              <Button
+                                variant='ghost'
+                                icon='downloadSimple'
+                                onClick={() => downloadFile(item.key)}
+                                className='justify-start'
+                              >
+                                Download
+                              </Button>
+                              <Button
+                                variant='ghost'
+                                icon='link'
+                                onClick={() => copyUrl(item.key)}
+                                className='justify-start'
+                              >
+                                Copy Link
+                              </Button>
+                            </>
+                          )}
+                          <Button
+                            variant='ghost'
+                            icon='trash'
+                            onClick={() => handleDelete(item.key)}
+                            className='justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </Popover>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Shimmer>
     </div>
   );
 };

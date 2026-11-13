@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import CertificateForm from '@/components/form/certificate';
 import { getCertificateById } from '@/database/certificates';
 
 import EditCertificatePage from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function CertificateEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <CertificateForm />
+        </FormSkeleton>
+      }
+    >
       <CertificateLoader params={params} />
     </Suspense>
   );

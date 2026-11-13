@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import MovieForm from '@/components/form/movie';
 import { getMovieById } from '@/database/movies';
 
 import EditMoviePage from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function MovieEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <MovieForm />
+        </FormSkeleton>
+      }
+    >
       <MovieLoader params={params} />
     </Suspense>
   );

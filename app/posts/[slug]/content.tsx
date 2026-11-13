@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { ViewTransition } from '@/components/motion';
+import { Shimmer } from '@/components/ui/shimmer';
 import PostContent from '@/components/post-content';
 import { Separator } from '@/components/ui';
 import PostCard from '@/components/ui/card/variants/post';
@@ -26,31 +27,31 @@ export default function BlogPostContent({
     }
   }, [post?.title, setHeaderTitle]);
 
-  if (isLoading || !post) {
-    return (
-      <div className='mt-0 pt-24 lg:mt-20 lg:pt-0 min-h-screen'>
-        <div className='animate-pulse space-y-8 px-4 max-w-4xl mx-auto'>
-          <div className='h-[200px] bg-muted rounded-lg'></div>
-          <div className='space-y-3'>
-            <div className='h-4 bg-muted rounded w-3/4'></div>
-            <div className='h-4 bg-muted rounded w-1/2'></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const renderPost: Post = post || {
+    id: 'loading-post',
+    title: 'Post Title',
+    excerpt:
+      'A short excerpt describing the post and what the reader can expect from it.',
+    content:
+      '## Introduction\n\nThis is a placeholder paragraph used to measure the real post layout while the content is loading.\n\n## Section heading\n\nAnother paragraph of placeholder content that mirrors the real article structure.\n\n- A list item\n- Another list item\n\n> A short quote to keep the layout honest.',
+    categories: ['Category'],
+    date_string: 'January 1, 2025',
+    image: '/images/placeholder-portrait.png',
+  };
 
   return (
-    <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
-      <ViewTransition>
-        <PostCard post={post} isPreview />
-      </ViewTransition>
+    <Shimmer loading={isLoading || !post}>
+      <div className='mt-0 pt-24 lg:mt-20 lg:pt-0'>
+        <ViewTransition>
+          <PostCard post={renderPost} isPreview />
+        </ViewTransition>
 
-      <Separator margin='6' />
+        <Separator margin='6' />
 
-      <ViewTransition>
-        <PostContent content={post?.content || ''} isLoading={isLoading} />
-      </ViewTransition>
-    </div>
+        <ViewTransition>
+          <PostContent content={renderPost.content || ''} />
+        </ViewTransition>
+      </div>
+    </Shimmer>
   );
 }

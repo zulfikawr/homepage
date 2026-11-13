@@ -15,7 +15,6 @@ export { default as Modal, modal, useModal } from './modal';
 export { Popover } from './popover';
 export { Portal } from './portal';
 export { Separator } from './separator';
-export { Skeleton } from './skeleton';
 export { Slider } from './slider';
 export { Switch } from './switch';
 export {

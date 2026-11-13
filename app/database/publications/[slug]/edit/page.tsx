@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import PublicationForm from '@/components/form/publication';
 import { getPublicationById } from '@/database/publications';
 
 import EditPublicationPage from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function PublicationEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <PublicationForm />
+        </FormSkeleton>
+      }
+    >
       <PublicationLoader params={params} />
     </Suspense>
   );

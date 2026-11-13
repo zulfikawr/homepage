@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { toast } from '@/components/ui';
-import { Skeleton } from '@/components/ui';
+import { Icon, toast } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 
 function CallbackContent() {
   const router = useRouter();
@@ -51,24 +51,21 @@ function CallbackContent() {
     }
   }, [router, searchParams]);
 
-  return (
-    <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-      <Skeleton width={48} height={48} variant='circle' />
-      <Skeleton width={200} height={24} />
-    </div>
-  );
+  return <CallbackLayout />;
 }
+
+const CallbackLayout = () => (
+  <Shimmer loading>
+    <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
+      <Icon name='spotifyLogo' className='size-12 text-theme-green' />
+      <p className='text-lg font-medium'>Connecting to Spotify…</p>
+    </div>
+  </Shimmer>
+);
 
 export default function CallbackPage() {
   return (
-    <Suspense
-      fallback={
-        <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-          <Skeleton width={48} height={48} variant='circle' />
-          <Skeleton width={200} height={24} />
-        </div>
-      }
-    >
+    <Suspense fallback={<CallbackLayout />}>
       <CallbackContent />
     </Suspense>
   );

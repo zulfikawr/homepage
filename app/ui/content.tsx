@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { modal } from '@/components/ui/modal';
 import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -386,17 +385,6 @@ export default function UIContent() {
                   </TableRow>
                 </TableBody>
               </Table>
-            </div>
-          </Card>
-
-          <Card className='p-6 space-y-4' isPreview>
-            <h3 className='font-bold border-b-2 border-border pb-2'>
-              Skeleton Loading
-            </h3>
-            <div className='space-y-3'>
-              <Skeleton className='h-32 w-full rounded-md' />
-              <Skeleton className='h-4 w-3/4' />
-              <Skeleton className='h-4 w-1/2' />
             </div>
           </Card>
         </div>

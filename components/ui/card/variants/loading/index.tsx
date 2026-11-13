@@ -1,370 +1,147 @@
-import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
+'use client';
 
-const BaseCardLoading = ({ children }: { children: React.ReactNode }) => (
-  <div className='relative flex w-full flex-col rounded-md border border-border bg-card shadow-sm '>
-    {children}
-  </div>
-);
+import { Shimmer } from '@/components/ui/shimmer';
+import { Book } from '@/types/book';
+import { Certificate } from '@/types/certificate';
+import { Employment } from '@/types/employment';
+import { Movie } from '@/types/movie';
+import { Post } from '@/types/post';
+import { Project } from '@/types/project';
+import { Publication } from '@/types/publication';
+import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 
-// Book: Exact mirror of BookCard
-const BookCardLoading = () => (
-  <BaseCardLoading>
-    <div className='flex flex-1 items-center'>
-      <div className='flex-shrink-0 px-4.5 py-4'>
-        <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
-          <Skeleton width='100%' height='100%' />
-        </div>
-      </div>
-      <div className='py-2 pr-4 space-y-1 flex-1'>
-        <div className='h-5 flex items-center'>
-          <Skeleton width='80%' height={14} as='span' />
-        </div>
-        <div className='h-4 flex items-center'>
-          <Skeleton width='60%' height={12} as='span' />
-        </div>
-      </div>
-    </div>
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
-      <Skeleton width={60} height={10} as='span' />
-      <Skeleton width={40} height={10} as='span' />
-    </div>
-  </BaseCardLoading>
-);
+import ArtistCard from '../artist';
+import BookCard from '../book';
+import CertificateCard from '../certificate';
+import EmploymentCard from '../employment';
+import GitHubCard from '../github';
+import MovieCard from '../movie';
+import PlaylistCard from '../playlist/spotify';
+import PostCard from '../post';
+import ProjectCard from '../project';
+import PublicationCard from '../publication';
+import TrackRow from '../track';
 
-// Employment: Exact mirror of EmploymentCard
-const EmploymentCardLoading = () => (
-  <BaseCardLoading>
-    <div className='min-w-[18rem] lg:min-w-[25rem]'>
-      <div className='text-normal flex w-full items-center justify-between gap-x-2.5 overflow-hidden border-b border-border px-4.5 py-2.5 '>
-        <div className='flex items-center gap-x-2'>
-          <Skeleton width={24} height={24} variant='circle' as='span' />
-          <Skeleton width={100} height={16} as='span' />
-        </div>
-        <Skeleton width={80} height={20} className='rounded-full' as='span' />
-      </div>
-      <div className='flex items-center justify-between gap-x-2.5 px-4.5 py-3'>
-        <Skeleton width={120} height={16} as='span' />
-        <Skeleton width={80} height={14} as='span' />
-      </div>
-      <div className='flex items-center justify-between border-t border-border px-4.5 py-1.5  w-full'>
-        <Skeleton width={100} height={14} as='span' />
-        <Skeleton width={60} height={18} className='rounded-full' as='span' />
-      </div>
-    </div>
-  </BaseCardLoading>
-);
-
-// Project: Exact mirror of ProjectCard
-const ProjectCardLoading = () => (
-  <BaseCardLoading>
-    {/* Mobile layout image */}
-    <div className='relative h-48 w-full flex-shrink-0 overflow-hidden rounded-t-md sm:hidden'>
-      <Skeleton width='100%' height='100%' />
-    </div>
-
-    {/* Desktop layout */}
-    <div className='flex flex-1 flex-col p-4 sm:flex-row sm:items-center sm:gap-6'>
-      {/* Desktop image container */}
-      <div className='relative hidden h-32 w-56 flex-shrink-0 overflow-hidden rounded-md sm:block'>
-        <Skeleton width='100%' height='100%' />
-      </div>
-
-      {/* Main content container */}
-      <div className='flex w-full flex-col justify-between gap-4 sm:min-h-[100px]'>
-        <div className='border-b border-border pb-2 '>
-          <div className='flex items-center h-7'>
-            <Skeleton width={20} height={20} className='mr-3' as='span' />
-            <Skeleton width='50%' height={20} as='span' />
-          </div>
-        </div>
-
-        <div className='space-y-2'>
-          <Skeleton width='100%' height={14} as='span' />
-          <Skeleton width='80%' height={14} as='span' />
-        </div>
-
-        <div className='flex flex-wrap gap-2 border-t border-border pt-2.5 '>
-          {[1, 2, 3].map((i) => (
-            <Skeleton
-              key={i}
-              width={60}
-              height={24}
-              className='rounded-full'
-              as='span'
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  </BaseCardLoading>
-);
-
-// Post: Exact mirror of PostCard
-const PostCardLoading = () => (
-  <BaseCardLoading>
-    <div className='flex p-6 gap-6 lg:p-8 lg:gap-8'>
-      <div className='relative w-[120px] sm:w-[150px] h-[180px] sm:h-[200px] flex-shrink-0 overflow-hidden rounded-md border border'>
-        <Skeleton width='100%' height='100%' />
-      </div>
-
-      <div className='flex flex-col space-y-4 flex-1'>
-        <div className='flex items-center h-7'>
-          <div className='flex flex-wrap gap-3'>
-            <Skeleton width={80} height={24} className='rounded-md' as='span' />
-          </div>
-        </div>
-
-        <div className='h-8 flex items-center'>
-          <Skeleton width='90%' height={24} as='span' />
-        </div>
-
-        <div className='space-y-2'>
-          <Skeleton width='100%' height={16} as='span' />
-          <Skeleton width='100%' height={16} as='span' />
-          <Skeleton width='60%' height={16} as='span' />
-        </div>
-      </div>
-    </div>
-
-    <div className='h-auto w-full border-t border-border px-6 py-2 lg:px-8 lg:py-3 '>
-      <div className='flex items-center justify-between h-8'>
-        <Skeleton width={120} height={14} as='span' />
-        <Skeleton width={60} height={14} as='span' />
-      </div>
-    </div>
-  </BaseCardLoading>
-);
-
-// Playlist: Exact mirror of PlaylistCard
-const PlaylistCardLoading = () => (
-  <BaseCardLoading>
-    <div className='grid grid-cols-4 items-center gap-4 p-4'>
-      <div className='col-span-1 flex justify-center aspect-square'>
-        <div className='w-20 h-20 rounded-md border border'>
-          <Skeleton width='100%' height='100%' className='rounded-md' />
-        </div>
-      </div>
-      <div className='col-span-3 space-y-1'>
-        <div className='h-5 flex items-center'>
-          <Skeleton width='75%' height={14} as='span' />
-        </div>
-        <div className='h-4 flex items-center'>
-          <Skeleton width='60%' height={12} as='span' />
-        </div>
-        <div className='h-4 flex items-center'>
-          <Skeleton width='40%' height={12} as='span' />
-        </div>
-      </div>
-    </div>
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
-      <div className='flex items-center space-x-1'>
-        <Skeleton width={18} height={18} variant='circle' as='span' />
-        <Skeleton width={40} height={10} as='span' />
-      </div>
-      <Skeleton width={60} height={10} as='span' />
-    </div>
-  </BaseCardLoading>
-);
-
-// Certificate: Exact mirror of CertificateCard
-const CertificateCardLoading = () => (
-  <BaseCardLoading>
-    <div className='block md:hidden'>
-      <div className='w-full'>
-        <div className='w-full aspect-video'>
-          <Skeleton width='100%' height='100%' className='rounded-t-md' />
-        </div>
-        <div className='flex w-full border-b border-border px-4 py-3 '>
-          <Skeleton width='75%' height={20} as='span' />
-        </div>
-        <div className='p-4 space-y-1'>
-          <div className='flex items-center space-x-2 h-4'>
-            <Skeleton width={14} height={14} variant='circle' as='span' />
-            <Skeleton width={100} height={12} as='span' />
-          </div>
-          <Skeleton width={120} height={12} as='span' />
-          <Skeleton width={180} height={16} className='rounded' as='span' />
-        </div>
-      </div>
-    </div>
-
-    <div className='hidden md:grid md:grid-cols-4 items-center gap-4 p-4'>
-      <div className='col-span-1 flex justify-center aspect-video'>
-        <Skeleton width='100%' height='100%' className='rounded-md' />
-      </div>
-      <div className='col-span-3 space-y-2'>
-        <div className='h-6 flex items-center'>
-          <Skeleton width='70%' height={18} as='span' />
-        </div>
-        <Separator margin='2' />
-        <div className='flex items-center space-x-2 h-4'>
-          <Skeleton width={14} height={14} variant='circle' as='span' />
-          <Skeleton width={100} height={12} as='span' />
-        </div>
-        <div className='flex items-center space-x-2 h-4'>
-          <Skeleton width={80} height={12} as='span' />
-          <span className='text-muted-foreground font-light text-xs'>|</span>
-          <Skeleton width={120} height={12} as='span' />
-        </div>
-      </div>
-    </div>
-
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
-      <Skeleton width={60} height={10} as='span' />
-      <Skeleton width={30} height={10} as='span' />
-    </div>
-  </BaseCardLoading>
-);
-
-// Publication: Exact mirror of PublicationCard
-const PublicationCardLoading = () => (
-  <BaseCardLoading>
-    <div className='p-4 space-y-2'>
-      <div className='h-6 flex items-center'>
-        <Skeleton width='90%' height={18} as='span' />
-      </div>
-      <div className='h-5 flex items-center'>
-        <Skeleton width='60%' height={14} as='span' />
-      </div>
-      <div className='flex flex-wrap gap-2 pt-2'>
-        {[1, 2, 3].map((i) => (
-          <Skeleton
-            key={i}
-            width={60}
-            height={20}
-            className='rounded-full'
-            as='span'
-          />
-        ))}
-      </div>
-    </div>
-
-    <div className='flex w-full items-center justify-between border-t border-border px-4.5 py-2 h-8 '>
-      <Skeleton width={80} height={10} as='span' />
-      <div className='flex items-center gap-2'>
-        <Skeleton width={18} height={18} variant='circle' as='span' />
-        <Skeleton width={80} height={10} as='span' />
-      </div>
-    </div>
-  </BaseCardLoading>
-);
-
-// GitHub: Exact mirror of GitHubCard
-const GitHubCardLoading = () => (
-  <BaseCardLoading>
-    <div className='flex flex-col h-full p-4 sm:p-5 gap-3'>
-      {/* Header with icon and name */}
-      <div className='flex items-start justify-between gap-3'>
-        <div className='flex items-center gap-2 flex-1'>
-          <Skeleton width={20} height={20} variant='circle' as='span' />
-          <Skeleton width='70%' height={18} as='span' />
-        </div>
-        <Skeleton width={16} height={16} variant='circle' as='span' />
-      </div>
-
-      {/* Description */}
-      <div className='space-y-1'>
-        <Skeleton width='100%' height={14} as='span' />
-        <Skeleton width='85%' height={14} as='span' />
-      </div>
-
-      {/* Language badge */}
-      <div className='flex items-center gap-1.5'>
-        <Skeleton width={8} height={8} variant='circle' as='span' />
-        <Skeleton width='40%' height={12} as='span' />
-      </div>
-
-      {/* Stats footer */}
-      <div className='flex items-center gap-4 mt-auto pt-3 border-t border-border'>
-        <div className='flex items-center gap-1.5'>
-          <Skeleton width={16} height={16} variant='circle' as='span' />
-          <Skeleton width={30} height={12} as='span' />
-        </div>
-        <div className='flex items-center gap-1.5'>
-          <Skeleton width={16} height={16} variant='circle' as='span' />
-          <Skeleton width={30} height={12} as='span' />
-        </div>
-      </div>
-    </div>
-  </BaseCardLoading>
-);
-
-// Track: Mirror of the inline track layout in app/music/content.tsx
-const TrackCardLoading = () => (
-  <div className='flex items-center gap-4 py-4 px-2 md:px-6'>
-    <span className='hidden md:flex w-5 h-5 items-center justify-center'>
-      <Skeleton width={12} height={12} as='span' />
-    </span>
-    <div className='flex-shrink-0'>
-      <Skeleton width={48} height={48} className='rounded-md' />
-    </div>
-    <div className='min-w-0 flex-1 space-y-2'>
-      <div className='h-5 flex items-center'>
-        <Skeleton width='40%' height={14} as='span' />
-      </div>
-      <div className='h-4 flex items-center'>
-        <Skeleton width='30%' height={12} as='span' />
-      </div>
-    </div>
-    <div className='flex-shrink-0'>
-      <Skeleton width={40} height={12} as='span' />
-    </div>
-  </div>
-);
-
-// Movie: Exact mirror of MovieCard
-const MovieCardLoading = ({ isPreview = false }: { isPreview?: boolean }) => {
-  if (isPreview) {
-    return (
-      <BaseCardLoading>
-        <div className='flex flex-1 items-center'>
-          <div className='flex-shrink-0 px-4.5 py-4'>
-            <div className='h-[52px] w-[35px] overflow-hidden rounded-sm border shadow-sm shadow-muted dark:shadow-none '>
-              <Skeleton width='100%' height='100%' />
-            </div>
-          </div>
-          <div className='py-2 pr-4 space-y-1 flex-1'>
-            <div className='h-5 flex items-center'>
-              <Skeleton width='70%' height={14} as='span' />
-            </div>
-            <div className='h-4 flex items-center'>
-              <Skeleton width='50%' height={12} as='span' />
-            </div>
-          </div>
-        </div>
-        <Separator margin='0' />
-        <div className='flex items-center gap-2 px-4.5 py-2 h-8'>
-          <Skeleton width={40} height={10} as='span' />
-          <div className='flex items-center gap-0.5'>
-            {[1, 2, 3, 4, 5].map((i) => (
-              <Skeleton
-                key={i}
-                width={12}
-                height={12}
-                variant='circle'
-                as='span'
-              />
-            ))}
-          </div>
-        </div>
-      </BaseCardLoading>
-    );
-  }
-
-  return (
-    <BaseCardLoading>
-      <div className='relative aspect-[2/3] w-full overflow-hidden'>
-        <Skeleton width='100%' height='100%' className='rounded-t-md' />
-      </div>
-      <div className='flex w-full items-center justify-center px-1 py-2 gap-0.5 h-8'>
-        {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} width={14} height={14} variant='circle' as='span' />
-        ))}
-      </div>
-    </BaseCardLoading>
-  );
+const BOOK_TEMPLATE: Book = {
+  id: 'loading-book',
+  slug: 'loading-book',
+  type: 'currently_reading',
+  title: 'Book Title',
+  author: 'Book Author',
+  image: '/images/placeholder-portrait.png',
+  image_url: '/images/placeholder-portrait.png',
+  link: '#',
+  date_added: '01/01/2025',
 };
+
+const EMPLOYMENT_TEMPLATE: Employment = {
+  id: 'loading-employment',
+  slug: 'loading-employment',
+  organization: 'Organization Name',
+  organization_industry: 'Industry Name',
+  job_title: 'Job Title',
+  job_type: 'full_time',
+  responsibilities: [],
+  date_string: 'Jan 2024 - Present',
+  logo: '/images/placeholder-square.png',
+  organization_location: 'Location',
+};
+
+const PROJECT_TEMPLATE: Project = {
+  id: 'loading-project',
+  slug: 'loading-project',
+  name: 'Project Name',
+  date_string: '2025',
+  image: '/images/placeholder.png',
+  description:
+    'A short description of the project and the problem it solves for people.',
+  tools: ['React', 'TypeScript', 'Tailwind'],
+  status: 'completed',
+  favicon: '/images/placeholder-square.png',
+  pinned: true,
+  link: '#',
+};
+
+const POST_TEMPLATE: Post = {
+  id: 'loading-post',
+  slug: 'loading-post',
+  title: 'Post Title',
+  excerpt:
+    'A short excerpt describing the post and what the reader can expect from it.',
+  categories: ['Category'],
+  date_string: 'January 1, 2025',
+  image: '/images/placeholder-portrait.png',
+  image_url: '/images/placeholder-portrait.png',
+  content: '',
+};
+
+const PUBLICATION_TEMPLATE: Publication = {
+  id: 'loading-publication',
+  slug: 'loading-publication',
+  title: 'Publication Title',
+  authors: ['Author Name'],
+  publisher: 'Publisher',
+  excerpt: 'A short publication excerpt.',
+  keywords: ['Research', 'Academic', 'Publication'],
+  open_access: true,
+  link: '#',
+};
+
+const CERTIFICATE_TEMPLATE: Certificate = {
+  id: 'loading-certificate',
+  slug: 'loading-certificate',
+  title: 'Certificate Title',
+  issued_by: 'Issuing Organization',
+  date_issued: 'January 2025',
+  credential_id: 'CREDENTIAL-ID',
+  image: '/images/placeholder.png',
+  image_url: '/images/placeholder.png',
+  logo: '/images/placeholder-square.png',
+  link: '#',
+};
+
+const MOVIE_TEMPLATE: Movie = {
+  id: 'loading-movie',
+  slug: 'loading-movie',
+  title: 'Movie Title',
+  release_date: '2025',
+  image: '/images/placeholder-portrait.png',
+  imdb_link: '#',
+  rating: 4,
+};
+
+const PLAYLIST_TEMPLATE: SpotifyPlaylist = {
+  id: 'loading-playlist',
+  name: 'Playlist Name',
+  description: 'A short playlist description',
+  images: [{ url: '/images/placeholder-square.png' }],
+  tracks: { total: 0 },
+  external_urls: { spotify: '#' },
+};
+
+const TRACK_TEMPLATE: SpotifyTrack = {
+  id: 'loading-track',
+  name: 'Track Name',
+  artists: [{ name: 'Artist Name' }],
+  album: {
+    name: 'Album Name',
+    images: [{ url: '/images/placeholder-square.png' }],
+  },
+  external_urls: { spotify: '#' },
+  duration_ms: 0,
+};
+
+const ARTIST_TEMPLATE: SpotifyArtist = {
+  id: 'loading-artist',
+  name: 'Artist Name',
+  images: [{ url: '/images/placeholder-square.png' }],
+  external_urls: { spotify: '#' },
+  genres: [],
+};
+
+const ShimmerCard = ({ children }: { children: React.ReactNode }) => (
+  <Shimmer loading>{children}</Shimmer>
+);
 
 type CardLoadingProps = {
   variant:
@@ -376,36 +153,106 @@ type CardLoadingProps = {
     | 'certificate'
     | 'publication'
     | 'track'
+    | 'artist'
     | 'movie'
     | 'github';
   isPreview?: boolean;
 };
 
+/**
+ * Loading state for cards.
+ *
+ * Instead of hand-drawn skeleton blocks, each variant renders the real card
+ * with representative data and lets `shimmer-from-structure` measure it. The
+ * layout therefore stays pixel-perfect whenever a card changes.
+ */
 const CardLoading = ({ variant, isPreview }: CardLoadingProps) => {
   switch (variant) {
     case 'book':
-      return <BookCardLoading />;
+      return (
+        <ShimmerCard>
+          <BookCard book={BOOK_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'employment':
-      return <EmploymentCardLoading />;
+      return (
+        <ShimmerCard>
+          <EmploymentCard employment={EMPLOYMENT_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'project':
-      return <ProjectCardLoading />;
+      return (
+        <ShimmerCard>
+          <ProjectCard project={PROJECT_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'post':
-      return <PostCardLoading />;
+      return (
+        <ShimmerCard>
+          <PostCard post={POST_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'playlist':
-      return <PlaylistCardLoading />;
+      return (
+        <ShimmerCard>
+          <PlaylistCard playlist={PLAYLIST_TEMPLATE} />
+        </ShimmerCard>
+      );
     case 'certificate':
-      return <CertificateCardLoading />;
+      return (
+        <ShimmerCard>
+          <CertificateCard certificate={CERTIFICATE_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'publication':
-      return <PublicationCardLoading />;
+      return (
+        <ShimmerCard>
+          <PublicationCard publication={PUBLICATION_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
     case 'track':
-      return <TrackCardLoading />;
+      return (
+        <ShimmerCard>
+          <TrackRow track={TRACK_TEMPLATE} trailing='0:00' index={0} />
+        </ShimmerCard>
+      );
+    case 'artist':
+      return (
+        <ShimmerCard>
+          <ArtistCard artist={ARTIST_TEMPLATE} />
+        </ShimmerCard>
+      );
     case 'movie':
-      return <MovieCardLoading isPreview={isPreview} />;
+      return (
+        <ShimmerCard>
+          <MovieCard movie={MOVIE_TEMPLATE} isPreview={isPreview} />
+        </ShimmerCard>
+      );
     case 'github':
-      return <GitHubCardLoading />;
+      return (
+        <ShimmerCard>
+          <GitHubCard
+            repoName='repository-name'
+            repoUrl='https://github.com'
+            isPreview
+          />
+        </ShimmerCard>
+      );
     default:
-      return <ProjectCardLoading />;
+      return (
+        <ShimmerCard>
+          <ProjectCard project={PROJECT_TEMPLATE} isPreview />
+        </ShimmerCard>
+      );
   }
 };
 
-export { CardLoading };
+export {
+  CardLoading,
+  BOOK_TEMPLATE,
+  CERTIFICATE_TEMPLATE,
+  MOVIE_TEMPLATE,
+  POST_TEMPLATE,
+  PROJECT_TEMPLATE,
+  PUBLICATION_TEMPLATE,
+};

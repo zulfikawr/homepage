@@ -7,30 +7,37 @@ import PageTitle from '@/components/page-title';
 import SectionTitle from '@/components/section-title';
 import BookCard from '@/components/ui/card/variants/book';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { CardLoading } from '@/components/ui/card/variants/loading';
+import { BOOK_TEMPLATE } from '@/components/ui/card/variants/loading';
+import { Shimmer } from '@/components/ui/shimmer';
 import { Separator } from '@/components/ui/separator';
 import { Book } from '@/types/book';
 
+const BOOK_TEMPLATES: Book[] = [
+  ...Array.from({ length: 2 }, (_, index) => ({
+    ...BOOK_TEMPLATE,
+    id: `loading-reading-${index}`,
+    slug: `loading-reading-${index}`,
+    type: 'currently_reading' as const,
+  })),
+  ...Array.from({ length: 2 }, (_, index) => ({
+    ...BOOK_TEMPLATE,
+    id: `loading-read-${index}`,
+    slug: `loading-read-${index}`,
+    type: 'read' as const,
+  })),
+  ...Array.from({ length: 2 }, (_, index) => ({
+    ...BOOK_TEMPLATE,
+    id: `loading-to-read-${index}`,
+    slug: `loading-to-read-${index}`,
+    type: 'to_read' as const,
+  })),
+];
+
 export function ReadingListSkeleton() {
   return (
-    <div>
-      <PageTitle
-        emoji='📚'
-        title='Reading List'
-        subtitle="I'm reading or re-reading (on average) one book every 3 month in 2025"
-        badge={{
-          color: 'yellow',
-          text: '2025',
-        }}
-      />
-      <section>
-        <SectionTitle icon='eye' title='Currently Reading' loading={true} />
-        <div className='grid grid-cols-2 gap-4 mt-4'>
-          <CardLoading variant='book' />
-          <CardLoading variant='book' />
-        </div>
-      </section>
-    </div>
+    <Shimmer loading>
+      <ReadingListContent books={BOOK_TEMPLATES} />
+    </Shimmer>
   );
 }
 

@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import EmploymentForm from '@/components/form/employment';
 import { getEmploymentById } from '@/database/employments';
 
 import EditEmploymentPage from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function EmploymentEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <EmploymentForm />
+        </FormSkeleton>
+      }
+    >
       <EmploymentLoader params={params} />
     </Suspense>
   );

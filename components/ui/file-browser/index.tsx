@@ -3,13 +3,21 @@
 import React, { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Button, Icon, Skeleton } from '@/components/ui';
+import { Button, Icon } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 
 interface FileItem {
   type: 'folder' | 'file';
   key: string;
   size?: number;
 }
+
+const TEMPLATE_ITEMS: FileItem[] = [
+  { type: 'folder', key: 'folder-name/' },
+  { type: 'folder', key: 'another-folder/' },
+  { type: 'file', key: 'image-name.png', size: 240000 },
+  { type: 'file', key: 'document-name.pdf', size: 1200000 },
+];
 
 interface FileBrowserProps {
   onSelect: (key: string) => void;
@@ -167,49 +175,42 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
 
       {/* File List */}
       <div className='flex-1 overflow-y-auto p-4 max-h-[50vh]'>
-        {loading ? (
-          <div className='space-y-2'>
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className='flex items-center gap-3 px-3 py-2'>
-                <Skeleton className='size-5 rounded' />
-                <Skeleton className='h-5 flex-1' />
-              </div>
-            ))}
-          </div>
-        ) : items.length === 0 ? (
+        {!loading && items.length === 0 ? (
           <div className='text-center py-8 text-muted-foreground'>
             No files found
           </div>
         ) : (
-          <div className='space-y-1'>
-            {items.map((item) => (
-              <button
-                key={item.key}
-                onClick={() =>
-                  item.type === 'folder'
-                    ? handleFolderClick(item.key)
-                    : handleFileClick(item.key)
-                }
-                className={twMerge(
-                  'w-full text-left px-3 py-2 rounded hover:bg-muted/50 flex items-center gap-3 cursor-pointer',
-                  selectedKey === item.key ? 'bg-primary/10' : '',
-                )}
-              >
-                <Icon
-                  name={item.type === 'folder' ? 'folder' : 'file'}
-                  className='size-5 text-primary flex-shrink-0'
-                />
-                <span className='flex-1 truncate'>
-                  {item.key.split('/').filter(Boolean).pop()}
-                </span>
-                {item.size && (
-                  <span className='text-sm text-muted-foreground'>
-                    {formatSize(item.size)}
+          <Shimmer loading={loading}>
+            <div className='space-y-1'>
+              {(loading ? TEMPLATE_ITEMS : items).map((item) => (
+                <button
+                  key={item.key}
+                  onClick={() =>
+                    item.type === 'folder'
+                      ? handleFolderClick(item.key)
+                      : handleFileClick(item.key)
+                  }
+                  className={twMerge(
+                    'w-full text-left px-3 py-2 rounded hover:bg-muted/50 flex items-center gap-3 cursor-pointer',
+                    selectedKey === item.key ? 'bg-primary/10' : '',
+                  )}
+                >
+                  <Icon
+                    name={item.type === 'folder' ? 'folder' : 'file'}
+                    className='size-5 text-primary flex-shrink-0'
+                  />
+                  <span className='flex-1 truncate'>
+                    {item.key.split('/').filter(Boolean).pop()}
                   </span>
-                )}
-              </button>
-            ))}
-          </div>
+                  {item.size && (
+                    <span className='text-sm text-muted-foreground'>
+                      {formatSize(item.size)}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </Shimmer>
         )}
       </div>
 

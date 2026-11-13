@@ -6,88 +6,45 @@ import VisitorGeographyBanner from '@/components/banners/visitor-geography';
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
 import { Card } from '@/components/ui';
-import { Icon, Skeleton } from '@/components/ui';
+import { Icon } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { AnalyticsSummary } from '@/types/analytics-summary';
 
+const ANALYTICS_TEMPLATE: AnalyticsSummary = {
+  totalViews: 1280,
+  uniqueVisitors: 412,
+  topRoutes: [
+    { path: '/', views: 520 },
+    { path: '/projects', views: 280 },
+    { path: '/posts', views: 210 },
+    { path: '/about', views: 140 },
+    { path: '/reading-list', views: 90 },
+  ],
+  countries: [
+    { code: 'US', name: 'United States', count: 120 },
+    { code: 'ID', name: 'Indonesia', count: 86 },
+    { code: 'DE', name: 'Germany', count: 54 },
+    { code: 'JP', name: 'Japan', count: 32 },
+    { code: 'BR', name: 'Brazil', count: 18 },
+  ],
+  devices: [
+    { type: 'Desktop', count: 260, icon: 'desktop', percentage: 63 },
+    { type: 'Mobile', count: 152, icon: 'deviceMobile', percentage: 37 },
+  ],
+  referrers: [
+    { name: 'Google', count: 180 },
+    { name: 'Direct', count: 120 },
+    { name: 'GitHub', count: 72 },
+    { name: 'Twitter / X', count: 44 },
+  ],
+};
+
 export function AnalyticsSkeleton() {
   return (
-    <div className='pb-10'>
-      <PageTitle
-        emoji='📊'
-        title='Analytics'
-        subtitle='Real-time insights into website traffic and visitor behavior.'
-      />
-
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
-        {[
-          'text-theme-aqua',
-          'text-theme-green',
-          'text-theme-yellow',
-          'text-theme-blue',
-        ].map((color, i) => (
-          <Card
-            key={i}
-            isPreview
-            className='p-5 flex flex-col justify-between h-32'
-          >
-            <div className='flex items-center justify-between'>
-              <Skeleton width={80} height={12} as='span' />
-              <Skeleton
-                width={18}
-                height={18}
-                variant='circle'
-                className={color}
-              />
-            </div>
-            <Skeleton width={100} height={32} />
-          </Card>
-        ))}
-      </div>
-
-      <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-        <div className='lg:col-span-2 space-y-8'>
-          <Card isPreview className='h-[450px]'>
-            <div className='p-4 border-b border-border bg-muted/30 flex items-center justify-between'>
-              <Skeleton width={120} height={16} />
-            </div>
-            <div className='p-8'>
-              <Skeleton width='100%' height={300} />
-            </div>
-          </Card>
-          <Card isPreview className='p-6'>
-            <Skeleton width={150} height={20} className='mb-6' as='span' />
-            <div className='space-y-5'>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className='space-y-2'>
-                  <div className='flex justify-between'>
-                    <Skeleton width={100} height={14} as='span' />
-                    <Skeleton width={40} height={14} as='span' />
-                  </div>
-                  <Skeleton width='100%' height={8} className='rounded-full' />
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-        <div className='space-y-8'>
-          <Card isPreview className='p-6'>
-            <Skeleton width={120} height={20} className='mb-6' as='span' />
-            <div className='space-y-4'>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className='space-y-2'>
-                  <div className='flex justify-between'>
-                    <Skeleton width={120} height={14} as='span' />
-                    <Skeleton width={30} height={14} as='span' />
-                  </div>
-                  <Skeleton width='100%' height={6} className='rounded-full' />
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      </div>
-    </div>
+    <Shimmer loading>
+      <AnalyticsContent stats={ANALYTICS_TEMPLATE} />
+    </Shimmer>
   );
 }
 

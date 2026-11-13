@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import ProjectForm from '@/components/form/project';
 import { getProjectById } from '@/database/projects';
 
 import ProjectEditContent from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function ProjectEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <ProjectForm />
+        </FormSkeleton>
+      }
+    >
       <ProjectLoader params={params} />
     </Suspense>
   );

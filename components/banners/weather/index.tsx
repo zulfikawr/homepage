@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Card } from '@/components/ui';
-import { Icon, Skeleton } from '@/components/ui';
+import { Icon } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { useRadius } from '@/contexts/radius-context';
 import { useWeather, WeatherType } from '@/contexts/weather-context';
@@ -471,11 +472,9 @@ const emptySubscribe = () => () => {};
 const FlipNumber = ({
   number,
   isDaytime,
-  isLoading = false,
 }: {
   number?: string;
   isDaytime: boolean;
-  isLoading?: boolean;
 }) => {
   const { radius } = useRadius();
 
@@ -490,41 +489,27 @@ const FlipNumber = ({
       style={{ borderRadius: `${radius}px` }}
     >
       <div className='absolute inset-0 flex items-center justify-center'>
-        {isLoading ? (
-          <Skeleton width='100%' height='100%' />
-        ) : (
-          <span
-            className={twMerge(
-              'text-xl font-mono font-bold',
-              isDaytime ? 'text-[#282828]' : 'text-[#ebdbb2]',
-            )}
-          >
-            {number}
-          </span>
-        )}
+        <span
+          className={twMerge(
+            'text-xl font-mono font-bold',
+            isDaytime ? 'text-[#282828]' : 'text-[#ebdbb2]',
+          )}
+        >
+          {number}
+        </span>
       </div>
     </div>
   );
 };
 
-const WeatherSeparator = ({
-  isDaytime,
-  isLoading = false,
-}: {
-  isDaytime: boolean;
-  isLoading?: boolean;
-}) => (
+const WeatherSeparator = ({ isDaytime }: { isDaytime: boolean }) => (
   <div
     className={twMerge(
       'mx-1 text-xl font-bold z-30 drop-shadow-sm',
       isDaytime ? 'text-[#282828]/90' : 'text-[#ebdbb2]/90',
     )}
   >
-    {isLoading ? (
-      <div className='animate-pulse text-muted opacity-50'>:</div>
-    ) : (
-      ':'
-    )}
+    :
   </div>
 );
 
@@ -559,114 +544,84 @@ const WeatherLayout = ({
   };
 
   return (
-    <Card
-      className={twMerge(
-        'bg-gradient-to-br',
-        getBgGradient(),
-        'min-h-[120px] h-full',
-      )}
-      isPreview
-    >
-      {!isLoading && (
-        <WeatherVisuals type={currentType} isDaytime={isDaytime} />
-      )}
+    <Shimmer loading={isLoading}>
+      <Card
+        className={twMerge(
+          'bg-gradient-to-br',
+          getBgGradient(),
+          'min-h-[120px] h-full',
+        )}
+        isPreview
+      >
+        {!isLoading && (
+          <WeatherVisuals type={currentType} isDaytime={isDaytime} />
+        )}
 
-      <div className='relative h-full flex flex-col z-30 gap-y-4 px-4 py-3'>
-        {/* Header */}
-        <div className='flex w-full items-center justify-between pointer-events-none'>
-          <div
-            className={twMerge(
-              'flex items-center gap-x-2 px-3 py-1.5 rounded-full shadow-sm border border-white/10 transition-colors',
-              isDaytime
-                ? 'bg-[#fbf1c7]/40 text-[#282828]'
-                : 'bg-[#282828]/80 text-[#ebdbb2]',
-            )}
-          >
-            {isLoading ? (
-              <>
-                <Skeleton width={20} height={20} className='rounded-full' />
-                <Skeleton width={80} height={16} />
-              </>
-            ) : (
-              <>
-                <Icon name='mapPin' className='size-5' />
-                <h2 className='font-bold text-sm tracking-wide'>Jakarta, ID</h2>
-              </>
-            )}
+        <div className='relative h-full flex flex-col z-30 gap-y-4 px-4 py-3'>
+          {/* Header */}
+          <div className='flex w-full items-center justify-between pointer-events-none'>
+            <div
+              className={twMerge(
+                'flex items-center gap-x-2 px-3 py-1.5 rounded-full shadow-sm border border-white/10 transition-colors',
+                isDaytime
+                  ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                  : 'bg-[#282828]/80 text-[#ebdbb2]',
+              )}
+            >
+              <Icon name='mapPin' className='size-5' />
+              <h2 className='font-bold text-sm tracking-wide'>Jakarta, ID</h2>
+            </div>
+
+            <div
+              className={twMerge(
+                'flex items-center px-3 py-1.5 rounded-full shadow-sm border border-white/10 text-xs font-bold transition-colors',
+                isDaytime
+                  ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                  : 'bg-[#282828]/80 text-[#ebdbb2]',
+              )}
+            >
+              {timeData.date || '01/01/2025'}
+            </div>
           </div>
 
-          <div
-            className={twMerge(
-              'flex items-center px-3 py-1.5 rounded-full shadow-sm border border-white/10 text-xs font-bold transition-colors',
-              isDaytime
-                ? 'bg-[#fbf1c7]/40 text-[#282828]'
-                : 'bg-[#282828]/80 text-[#ebdbb2]',
-            )}
-          >
-            {isLoading ? <Skeleton width={70} height={14} /> : timeData.date}
+          {/* Center: Time Display */}
+          <div className='flex-1 flex items-center justify-center w-full pointer-events-none'>
+            <div className='flex items-center'>
+              <FlipNumber number={timeData.hours} isDaytime={isDaytime} />
+              <WeatherSeparator isDaytime={isDaytime} />
+              <FlipNumber number={timeData.minutes} isDaytime={isDaytime} />
+              <WeatherSeparator isDaytime={isDaytime} />
+              <FlipNumber number={timeData.seconds} isDaytime={isDaytime} />
+            </div>
           </div>
-        </div>
 
-        {/* Center: Time Display */}
-        <div className='flex-1 flex items-center justify-center w-full pointer-events-none'>
-          <div className='flex items-center'>
-            <FlipNumber
-              number={timeData.hours}
-              isDaytime={isDaytime}
-              isLoading={isLoading}
-            />
-            <WeatherSeparator isDaytime={isDaytime} isLoading={isLoading} />
-            <FlipNumber
-              number={timeData.minutes}
-              isDaytime={isDaytime}
-              isLoading={isLoading}
-            />
-            <WeatherSeparator isDaytime={isDaytime} isLoading={isLoading} />
-            <FlipNumber
-              number={timeData.seconds}
-              isDaytime={isDaytime}
-              isLoading={isLoading}
-            />
-          </div>
-        </div>
-
-        {/* Footer: Weather Info */}
-        <div className='flex justify-center pointer-events-none h-6 leading-6'>
-          <div
-            className={twMerge(
-              'text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/10 flex items-center gap-2',
-              isDaytime
-                ? 'bg-[#fbf1c7]/40 text-[#282828]'
-                : 'bg-[#282828]/80 text-[#ebdbb2]',
-            )}
-          >
-            {isLoading ? (
-              <>
-                <Skeleton width={64} height={12} />
-                <span className='opacity-50 text-muted'>|</span>
-                <Skeleton width={32} height={12} />
-              </>
-            ) : (
-              <>
-                <span className='drop-shadow-sm'>
-                  {weatherLabels[currentType]}
-                </span>
-                {weatherData && (
-                  <>
-                    <span className='opacity-50'>|</span>
-                    <span className='drop-shadow-sm'>
-                      {Math.round(weatherData.temp)}°C
-                    </span>
-                  </>
-                )}
-              </>
-            )}
+          {/* Footer: Weather Info */}
+          <div className='flex justify-center pointer-events-none h-6 leading-6'>
+            <div
+              className={twMerge(
+                'text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/10 flex items-center gap-2',
+                isDaytime
+                  ? 'bg-[#fbf1c7]/40 text-[#282828]'
+                  : 'bg-[#282828]/80 text-[#ebdbb2]',
+              )}
+            >
+              <span className='drop-shadow-sm'>
+                {weatherLabels[currentType]}
+              </span>
+              <span className='opacity-50'>|</span>
+              <span className='drop-shadow-sm'>
+                {Math.round((weatherData ?? { temp: 24 }).temp)}°C
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/10 to-transparent pointer-events-none z-[1]' />
-    </Card>
+        <div
+          data-shimmer-ignore
+          className='absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-black/10 to-transparent pointer-events-none z-[1]'
+        />
+      </Card>
+    </Shimmer>
   );
 };
 

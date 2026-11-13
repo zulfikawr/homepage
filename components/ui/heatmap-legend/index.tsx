@@ -3,8 +3,6 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
-import { Skeleton } from '@/components/ui/skeleton';
-
 export const getHeatmapIntensityClass = (intensity: number) => {
   switch (intensity) {
     case 1:
@@ -24,34 +22,20 @@ export const getHeatmapIntensityClass = (intensity: number) => {
   }
 };
 
-const HeatmapLegend = ({ isLoading = false }: { isLoading?: boolean }) => {
+const HeatmapLegend = () => {
   return (
     <div className='flex items-center justify-end gap-1 text-xs text-muted-foreground'>
-      <span className='h-4 flex items-center'>
-        {isLoading ? <Skeleton width={24} height={12} as='span' /> : 'Less'}
-      </span>
+      <span className='h-4 flex items-center'>Less</span>
       {[0, 1, 2, 3, 4, 5, 6].map((intensity) => (
         <div
           key={intensity}
           className={twMerge(
             'w-3 h-3 rounded-sm',
-            !isLoading && getHeatmapIntensityClass(intensity),
+            getHeatmapIntensityClass(intensity),
           )}
-        >
-          {isLoading && (
-            <Skeleton
-              width='100%'
-              height='100%'
-              as='span'
-              className='block'
-              style={{ borderRadius: '2px' }}
-            />
-          )}
-        </div>
+        />
       ))}
-      <span className='h-4 flex items-center'>
-        {isLoading ? <Skeleton width={32} height={12} as='span' /> : 'More'}
-      </span>
+      <span className='h-4 flex items-center'>More</span>
     </div>
   );
 };

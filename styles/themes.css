@@ -438,5 +438,24 @@
     --heatmap-5: #e69875;
     --heatmap-6: #e67e80;
   }
+}
 
+/* Structure-aware shimmer tokens (mirror the old ui/skeleton colors). */
+@layer base {
+  :root {
+    --skeleton-bg: var(--muted);
+    --skeleton-shimmer: color-mix(in srgb, var(--foreground) 14%, transparent);
+  }
+
+  .dark,
+  .gruvbox-dark,
+  .monokai,
+  .dracula,
+  .nord,
+  .catppuccin,
+  .tokyo-night,
+  .everforest {
+    --skeleton-bg: color-mix(in srgb, var(--muted) 50%, transparent);
+    --skeleton-shimmer: color-mix(in srgb, var(--foreground) 12%, transparent);
+  }
 }

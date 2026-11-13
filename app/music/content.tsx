@@ -1,21 +1,19 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 
 import SpotifyBanner from '@/components/banners/spotify';
-import ImageWithFallback from '@/components/image-with-fallback';
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
-import { Button, Icon, Tooltip } from '@/components/ui';
-import { Skeleton } from '@/components/ui';
+import { Button, Icon } from '@/components/ui';
+import ArtistCard from '@/components/ui/card/variants/artist';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { CardLoading } from '@/components/ui/card/variants/loading';
 import PlaylistCard from '@/components/ui/card/variants/playlist/spotify';
+import TrackRow from '@/components/ui/card/variants/track';
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import { useLoadingToggle } from '@/contexts/loading-context';
-import { useRadius } from '@/contexts/radius-context';
 import { SpotifyArtist, SpotifyPlaylist, SpotifyTrack } from '@/types/spotify';
 import { getTimeAgo } from '@/utilities/time-ago';
 
@@ -94,8 +92,6 @@ export default function SpotifyMusicContent({
     useState<TimeRange>('short_term');
   const [artistsTimeRange, setArtistsTimeRange] =
     useState<TimeRange>('short_term');
-
-  const { radius } = useRadius();
 
   const displayData = {
     recentTracks: forceEmpty ? [] : recentTracks,
@@ -338,44 +334,11 @@ export default function SpotifyMusicContent({
               <StaggerContainer>
                 {displayData.recentTracks.map((item, index) => (
                   <ViewTransition key={index}>
-                    <div
-                      className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
-                      style={{ borderRadius: `${radius}px` }}
-                    >
-                      <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
-                        {index + 1}
-                      </span>
-                      <div className='flex-shrink-0'>
-                        <Tooltip text={item.track.album.name}>
-                          <ImageWithFallback
-                            src={item.track.album.images[0]?.url}
-                            alt={item.track.album.name}
-                            width={48}
-                            height={48}
-                            type='square'
-                            sizes='48px'
-                          />
-                        </Tooltip>
-                      </div>
-                      <div className='min-w-0 flex-1 overflow-hidden'>
-                        <Link
-                          href={item.track.external_urls.spotify}
-                          target='_blank'
-                          className='font-medium hover:underline block truncate'
-                          title={item.track.name}
-                        >
-                          {item.track.name}
-                        </Link>
-                        <p className='text-sm text-muted-foreground truncate'>
-                          {item.track.artists
-                            .map((artist) => artist.name)
-                            .join(', ')}
-                        </p>
-                      </div>
-                      <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                        {mounted ? getTimeAgo(item.playedAt) : ''}
-                      </div>
-                    </div>
+                    <TrackRow
+                      track={item.track}
+                      index={index}
+                      trailing={mounted ? getTimeAgo(item.playedAt) : ''}
+                    />
                   </ViewTransition>
                 ))}
               </StaggerContainer>
@@ -404,44 +367,11 @@ export default function SpotifyMusicContent({
               <StaggerContainer>
                 {displayData.topTracks.map((track, index) => (
                   <ViewTransition key={track.id}>
-                    <div
-                      className='flex items-center gap-4 py-4 px-2 md:px-6 hover:bg-muted/50 hover:bg-muted transition-colors'
-                      style={{ borderRadius: `${radius}px` }}
-                    >
-                      <span className='hidden md:flex text-muted-foreground dark:text-muted-foreground w-5 text-sm'>
-                        {index + 1}
-                      </span>
-                      <div className='flex-shrink-0'>
-                        <Tooltip text={track.album.name}>
-                          <ImageWithFallback
-                            src={track.album.images[0]?.url}
-                            alt={track.album.name}
-                            width={48}
-                            height={48}
-                            type='square'
-                            sizes='48px'
-                          />
-                        </Tooltip>
-                      </div>
-                      <div className='min-w-0 flex-1 overflow-hidden'>
-                        <Link
-                          href={track.external_urls.spotify}
-                          target='_blank'
-                          className='font-medium hover:underline block truncate'
-                          title={track.name}
-                        >
-                          {track.name}
-                        </Link>
-                        <p className='text-sm text-muted-foreground truncate'>
-                          {track.artists
-                            .map((artist) => artist.name)
-                            .join(', ')}
-                        </p>
-                      </div>
-                      <div className='text-xs text-muted-foreground whitespace-nowrap flex-shrink-0'>
-                        {formatDuration(track.duration_ms)}
-                      </div>
-                    </div>
+                    <TrackRow
+                      track={track}
+                      index={index}
+                      trailing={formatDuration(track.duration_ms)}
+                    />
                   </ViewTransition>
                 ))}
               </StaggerContainer>
@@ -467,37 +397,13 @@ export default function SpotifyMusicContent({
                 Array(8)
                   .fill(0)
                   .map((_, index) => (
-                    <div
-                      key={index}
-                      className='flex flex-col items-center space-y-2 p-3'
-                    >
-                      <Skeleton width={96} height={96} variant='circle' />
-                      <Skeleton width='75%' height={16} as='span' />
-                    </div>
+                    <CardLoading key={index} variant='artist' />
                   ))
               ) : displayData.topArtists.length > 0 ? (
                 <StaggerContainer>
                   {displayData.topArtists.map((artist) => (
                     <ViewTransition key={artist.id}>
-                      <Link
-                        href={artist.external_urls.spotify}
-                        target='_blank'
-                        className='flex flex-col items-center space-y-2 p-3 hover:bg-muted/50 hover:bg-muted transition-colors'
-                        style={{ borderRadius: `${radius}px` }}
-                      >
-                        <ImageWithFallback
-                          src={artist.images[0]?.url}
-                          alt={artist.name}
-                          width={96}
-                          height={96}
-                          className='object-cover aspect-square'
-                          type='square'
-                          sizes='96px'
-                        />
-                        <h3 className='font-medium text-center'>
-                          {artist.name}
-                        </h3>
-                      </Link>
+                      <ArtistCard artist={artist} />
                     </ViewTransition>
                   ))}
                 </StaggerContainer>

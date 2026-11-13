@@ -5,7 +5,9 @@ import GitHubContributionsBanner from '@/components/banners/github-contributions
 import SpotifyBanner from '@/components/banners/spotify';
 import TopLanguagesBanner from '@/components/banners/top-languages';
 import WeatherBanner from '@/components/banners/weather';
-import PersonalInfoSection from '@/components/section/personal-info';
+import PersonalInfoSection, {
+  PersonalInfoLayout,
+} from '@/components/section/personal-info';
 import {
   getGitHubContributionsServer,
   getGitHubLanguagesServer,
@@ -43,9 +45,7 @@ export default function GitHubProfileExportPage() {
         to screenshot and use on the GitHub profile README.
       */}
 
-      <Suspense
-        fallback={<div className='h-24 animate-pulse bg-muted rounded-xl' />}
-      >
+      <Suspense fallback={<PersonalInfoLayout isLoading />}>
         <PersonalInfoData />
       </Suspense>
 

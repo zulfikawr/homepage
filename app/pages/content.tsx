@@ -2,33 +2,16 @@
 
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
-import { Skeleton } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import NavigationCard from '@/components/ui/card/variants/navigation';
 import { IconName } from '@/components/ui/icon';
 import { Resume } from '@/types/resume';
 
 export function PagesSkeleton() {
   return (
-    <div>
-      <PageTitle
-        emoji='📑'
-        title='Pages'
-        subtitle='Explore all pages in this website'
-      />
-      <div className='grid grid-cols-2 gap-4'>
-        {Array(12)
-          .fill(0)
-          .map((_, i) => (
-            <div
-              key={i}
-              className='h-24 border-2 shadow-brutalist rounded-md bg-card p-4'
-            >
-              <Skeleton width='40%' height={20} className='mb-2' />
-              <Skeleton width='80%' height={16} />
-            </div>
-          ))}
-      </div>
-    </div>
+    <Shimmer loading>
+      <PagesContent resume={null} />
+    </Shimmer>
   );
 }
 

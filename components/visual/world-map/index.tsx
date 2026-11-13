@@ -47,9 +47,7 @@ let worldDataRequest: Promise<
 > | null = null;
 
 const getWorldData = () => {
-  worldDataRequest ??= fetch(
-    '/data/world.geojson',
-  ).then(
+  worldDataRequest ??= fetch('/data/world.geojson').then(
     (response) =>
       response.json() as Promise<
         FeatureCollection<Geometry, GeoJsonProperties>
@@ -427,18 +425,52 @@ export default function WorldMap({ data, className }: WorldMapProps) {
     });
   }, [data, worldData]);
 
+  const { activeCountries, backgroundPath } = useMemo(() => {
+    const active = countries.filter((country) => country.count > 0);
+    const background = countries
+      .filter((country) => country.count === 0)
+      .map((country) => country.path)
+      .join(' ');
+
+    return { activeCountries: active, backgroundPath: background };
+  }, [countries]);
+
+  const activePaths = useMemo(
+    () =>
+      activeCountries.map((country) => (
+        <path
+          key={country.id}
+          d={country.path}
+          fill={country.fill}
+          stroke='var(--border)'
+          strokeWidth='0.5'
+          className='transition-opacity hover:opacity-80 cursor-pointer'
+          data-country={country.name}
+          data-count={country.count}
+        />
+      )),
+    [activeCountries],
+  );
+
   const handlePointerOver = (event: ReactPointerEvent<SVGSVGElement>) => {
     const path = event.target as SVGPathElement;
     const name = path.dataset.country;
     const count = path.dataset.count;
     if (!name || count === undefined) return;
 
-    setHoveredCountry({ name, count: Number(count) });
+    setHoveredCountry((previous) =>
+      previous?.name === name && previous.count === Number(count)
+        ? previous
+        : { name, count: Number(count) },
+    );
     setTooltipPos({ top: event.clientY - 10, left: event.clientX });
   };
 
   return (
-    <div className={twMerge('relative w-full h-full min-h-[200px]', className)}>
+    <div
+      className={twMerge('relative w-full h-full min-h-[200px]', className)}
+      style={{ contain: 'paint' }}
+    >
       <svg
         className='w-full h-full'
         viewBox='0 0 1000 500'
@@ -446,18 +478,17 @@ export default function WorldMap({ data, className }: WorldMapProps) {
         onPointerOver={handlePointerOver}
         onPointerLeave={() => setHoveredCountry(null)}
       >
-        {countries.map((country) => (
+        {backgroundPath && (
           <path
-            key={country.id}
-            d={country.path}
-            fill={country.fill}
+            d={backgroundPath}
+            fill='var(--heatmap-0)'
             stroke='var(--border)'
             strokeWidth='0.5'
-            className='transition-opacity hover:opacity-80 cursor-pointer'
-            data-country={country.name}
-            data-count={country.count}
+            fillRule='evenodd'
+            pointerEvents='none'
           />
-        ))}
+        )}
+        {activePaths}
       </svg>
 
       {hoveredCountry && (

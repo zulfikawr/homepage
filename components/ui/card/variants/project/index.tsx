@@ -45,7 +45,7 @@ export default function ProjectCard({
         <ImageWithFallback
           src={project.image}
           alt={project.name}
-          className='object-cover dark:brightness-[95%]'
+          className='h-full w-full object-cover dark:brightness-[95%]'
           loading={priority ? 'eager' : 'lazy'}
           priority={priority}
           height={480}
@@ -63,7 +63,7 @@ export default function ProjectCard({
             alt={project.name}
             height={480}
             width={640}
-            className='rounded-md object-cover dark:brightness-[95%]'
+            className='h-full w-full rounded-md object-cover dark:brightness-[95%]'
             loading={priority ? 'eager' : 'lazy'}
             priority={priority}
             sizes='(max-width: 768px) 100vw, 224px'

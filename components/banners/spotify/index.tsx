@@ -11,14 +11,8 @@ import Link from 'next/link';
 
 import ImageWithFallback from '@/components/image-with-fallback';
 import { Card } from '@/components/ui';
-import {
-  Button,
-  Icon,
-  Separator,
-  Skeleton,
-  TimeAgo,
-  Tooltip,
-} from '@/components/ui';
+import { Button, Icon, Separator, TimeAgo, Tooltip } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { SpotifyTrack } from '@/types/spotify';
@@ -42,6 +36,20 @@ const FALLBACK_TRACK: SpotifyTrack = {
   duration_ms: 0,
 };
 
+const LOADING_TRACK: SpotifyTrack = {
+  id: 'loading-track',
+  name: 'Track Name',
+  artists: [{ name: 'Artist Name' }],
+  album: {
+    name: 'Album Name',
+    images: [{ url: '/images/placeholder-square.png' }],
+  },
+  external_urls: {
+    spotify: '#',
+  },
+  duration_ms: 0,
+};
+
 const apiCache: {
   currentTrack: SpotifyTrack | null;
   isPlaying: boolean;
@@ -59,12 +67,10 @@ interface SpotifyBannerProps {
 const BannerHeader = ({
   isPlaying,
   isFallback = false,
-  isLoading = false,
   showMoreButton = true,
 }: {
   isPlaying?: boolean;
   isFallback?: boolean;
-  isLoading?: boolean;
   showMoreButton?: boolean;
 }) => {
   const GoToMusicButton = (
@@ -73,11 +79,7 @@ const BannerHeader = ({
         aria-label='View music'
         className='h-7 !p-1 dark:bg-muted tracking-normal'
       >
-        {isLoading ? (
-          <Skeleton width={20} height={20} className='rounded-sm' />
-        ) : (
-          <Icon name='caretRight' className='size-5' />
-        )}
+        <Icon name='caretRight' className='size-5' />
       </Button>
     </Link>
   );
@@ -85,23 +87,14 @@ const BannerHeader = ({
   return (
     <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header'>
       <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-        {isLoading ? (
-          <>
-            <Skeleton width={28} height={28} className='rounded-md' />
-            <Skeleton width={140} height={24} />
-          </>
-        ) : (
-          <>
-            <Icon name='musicNotes' className='size-7 text-theme-green' />
-            <span>
-              {isFallback
-                ? 'On Repeat'
-                : isPlaying
-                  ? 'Currently Listening'
-                  : 'Recently Played'}
-            </span>
-          </>
-        )}
+        <Icon name='musicNotes' className='size-7 text-theme-green' />
+        <span>
+          {isFallback
+            ? 'On Repeat'
+            : isPlaying
+              ? 'Currently Listening'
+              : 'Recently Played'}
+        </span>
       </div>
 
       {showMoreButton && (
@@ -128,85 +121,63 @@ const SpotifyLayout = ({
   isPlaying?: boolean;
   isFallback?: boolean;
   isLoading?: boolean;
-  currentTrack?: SpotifyTrack | null;
+  currentTrack: SpotifyTrack;
   lastPlayedAt?: string | null;
   showMoreButton?: boolean;
 }) => {
   const content = (
     <div className='group relative flex items-center gap-x-4 p-4'>
       <div className='relative h-16 w-16 flex-shrink-0'>
-        {isLoading ? (
-          <Skeleton width='100%' height='100%' className='rounded-md' />
-        ) : (
-          <ImageWithFallback
-            src={currentTrack?.album.images[0]?.url}
-            alt={currentTrack?.album.name || ''}
-            width={200}
-            height={200}
-            sizes='(max-width: 768px) 64px, 64px'
-            className='object-cover'
-            type='square'
-            priority
-          />
-        )}
+        <ImageWithFallback
+          src={currentTrack.album.images[0]?.url}
+          alt={currentTrack.album.name}
+          width={200}
+          height={200}
+          sizes='(max-width: 768px) 64px, 64px'
+          className='object-cover'
+          type='square'
+          priority
+        />
       </div>
 
       <div className='flex-col min-w-0 space-y-1 flex-1'>
         <h2 className='font-bold text-md text-theme-aqua truncate leading-6 h-6 flex items-center'>
-          {isLoading ? (
-            <Skeleton width={160} height={18} as='span' />
-          ) : (
-            currentTrack?.name
-          )}
+          <span className='truncate'>{currentTrack.name}</span>
         </h2>
         <p className='text-sm text-theme-yellow font-medium truncate leading-5 h-5 flex items-center'>
-          {isLoading ? (
-            <Skeleton width={120} height={14} as='span' />
-          ) : (
-            currentTrack?.artists.map((artist) => artist.name).join(', ')
-          )}
+          <span className='truncate'>
+            {currentTrack.artists.map((artist) => artist.name).join(', ')}
+          </span>
         </p>
         <div className='flex items-center gap-x-2 leading-4 h-4'>
-          {isLoading ? (
-            <>
-              <Skeleton width={100} height={12} as='span' />
-              <span className='text-xs text-muted-foreground dark:text-muted-foreground'>
-                |
+          <span className='text-xs text-theme-blue truncate min-w-0 flex-shrink'>
+            {currentTrack.album.name}
+          </span>
+          <span className='text-xs text-muted-foreground dark:text-muted-foreground flex-shrink-0'>
+            |
+          </span>
+          {isFallback ? (
+            <span className='text-xs text-theme-green font-medium flex-shrink-0'>
+              On repeat
+            </span>
+          ) : isPlaying ? (
+            <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium flex-shrink-0'>
+              <span className='relative flex h-1.5 w-1.5'>
+                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-aqua opacity-75'></span>
+                <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-theme-aqua'></span>
               </span>
-              <Skeleton width={80} height={12} as='span' />
-            </>
+              <span>Playing now</span>
+            </span>
+          ) : lastPlayedAt ? (
+            <TimeAgo
+              date={lastPlayedAt}
+              prefix='Played'
+              className='text-xs text-muted-foreground flex-shrink-0'
+            />
           ) : (
-            <>
-              <span className='text-xs text-theme-blue truncate min-w-0 flex-shrink'>
-                {currentTrack?.album.name}
-              </span>
-              <span className='text-xs text-muted-foreground dark:text-muted-foreground flex-shrink-0'>
-                |
-              </span>
-              {isFallback ? (
-                <span className='text-xs text-theme-green font-medium flex-shrink-0'>
-                  On repeat
-                </span>
-              ) : isPlaying ? (
-                <span className='flex items-center gap-x-2 text-xs text-theme-green font-medium flex-shrink-0'>
-                  <span className='relative flex h-1.5 w-1.5'>
-                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-theme-aqua opacity-75'></span>
-                    <span className='relative inline-flex rounded-full h-1.5 w-1.5 bg-theme-aqua'></span>
-                  </span>
-                  <span>Playing now</span>
-                </span>
-              ) : lastPlayedAt ? (
-                <TimeAgo
-                  date={lastPlayedAt}
-                  prefix='Played'
-                  className='text-xs text-muted-foreground flex-shrink-0'
-                />
-              ) : (
-                <span className='text-xs text-muted-foreground flex-shrink-0'>
-                  Played just now
-                </span>
-              )}
-            </>
+            <span className='text-xs text-muted-foreground flex-shrink-0'>
+              Played just now
+            </span>
           )}
         </div>
       </div>
@@ -215,24 +186,28 @@ const SpotifyLayout = ({
 
   return (
     <Card isPreview className='h-full'>
-      <BannerHeader
-        isPlaying={isPlaying}
-        isFallback={isFallback}
-        isLoading={isLoading}
-        showMoreButton={showMoreButton}
-      />
-      <Separator margin='0' />
-      {!isLoading && currentTrack ? (
-        <Link
-          href={currentTrack.external_urls.spotify}
-          target='_blank'
-          className='flex-1 flex items-center hover:bg-muted/50 transition-colors'
-        >
-          {content}
-        </Link>
-      ) : (
-        <div className='flex-1 flex items-center'>{content}</div>
-      )}
+      <Shimmer
+        loading={!!isLoading}
+        containerClassName='flex flex-1 flex-col [&>div]:flex-1 [&>div]:flex [&>div]:flex-col [&_.shimmer-measure-container]:flex-1 [&_.shimmer-measure-container]:flex [&_.shimmer-measure-container]:flex-col'
+      >
+        <BannerHeader
+          isPlaying={isPlaying}
+          isFallback={isFallback}
+          showMoreButton={showMoreButton}
+        />
+        <Separator margin='0' />
+        {!isLoading ? (
+          <Link
+            href={currentTrack.external_urls.spotify}
+            target='_blank'
+            className='flex-1 flex items-center hover:bg-muted/50 transition-colors'
+          >
+            {content}
+          </Link>
+        ) : (
+          <div className='flex-1 flex items-center'>{content}</div>
+        )}
+      </Shimmer>
     </Card>
   );
 };
@@ -410,23 +385,17 @@ const SpotifyBanner: React.FC<SpotifyBannerProps> = ({
 
   if (error || forceEmpty) return <CardEmpty message='No data' />;
 
-  if (!mounted || isLoading) {
-    return (
-      <SpotifyLayout
-        isLoading={true}
-        isPlaying={isPlaying}
-        showMoreButton={showMoreButton}
-      />
-    );
-  }
-  const displayTrack = currentTrack || FALLBACK_TRACK;
-  const isFallback = !currentTrack;
+  const isShimmering = !mounted || isLoading;
+  const displayTrack = isShimmering
+    ? LOADING_TRACK
+    : currentTrack || FALLBACK_TRACK;
+  const isFallback = !isShimmering && !currentTrack;
 
   return (
     <SpotifyLayout
       isPlaying={isPlaying}
       isFallback={isFallback}
-      isLoading={false}
+      isLoading={isShimmering}
       currentTrack={displayTrack}
       lastPlayedAt={isFallback ? null : lastPlayedAt}
       showMoreButton={showMoreButton}

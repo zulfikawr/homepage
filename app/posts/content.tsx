@@ -6,27 +6,23 @@ import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
 import { Icon, Toggle } from '@/components/ui';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { CardLoading } from '@/components/ui/card/variants/loading';
+import { POST_TEMPLATE } from '@/components/ui/card/variants/loading';
+import { Shimmer } from '@/components/ui/shimmer';
 import PostCard from '@/components/ui/card/variants/post';
 import { Post } from '@/types/post';
 import { sortByDate } from '@/utilities/sort-by-date';
 
+const POST_TEMPLATES: Post[] = Array.from({ length: 8 }, (_, index) => ({
+  ...POST_TEMPLATE,
+  id: `loading-post-${index}`,
+  slug: `loading-post-${index}`,
+}));
+
 export function PostsSkeleton() {
   return (
-    <div>
-      <PageTitle
-        emoji='📰'
-        title='Posts'
-        subtitle='Browse all posts written by me'
-      />
-      <div className='flex flex-col gap-y-4'>
-        {Array(8)
-          .fill(0)
-          .map((_, index) => (
-            <CardLoading key={index} variant='post' />
-          ))}
-      </div>
-    </div>
+    <Shimmer loading>
+      <PostsContent posts={POST_TEMPLATES} />
+    </Shimmer>
   );
 }
 

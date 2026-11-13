@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 
-import { MarkdownRenderer, Separator, Skeleton } from '@/components/ui';
+import { MarkdownRenderer, Separator } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import { useTitle } from '@/contexts/title-context';
 
 interface PageTitleProps {
@@ -44,44 +45,34 @@ const PageTitle = ({
     <>
       <section className='mt-18 lg:mt-20'>
         <div className='mb-6 flex flex-col gap-3 select-none'>
-          <div className='flex items-center gap-2.5 flex-wrap'>
-            {emoji && !isLoading && (
-              <span className='text-2xl lg:text-3xl flex items-center justify-center'>
-                {emoji}
-              </span>
-            )}
-            {isLoading && <Skeleton width={32} height={32} as='span' />}
+          <Shimmer loading={isLoading}>
+            <div className='flex items-center gap-2.5 flex-wrap'>
+              {emoji && (
+                <span className='text-2xl lg:text-3xl flex items-center justify-center'>
+                  {emoji}
+                </span>
+              )}
 
-            <div className='relative inline-block'>
-              <h1 className='relative text-2xl lg:text-3xl font-bold tracking-tight text-foreground squiggly-underline leading-tight pb-2'>
-                {isLoading ? (
-                  <Skeleton width={200} height={32} as='span' />
-                ) : (
-                  title
-                )}
-              </h1>
-            </div>
+              <div className='relative inline-block'>
+                <h1 className='relative text-2xl lg:text-3xl font-bold tracking-tight text-foreground squiggly-underline leading-tight pb-2'>
+                  {title}
+                </h1>
+              </div>
 
-            {badge && !isLoading && (
-              <span className={badgeStyles[badge.color]}>{badge.text}</span>
-            )}
-          </div>
-
-          {(subtitle || isLoading) && (
-            <div className='text-xs lg:text-sm text-muted-foreground/90 max-w-3xl leading-relaxed'>
-              {isLoading ? (
-                <div className='space-y-1.5'>
-                  <Skeleton width='100%' height={10} as='span' />
-                  <Skeleton width='65%' height={10} as='span' />
-                </div>
-              ) : (
-                <MarkdownRenderer
-                  content={subtitle || ''}
-                  className='prose-sm [&>p]:my-0 [&>p]:text-muted-foreground/90'
-                />
+              {badge && (
+                <span className={badgeStyles[badge.color]}>{badge.text}</span>
               )}
             </div>
-          )}
+
+            {subtitle && (
+              <div className='text-xs lg:text-sm text-muted-foreground/90 max-w-3xl leading-relaxed'>
+                <MarkdownRenderer
+                  content={subtitle}
+                  className='prose-sm [&>p]:my-0 [&>p]:text-muted-foreground/90'
+                />
+              </div>
+            )}
+          </Shimmer>
         </div>
       </section>
       <Separator margin='4' />

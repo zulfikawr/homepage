@@ -3,26 +3,25 @@
 import { StaggerContainer, ViewTransition } from '@/components/motion';
 import PageTitle from '@/components/page-title';
 import CardEmpty from '@/components/ui/card/variants/empty';
-import { CardLoading } from '@/components/ui/card/variants/loading';
+import { PUBLICATION_TEMPLATE } from '@/components/ui/card/variants/loading';
+import { Shimmer } from '@/components/ui/shimmer';
 import PublicationCard from '@/components/ui/card/variants/publication';
 import { Publication } from '@/types/publication';
 
+const PUBLICATION_TEMPLATES: Publication[] = Array.from(
+  { length: 4 },
+  (_, index) => ({
+    ...PUBLICATION_TEMPLATE,
+    id: `loading-publication-${index}`,
+    slug: `loading-publication-${index}`,
+  }),
+);
+
 export function PublicationsSkeleton() {
   return (
-    <div>
-      <PageTitle
-        emoji='📚'
-        title='Publications'
-        subtitle='My academic and professional publications'
-      />
-      <div className='grid grid-cols-1 gap-4'>
-        {Array(4)
-          .fill(0)
-          .map((_, index) => (
-            <CardLoading key={index} variant='publication' />
-          ))}
-      </div>
-    </div>
+    <Shimmer loading>
+      <PublicationsContent publications={PUBLICATION_TEMPLATES} />
+    </Shimmer>
   );
 }
 

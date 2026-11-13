@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { FormSkeleton } from '@/components/form/loading';
+import PostForm from '@/components/form/post';
 import { getPostById } from '@/database/posts';
 
 import EditPostPage from './content';
@@ -33,7 +34,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default function PostEditPage({ params }: Props) {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <PostForm />
+        </FormSkeleton>
+      }
+    >
       <PostLoader params={params} />
     </Suspense>
   );

@@ -2,44 +2,20 @@
 
 import React from 'react';
 
-import { Separator, Skeleton } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 
 interface FormSkeletonProps {
-  fields?: number;
-  hasPreview?: boolean;
+  children: React.ReactNode;
 }
 
-const FormSkeleton: React.FC<FormSkeletonProps> = ({
-  fields = 5,
-  hasPreview = true,
-}) => {
-  return (
-    <div className='space-y-6'>
-      {hasPreview && (
-        <>
-          <div className='flex justify-center'>
-            <Skeleton width='100%' height={120} className='max-w-md' />
-          </div>
-          <Separator margin='5' />
-        </>
-      )}
-
-      <div className='space-y-4'>
-        {Array.from({ length: fields }).map((_, i) => (
-          <div key={i} className='space-y-2'>
-            <Skeleton width={100} height={20} />
-            <Skeleton width='100%' height={40} />
-          </div>
-        ))}
-      </div>
-
-      <Separator margin='5' />
-
-      <div className='flex gap-4'>
-        <Skeleton width='100%' height={40} />
-      </div>
-    </div>
-  );
+/**
+ * Shimmer fallback for route-level form loading.
+ *
+ * It renders the real form component underneath so the skeleton is measured
+ * from the actual fields instead of hand-maintained placeholder blocks.
+ */
+const FormSkeleton: React.FC<FormSkeletonProps> = ({ children }) => {
+  return <Shimmer loading>{children}</Shimmer>;
 };
 
 export { FormSkeleton };

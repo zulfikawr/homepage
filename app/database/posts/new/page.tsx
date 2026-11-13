@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 
 import { FormSkeleton } from '@/components/form/loading';
+import PostForm from '@/components/form/post';
 
 import NewProjectContent from './content';
 
@@ -12,7 +13,13 @@ export const metadata: Metadata = {
 
 export default function NewProjectPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <FormSkeleton>
+          <PostForm />
+        </FormSkeleton>
+      }
+    >
       <NewProjectContent />
     </Suspense>
   );

@@ -9,7 +9,8 @@ import PageTitle from '@/components/page-title';
 import SectionTitle from '@/components/section-title';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CardLoading } from '@/components/ui/card/variants/loading';
+import { PROJECT_TEMPLATE } from '@/components/ui/card/variants/loading';
+import { Shimmer } from '@/components/ui/shimmer';
 import ProjectCard from '@/components/ui/card/variants/project';
 import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
@@ -21,32 +22,19 @@ import { sortByDate } from '@/utilities/sort-by-date';
 
 type StatusFilter = 'all' | 'in_progress' | 'completed' | 'upcoming';
 
+const PROJECT_TEMPLATES: Project[] = Array.from({ length: 6 }, (_, index) => ({
+  ...PROJECT_TEMPLATE,
+  id: `loading-project-${index}`,
+  slug: `loading-project-${index}`,
+  pinned: index < 2,
+  status: index < 2 ? 'completed' : index < 4 ? 'in_progress' : 'upcoming',
+}));
+
 export function ProjectsSkeleton() {
   return (
-    <div className='space-y-8'>
-      <PageTitle
-        emoji='🚀'
-        title='Projects'
-        subtitle='A collection of my projects, categorized by their status.'
-      />
-      <ProjectAnalytics projects={[]} loading={true} />
-      <div className='flex flex-col gap-y-10'>
-        <section>
-          <SectionTitle icon='pushPin' title='Pinned' loading={true} />
-          <div className='flex flex-col gap-6 mt-4'>
-            <CardLoading variant='project' />
-          </div>
-        </section>
-        <Separator />
-        <section>
-          <SectionTitle icon='hammer' title='Work in Progress' loading={true} />
-          <div className='flex flex-col gap-6 mt-4'>
-            <CardLoading variant='project' />
-            <CardLoading variant='project' />
-          </div>
-        </section>
-      </div>
-    </div>
+    <Shimmer loading>
+      <ProjectsContent projects={PROJECT_TEMPLATES} />
+    </Shimmer>
   );
 }
 

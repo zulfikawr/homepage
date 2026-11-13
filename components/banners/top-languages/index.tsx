@@ -4,7 +4,8 @@ import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 
 import { Card } from '@/components/ui';
-import { Button, Icon, Separator, Skeleton, Tooltip } from '@/components/ui';
+import { Button, Icon, Separator, Tooltip } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { useLoadingToggle } from '@/contexts/loading-context';
 
@@ -20,6 +21,19 @@ interface LanguageData {
   languages: Language[];
   total_bytes: number;
 }
+
+const LANGUAGE_TEMPLATE: LanguageData = {
+  total_bytes: 1000,
+  languages: ['TypeScript', 'JavaScript', 'CSS', 'Python', 'Go'].map(
+    (name, index) => ({
+      name,
+      bytes: 1000 - index * 100,
+      color: '#83a598',
+      percentage: String(32 - index * 4),
+      lines: 1200 - index * 100,
+    }),
+  ),
+};
 
 const getLanguageIcon = (name: string): string => {
   const iconMap: Record<string, string> = {
@@ -46,10 +60,8 @@ const getLanguageIcon = (name: string): string => {
 };
 
 const BannerHeader = ({
-  isLoading = false,
   showMoreButton = true,
 }: {
-  isLoading?: boolean;
   showMoreButton?: boolean;
 }) => {
   const GoToGithubButton = (
@@ -63,11 +75,7 @@ const BannerHeader = ({
         aria-label='View GitHub repositories'
         className='h-7 !p-1 dark:bg-muted tracking-normal'
       >
-        {isLoading ? (
-          <Skeleton width={20} height={20} className='rounded-sm' />
-        ) : (
-          <Icon name='caretRight' className='size-5' />
-        )}
+        <Icon name='caretRight' className='size-5' />
       </Button>
     </Link>
   );
@@ -75,17 +83,8 @@ const BannerHeader = ({
   return (
     <div className='flex w-full items-center justify-between px-4 py-3 bg-card-header '>
       <div className='flex items-center gap-x-3 text-md font-medium tracking-wide text-foreground'>
-        {isLoading ? (
-          <>
-            <Skeleton width={28} height={28} className='rounded-md' />
-            <Skeleton width={120} height={24} />
-          </>
-        ) : (
-          <>
-            <Icon name='code' className='size-7 text-theme-yellow' />
-            <span>Top Languages</span>
-          </>
-        )}
+        <Icon name='code' className='size-7 text-theme-yellow' />
+        <span>Top Languages</span>
       </div>
 
       {showMoreButton && (
@@ -110,79 +109,39 @@ export const TopLanguagesLayout = ({
   data: LanguageData | null;
   showMoreButton?: boolean;
 }) => {
-  const topLanguage = data?.languages?.[0];
+  const renderData = data ?? LANGUAGE_TEMPLATE;
+  const topLanguage = renderData.languages[0];
 
   return (
-    <Card isPreview>
-      <BannerHeader isLoading={isLoading} showMoreButton={showMoreButton} />
+    <Shimmer loading={isLoading}>
+      <Card isPreview>
+        <BannerHeader showMoreButton={showMoreButton} />
 
-      <Separator margin='0' />
+        <Separator margin='0' />
 
-      <div className='p-4 space-y-4'>
-        <div className='flex items-center gap-4'>
-          <div className='flex-shrink-0'>
-            {isLoading ? (
-              <div className='w-16 h-16 rounded-lg flex items-center justify-center'>
-                <Skeleton width={48} height={48} className='rounded-lg' />
-              </div>
-            ) : topLanguage ? (
+        <div className='p-4 space-y-4'>
+          <div className='flex items-center gap-4'>
+            <div className='flex-shrink-0'>
               <div className='w-16 h-16 rounded-lg bg-transparent flex items-center justify-center'>
                 <Icon
                   name={getLanguageIcon(topLanguage.name)}
                   className='size-12'
                 />
               </div>
-            ) : null}
+            </div>
+
+            <div className='flex-1 space-y-1'>
+              <h2 className='text-xl font-bold text-foreground'>
+                {topLanguage.name}
+              </h2>
+              <p className='text-sm text-muted-foreground'>
+                {topLanguage.percentage}% of code
+              </p>
+            </div>
           </div>
 
-          <div className='flex-1 space-y-1'>
-            {isLoading ? (
-              <>
-                <h2 className='text-xl font-bold h-7 flex items-center'>
-                  <Skeleton width={120} height={24} as='span' />
-                </h2>
-                <p className='text-sm h-5 flex items-center'>
-                  <Skeleton width={80} height={16} as='span' />
-                </p>
-              </>
-            ) : topLanguage ? (
-              <>
-                <h2 className='text-xl font-bold text-foreground'>
-                  {topLanguage.name}
-                </h2>
-                <p className='text-sm text-muted-foreground'>
-                  {topLanguage.percentage}% of code
-                </p>
-              </>
-            ) : (
-              <p className='text-sm text-muted-foreground'>No data available</p>
-            )}
-          </div>
-        </div>
-
-        <div className='space-y-3'>
-          {isLoading ? (
-            <>
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className='space-y-1.5'>
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-2'>
-                      <Skeleton
-                        width={12}
-                        height={12}
-                        variant='circle'
-                        className='flex-shrink-0'
-                      />
-                      <Skeleton width={80} height={12} />
-                    </div>
-                    <Skeleton width={60} height={12} />
-                  </div>
-                  <Skeleton width='100%' height={8} className='rounded-full' />
-                </div>
-              ))}
-            </>
-          ) : data?.languages && data.languages.length > 0 ? (
-            data.languages.slice(0, 5).map((lang) => (
+          <div className='space-y-3'>
+            {renderData.languages.slice(0, 5).map((lang) => (
               <div key={lang.name} className='space-y-1.5'>
                 <div className='flex items-center justify-between text-xs'>
                   <div className='flex items-center gap-2'>
@@ -214,11 +173,11 @@ export const TopLanguagesLayout = ({
                   />
                 </div>
               </div>
-            ))
-          ) : null}
+            ))}
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </Shimmer>
   );
 };
 

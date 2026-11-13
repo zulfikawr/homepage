@@ -15,14 +15,8 @@ import PostSection from '@/components/section/post';
 import ProjectSection from '@/components/section/project';
 import { drawer } from '@/components/ui';
 import { toast } from '@/components/ui';
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  Icon,
-  Skeleton,
-  Switch,
-} from '@/components/ui';
+import { Button, Dropdown, DropdownItem, Icon, Switch } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { useCollection } from '@/hooks';
 import {
@@ -35,6 +29,24 @@ import {
 } from '@/lib/mappers';
 import { BannerSetting, BannerWidth } from '@/lib/banner-config';
 import { Section } from '@/types/section';
+
+const TEMPLATE_SECTIONS: Section[] = [
+  'personal-info',
+  'banners',
+  'interests',
+  'projects',
+  'employment',
+  'posts',
+].map((name, index) => ({
+  id: `loading-${name}`,
+  name,
+  title: name
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' '),
+  enabled: true,
+  order: index,
+}));
 
 const SectionPreview = ({
   sections,
@@ -293,63 +305,51 @@ export default function SectionDatabase({
       </div>
 
       <div className='space-y-3'>
-        {loading ? (
-          Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className='flex items-center gap-3 rounded-md border border-border bg-card p-3 shadow-sm h-[66px]'
-            >
-              <Skeleton width={20} height={20} />
-              <div className='flex-1 space-y-2'>
-                <Skeleton width='40%' height={16} />
-                <Skeleton width='20%' height={10} />
-              </div>
-              <Skeleton width={36} height={20} className='rounded-full' />
-            </div>
-          ))
-        ) : (
+        <Shimmer loading={loading}>
           <StaggerContainer>
-            {localSections.map((section, index) => (
-              <ViewTransition key={section.id}>
-                <div
-                  draggable
-                  onDragStart={(e) => onDragStart(e, section)}
-                  onDragOver={(e) => onDragOver(e, index)}
-                  onDragEnd={onDragEnd}
-                  className={twMerge(
-                    'flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card',
-                    draggedItem?.id === section.id
-                      ? 'opacity-50 scale-95 border-theme-blue'
-                      : 'opacity-100',
-                    'cursor-grab active:cursor-grabbing',
-                  )}
-                >
-                  <div className='text-muted-foreground size-5 flex-shrink-0'>
-                    <Icon name='dotsSixVertical' />
-                  </div>
+            {(loading ? TEMPLATE_SECTIONS : localSections).map(
+              (section, index) => (
+                <ViewTransition key={section.id}>
+                  <div
+                    draggable
+                    onDragStart={(e) => onDragStart(e, section)}
+                    onDragOver={(e) => onDragOver(e, index)}
+                    onDragEnd={onDragEnd}
+                    className={twMerge(
+                      'flex items-center gap-3 rounded-md border bg-white p-3 shadow-sm transition-all  dark:bg-card',
+                      draggedItem?.id === section.id
+                        ? 'opacity-50 scale-95 border-theme-blue'
+                        : 'opacity-100',
+                      'cursor-grab active:cursor-grabbing',
+                    )}
+                  >
+                    <div className='text-muted-foreground size-5 flex-shrink-0'>
+                      <Icon name='dotsSixVertical' />
+                    </div>
 
-                  <div className='flex-1 min-w-0'>
-                    <p className='font-medium truncate text-sm'>
-                      {section.title}
-                    </p>
-                    <p className='text-[10px] text-muted-foreground font-mono'>
-                      {section.name}
-                    </p>
-                  </div>
+                    <div className='flex-1 min-w-0'>
+                      <p className='font-medium truncate text-sm'>
+                        {section.title}
+                      </p>
+                      <p className='text-[10px] text-muted-foreground font-mono'>
+                        {section.name}
+                      </p>
+                    </div>
 
-                  <div onPointerDown={(e) => e.stopPropagation()}>
-                    <Switch
-                      id={`show-${section.id}`}
-                      checked={section.enabled}
-                      onChange={() => handleToggle(section)}
-                      label=''
-                    />
+                    <div onPointerDown={(e) => e.stopPropagation()}>
+                      <Switch
+                        id={`show-${section.id}`}
+                        checked={section.enabled}
+                        onChange={() => handleToggle(section)}
+                        label=''
+                      />
+                    </div>
                   </div>
-                </div>
-              </ViewTransition>
-            ))}
+                </ViewTransition>
+              ),
+            )}
           </StaggerContainer>
-        )}
+        </Shimmer>
       </div>
 
       <div className='space-y-3 border-t border-border pt-6'>

@@ -4,6 +4,7 @@ import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { useRadius } from '@/contexts/radius-context';
+import { Shimmer } from '@/components/ui/shimmer';
 
 interface TableProps extends React.HTMLAttributes<HTMLTableElement> {
   className?: string;
@@ -87,8 +88,17 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
 TableRow.displayName = 'TableRow';
 
 const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ className, isHeader = false, ...props }, ref) => {
+  ({ className, isHeader = false, children, ...props }, ref) => {
     const Tag = isHeader ? 'th' : 'td';
+    // Keep plain text inside an element: shimmer-from-structure measures leaf
+    // text nodes by temporarily wrapping/unwrapping them, which would retrigger
+    // the table's ResizeObserver in a loop.
+    const content =
+      typeof children === 'string' || typeof children === 'number' ? (
+        <span>{children}</span>
+      ) : (
+        children
+      );
 
     return (
       <Tag
@@ -100,14 +110,12 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
           className,
         )}
         {...props}
-      />
+      >
+        {content}
+      </Tag>
     );
   },
 );
-
-import { Skeleton } from '@/components/ui/skeleton';
-
-TableCell.displayName = 'TableCell';
 
 interface TableSkeletonProps {
   rows?: number;
@@ -118,48 +126,29 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({
   rows = 8,
   cols = 4,
 }) => {
-  const { radius } = useRadius();
-
   return (
-    <div
-      className='overflow-x-auto border-2 border-border mt-4 shadow-brutalist'
-      style={{ borderRadius: `${radius}px` }}
-    >
-      <table className='w-full border-collapse bg-card'>
-        <thead className='bg-muted/50 dark:bg-muted/20'>
-          <tr>
-            {Array.from({ length: cols }).map((_, i) => (
-              <th
-                key={i}
-                className='py-4 px-6 border-b border-r border-border last:border-r-0'
-              >
-                <Skeleton width='60%' height={16} />
-              </th>
+    <Shimmer loading>
+      <Table className='mt-0'>
+        <TableHeader>
+          <TableRow>
+            {Array.from({ length: cols }).map((_, index) => (
+              <TableCell key={index} isHeader>
+                Column
+              </TableCell>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {Array.from({ length: rows }).map((_, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className='border-b border-border last:border-b-0'
-            >
+            <TableRow key={rowIndex}>
               {Array.from({ length: cols }).map((_, colIndex) => (
-                <td
-                  key={colIndex}
-                  className='py-4 px-6 border-r border-border last:border-r-0'
-                >
-                  <Skeleton
-                    width={colIndex === 0 ? '40%' : '80%'}
-                    height={14}
-                  />
-                </td>
+                <TableCell key={colIndex}>Value</TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </Shimmer>
   );
 };
 

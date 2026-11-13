@@ -4,7 +4,8 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';
 
-import { Button, Icon, Skeleton } from '@/components/ui';
+import { Button, Icon } from '@/components/ui';
+import { Shimmer } from '@/components/ui/shimmer';
 import type { IconName } from '@/components/ui/icon';
 import { useRadius } from '@/contexts/radius-context';
 
@@ -50,34 +51,23 @@ const SectionTitle = ({
         link && !loading ? 'justify-between' : 'justify-start',
       )}
     >
-      <div
-        className='inline-flex items-center bg-card border-2 shadow-brutalist px-4 py-[4px] font-medium tracking-wider brutalist-interactive-lg'
-        style={{ borderRadius: `${radius}px` }}
-      >
-        {loading ? (
-          <>
-            <span className='mr-1.5 flex items-center justify-center'>
-              <Skeleton width={25} height={25} as='span' />
-            </span>
-            <span className='flex items-center uppercase cursor-default'>
-              <Skeleton width={100} height={25} as='span' />
-            </span>
-          </>
-        ) : (
-          <>
-            <span
-              className={twMerge(
-                'mr-1.5 flex h-5 w-5 items-center justify-center',
-                iconColor,
-                '${iconClassName}',
-              )}
-            >
-              {icon && <Icon name={icon} />}
-            </span>
-            <span className='block uppercase cursor-default'>{title}</span>
-          </>
-        )}
-      </div>
+      <Shimmer loading={loading}>
+        <div
+          className='inline-flex items-center bg-card border-2 shadow-brutalist px-4 py-[4px] font-medium tracking-wider brutalist-interactive-lg'
+          style={{ borderRadius: `${radius}px` }}
+        >
+          <span
+            className={twMerge(
+              'mr-1.5 flex h-5 w-5 items-center justify-center',
+              iconColor,
+              '${iconClassName}',
+            )}
+          >
+            {icon && <Icon name={icon} />}
+          </span>
+          <span className='block uppercase cursor-default'>{title}</span>
+        </div>
+      </Shimmer>
       {link && !loading && (
         <Link href={link.href} target='_blank'>
           <Button
