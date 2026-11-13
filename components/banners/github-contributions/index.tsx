@@ -15,6 +15,7 @@ import {
 import { Shimmer } from '@/components/ui/shimmer';
 import CardEmpty from '@/components/ui/card/variants/empty';
 import { getHeatmapIntensityClass } from '@/components/ui/heatmap-legend';
+import Mask from '@/components/visual/mask';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { GitHubContributionData } from '@/types/github';
 
@@ -71,14 +72,11 @@ const HeatmapSkeleton = () => (
       }
     `}</style>
 
-    <div className='flex w-full gap-px'>
+    <div className='flex gap-1 min-w-max'>
       {Array.from({ length: 52 }).map((_, weekIndex) => (
-        <div key={weekIndex} className='flex min-w-0 flex-1 flex-col gap-px'>
+        <div key={weekIndex} className='flex flex-col gap-1'>
           {Array.from({ length: 7 }).map((_, dayIndex) => (
-            <div
-              key={dayIndex}
-              className='aspect-square w-full rounded-[1px] bg-[var(--skeleton-bg)]'
-            />
+            <div key={dayIndex} className='w-3 h-3 rounded-sm bg-muted' />
           ))}
         </div>
       ))}
@@ -176,32 +174,33 @@ export const GitHubContributionsLayout = ({
           </div>
         </Shimmer>
 
-        {isLoading ? (
-          <HeatmapSkeleton />
-        ) : (
-          <div className='flex w-full gap-px'>
-            {renderData.weeks.map((week, weekIndex) => (
-              <div
-                key={weekIndex}
-                className='flex min-w-0 flex-1 flex-col gap-px'
-              >
-                {week.map((day, dayIndex) => (
-                  <Tooltip
-                    key={`${weekIndex}-${dayIndex}`}
-                    text={`${day.date}: ${day.count} contributions`}
-                  >
-                    <div
-                      className={twMerge(
-                        'aspect-square w-full rounded-[1px] transition-colors duration-200 hover:ring-1 hover:ring-theme-orange/50',
-                        getHeatmapIntensityClass(getIntensityLevel(day.count)),
-                      )}
-                    />
-                  </Tooltip>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
+        <Mask className='-m-1 p-1 scrollbar-hide'>
+          {isLoading ? (
+            <HeatmapSkeleton />
+          ) : (
+            <div className='flex gap-1 min-w-max'>
+              {renderData.weeks.map((week, weekIndex) => (
+                <div key={weekIndex} className='flex flex-col gap-1'>
+                  {week.map((day, dayIndex) => (
+                    <Tooltip
+                      key={`${weekIndex}-${dayIndex}`}
+                      text={`${day.date}: ${day.count} contributions`}
+                    >
+                      <div
+                        className={twMerge(
+                          'w-3 h-3 rounded-sm transition-all duration-200 hover:scale-125 hover:ring-1 hover:ring-theme-orange/50',
+                          getHeatmapIntensityClass(
+                            getIntensityLevel(day.count),
+                          ),
+                        )}
+                      />
+                    </Tooltip>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+        </Mask>
 
         <div className='pt-4'>
           <HeatmapLegend />
