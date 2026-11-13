@@ -260,19 +260,6 @@ CREATE TABLE IF NOT EXISTS sections (
 );
 
 -- -----------------------------------------------------------------------------
--- CONTENT - BANNERS
--- -----------------------------------------------------------------------------
-
--- Banner Settings
--- Controls the order, width and visibility of banners on the home page
-CREATE TABLE IF NOT EXISTS banner_settings (
-  id TEXT PRIMARY KEY,                              -- Banner identifier
-  width TEXT NOT NULL DEFAULT 'half',               -- 'half' | 'wide' | 'disabled'
-  sort_order INTEGER NOT NULL DEFAULT 0,            -- Display order
-  updated_at INTEGER DEFAULT (unixepoch())          -- Last update timestamp
-);
-
--- -----------------------------------------------------------------------------
 -- INTEGRATIONS - SPOTIFY
 -- -----------------------------------------------------------------------------
 

@@ -6,7 +6,6 @@ const banner = (id: string, width: BannerSetting['width']): BannerSetting => ({
   id,
   title: id,
   width,
-  order: 0,
 });
 
 describe('banner layout', () => {
@@ -34,17 +33,6 @@ describe('banner layout', () => {
       ['half-a', 'half-b'],
       ['half-c'],
       ['wide-2'],
-    ]);
-  });
-
-  it('skips hidden banners', () => {
-    const rows = groupBannerRows([
-      banner('half-a', 'half'),
-      banner('hidden', 'disabled'),
-      banner('half-b', 'half'),
-    ]);
-    expect(rows.map((row) => row.map((item) => item.id))).toEqual([
-      ['half-a', 'half-b'],
     ]);
   });
 });

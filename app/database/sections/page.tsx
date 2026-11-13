@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 
 import { getBannerNodes } from '@/components/section/banners';
-import { getBannerSettings } from '@/database/banners';
 
 import SectionDatabase from './content';
 
@@ -10,14 +9,8 @@ export const metadata: Metadata = {
   description: 'Manage homepage sections order and visibility',
 };
 
-export default async function SectionPage() {
-  const bannerSettings = await getBannerSettings();
+export default function SectionPage() {
   const bannerNodes = getBannerNodes();
 
-  return (
-    <SectionDatabase
-      bannerNodes={bannerNodes}
-      initialBannerSettings={bannerSettings}
-    />
-  );
+  return <SectionDatabase bannerNodes={bannerNodes} />;
 }

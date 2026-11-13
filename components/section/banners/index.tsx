@@ -6,13 +6,13 @@ import SpotifyBanner from '@/components/banners/spotify';
 import TopLanguagesBanner from '@/components/banners/top-languages';
 import VisitorGeographyBanner from '@/components/banners/visitor-geography';
 import WeatherBanner from '@/components/banners/weather';
-import { getBannerSettings } from '@/database/banners';
 import {
   getAnalyticsSummary,
   getGitHubContributionsServer,
   getGitHubLanguagesServer,
   getResume,
 } from '@/lib/data';
+import { DEFAULT_BANNER_SETTINGS } from '@/lib/banner-config';
 
 import BannerGrid from './grid';
 
@@ -63,10 +63,8 @@ export const getBannerNodes = (): Record<string, React.ReactNode> => ({
   weather: <WeatherBanner />,
 });
 
-const Banners = async () => {
-  const settings = await getBannerSettings();
-
-  return <BannerGrid settings={settings} nodes={getBannerNodes()} />;
-};
+const Banners = () => (
+  <BannerGrid settings={DEFAULT_BANNER_SETTINGS} nodes={getBannerNodes()} />
+);
 
 export default Banners;

@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import * as bannersDB from '@/database/banners';
 import * as booksDB from '@/database/books';
 import * as certsDB from '@/database/certificates';
 import * as customizationDB from '@/database/customization';
@@ -57,11 +56,6 @@ export async function GET(
   try {
     let { name } = await context.params;
     name = name.replace(/\/$/, '');
-
-    if (name === 'banners') {
-      const results = await bannersDB.getBannerSettings();
-      return apiSuccess({ results });
-    }
 
     const db = getDB();
     if (!db) return apiError('Database not available', 500);
@@ -226,11 +220,6 @@ export async function PUT(
       case 'resume':
         result = await resumeDB.updateResume(
           data as Parameters<typeof resumeDB.updateResume>[0],
-        );
-        break;
-      case 'banners':
-        result = await bannersDB.updateBannerSetting(
-          data as Parameters<typeof bannersDB.updateBannerSetting>[0],
         );
         break;
       default:
