@@ -213,6 +213,8 @@ export class LocalR2Bucket implements R2Bucket {
           : entry.name;
         const child = path.join(dir, entry.name);
         if (entry.isDirectory()) {
+          // Mirror R2's folder markers so empty folders show up in listings.
+          keys.push(`${childRelative}/`);
           await walk(child, childRelative);
         } else if (entry.isFile()) {
           keys.push(childRelative);

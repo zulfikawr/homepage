@@ -196,6 +196,12 @@ const StorageContent = () => {
         <Input
           placeholder='Folder Name'
           onChange={(e) => (folderName = e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleCreateFolder(folderName);
+            }
+          }}
           autoFocus
         />
         <div className='flex justify-end gap-2'>
@@ -244,6 +250,12 @@ const StorageContent = () => {
         <Input
           defaultValue={newName}
           onChange={(e) => (newName = e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleRename(oldKey, newName);
+            }
+          }}
           autoFocus
         />
         <div className='flex justify-end gap-2'>
@@ -443,25 +455,12 @@ const StorageContent = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentPrefix && (
-              <TableRow className='cursor-pointer' onClick={handleGoUp}>
-                <TableCell></TableCell>
-                <TableCell className='font-medium text-muted-foreground flex items-center gap-3'>
-                  <Icon
-                    name='arrowBendUpLeft'
-                    className='size-5 text-muted-foreground flex-shrink-0'
-                  />
-                  ..
-                </TableCell>
-                <TableCell>-</TableCell>
-                <TableCell>-</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            )}
-
             {!loading && items.length === 0 ? (
               <TableRow>
-                <TableCell className='text-center py-8 text-muted-foreground'>
+                <TableCell
+                  colSpan={5}
+                  className='text-center py-16 text-muted-foreground'
+                >
                   No files found in this folder
                 </TableCell>
               </TableRow>

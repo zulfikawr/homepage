@@ -25,6 +25,7 @@ interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
 interface TableCellProps extends React.HTMLAttributes<HTMLTableCellElement> {
   className?: string;
   isHeader?: boolean;
+  colSpan?: number;
 }
 
 const Table = React.forwardRef<HTMLTableElement, TableProps>(
