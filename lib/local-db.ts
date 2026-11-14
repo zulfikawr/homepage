@@ -32,6 +32,9 @@ function getSqlite(): Sqlite {
 }
 
 export function isLocalDataMode(): boolean {
+  // Never use the local SQLite/filesystem stores in a deployed build, even if
+  // DATA_MODE=local leaked into the production environment.
+  if (process.env.NODE_ENV === 'production') return false;
   if (process.env.DATA_MODE) return process.env.DATA_MODE === 'local';
   return process.env.NODE_ENV === 'development';
 }

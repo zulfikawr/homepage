@@ -338,8 +338,83 @@ class HTTPR2Bucket implements Partial<R2Bucket> {
     }
   }
 
-  async list(): Promise<R2Objects> {
-    throw new Error('R2 list not implemented in HTTP mode');
+  async list(options: R2ListOptions = {}): Promise<R2Objects> {
+    const params = new URLSearchParams();
+    if (options.prefix) params.set('prefix', options.prefix);
+    if (options.cursor) params.set('cursor', options.cursor);
+    if (options.limit) params.set('limit', String(options.limit));
+    if (options.delimiter) params.set('delimiter', options.delimiter);
+
+    const url = `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/r2/buckets/${this.bucketName}/objects?${params.toString()}`;
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${this.apiToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`R2 HTTP API Error: ${response.statusText} - ${text}`);
+    }
+
+    const payload = (await response.json()) as {
+      success: boolean;
+      errors?: Array<{ message?: string }>;
+      result?: Array<{
+        key: string;
+        etag: string;
+        last_modified: string;
+        size: number;
+        http_metadata?: Record<string, string>;
+        custom_metadata?: Record<string, string>;
+        storage_class?: string;
+      }>;
+      result_info?: {
+        cursor?: string;
+        is_truncated?: boolean;
+      };
+    };
+
+    if (!payload.success) {
+      throw new Error(
+        `R2 HTTP API Error: ${payload.errors?.[0]?.message || 'Unknown error'}`,
+      );
+    }
+
+    const objects = (payload.result ?? []).map(
+      (item) =>
+        ({
+          key: item.key,
+          version: item.etag,
+          size: item.size,
+          etag: item.etag,
+          httpEtag: `"${item.etag}"`,
+          checksums: { toJSON: () => ({}) },
+          uploaded: new Date(item.last_modified),
+          httpMetadata: item.http_metadata || {},
+          customMetadata: item.custom_metadata || {},
+          storageClass: item.storage_class || 'STANDARD',
+          writeHttpMetadata: (headers: Headers | R2HTTPMetadata) => {
+            const metadata = item.http_metadata || {};
+            if (headers instanceof Headers) {
+              if (metadata.contentType) {
+                headers.set('Content-Type', metadata.contentType);
+              }
+              headers.set('ETag', `"${item.etag}"`);
+            } else {
+              Object.assign(headers, metadata);
+            }
+          },
+        }) as R2Object,
+    );
+
+    return {
+      objects,
+      truncated: payload.result_info?.is_truncated ?? false,
+      cursor: payload.result_info?.cursor,
+      delimitedPrefixes: [],
+    } as R2Objects;
   }
 
   async createMultipartUpload(

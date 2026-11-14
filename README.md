@@ -83,7 +83,7 @@ bun run test:crud
 
 ## 📌 Acknowledgments
 
-- **Template & Design:** [Tony (Lipeng) He](https://www.ouorz.com/)
+- **Layout inspired by:** [Tony (Lipeng) He](https://www.ouorz.com/)
 
 ---
 

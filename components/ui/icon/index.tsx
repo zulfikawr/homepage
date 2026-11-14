@@ -4,6 +4,7 @@ import TechIcon from './tech-icon';
 
 import {
   AddressBookIcon,
+  ArrowBendUpLeftIcon,
   ArrowClockwiseIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -117,6 +118,7 @@ import {
 
 export const iconMap = {
   addressBook: AddressBookIcon,
+  arrowBendUpLeft: ArrowBendUpLeftIcon,
   arrowClockwise: ArrowClockwiseIcon,
   arrowLeft: ArrowLeftIcon,
   arrowRight: ArrowRightIcon,
