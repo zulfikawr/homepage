@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Shimmer } from '@/components/ui/shimmer';
-
+import { DropdownItem } from '@/components/ui/dropdown';
 import PageTitle from '@/components/page-title';
 import {
   Button,
@@ -527,42 +527,38 @@ const StorageContent = () => {
                         }
                       >
                         <div className='flex flex-col gap-1 p-1 min-w-40'>
-                          <Button
-                            variant='ghost'
+                          <DropdownItem
                             icon='pencilSimple'
                             onClick={() => openRenameModal(item.key)}
                             className='justify-start'
                           >
                             Rename
-                          </Button>
+                          </DropdownItem>
                           {item.type === 'file' && (
                             <>
-                              <Button
-                                variant='ghost'
+                              <DropdownItem
                                 icon='downloadSimple'
                                 onClick={() => downloadFile(item.key)}
                                 className='justify-start'
                               >
                                 Download
-                              </Button>
-                              <Button
-                                variant='ghost'
+                              </DropdownItem>
+                              <DropdownItem
                                 icon='link'
                                 onClick={() => copyUrl(item.key)}
                                 className='justify-start'
                               >
                                 Copy Link
-                              </Button>
+                              </DropdownItem>
                             </>
                           )}
-                          <Button
-                            variant='ghost'
+                          <DropdownItem
                             icon='trash'
                             onClick={() => handleDelete(item.key)}
                             className='justify-start text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20'
                           >
                             Delete
-                          </Button>
+                          </DropdownItem>
                         </div>
                       </Popover>
                     </div>
