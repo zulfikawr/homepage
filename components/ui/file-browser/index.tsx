@@ -64,6 +64,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect -- initial data fetch on mount
     loadItems('');
   }, []);
 

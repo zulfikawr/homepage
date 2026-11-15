@@ -22,11 +22,13 @@ export const trimStr = (str: string, n: number) => {
 
 export const sanitizeStr = (str: string) => {
   const strippedStr = str.replace(
+    // eslint-disable-next-line no-control-regex -- ANSI escape sequences to strip
     /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
     '',
   );
 
   return strippedStr.replace(
+    // eslint-disable-next-line no-control-regex -- intentional control-character filtering
     /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007f-\u0084\u0086-\u009f\uD800-\uDFFF\uFDD0-\uFDFF\uFFFF\uC008]/g,
     '',
   );

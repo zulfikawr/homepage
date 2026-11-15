@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { StaggerContainer, ViewTransition } from '@/components/motion';
@@ -107,12 +107,19 @@ export default function SectionDatabase({
 
   const [draggedItem, setDraggedItem] = useState<Section | null>(null);
   const [localSections, setLocalSections] = useState<Section[]>([]);
+  const [syncedSectionsKey, setSyncedSectionsKey] = useState<
+    string | undefined
+  >();
 
-  useEffect(() => {
-    if (sections) {
-      setLocalSections([...sections].sort((a, b) => a.order - b.order));
-    }
-  }, [sections]);
+  // Sync incoming sections during render (avoids setState-in-effect) and only
+  // when the remote data actually changed, so optimistic reorders are kept.
+  const sectionsKey = sections
+    ?.map((section) => `${section.id}:${section.order}:${section.enabled}`)
+    .join('|');
+  if (sections && sectionsKey !== syncedSectionsKey) {
+    setSyncedSectionsKey(sectionsKey);
+    setLocalSections([...sections].sort((a, b) => a.order - b.order));
+  }
 
   if (error) return <CardEmpty message='Failed to load sections' />;
 

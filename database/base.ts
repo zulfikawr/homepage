@@ -22,8 +22,9 @@ export function getFormFile(data: FormData, key: string): File | null {
   return (
     data
       .getAll(key)
-      .find((value): value is File => value instanceof File && value.size > 0) ??
-    null
+      .find(
+        (value): value is File => value instanceof File && value.size > 0,
+      ) ?? null
   );
 }
 

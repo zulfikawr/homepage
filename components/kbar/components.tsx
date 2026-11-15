@@ -76,17 +76,14 @@ export function KbarContent() {
 
   // Debounced search for database content
   useEffect(() => {
-    if (search.length < 2) {
-      setDbResults([]);
-      setIsSearching(false);
-      return;
-    }
+    if (search.length < 2) return;
 
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
         const results = await searchDatabase(search);
         setDbResults(results);
+        setSelectedIndex(-1);
       } finally {
         setIsSearching(false);
       }
@@ -94,6 +91,15 @@ export function KbarContent() {
 
     return () => clearTimeout(timer);
   }, [search]);
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    setSelectedIndex(-1);
+    if (value.length < 2) {
+      setDbResults([]);
+      setIsSearching(false);
+    }
+  };
 
   const allItems: {
     label: string;
@@ -386,10 +392,6 @@ export function KbarContent() {
   );
 
   useEffect(() => {
-    setSelectedIndex(-1);
-  }, [search, dbResults]);
-
-  useEffect(() => {
     if (inputRef.current) {
       // Only focus on non-mobile devices to prevent automatic keyboard popup
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -484,7 +486,7 @@ export function KbarContent() {
             className='w-full px-12 py-6 text-lg'
             placeholder='What do you need?'
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             onKeyDown={handleKeyDown}
           />
         </div>

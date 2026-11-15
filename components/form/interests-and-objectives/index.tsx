@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Editor } from '@/components/editor';
 import { toast } from '@/components/ui';
@@ -16,10 +16,12 @@ const InterestsAndObjectivesForm: React.FC<InterestsAndObjectivesFormProps> = ({
   data,
 }) => {
   const [content, setContent] = useState(data?.content || '');
+  const [prevData, setPrevData] = useState(data);
 
-  useEffect(() => {
+  if (data !== prevData) {
+    setPrevData(data);
     setContent(data?.content || '');
-  }, [data]);
+  }
 
   const handleSubmit = async (e?: React.SyntheticEvent) => {
     e?.preventDefault();

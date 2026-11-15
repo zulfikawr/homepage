@@ -31,16 +31,15 @@ export default function TechIcon({
   style?: React.CSSProperties;
 }) {
   const [icon, setIcon] = useState<TechIconData | null>(cache?.[name] || null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(
+    () => typeof IntersectionObserver === 'undefined',
+  );
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
-    if (typeof IntersectionObserver === 'undefined') {
-      setVisible(true);
-      return;
-    }
+    if (!element || visible) return;
+    if (typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
@@ -51,7 +50,7 @@ export default function TechIcon({
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [visible]);
 
   useEffect(() => {
     if (!visible || icon) return;

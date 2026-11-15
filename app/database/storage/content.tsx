@@ -81,6 +81,7 @@ const StorageContent = () => {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react/set-state-in-effect -- initial data fetch on mount
     loadItems('');
   }, []);
 

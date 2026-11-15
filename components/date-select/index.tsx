@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useSyncExternalStore } from 'react';
+import React, { useMemo, useState, useSyncExternalStore } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { Button, Dropdown, DropdownItem } from '@/components/ui';
@@ -42,10 +42,11 @@ const DateSelect: React.FC<DateSelectProps> = ({
     () => new Date().getFullYear(),
     () => 2025, // Fixed year for SSR/Prerender
   );
+  const [invalidFallback] = useState(() => new Date());
 
   const safeValue = useMemo(
-    () => (Number.isNaN(value.getTime()) ? new Date() : value),
-    [value],
+    () => (Number.isNaN(value.getTime()) ? invalidFallback : value),
+    [invalidFallback, value],
   );
 
   const days = useMemo(() => Array.from({ length: 31 }, (_, i) => i + 1), []);

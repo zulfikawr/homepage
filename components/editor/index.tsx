@@ -42,14 +42,16 @@ const Editor: React.FC<EditorProps> = ({
 }) => {
   const { radius } = useRadius();
   const [markdown, setMarkdown] = useState(content);
+  const [prevContent, setPrevContent] = useState(content);
   const [cursorStyle, setCursorStyle] = useState<{ [key: string]: boolean }>(
     {},
   );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
+  if (content !== prevContent) {
+    setPrevContent(content);
     setMarkdown(content);
-  }, [content]);
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;

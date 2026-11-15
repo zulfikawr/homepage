@@ -167,14 +167,14 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ data }) => {
   const [settings, setSettings] = useState<Partial<CustomizationSettings>>(
     data || { default_theme: 'gruvbox-dark', default_background: 'none' },
   );
+  const [prevData, setPrevData] = useState(data);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (data) {
-      setSettings(data);
-    }
-  }, [data]);
+  if (data && data !== prevData) {
+    setPrevData(data);
+    setSettings(data);
+  }
 
   const handleSubmit = async () => {
     setLoading(true);
