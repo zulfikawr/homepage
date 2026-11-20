@@ -15,6 +15,7 @@ import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import type { IconName } from '@/components/ui/icon';
 import { useAuth } from '@/contexts/auth-context';
 import { useBackground } from '@/contexts/background-context';
+import { useSiteDefaults } from '@/contexts/customization-context';
 import { useLoadingToggle } from '@/contexts/loading-context';
 import { useRadius } from '@/contexts/radius-context';
 import { useWeather, WeatherType } from '@/contexts/weather-context';
@@ -67,6 +68,7 @@ export default function Settings() {
   const { setTheme, theme } = useTheme();
   const { background, setBackground } = useBackground();
   const { radius, setRadius } = useRadius();
+  const defaults = useSiteDefaults();
   const {
     weatherOverride,
     setWeatherOverride,
@@ -95,6 +97,19 @@ export default function Settings() {
   };
 
   const sectionTitleClass = 'text-left text-md text-muted-foreground';
+
+  const hasCustomizations =
+    theme !== undefined &&
+    (theme !== defaults.theme ||
+      background !== defaults.background ||
+      radius !== defaults.radius);
+
+  const handleResetAppearance = () => {
+    setTheme(defaults.theme);
+    setBackground(defaults.background);
+    setRadius(defaults.radius);
+    toast.success('Appearance reset to default');
+  };
 
   const selectedBackground = backgroundOptions.find(
     (option) => option.value === background,
@@ -201,6 +216,17 @@ export default function Settings() {
             </DropdownItem>
           ))}
         </Dropdown>
+
+        {hasCustomizations && (
+          <Button
+            variant='default'
+            icon='arrowCounterClockwise'
+            onClick={handleResetAppearance}
+            className='w-full'
+          >
+            Reset to Default
+          </Button>
+        )}
 
         {process.env.NODE_ENV === 'development' && (
           <>

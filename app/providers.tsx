@@ -6,6 +6,7 @@ import { ThemeProvider } from 'next-themes';
 import { ThemeSync } from '@/components/visual/theme-sync';
 import { AuthProvider } from '@/contexts/auth-context';
 import { BackgroundProvider } from '@/contexts/background-context';
+import { SiteDefaultsProvider } from '@/contexts/customization-context';
 import { LoadingProvider } from '@/contexts/loading-context';
 import { RadiusProvider } from '@/contexts/radius-context';
 import { TitleProvider } from '@/contexts/title-context';
@@ -15,10 +16,12 @@ export default function Providers({
   children,
   defaultTheme = 'system',
   defaultBackground = 'none',
+  defaultRadius = 8,
 }: {
   children: React.ReactNode;
   defaultTheme?: string;
   defaultBackground?: string;
+  defaultRadius?: number;
 }) {
   useEffect(() => {
     // Clear the background style set by the anti-flash script
@@ -45,16 +48,24 @@ export default function Providers({
           'everforest',
         ]}
       >
-        <ThemeSync />
-        <BackgroundProvider initialBackground={defaultBackground}>
-          <LoadingProvider>
-            <TitleProvider>
-              <WeatherProvider>
-                <RadiusProvider>{children}</RadiusProvider>
-              </WeatherProvider>
-            </TitleProvider>
-          </LoadingProvider>
-        </BackgroundProvider>
+        <SiteDefaultsProvider
+          value={{
+            theme: defaultTheme,
+            background: defaultBackground,
+            radius: defaultRadius,
+          }}
+        >
+          <ThemeSync />
+          <BackgroundProvider initialBackground={defaultBackground}>
+            <LoadingProvider>
+              <TitleProvider>
+                <WeatherProvider>
+                  <RadiusProvider>{children}</RadiusProvider>
+                </WeatherProvider>
+              </TitleProvider>
+            </LoadingProvider>
+          </BackgroundProvider>
+        </SiteDefaultsProvider>
       </ThemeProvider>
     </AuthProvider>
   );
